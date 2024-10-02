@@ -1,0 +1,304 @@
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last
+
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+
+import 'package:mazilon/pages/PersonalPlan/myPlan2.dart';
+import 'package:mazilon/util/Form/retrieveInformation.dart';
+import 'package:mazilon/util/styles.dart';
+import 'package:mazilon/util/appInformation.dart';
+import 'package:provider/provider.dart';
+import 'package:mazilon/form/form.dart';
+import 'package:mazilon/util/userInformation.dart';
+import 'package:mazilon/util/Form/checkbox_model.dart';
+import 'package:mazilon/util/Form/formPagePhoneModel.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+// This widget displays the user's personalized plan with sections for various topics.
+// It allows the user to view their selected answers and navigate to additional forms or options.
+class Schedule extends StatefulWidget {
+  final List<List<String>> collections; // Collection of data for the user
+  final List<String> collectionNames; // Names of the data collections
+  final Map<String, CheckboxModel>
+      checkboxModels; // Models for the checkbox forms
+  final PhonePageData phonePageData; // Data related to phone numbers
+  final bool hasFilled; // Whether the user has filled out the required forms
+
+  Schedule(
+      {super.key,
+      required this.collections,
+      required this.collectionNames,
+      required this.checkboxModels,
+      required this.phonePageData,
+      required this.hasFilled});
+
+  @override
+  State<Schedule> createState() => _ScheduleState();
+}
+
+class _ScheduleState extends State<Schedule> {
+  List<List<String>> userAnswers = []; // User's answers for each section
+  List<String> phoneInformation = []; // User's phone-related information
+
+  // Field names for different sections of the personal plan
+  List<String> fieldNames = [
+    'PersonalPlan-DifficultEvents',
+    'PersonalPlan-MakeSafer',
+    'PersonalPlan-FeelBetter',
+    'PersonalPlan-Distractions'
+  ];
+
+  // Names for the providers managing each section
+  List<String> providerNames = [
+    'difficultEvents',
+    'makeSafer',
+    'feelBetter',
+    'distractions'
+  ];
+
+  // Retrieve the user's answers for each section and update the state
+  void getUserAnswers(userSelectionDifficultEvents, userSelectionMakeSafer,
+      userSelectionFeelBetter, userSelectionDistractions) {
+    setState(() {
+      userAnswers = [
+        userSelectionDifficultEvents,
+        userSelectionMakeSafer,
+        userSelectionFeelBetter,
+        userSelectionDistractions
+      ];
+    });
+  }
+
+  // Combine phone names and numbers into a formatted string and update the state
+  void setPhones(names, numbers) {
+    List<String> temp = [];
+    for (var i = 0; i < names.length; i++) {
+      temp.add(names[i] + ':' + numbers[i]);
+    }
+    setState(() {
+      phoneInformation = [...temp];
+    });
+  }
+
+  // Launch a URL in the default browser
+  void _launchURL(Uri url) async {
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  @override
+  initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Providers to get app and user information
+    final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
+    final userInfoProvider =
+        Provider.of<UserInformation>(context, listen: true);
+
+    // Set up phone and answer information based on the user's data
+    setPhones(widget.phonePageData.savedPhoneNames,
+        widget.phonePageData.savedPhoneNumbers);
+    getUserAnswers(userInfoProvider.difficultEvents, userInfoProvider.makeSafer,
+        userInfoProvider.feelBetter, userInfoProvider.distractions);
+
+    final gender = userInfoProvider.gender;
+    Map<String, String> texts = appInfoProvider.sharePDFtexts;
+
+    // Extract relevant texts for display of the bottom text
+    String text1 = texts['firstLine'] ?? '';
+    String text2 = texts['firstLinkText'] ?? '';
+    String text2Link = texts['firstLinkURL'] ?? '';
+    String text3 = texts['secondLine'] ?? '';
+    String text4 = texts['thirdLine'] ?? '';
+    String text5 = texts['secondLinkText'] ?? '';
+    String text5Link = texts['secondLinkURL'] ?? '';
+    String text6 = texts['forthLine'] ?? '';
+
+    return Scaffold(
+      backgroundColor: Colors.grey[300],
+      appBar: AppBar(
+          title: SingleChildScrollView(
+            child: Center(
+                child: Directionality(
+              textDirection: TextDirection.rtl,
+              child: myAutoSizedText(
+                  appInfoProvider.returnToPlanStrings['MyPlan'] ??
+                      'התוכנית שלי2',
+                  TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
+                  null,
+                  40),
+            )),
+          ),
+          backgroundColor: primaryPurple,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(25.0),
+                  bottomRight: Radius.circular(25.0))),
+          toolbarHeight: 100),
+      body: SingleChildScrollView(
+        child: Column(
+          // Main content area for displaying the user's plan
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Display a list of plan sections with their corresponding answers
+            ListView.builder(
+              itemBuilder: (context, index) {
+                var info = retrieveInformation(appInfoProvider,
+                    fieldNames[index], userInfoProvider.gender);
+
+                return MyPlan(
+                  title: info["header"] ?? '',
+                  subTitle: info["subTitle"] ?? '',
+                  answers: userAnswers[index],
+                );
+              },
+              itemCount: 4,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+            ),
+            // Additional section for phone-related information
+            MyPlan(
+              title: appInfoProvider
+                      .formPhonePage['header${userInfoProvider.gender}'] ??
+                  '',
+              subTitle: appInfoProvider
+                      .formPhonePage['subTitle${userInfoProvider.gender}'] ??
+                  '',
+              answers: phoneInformation,
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            // Display additional text with links, if available
+            Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+              Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: RichText(
+                      textDirection: TextDirection.rtl,
+                      textAlign: TextAlign.justify,
+                      text: TextSpan(children: <TextSpan>[
+                        TextSpan(
+                          text: text1 + " ",
+                          style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black),
+                        ),
+                        TextSpan(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => _launchURL(Uri.parse(text2Link)),
+                          text: text2 + " ",
+                          style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.normal,
+                              color: Color.fromARGB(255, 6, 25, 231)),
+                        ),
+                        TextSpan(
+                          text: text3 + " ",
+                          style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black),
+                        ),
+                        TextSpan(
+                          text: text4 + " ",
+                          style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black),
+                        ),
+                        TextSpan(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => _launchURL(Uri.parse(text5Link)),
+                          text: text5 + " ",
+                          style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.normal,
+                              color: Color.fromARGB(255, 6, 25, 231)),
+                        ),
+                        TextSpan(
+                          text: text6 + ".",
+                          style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black),
+                        ),
+                      ]))),
+            ]),
+            SizedBox(
+              height: 30,
+            ),
+            // Button to navigate to another form or action
+            TextButton(
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        FormProgressIndicator(
+                      collections: widget.collections,
+                      collectionNames: widget.collectionNames,
+                      checkboxModels: widget.checkboxModels,
+                      phonePageData: widget.phonePageData,
+                    ), //place collections here
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                      var begin = Offset(-1.0, 0.0);
+                      var end = Offset.zero;
+                      var tween = Tween(begin: begin, end: end);
+                      var offsetAnimation = animation.drive(tween);
+
+                      var fadeTween = Tween(begin: 0.0, end: 1.0);
+                      var fadeAnimation = animation.drive(fadeTween);
+
+                      return SlideTransition(
+                        position: offsetAnimation,
+                        child: FadeTransition(
+                          opacity: fadeAnimation,
+                          child: child,
+                        ),
+                      );
+                    },
+                  ),
+                  (Route<dynamic> route) => false,
+                );
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: primaryPurple,
+                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+              ),
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: myAutoSizedText(
+                    widget.hasFilled
+                        ? appInfoProvider
+                            .returnToPlanStrings['hasFilled$gender']
+                        : appInfoProvider
+                            .returnToPlanStrings['didNotFill$gender'],
+                    TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                    null,
+                    24),
+              ),
+            ),
+            SizedBox(
+              height: 45,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

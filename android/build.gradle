@@ -1,0 +1,36 @@
+buildscript {
+    ext.kotlin_version = '1.9.25'
+    ext {
+       compileSdkVersion   = 34                // or higher / as desired
+       targetSdkVersion    = 34                // or higher / as desired
+   }
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.google.gms:google-services:4.4.1'  // Add this line
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+subprojects { afterEvaluate { android { compileSdkVersion 34 } } }
+
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    project.evaluationDependsOn(':app')
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
