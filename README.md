@@ -1,3 +1,6 @@
+![Build](https://github.com/Tovli/Mazilon/actions/workflows/main.yml/badge.svg)
+
+
 # Mezilon App Documentation
 
 ## Overview
