@@ -13,7 +13,7 @@ jobs:
     env:
       KEYSTORE_PATH: android/app/
       KEYSTORE_FILE: Maztzilonkey.jks
-      GOOGLE_SERVICES_PATH: android/app/google-services.json
+      FIREBASE_OPTIONS_PATH: lib/util/Firebase/firebase_options.dart
       AAB_PATH: build/app/outputs/bundle/release/app-release.aab
     steps:
       - name: Set up JDK 17
@@ -27,12 +27,12 @@ jobs:
         uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
-      - name: Write google-services.json
-        run: |
-          echo $PRODGOOGLESERVICES > ${{ env.GOOGLE_SERVICES_PATH }}
       - name: Write key store file for release signing
         run: |
             echo $APPSIGNINGKEY | base64 --decode > ${{ env.KEYSTORE_PATH }}${{env.KEYSTORE_FILE }}
+      - name: Write key store file for release signing
+        run: |
+            echo $FIREBASE_OPTIONS | base64 --decode > ${{ env.FIREBASE_OPTIONS_PATH }}
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
