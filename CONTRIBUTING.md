@@ -45,8 +45,17 @@ Here are some goals and guidelines for submitting your pull requests:
 
 To set up your development environment for Mazilon:
 
+#### clone
 ```bash
 git clone https://github.com/Tovli/Mazilon.git
+```
+
+
+#### Add firebase configurations
+Follow [this link](https://firebase.google.com/docs/flutter/setup) for creating firebase configurations file in flutter
+
+#### run
+```bash
 cd Mazilon
 flutter pub get
 flutter run
