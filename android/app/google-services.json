@@ -1,0 +1,187 @@
+{
+  "project_info": {
+    "project_number": "37967917693",
+    "firebase_url": "https://mezilondb-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "mezilondb",
+    "storage_bucket": "mezilondb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37967917693:android:9e2fe94781e53711faf714",
+        "android_client_info": {
+          "package_name": "com.Tovli.Mazilon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "37967917693-5knn3o3prm9cf5kaq13kac7iqr9cnn2d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Tovli.Mazilon",
+            "certificate_hash": "62a60eafc159e760d711c6e4c2f184d360a00caa"
+          }
+        },
+        {
+          "client_id": "37967917693-8tr5hdl6esqfh6675trctv4cq5l7u3s9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.Tovli.Mazilon",
+            "certificate_hash": "eeda192a54b76611619cc3c5da522901e519a04b"
+          }
+        },
+        {
+          "client_id": "37967917693-aeb8hj0uk8tt70ngp3dag7f57j0n39dm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApA4kbqIF6RhP7gGM8MjI42vv3AhB_WQw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "37967917693-aeb8hj0uk8tt70ngp3dag7f57j0n39dm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "37967917693-hpl8lgbco59fmeaohv3i5m79nl698sf2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mezilon"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37967917693:android:961969071caf3fdefaf714",
+        "android_client_info": {
+          "package_name": "com.example.mezilon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "37967917693-it48o2sqpr4k55oo29o6lj36g24sakt4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mezilon",
+            "certificate_hash": "eeda192a54b76611619cc3c5da522901e519a04b"
+          }
+        },
+        {
+          "client_id": "37967917693-u9gmg0mesu6c80gnr5rn8kc2kcptrjl5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mezilon",
+            "certificate_hash": "62a60eafc159e760d711c6e4c2f184d360a00caa"
+          }
+        },
+        {
+          "client_id": "37967917693-aeb8hj0uk8tt70ngp3dag7f57j0n39dm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApA4kbqIF6RhP7gGM8MjI42vv3AhB_WQw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "37967917693-aeb8hj0uk8tt70ngp3dag7f57j0n39dm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "37967917693-hpl8lgbco59fmeaohv3i5m79nl698sf2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mezilon"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37967917693:android:e4e96bf355e8cff9faf714",
+        "android_client_info": {
+          "package_name": "com.matzilon.mezilon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "37967917693-aeb8hj0uk8tt70ngp3dag7f57j0n39dm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApA4kbqIF6RhP7gGM8MjI42vv3AhB_WQw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "37967917693-aeb8hj0uk8tt70ngp3dag7f57j0n39dm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "37967917693-hpl8lgbco59fmeaohv3i5m79nl698sf2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mezilon"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37967917693:android:782e577542c23378faf714",
+        "android_client_info": {
+          "package_name": "mezilon.DB1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "37967917693-aeb8hj0uk8tt70ngp3dag7f57j0n39dm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApA4kbqIF6RhP7gGM8MjI42vv3AhB_WQw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "37967917693-aeb8hj0uk8tt70ngp3dag7f57j0n39dm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "37967917693-hpl8lgbco59fmeaohv3i5m79nl698sf2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mezilon"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

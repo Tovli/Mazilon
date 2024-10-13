@@ -1,3 +1,5 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mazilon/iFx/service_locator.dart';
@@ -45,6 +47,49 @@ void main() async {
     'PersonalPlan-Distractions',
     // Add the new table name
   ];
+
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => MultiProvider(
+        providers: [
+          for (int i = 0; i < checkboxCollectionNames.length; i++)
+            // Initialize the checkbox models
+            ChangeNotifierProvider(
+              create: (context) => CheckboxModel(checkboxCollectionNames[i],
+                  checkboxCollectionNames[i], "", "", "", ""),
+            ),
+          // Initialize the phonePageData provider
+          ChangeNotifierProvider(
+            create: (context) => PhonePageData(
+                key: "PhonePage",
+                phoneNames: [],
+                phoneNumbers: [],
+                header: "", // Blank for unknown field
+                subTitle: "", // Blank for unknown field
+                midTitle: "", // Blank for unknown field
+                phoneNameTitle: "", // Blank for unknown field
+                phoneNumberTitle: "", // Blank for unknown field
+                savedPhoneNames: [], // Assuming empty list for unknown
+                savedPhoneNumbers: [], // Assuming empty list for unknown
+                phoneDescription: [] // Assuming empty list for unknown
+                )
+              ..loadItemsFromPrefs(), // Initialize phonePageData
+          ),
+          //REMOVE COMMENT ON FUTURE UPDATES FOR SYNC DEVICE FUNCTIONALITY
+          // Initialize the FirebaseAppProvider for dbUsersApp-REALTIME DB
+          ChangeNotifierProvider(
+              create: (context) => FirebaseAppProvider(dbUsersApp)),
+          // Initialize the APP information provider
+          ChangeNotifierProvider(create: (context) => AppInformation()),
+          // Initialize the User information provider
+          ChangeNotifierProvider(create: (context) => UserInformation()),
+        ],
+        child: MyApp(),
+      ),
+    ),
+  );
+  /*
   runApp(
     MultiProvider(
       providers: [
@@ -82,7 +127,7 @@ void main() async {
       ],
       child: MyApp(),
     ),
-  );
+  );*/
 }
 
 class MyApp extends StatefulWidget {
