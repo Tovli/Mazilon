@@ -263,8 +263,28 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
                 icon: Icons.note_add, // the icon of the personal plan section
                 icons: [
                   // the share and download buttons
-                  myTextButton(() {
-                    share(appInfoProvider, gender);
+                  myTextButton(() async {
+                    await generateAndSharePdf(
+                      appInfoProvider.shareMessages['regular']!,
+                      [
+                        appInfoProvider
+                            .formDifficultEventsTitles['header$gender'],
+                        appInfoProvider.formMakeSaferTitles['header$gender'],
+                        appInfoProvider.formFeelBetterTitles['header$gender'],
+                        appInfoProvider.formDistractionsTitles['header$gender'],
+                        appInfoProvider.formPhonePage['header$gender'],
+                      ],
+                      [
+                        appInfoProvider
+                            .formDifficultEventsTitles['subTitle$gender'],
+                        appInfoProvider.formMakeSaferTitles['subTitle$gender'],
+                        appInfoProvider.formFeelBetterTitles['subTitle$gender'],
+                        appInfoProvider
+                            .formDistractionsTitles['subTitle$gender'],
+                        appInfoProvider.formPhonePage['subTitle$gender'],
+                      ],
+                      appInfoProvider.sharePDFtexts,
+                    );
                   }, Elusive.share, Colors.black),
                   myTextButton(() async {
                     // the function to download the pdf file of the personal plan

@@ -90,7 +90,7 @@ class _ShareFormState extends State<ShareForm> {
                   height: 30,
                 ),
                 //whatsapp share msg row:
-                Row(
+                /*  Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     //send whatsapp routine text button:
@@ -142,6 +142,7 @@ class _ShareFormState extends State<ShareForm> {
                     ),
                   ],
                 ),
+               */
                 const SizedBox(
                   height: 30,
                 ),

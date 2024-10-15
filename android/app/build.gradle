@@ -2,39 +2,16 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
 }
 
-def signingKeyAlias = "Matzilonkey"
-def signingKeyPassword = ""
-def signingKeyFile = ""
-def signingKeyStorePassword = ""
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file("key.properties")
 if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader('UTF-8') { reader ->
         localProperties.load(reader)
     }
 }
-if (keystorePropertiesFile.exists()) {
-    keystorePropertiesFile.withReader('UTF-8') { reader ->
-        keystoreProperties.load(reader)
-    }
-    signingKeyPassword = keystoreProperties['keyPassword']
-    signingKeyFile = keystoreProperties['storeFile']
-    signingKeyStorePassword = keystoreProperties['storePassword']
-   
-}else {
-    signingKeyPassword = System.getenv("APPSIGNINGKEYPASSWORD")
-    signingKeyFile = System.getenv("KEYSTORE_FILE")
-    signingKeyStorePassword = System.getenv("APPSIGNINGKEYSTOREPASSWORD")
-}
-
-if (signingKeyFile.isEmpty() || signingKeyPassword.isEmpty() || signingKeyStorePassword.isEmpty()) {
-    throw new Exception("Keystore credentials are not properly set in either key.properties or environment variables.")
-}
-    
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
@@ -48,12 +25,14 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.mezilon"
+    compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
     compileSdkVersion 34
     
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
@@ -70,22 +49,17 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 23
-        targetSdkVersion 34
+        targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
     }
-    signingConfigs {
-        release {
-            keyAlias signingKeyAlias
-            keyPassword signingKeyPassword
-            storeFile file(signingKeyFile)
-            storePassword signingKeyStorePassword
-        }
-    }
+
     buildTypes {
         release {
-        signingConfig signingConfigs.release
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.debug
         }
     }
         applicationVariants.all { variant ->
@@ -100,6 +74,12 @@ flutter {
 }
 
 dependencies {
+    implementation platform('com.google.firebase:firebase-bom:32.7.3') // Add this line
+    implementation 'com.google.firebase:firebase-analytics' // Add this line
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" 
+            implementation 'com.google.firebase:firebase-auth'
+        implementation 'com.google.firebase:firebase-database'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
 }
+
+apply plugin: 'com.google.gms.google-services'
