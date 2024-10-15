@@ -18,6 +18,7 @@ import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/initialForm/form.dart';
 import 'package:mazilon/util/userSyncFirebaseProvider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 //testing:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mazilon/disclaimerPage.dart';
@@ -50,8 +51,7 @@ void main() async {
   ];
   await SentryFlutter.init(
     (options) {
-      options.dsn =
-          'https://85a07f48d85f0b6ec907248ec88275c0@o4508111764848640.ingest.de.sentry.io/4508111785558096';
+      options.dsn = dotenv.env['SENTRY_DSN'] ?? '';
       // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
       // We recommend adjusting this value in production.
       options.tracesSampleRate = 1.0;
