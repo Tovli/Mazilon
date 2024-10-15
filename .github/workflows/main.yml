@@ -15,6 +15,7 @@ jobs:
       KEYSTORE_FILE: Maztzilonkey.jks
       FIREBASE_OPTIONS_PATH: lib/util/Firebase/firebase_options.dart
       AAB_PATH: build/app/outputs/bundle/release/app-release.aab
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -83,7 +84,7 @@ jobs:
           path: ${{ env.AAB_PATH }}
 
       # - name: Build APK
-      #   run: flutter build apk --release 
+      #   run: flutter build apk --release
       # - name: Upload APK
       #   uses: actions/upload-artifact@v3
       #   with:

@@ -75,6 +75,7 @@ dependencies:
   get_it: ^7.7.0
   sentry_flutter: ^8.9.0
   device_preview: ^1.2.0
+  flutter_dotenv: ^5.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
