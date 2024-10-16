@@ -15,6 +15,7 @@ jobs:
       KEYSTORE_FILE: Maztzilonkey.jks
       FIREBASE_OPTIONS_PATH: lib/util/Firebase/firebase_options.dart
       AAB_PATH: build/app/outputs/bundle/release/app-release.aab
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -24,10 +25,10 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
       - name: Write key store file for release signing
         run: |
-            echo $APPSIGNINGKEY | base64 --decode > ${{ env.KEYSTORE_PATH }}${{env.KEYSTORE_FILE }}
+          echo $APPSIGNINGKEY | base64 --decode > ${{ env.KEYSTORE_PATH }}${{env.KEYSTORE_FILE }}
       - name: Write firebase options file
         run: |
-            echo $FIREBASE_OPTIONS | base64 --decode > ${{ env.FIREBASE_OPTIONS_PATH }}
+          echo $FIREBASE_OPTIONS | base64 --decode > ${{ env.FIREBASE_OPTIONS_PATH }}
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
@@ -48,7 +49,7 @@ jobs:
           name: app-release
           path: ${{ env.AAB_PATH }}
       # - name: Build APK
-      #   run: flutter build apk --release 
+      #   run: flutter build apk --release
       # - name: Upload APK
       #   uses: actions/upload-artifact@v3
       #   with:
