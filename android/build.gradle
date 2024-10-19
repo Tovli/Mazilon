@@ -1,9 +1,10 @@
 buildscript {
-    ext.kotlin_version = '1.9.10'
- 
+    ext.kotlin_version = '1.9.25'
     ext {
-        buildToolsVersion = "33.0.0"
-        minSdkVersion = 24}
+       compileSdkVersion   = 34                // or higher / as desired
+       targetSdkVersion    = 34                // or higher / as desired
+   }
+
     repositories {
         google()
         mavenCentral()
@@ -11,9 +12,6 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.4.1'  // Ensure this is the correct version
-        classpath 'com.android.tools.build:gradle:7.3.1'
-        
     }
 }
 
@@ -24,34 +22,13 @@ allprojects {
     }
 }
 
+subprojects { afterEvaluate { android { compileSdkVersion 34 } } }
+
 rootProject.buildDir = '../build'
-subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
-    afterEvaluate { project ->
-        if (project.plugins.hasPlugin("com.android.application") ||
-                project.plugins.hasPlugin("com.android.library")) {
-            project.android {
-                compileSdkVersion 34                
-            }
-        }
-    }
-}
-subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
-    afterEvaluate { project ->
-        if (project.plugins.hasPlugin("com.android.application") ||
-                project.plugins.hasPlugin("com.android.library")) {
-            project.android {
-                compileSdkVersion 34                
-            }
-        }
-    }
-}
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
     project.evaluationDependsOn(':app')
 }
-
 
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
