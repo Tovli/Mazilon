@@ -141,7 +141,7 @@ Future<void> loadUserInformation(UserInformation userInfo) async {
   userInfo.updateMakeSafer(prefs.getStringList(fieldNames[1]) ?? []);
   userInfo.updateFeelBetter(prefs.getStringList(fieldNames[2]) ?? []);
   userInfo.updateDistractions(prefs.getStringList(fieldNames[3]) ?? []);
-
+  userInfo.updateNotifications(prefs.getStringList("notifications") ?? []);
   userInfo
       .updateDisclaimerSigned(prefs.getBool('disclaimerConfirmed') ?? false);
 }

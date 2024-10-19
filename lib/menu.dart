@@ -6,6 +6,8 @@ import 'package:mazilon/pages/about.dart';
 import 'package:mazilon/pages/FeelGood/feelGood.dart';
 import 'package:mazilon/pages/WellnessTools/wellnessTools.dart';
 
+import 'package:mazilon/pages/notifications/notification_page.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mazilon/pages/home.dart';
@@ -100,6 +102,11 @@ class _MenuState extends State<Menu> {
             gender: userInformation.gender,
             phonePageData: widget.phonePageData);
       }*/
+      else if (index == 9) {
+        currentScreen = NotificationPage(
+          title: 'הוספת תזכורת', // Pass the title here
+        );
+      }
     });
   }
 
@@ -261,6 +268,33 @@ class _MenuState extends State<Menu> {
                                                     setState(() {
                                                       currentScreen = About();
                                                       current = 6;
+                                                    });
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Directionality(
+                                                        textDirection:
+                                                            TextDirection.rtl,
+                                                        child: Text(
+                                                            'הוספת תזכורת'),
+                                                      ),
+                                                      SizedBox(width: 20),
+                                                      Icon(Icons.add_alert),
+                                                    ],
+                                                  ),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      currentScreen =
+                                                          NotificationPage(
+                                                        title:
+                                                            'הוספת תזכורת', // Pass the title here
+                                                      );
+                                                      current = 10;
                                                     });
                                                     Navigator.of(context).pop();
                                                   },
