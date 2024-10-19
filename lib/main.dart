@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mazilon/iFx/service_locator.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'util/Firebase/firebase_options.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,43 +47,92 @@ void main() async {
     'PersonalPlan-Distractions',
     // Add the new table name
   ];
-  runApp(
-    MultiProvider(
-      providers: [
-        for (int i = 0; i < checkboxCollectionNames.length; i++)
-          // Initialize the checkbox models
+
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = dotenv.env['SENTRY_DSN'] ?? '';
+      // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
+      // We recommend adjusting this value in production.
+      options.tracesSampleRate = 1.0;
+      // The sampling rate for profiling is relative to tracesSampleRate
+      // Setting to 1.0 will profile 100% of sampled transactions:
+      options.profilesSampleRate = 1.0;
+    },
+    appRunner: () => runApp(
+      MultiProvider(
+        providers: [
+          for (int i = 0; i < checkboxCollectionNames.length; i++)
+            // Initialize the checkbox models
+            ChangeNotifierProvider(
+              create: (context) => CheckboxModel(checkboxCollectionNames[i],
+                  checkboxCollectionNames[i], "", "", "", ""),
+            ),
+          // Initialize the phonePageData provider
           ChangeNotifierProvider(
-            create: (context) => CheckboxModel(checkboxCollectionNames[i],
-                checkboxCollectionNames[i], "", "", "", ""),
+            create: (context) => PhonePageData(
+                key: "PhonePage",
+                phoneNames: [],
+                phoneNumbers: [],
+                header: "", // Blank for unknown field
+                subTitle: "", // Blank for unknown field
+                midTitle: "", // Blank for unknown field
+                phoneNameTitle: "", // Blank for unknown field
+                phoneNumberTitle: "", // Blank for unknown field
+                savedPhoneNames: [], // Assuming empty list for unknown
+                savedPhoneNumbers: [], // Assuming empty list for unknown
+                phoneDescription: [] // Assuming empty list for unknown
+                )
+              ..loadItemsFromPrefs(), // Initialize phonePageData
           ),
-        // Initialize the phonePageData provider
-        ChangeNotifierProvider(
-          create: (context) => PhonePageData(
-              key: "PhonePage",
-              phoneNames: [],
-              phoneNumbers: [],
-              header: "", // Blank for unknown field
-              subTitle: "", // Blank for unknown field
-              midTitle: "", // Blank for unknown field
-              phoneNameTitle: "", // Blank for unknown field
-              phoneNumberTitle: "", // Blank for unknown field
-              savedPhoneNames: [], // Assuming empty list for unknown
-              savedPhoneNumbers: [], // Assuming empty list for unknown
-              phoneDescription: [] // Assuming empty list for unknown
-              )
-            ..loadItemsFromPrefs(), // Initialize phonePageData
-        ),
-        //REMOVE COMMENT ON FUTURE UPDATES FOR SYNC DEVICE FUNCTIONALITY
-        // Initialize the FirebaseAppProvider for dbUsersApp-REALTIME DB
-        ChangeNotifierProvider(
-            create: (context) => FirebaseAppProvider(dbUsersApp)),
-        // Initialize the APP information provider
-        ChangeNotifierProvider(create: (context) => AppInformation()),
-        // Initialize the User information provider
-        ChangeNotifierProvider(create: (context) => UserInformation()),
-      ],
-      child: MyApp(),
+          //REMOVE COMMENT ON FUTURE UPDATES FOR SYNC DEVICE FUNCTIONALITY
+          // Initialize the FirebaseAppProvider for dbUsersApp-REALTIME DB
+          ChangeNotifierProvider(
+              create: (context) => FirebaseAppProvider(dbUsersApp)),
+          // Initialize the APP information provider
+          ChangeNotifierProvider(create: (context) => AppInformation()),
+          // Initialize the User information provider
+          ChangeNotifierProvider(create: (context) => UserInformation()),
+        ],
+        child: MyApp(),
+      ), // Wrap your app
     ),
+  );
+  MultiProvider(
+    providers: [
+      for (int i = 0; i < checkboxCollectionNames.length; i++)
+        // Initialize the checkbox models
+        ChangeNotifierProvider(
+          create: (context) => CheckboxModel(checkboxCollectionNames[i],
+              checkboxCollectionNames[i], "", "", "", ""),
+        ),
+      // Initialize the phonePageData provider
+      ChangeNotifierProvider(
+        create: (context) => PhonePageData(
+            key: "PhonePage",
+            phoneNames: [],
+            phoneNumbers: [],
+            header: "", // Blank for unknown field
+            subTitle: "", // Blank for unknown field
+            midTitle: "", // Blank for unknown field
+            phoneNameTitle: "", // Blank for unknown field
+            phoneNumberTitle: "", // Blank for unknown field
+            savedPhoneNames: [], // Assuming empty list for unknown
+            savedPhoneNumbers: [], // Assuming empty list for unknown
+            phoneDescription: [] // Assuming empty list for unknown
+            )
+          ..loadItemsFromPrefs(), // Initialize phonePageData
+      ),
+      //REMOVE COMMENT ON FUTURE UPDATES FOR SYNC DEVICE FUNCTIONALITY
+      // Initialize the FirebaseAppProvider for dbUsersApp-REALTIME DB
+      ChangeNotifierProvider(
+          create: (context) => FirebaseAppProvider(dbUsersApp)),
+      // Initialize the APP information provider
+      ChangeNotifierProvider(create: (context) => AppInformation()),
+      // Initialize the User information provider
+      ChangeNotifierProvider(create: (context) => UserInformation()),
+    ],
+    child: MyApp(),
+    // Wrap your app
   );
 }
 
