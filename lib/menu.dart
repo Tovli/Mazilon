@@ -6,7 +6,6 @@ import 'package:mazilon/pages/about.dart';
 import 'package:mazilon/pages/FeelGood/feelGood.dart';
 import 'package:mazilon/pages/WellnessTools/wellnessTools.dart';
 
-import 'package:mazilon/pages/Sync/syncDevicesRealtime.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mazilon/pages/home.dart';
