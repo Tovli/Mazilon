@@ -15,8 +15,10 @@ jobs:
       KEYSTORE_FILE: Maztzilonkey.jks
       FIREBASE_OPTIONS_PATH: lib/util/Firebase/firebase_options.dart
       AAB_PATH: build/app/outputs/bundle/release/app-release.aab
-      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
     steps:
+      - name: Create .env file
+        run: |
+          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: export secrets as env vars
