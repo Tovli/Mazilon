@@ -15,6 +15,7 @@ jobs:
       KEYSTORE_FILE: Maztzilonkey.jks
       FIREBASE_OPTIONS_PATH: lib/util/Firebase/firebase_options.dart
       AAB_PATH: build/app/outputs/bundle/release/app-release.aab
+      
     steps:
       - name: Create .env file
         run: |
@@ -25,6 +26,12 @@ jobs:
         uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
+              
+      - name: Create .env file            
+        uses: SpicyPizza/create-envfile@v2.0.3
+        with:
+            envkey_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+            file_name: .env
       - name: Write key store file for release signing
         run: |
           echo $APPSIGNINGKEY | base64 --decode > ${{ env.KEYSTORE_PATH }}${{env.KEYSTORE_FILE }}
