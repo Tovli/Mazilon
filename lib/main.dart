@@ -1,6 +1,10 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mazilon/iFx/service_locator.dart';
+import 'package:mazilon/util/sentry_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'util/Firebase/firebase_options.dart';
@@ -15,13 +19,21 @@ import 'package:mazilon/util/Form/checkbox_model.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/initialForm/form.dart';
 import 'package:mazilon/util/userSyncFirebaseProvider.dart';
+
 //testing:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mazilon/disclaimerPage.dart';
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-void main() async {
+List<String> checkboxCollectionNames = [
+  'PersonalPlan-DifficultEvents',
+  'PersonalPlan-MakeSafer',
+  'PersonalPlan-FeelBetter',
+  'PersonalPlan-Distractions',
+  // Add the new table name
+];
+Future<FirebaseApp> initializeApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -36,16 +48,13 @@ void main() async {
     options: DefaultFirebaseOptions
         .currentPlatform, // Use your custom FirebaseOptions
   );
+  return dbUsersApp;
+}
 
-  //adding checkbox collection for the form add here:
-  List<String> checkboxCollectionNames = [
-    'PersonalPlan-DifficultEvents',
-    'PersonalPlan-MakeSafer',
-    'PersonalPlan-FeelBetter',
-    'PersonalPlan-Distractions',
-    // Add the new table name
-  ];
-  runApp(
+void main() async {
+  FirebaseApp dbUsersApp = await initializeApp();
+  SentryService sentryService = GetIt.instance<SentryService>();
+  await sentryService.initializeSentry(
     MultiProvider(
       providers: [
         for (int i = 0; i < checkboxCollectionNames.length; i++)
@@ -97,13 +106,7 @@ class _MyAppState extends State<MyApp> {
   List<List<String>> collections = [];
   bool _isInitialized = false;
   // adding checkboxmodel for the form add here:
-  List<String> checkboxCollectionNames = [
-    'PersonalPlan-DifficultEvents',
-    'PersonalPlan-MakeSafer',
-    'PersonalPlan-FeelBetter',
-    'PersonalPlan-Distractions',
-    // Add the new table name
-  ];
+
   List<String> phonePageCollectionNames = [
     'PersonalPlan-PhonesPage',
   ];
@@ -116,9 +119,6 @@ class _MyAppState extends State<MyApp> {
   List<String> homeTitles = [];
 
   AppInformation appInfo = AppInformation();
-  void mySetState() {
-    setState(() {});
-  }
 
   bool hasFilled = false;
   void getHasFilled() async {
@@ -153,12 +153,6 @@ class _MyAppState extends State<MyApp> {
   void didChangeDependencies() {
     if (!_isInitialized) {
       phonePageData = Provider.of<PhonePageData>(context);
-      /* loadCollectionsFuture = loadCollections(
-        checkboxCollectionNames,
-        collections,
-        checkboxModels,
-        appInfo,
-      );*/
       _isInitialized = true;
     }
     super.didChangeDependencies();
