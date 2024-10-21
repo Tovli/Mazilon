@@ -18,35 +18,70 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: export secrets as env vars
+
+      - name: Export secrets as env vars
         uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
+
       - name: Write key store file for release signing
         run: |
-            echo $APPSIGNINGKEY | base64 --decode > ${{ env.KEYSTORE_PATH }}${{env.KEYSTORE_FILE }}
+          echo "$APPSIGNINGKEY" | base64 --decode > "${{ env.KEYSTORE_PATH }}${{ env.KEYSTORE_FILE }}"
+
       - name: Write firebase options file
         run: |
-            echo $FIREBASE_OPTIONS | base64 --decode > ${{ env.FIREBASE_OPTIONS_PATH }}
+          echo "$FIREBASE_OPTIONS" | base64 --decode > "${{ env.FIREBASE_OPTIONS_PATH }}"
+
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           distribution: "adopt"
           java-version: "17.x"
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.24.0"
           cache: true
+
+      - name: Get version from pubspec.yaml
+        id: get_version
+        run: |
+          VERSION_LINE=$(grep '^version: ' pubspec.yaml)
+          VERSION_STRING=${VERSION_LINE#version: }
+          echo "VERSION_STRING=$VERSION_STRING" >> $GITHUB_ENV
+
+      - name: Parse version components
+        run: |
+          VERSION_NO_BUILD="${VERSION_STRING%%+*}"
+          echo "VERSION_NO_BUILD=$VERSION_NO_BUILD" >> $GITHUB_ENV
+      - name: Get short commit hash
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
+
+      - name: Set build name and number
+        run: |
+          BUILD_NAME="${VERSION_NO_BUILD}+${COMMIT_HASH}"
+          BUILD_NUMBER="${GITHUB_RUN_NUMBER}"
+          echo "BUILD_NAME=$BUILD_NAME" >> $GITHUB_ENV
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
+
       - name: Install dependencies
         run: flutter pub get
+
       - name: Build App Bundle
-        run: flutter build appbundle --release
+        run: |
+          flutter build appbundle --release \
+            --build-name="${BUILD_NAME}" \
+            --build-number="${BUILD_NUMBER}"
+
       - name: Upload App Bundle
         uses: actions/upload-artifact@v3
         with:
           name: app-release
           path: ${{ env.AAB_PATH }}
+
       # - name: Build APK
       #   run: flutter build apk --release 
       # - name: Upload APK
