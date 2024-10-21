@@ -53,7 +53,7 @@ jobs:
 
       - name: Parse version components
         run: |
-          VERSION_NO_BUILD="${{ env.VERSION_STRING%%+* }}"
+          VERSION_NO_BUILD="${ env.VERSION_STRING%%+* }"
           echo "VERSION_NO_BUILD=$VERSION_NO_BUILD" >> $GITHUB_ENV
 
       - name: Get short commit hash
