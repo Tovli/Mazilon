@@ -17,9 +17,6 @@ jobs:
       AAB_PATH: build/app/outputs/bundle/release/app-release.aab
       
     steps:
-      - name: Create .env file
-        run: |
-          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: export secrets as env vars
