@@ -62,8 +62,8 @@ jobs:
 
       - name: Set build name and number
         run: |
-          BUILD_NAME="${{ env.VERSION_NO_BUILD }}+${{ env.COMMIT_HASH }}"
-          BUILD_NUMBER="${{ github.run_number }}"
+          BUILD_NAME="${VERSION_NO_BUILD}+${COMMIT_HASH}"
+          BUILD_NUMBER="${GITHUB_RUN_NUMBER}"
           echo "BUILD_NAME=$BUILD_NAME" >> $GITHUB_ENV
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
 
@@ -73,8 +73,8 @@ jobs:
       - name: Build App Bundle
         run: |
           flutter build appbundle --release \
-            --build-name="${{ env.BUILD_NAME }}" \
-            --build-number="${{ env.BUILD_NUMBER }}"
+            --build-name="${BUILD_NAME}" \
+            --build-number="${BUILD_NUMBER}"
 
       - name: Upload App Bundle
         uses: actions/upload-artifact@v3
