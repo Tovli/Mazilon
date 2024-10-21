@@ -251,8 +251,8 @@ class _MenuState extends State<Menu> {
                                                             TextDirection.rtl,
                                                         child: Text(appInfoProvider
                                                                     .extraMenuStrings[
-                                                                'feelGood'] ??
-                                                            'להרגיש טוב'),
+                                                                'About'] ??
+                                                            'אודות'),
                                                       ),
                                                       SizedBox(width: 20),
                                                       Icon(Icons.people),
