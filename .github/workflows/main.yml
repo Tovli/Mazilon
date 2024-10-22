@@ -15,7 +15,6 @@ jobs:
       KEYSTORE_FILE: Maztzilonkey.jks
       FIREBASE_OPTIONS_PATH: lib/util/Firebase/firebase_options.dart
       AAB_PATH: build/app/outputs/bundle/release/app-release.aab
-      
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
