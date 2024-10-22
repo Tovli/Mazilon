@@ -73,6 +73,9 @@ dependencies:
   googleapis_auth: ^1.6.0
   http: ^1.2.2
   get_it: ^7.7.0
+  sentry_flutter: ^8.9.0
+  device_preview: ^1.2.0
+  flutter_dotenv: ^5.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -98,6 +101,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - .env
     - assets/images/initialFormPage1.png
     - assets/images/initialFormPage3.png
     - assets/images/Logo.jpeg

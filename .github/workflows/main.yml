@@ -23,7 +23,12 @@ jobs:
         uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
-
+              
+      - name: Create .env file            
+        uses: SpicyPizza/create-envfile@v2.0.3
+        with:
+            envkey_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+            file_name: .env
       - name: Write key store file for release signing
         run: |
           echo "$APPSIGNINGKEY" | base64 --decode > "${{ env.KEYSTORE_PATH }}${{ env.KEYSTORE_FILE }}"
@@ -83,7 +88,7 @@ jobs:
           path: ${{ env.AAB_PATH }}
 
       # - name: Build APK
-      #   run: flutter build apk --release 
+      #   run: flutter build apk --release
       # - name: Upload APK
       #   uses: actions/upload-artifact@v3
       #   with:
