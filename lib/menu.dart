@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:mazilon/pages/about.dart';
 import 'package:mazilon/pages/FeelGood/feelGood.dart';
 import 'package:mazilon/pages/WellnessTools/wellnessTools.dart';
-
 import 'package:mazilon/pages/notifications/notification_page.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -294,7 +293,8 @@ class _MenuState extends State<Menu> {
                                                     setState(() {
                                                       currentScreen =
                                                           NotificationPage();
-                                                      current = 9;
+
+                                                      current = 10;
                                                     });
                                                     Navigator.of(context).pop();
                                                   },
