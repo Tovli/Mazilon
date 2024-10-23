@@ -428,17 +428,6 @@ class _HomeState extends State<Home> {
                 padding: const EdgeInsets.only(right: 10, left: 10),
                 child: Column(
                   children: [
-                    //TEMP --------------------------------------------------------
-                    //TOOD: all load functions were replaces with preload and variable homeTitles
-                    //TODO: need to delete load aux functions from each widget
-                    //TODO: not doing yet to not ruin main merge
-                    /*ReminderWidget(
-                      reminders: reminders,
-                      add: addReminder,
-                      reminderMainTitle: widget.appInfo.reminderMainTitle!,
-                      reminderSubTitle: widget.appInfo.reminderSubTitle!,
-                    ),*/
-
                     //this is the Personal Plan widget section
                     PersonalPlanWidget(
                         text: homeTitles,
@@ -446,15 +435,7 @@ class _HomeState extends State<Home> {
                     const SizedBox(
                       height: 20.0,
                     ),
-                    /* WarningSignsWidget(
-                        warnings: warnings,
-                        add: addWarning,
-                        warningMainTitle:
-                            widget.appInfo.warningHomePageTitles!['mainTitle']!,
-                        warningSubTitle: widget.appInfo.warningHomePageTitles![
-                            'secondaryTitle-' + gender]!),
-                    SizedBox(height: 20),*/
-                    //
+
                     //inspirational quote widget:
                     InspirationalQuote(
                         quotes: appInfoProvider.homePageInspirationalQuotes[
