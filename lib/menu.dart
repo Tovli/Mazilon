@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:mazilon/pages/about.dart';
 import 'package:mazilon/pages/FeelGood/feelGood.dart';
 import 'package:mazilon/pages/WellnessTools/wellnessTools.dart';
+<<<<<<< HEAD
 
+=======
+>>>>>>> 817b9fb (version 0.2)
 import 'package:mazilon/pages/notifications/notification_page.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -89,6 +92,8 @@ class _MenuState extends State<Menu> {
         //we dont want current screen to change here
       } else if (index == 6) {
         currentScreen = About();
+      } else if (index == 9) {
+        currentScreen = NotificationPage();
       } else if (index == 7) {
         //currentScreen =
         //    WellnessTools( videoData: appInfoProvider.wellnessVideos,setBool: setFullScreen, isFullScreen: isFullScreen);
@@ -104,8 +109,8 @@ class _MenuState extends State<Menu> {
       }*/
       else if (index == 9) {
         currentScreen = NotificationPage(
-          title: 'הוספת תזכורת', // Pass the title here
-        );
+            // Pass the title here
+            );
       }
     });
   }
@@ -113,6 +118,7 @@ class _MenuState extends State<Menu> {
   @override
   void initState() {
     loadFirstTime();
+
     super.initState();
     //this is the initial page
     currentScreen = Home(
@@ -281,6 +287,30 @@ class _MenuState extends State<Menu> {
                                                         textDirection:
                                                             TextDirection.rtl,
                                                         child: Text(
+                                                            'notifications'),
+                                                      ),
+                                                      SizedBox(width: 20),
+                                                      Icon(Icons.people),
+                                                    ],
+                                                  ),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      currentScreen =
+                                                          NotificationPage();
+                                                      current = 9;
+                                                    });
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Directionality(
+                                                        textDirection:
+                                                            TextDirection.rtl,
+                                                        child: Text(
                                                             'הוספת תזכורת'),
                                                       ),
                                                       SizedBox(width: 20),
@@ -290,10 +320,7 @@ class _MenuState extends State<Menu> {
                                                   onPressed: () {
                                                     setState(() {
                                                       currentScreen =
-                                                          NotificationPage(
-                                                        title:
-                                                            'הוספת תזכורת', // Pass the title here
-                                                      );
+                                                          NotificationPage();
                                                       current = 10;
                                                     });
                                                     Navigator.of(context).pop();
@@ -358,45 +385,6 @@ class _MenuState extends State<Menu> {
                                                     Navigator.of(context).pop();
                                                   },
                                                 ),
-                                                //REMOVE COMMENT TO ENABLE SYNC DEVICES ON FUTURE RELEASES
-
-                                                /* TextButton(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      Directionality(
-                                                        textDirection:
-                                                            TextDirection.rtl,
-                                                        child: Text(appInfoProvider
-                                                                    .extraMenuStrings[
-                                                                'Sync'] ??
-                                                            'סנכרון מכשירים'),
-                                                      ),
-                                                      const SizedBox(width: 20),
-                                                      const Icon(Icons.sync),
-                                                    ],
-                                                  ),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      currentScreen =
-                                                          syncDevicesRealTime(
-                                                        collections:
-                                                            widget.collections,
-                                                        checkboxModels: widget
-                                                            .checkboxModels,
-                                                        collectionNames: widget
-                                                            .collectionNames,
-                                                        gender: userInformation
-                                                            .gender,
-                                                        phonePageData: widget
-                                                            .phonePageData,
-                                                      );
-                                                      current = 9;
-                                                    });
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),*/
                                               ],
                                             ),
                                           ),
