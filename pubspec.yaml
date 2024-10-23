@@ -69,7 +69,7 @@ dependencies:
   uuid: ^4.4.0
   qr_flutter: ^4.0.0
   mobile_scanner: ^5.1.1
-  qr_code_scanner: ^1.0.0
+
   firebase_database: ^11.0.3
   file_picker: ^8.0.6
   googleapis: ^13.2.0
