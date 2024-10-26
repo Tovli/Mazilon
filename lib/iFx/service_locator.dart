@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
 import 'package:mazilon/pages/WellnessTools/VideoPlayerPageFactory.dart';
-import 'package:mazilon/util/PDF/PDF_service.dart';
+import 'package:mazilon/file_service.dart';
 import 'package:mazilon/util/sentry_service.dart';
 
 // Initialize GetIt instance
@@ -13,6 +13,6 @@ void setupLocator() {
       () => VideoPlayerPageFactoryImpl());
   getIt.registerLazySingleton<ImagePickerService>(
       () => ImagePickerServiceImpl());
-  getIt.registerLazySingleton<PDFService>(() => PDFServiceImpl());
+  getIt.registerLazySingleton<FileService>(() => FileServiceImpl());
   getIt.registerLazySingleton<SentryService>(() => SentryServiceImpl());
 }

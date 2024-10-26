@@ -1,0 +1,7 @@
+enum ShareFileType {
+  PDF, //ONLY PDF IS USED FOR NOW
+  DOCX,
+  TXT,
+  HTML,
+  //ADD TYPES AS NEEDED, THOSE ARE JUST EXAMPLES
+}

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get_it/get_it.dart';
-import 'package:mazilon/util/PDF/PDF_service.dart';
+import 'package:mazilon/global_enums.dart';
+import 'package:mazilon/file_service.dart';
+
 import 'package:mazilon/util/SignIn/popup_toast.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/styles.dart';
@@ -26,7 +28,7 @@ class ShareForm extends StatefulWidget {
 }
 
 class _ShareFormState extends State<ShareForm> {
-  late PDFService pdfService;
+  late FileService fileService;
   void setHasFilled() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('hasFilled', true);
@@ -35,7 +37,7 @@ class _ShareFormState extends State<ShareForm> {
   @override
   void initState() {
     super.initState();
-    pdfService = GetIt.instance<PDFService>();
+    fileService = GetIt.instance<FileService>();
     setHasFilled();
   }
 
@@ -103,33 +105,34 @@ class _ShareFormState extends State<ShareForm> {
                         //share personal plan PDF button:
                         IconButton(
                           onPressed: () async {
-                            await pdfService.share(
-                              appInfoProvider.shareMessages['emergency']!,
-                              [
-                                appInfoProvider
-                                    .formDifficultEventsTitles['header$gender'],
-                                appInfoProvider
-                                    .formMakeSaferTitles['header$gender'],
-                                appInfoProvider
-                                    .formFeelBetterTitles['header$gender'],
-                                appInfoProvider
-                                    .formDistractionsTitles['header$gender'],
-                                appInfoProvider.formPhonePage['header$gender'],
-                              ],
-                              [
-                                appInfoProvider.formDifficultEventsTitles[
-                                    'subTitle$gender'],
-                                appInfoProvider
-                                    .formMakeSaferTitles['subTitle$gender'],
-                                appInfoProvider
-                                    .formFeelBetterTitles['subTitle$gender'],
-                                appInfoProvider
-                                    .formDistractionsTitles['subTitle$gender'],
-                                appInfoProvider
-                                    .formPhonePage['subTitle$gender'],
-                              ],
-                              appInfoProvider.sharePDFtexts,
-                            );
+                            await fileService.share(
+                                appInfoProvider.shareMessages['emergency']!,
+                                [
+                                  appInfoProvider.formDifficultEventsTitles[
+                                      'header$gender'],
+                                  appInfoProvider
+                                      .formMakeSaferTitles['header$gender'],
+                                  appInfoProvider
+                                      .formFeelBetterTitles['header$gender'],
+                                  appInfoProvider
+                                      .formDistractionsTitles['header$gender'],
+                                  appInfoProvider
+                                      .formPhonePage['header$gender'],
+                                ],
+                                [
+                                  appInfoProvider.formDifficultEventsTitles[
+                                      'subTitle$gender'],
+                                  appInfoProvider
+                                      .formMakeSaferTitles['subTitle$gender'],
+                                  appInfoProvider
+                                      .formFeelBetterTitles['subTitle$gender'],
+                                  appInfoProvider.formDistractionsTitles[
+                                      'subTitle$gender'],
+                                  appInfoProvider
+                                      .formPhonePage['subTitle$gender'],
+                                ],
+                                appInfoProvider.sharePDFtexts,
+                                ShareFileType.PDF);
                           },
                           style: TextButton.styleFrom(
                             backgroundColor: Colors
@@ -149,32 +152,28 @@ class _ShareFormState extends State<ShareForm> {
                         //download personal plan PDF button:
                         IconButton(
                           onPressed: () async {
-                            var result = await pdfService.download(
-                              [
-                                appInfoProvider
-                                    .formDifficultEventsTitles['header$gender'],
-                                appInfoProvider
-                                    .formMakeSaferTitles['header$gender'],
-                                appInfoProvider
-                                    .formFeelBetterTitles['header$gender'],
-                                appInfoProvider
-                                    .formDistractionsTitles['header$gender'],
-                                appInfoProvider.formPhonePage['header$gender'],
-                              ],
-                              [
-                                appInfoProvider.formDifficultEventsTitles[
-                                    'subTitle$gender'],
-                                appInfoProvider
-                                    .formMakeSaferTitles['subTitle$gender'],
-                                appInfoProvider
-                                    .formFeelBetterTitles['subTitle$gender'],
-                                appInfoProvider
-                                    .formDistractionsTitles['subTitle$gender'],
-                                appInfoProvider
-                                    .formPhonePage['subTitle$gender'],
-                              ],
-                              appInfoProvider.sharePDFtexts,
-                            );
+                            var result = await fileService.download([
+                              appInfoProvider
+                                  .formDifficultEventsTitles['header$gender'],
+                              appInfoProvider
+                                  .formMakeSaferTitles['header$gender'],
+                              appInfoProvider
+                                  .formFeelBetterTitles['header$gender'],
+                              appInfoProvider
+                                  .formDistractionsTitles['header$gender'],
+                              appInfoProvider.formPhonePage['header$gender'],
+                            ], [
+                              appInfoProvider
+                                  .formDifficultEventsTitles['subTitle$gender'],
+                              appInfoProvider
+                                  .formMakeSaferTitles['subTitle$gender'],
+                              appInfoProvider
+                                  .formFeelBetterTitles['subTitle$gender'],
+                              appInfoProvider
+                                  .formDistractionsTitles['subTitle$gender'],
+                              appInfoProvider.formPhonePage['subTitle$gender'],
+                            ], appInfoProvider.sharePDFtexts,
+                                ShareFileType.PDF);
                             if (result == null) {
                               // Show him a message
                               showToast(message: 'ההורדה נכשלה');

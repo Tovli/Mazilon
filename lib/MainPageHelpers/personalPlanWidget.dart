@@ -2,7 +2,8 @@ import 'package:fluttericon/elusive_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mazilon/util/PDF/PDF_service.dart';
+import 'package:mazilon/global_enums.dart';
+import 'package:mazilon/file_service.dart';
 import 'package:mazilon/util/SignIn/popup_toast.dart';
 
 import 'package:mazilon/util/personalPlanItem.dart';
@@ -27,7 +28,7 @@ class PersonalPlanWidget extends StatefulWidget {
 }
 
 class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
-  late PDFService pdfService;
+  late FileService fileService;
   late List<String> randomItems = ['1', '2'];
   List<String> feelBetter = [];
   void loadFeelBetter() {
@@ -61,7 +62,7 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
 
   @override
   void initState() {
-    pdfService = GetIt.instance<PDFService>();
+    fileService = GetIt.instance<FileService>();
     loadFeelBetter();
     super.initState();
   }
@@ -108,50 +109,48 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
                 icons: [
                   // the share and download buttons
                   myTextButton(() async {
-                    await pdfService.share(
-                      appInfoProvider.shareMessages['emergency']!,
-                      [
-                        appInfoProvider
-                            .formDifficultEventsTitles['header$gender'],
-                        appInfoProvider.formMakeSaferTitles['header$gender'],
-                        appInfoProvider.formFeelBetterTitles['header$gender'],
-                        appInfoProvider.formDistractionsTitles['header$gender'],
-                        appInfoProvider.formPhonePage['header$gender'],
-                      ],
-                      [
-                        appInfoProvider
-                            .formDifficultEventsTitles['subTitle$gender'],
-                        appInfoProvider.formMakeSaferTitles['subTitle$gender'],
-                        appInfoProvider.formFeelBetterTitles['subTitle$gender'],
-                        appInfoProvider
-                            .formDistractionsTitles['subTitle$gender'],
-                        appInfoProvider.formPhonePage['subTitle$gender'],
-                      ],
-                      appInfoProvider.sharePDFtexts,
-                    );
+                    await fileService.share(
+                        appInfoProvider.shareMessages['emergency']!,
+                        [
+                          appInfoProvider
+                              .formDifficultEventsTitles['header$gender'],
+                          appInfoProvider.formMakeSaferTitles['header$gender'],
+                          appInfoProvider.formFeelBetterTitles['header$gender'],
+                          appInfoProvider
+                              .formDistractionsTitles['header$gender'],
+                          appInfoProvider.formPhonePage['header$gender'],
+                        ],
+                        [
+                          appInfoProvider
+                              .formDifficultEventsTitles['subTitle$gender'],
+                          appInfoProvider
+                              .formMakeSaferTitles['subTitle$gender'],
+                          appInfoProvider
+                              .formFeelBetterTitles['subTitle$gender'],
+                          appInfoProvider
+                              .formDistractionsTitles['subTitle$gender'],
+                          appInfoProvider.formPhonePage['subTitle$gender'],
+                        ],
+                        appInfoProvider.sharePDFtexts,
+                        ShareFileType.PDF);
                   }, Elusive.share, Colors.black),
                   myTextButton(() async {
                     // the function to download the pdf file of the personal plan
-                    var result = await pdfService.download(
-                      [
-                        appInfoProvider
-                            .formDifficultEventsTitles['header$gender'],
-                        appInfoProvider.formMakeSaferTitles['header$gender'],
-                        appInfoProvider.formFeelBetterTitles['header$gender'],
-                        appInfoProvider.formDistractionsTitles['header$gender'],
-                        appInfoProvider.formPhonePage['header$gender'],
-                      ],
-                      [
-                        appInfoProvider
-                            .formDifficultEventsTitles['subTitle$gender'],
-                        appInfoProvider.formMakeSaferTitles['subTitle$gender'],
-                        appInfoProvider.formFeelBetterTitles['subTitle$gender'],
-                        appInfoProvider
-                            .formDistractionsTitles['subTitle$gender'],
-                        appInfoProvider.formPhonePage['subTitle$gender'],
-                      ],
-                      appInfoProvider.sharePDFtexts,
-                    );
+                    var result = await fileService.download([
+                      appInfoProvider
+                          .formDifficultEventsTitles['header$gender'],
+                      appInfoProvider.formMakeSaferTitles['header$gender'],
+                      appInfoProvider.formFeelBetterTitles['header$gender'],
+                      appInfoProvider.formDistractionsTitles['header$gender'],
+                      appInfoProvider.formPhonePage['header$gender'],
+                    ], [
+                      appInfoProvider
+                          .formDifficultEventsTitles['subTitle$gender'],
+                      appInfoProvider.formMakeSaferTitles['subTitle$gender'],
+                      appInfoProvider.formFeelBetterTitles['subTitle$gender'],
+                      appInfoProvider.formDistractionsTitles['subTitle$gender'],
+                      appInfoProvider.formPhonePage['subTitle$gender'],
+                    ], appInfoProvider.sharePDFtexts, ShareFileType.PDF);
                     if (result == null) {
                       // Show him a message
                       showToast(message: 'ההורדה נכשלה');

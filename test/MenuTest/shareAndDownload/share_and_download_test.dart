@@ -4,17 +4,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fluttericon/elusive_icons.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/MainPageHelpers/personalPlanWidget.dart';
-import 'package:mazilon/pages/FeelGood/add_Image_item.dart';
-import 'package:mazilon/pages/FeelGood/image_display_item.dart';
+
 import 'package:mazilon/util/HomePage/sectionBarHome.dart';
 import 'package:mazilon/iFx/service_locator.dart';
 
-import 'package:mazilon/pages/FeelGood/feelGood.dart';
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
 import 'package:mazilon/pages/WellnessTools/VideoPlayerPageFactory.dart';
 import 'package:mazilon/pages/home.dart';
 
-import 'package:mazilon/util/PDF/PDF_service.dart';
+import 'package:mazilon/file_service.dart';
 
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
@@ -33,7 +31,7 @@ void dummyshare() {
 }
 
 @GenerateNiceMocks([
-  MockSpec<PDFService>(),
+  MockSpec<FileService>(),
   MockSpec<UserInformation>(),
   MockSpec<AppInformation>(),
   MockSpec<SharedPreferences>(),
@@ -57,17 +55,17 @@ void main() {
 
       // Reset getIt before each test
       locator.reset();
-      final mockPDFServiceImpl = MockPDFService();
-      getIt.registerLazySingleton<PDFService>(() => mockPDFServiceImpl);
+      final mockFileServiceImpl = MockFileService();
+      getIt.registerLazySingleton<FileService>(() => mockFileServiceImpl);
       final mockFactory = MockVideoPlayerPageFactory();
       getIt.registerSingleton<VideoPlayerPageFactory>(mockFactory);
       final imageFactory = MockImagePickerService();
       getIt.registerLazySingleton<ImagePickerService>(() => imageFactory);
-      when(mockPDFServiceImpl.share(any, any, any, any))
+      when(mockFileServiceImpl.share(any, any, any, any, any))
           .thenAnswer(((Invocation invocation) async {
         counterShare = counterShare + 1;
       }));
-      when(mockPDFServiceImpl.download(any, any, any))
+      when(mockFileServiceImpl.download(any, any, any, any))
           .thenAnswer(((Invocation invocation) async {
         counterDownload = counterDownload + 1;
       }));
