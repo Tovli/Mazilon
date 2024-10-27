@@ -24,7 +24,7 @@ if (keystorePropertiesFile.exists()) {
     signingKeyPassword = keystoreProperties['keyPassword']
     signingKeyFile = keystoreProperties['storeFile']
     signingKeyStorePassword = keystoreProperties['storePassword']
-   
+
 }else {
     signingKeyPassword = System.getenv("APPSIGNINGKEYPASSWORD")
     signingKeyFile = System.getenv("KEYSTORE_FILE")
@@ -34,7 +34,7 @@ if (keystorePropertiesFile.exists()) {
 if (signingKeyFile.isEmpty() || signingKeyPassword.isEmpty() || signingKeyStorePassword.isEmpty()) {
     throw new Exception("Keystore credentials are not properly set in either key.properties or environment variables.")
 }
-    
+
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
@@ -49,17 +49,16 @@ if (flutterVersionName == null) {
 android {
     namespace "com.example.mezilon"
     ndkVersion flutter.ndkVersion
-    compileSdkVersion 34
-    
+    compileSdkVersion flutter.compileSdkVersion
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_17
     }
-
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -69,10 +68,10 @@ android {
         applicationId "com.matzilon.mezilon"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 23
-        targetSdkVersion 34
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        minSdk = 23 // 23 is the minimum for firebase_auth
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
         multiDexEnabled true
     }
     signingConfigs {
@@ -101,5 +100,4 @@ flutter {
 
 dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" 
 }
