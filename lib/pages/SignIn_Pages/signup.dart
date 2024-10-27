@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:mazilon/pages/SignIn_Pages/login.dart';
 import 'package:mazilon/util/appInformation.dart';
-import 'package:mazilon/util/sentry_service.dart';
+import 'package:mazilon/util/logger_service.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Firebase/firebase_functions.dart';
 import 'package:mazilon/util/Form/checkbox_model.dart';

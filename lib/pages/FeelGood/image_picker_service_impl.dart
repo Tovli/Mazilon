@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mazilon/util/sentry_service.dart';
+import 'package:mazilon/util/logger_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';

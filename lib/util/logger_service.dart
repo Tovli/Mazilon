@@ -34,6 +34,12 @@ class SentryServiceImpl implements LoggerService {
   @override
   Future<void> captureException(dynamic exception,
       {StackTrace? stackTrace}) async {
+    if (!Sentry.isEnabled) {
+      print('Warning: Sentry is not initialized.');
+      print("an error as occured");
+      return;
+    }
+
     await Sentry.captureException(
       exception,
       stackTrace: stackTrace,
