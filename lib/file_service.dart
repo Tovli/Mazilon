@@ -3,8 +3,11 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/PDF/create_pdf.dart';
+import 'package:mazilon/util/sentry_service.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -154,8 +157,12 @@ class FileServiceImpl implements FileService {
       if (file["file"] == null || file["format"] == null) {
         return;
       }
-    } catch (e) {
-      print('Error: $e');
+    } catch (error, stackTrace) {
+      LoggerService loggerService = GetIt.instance<LoggerService>();
+      await loggerService.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -170,8 +177,12 @@ class FileServiceImpl implements FileService {
       );
       //If the user cancels the download
       return outputFile;
-    } catch (e) {
-      print('Error: $e');
+    } catch (error, stackTrace) {
+      LoggerService loggerService = GetIt.instance<LoggerService>();
+      await loggerService.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       return null;
     }
   }

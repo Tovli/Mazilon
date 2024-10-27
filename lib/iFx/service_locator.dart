@@ -14,5 +14,5 @@ void setupLocator() {
   getIt.registerLazySingleton<ImagePickerService>(
       () => ImagePickerServiceImpl());
   getIt.registerLazySingleton<FileService>(() => FileServiceImpl());
-  getIt.registerLazySingleton<SentryService>(() => SentryServiceImpl());
+  getIt.registerLazySingleton<LoggerService>(() => SentryServiceImpl());
 }

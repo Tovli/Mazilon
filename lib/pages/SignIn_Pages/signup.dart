@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:mazilon/pages/SignIn_Pages/login.dart';
 import 'package:mazilon/util/appInformation.dart';
+import 'package:mazilon/util/sentry_service.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Firebase/firebase_functions.dart';
 import 'package:mazilon/util/Form/checkbox_model.dart';
@@ -11,6 +13,7 @@ import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/util/SignIn/form_container.dart';
 import 'package:mazilon/util/SignIn/popup_toast.dart';
 import 'package:mazilon/util/SignIn/sign_callback.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:mazilon/util/userInformation.dart';
@@ -20,17 +23,18 @@ import 'package:provider/provider.dart';
 class SignUpPage extends StatefulWidget {
   final List<List<String>> collections; // Data collections for the form
   final List<String> collectionNames; // Names of the data collections
-  final Map<String, CheckboxModel> checkboxModels; // Checkbox models used in the form
+  final Map<String, CheckboxModel>
+      checkboxModels; // Checkbox models used in the form
   PhonePageData phonePageData; // Data related to phone page
   FirebaseApp dbUsersApp; // FirebaseApp instance
 
   SignUpPage(
       {super.key,
-        required this.collections,
-        required this.collectionNames,
-        required this.checkboxModels,
-        required this.dbUsersApp,
-        required this.phonePageData});
+      required this.collections,
+      required this.collectionNames,
+      required this.checkboxModels,
+      required this.dbUsersApp,
+      required this.phonePageData});
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
@@ -88,8 +92,12 @@ class _SignUpPageState extends State<SignUpPage> {
         showToast(message: "Some error happened");
         return false;
       }
-    } catch (error) {
-      print("Error during sign up: $error");
+    } catch (error, stackTrace) {
+      LoggerService loggerService = GetIt.instance<LoggerService>();
+      await loggerService.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
 
       setState(() {
         isSigningUp = false;
@@ -97,7 +105,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
       showToast(
           message:
-          "Error during sign up. Please check your input and try again.");
+              "Error during sign up. Please check your input and try again.");
       return false;
     }
   }
@@ -112,7 +120,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     final userInfoProvider =
-    Provider.of<UserInformation>(context, listen: true);
+        Provider.of<UserInformation>(context, listen: true);
     final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
 
     return PopScope(
@@ -132,7 +140,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 dbUsersApp: widget.dbUsersApp,
               ),
             ),
-                (route) => false,
+            (route) => false,
           );
         }
       },
@@ -151,7 +159,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   textDirection: TextDirection.rtl,
                   child: myAutoSizedText(
                       appInfoProvider.signUpLoginPage[
-                      'SignUpTitle-' + userInfoProvider.gender] ??
+                              'SignUpTitle-' + userInfoProvider.gender] ??
                           'הרשמה',
                       TextStyle(
                         fontSize: 28.sp,
@@ -204,22 +212,22 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     child: isSigningUp
                         ? const CircularProgressIndicator(
-                      color: Colors.white,
-                    )
+                            color: Colors.white,
+                          )
                         : Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: myAutoSizedText(
-                          appInfoProvider.signUpLoginPage[
-                          'SignUpButton-' +
-                              userInfoProvider.gender] ??
-                              'הרשמה',
-                          TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.sp),
-                          null,
-                          40),
-                    ),
+                            textDirection: TextDirection.rtl,
+                            child: myAutoSizedText(
+                                appInfoProvider.signUpLoginPage[
+                                        'SignUpButton-' +
+                                            userInfoProvider.gender] ??
+                                    'הרשמה',
+                                TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.sp),
+                                null,
+                                40),
+                          ),
                   ),
                 ),
                 const SizedBox(
@@ -232,7 +240,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   children: [
                     myAutoSizedText(
                         appInfoProvider.signUpLoginPage[
-                        'SignUpExists-' + userInfoProvider.gender] ??
+                                'SignUpExists-' + userInfoProvider.gender] ??
                             "כבר יש לך חשבון",
                         TextStyle(
                             fontWeight: FontWeight.normal, fontSize: 12.sp),
@@ -254,14 +262,14 @@ class _SignUpPageState extends State<SignUpPage> {
                               dbUsersApp: widget.dbUsersApp,
                             ),
                           ),
-                              (route) => false,
+                          (route) => false,
                         );
                       },
                       child: Directionality(
                         textDirection: TextDirection.rtl,
                         child: myAutoSizedText(
                             appInfoProvider.signUpLoginPage['SignUpToLogin-' +
-                                userInfoProvider.gender] ??
+                                    userInfoProvider.gender] ??
                                 'להתחברות',
                             TextStyle(
                                 color: Colors.blue,

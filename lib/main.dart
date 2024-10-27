@@ -52,7 +52,7 @@ Future<FirebaseApp> initializeApp() async {
 
 void main() async {
   FirebaseApp dbUsersApp = await initializeApp();
-  SentryService sentryService = GetIt.instance<SentryService>();
+  LoggerService sentryService = GetIt.instance<LoggerService>();
   await sentryService.initializeSentry(
     MultiProvider(
       providers: [

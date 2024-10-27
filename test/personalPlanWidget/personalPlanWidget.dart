@@ -1,11 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:fluttericon/elusive_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/file_service.dart';
+import 'package:mazilon/global_enums.dart';
 import 'personalPlan.dart';
 import 'sectionBarHome.dart';
-import 'package:mazilon/util/PDF/save_pdf_web.dart'
-    if (dart.library.io) 'package:mazilon/util/PDF/save_pdf_io.dart';
-import 'package:mazilon/util/PDF/shareAndDownload.dart';
+
 import 'dart:math';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -20,6 +21,7 @@ class PersonalPlanWidget extends StatefulWidget {
 }
 
 class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
+  late FileService fileService;
   late List<String> randomItems = ['1', '2'];
 
   List<String> feelBetter = [];
@@ -54,6 +56,7 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
 
   @override
   void initState() {
+    fileService = GetIt.instance<FileService>();
     loadFeelBetter();
     super.initState();
   }
@@ -91,24 +94,24 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
                     "test2",
                   ),
                   onPressed: () async {
-                    await generateAndSharePdf(
-                      "test3",
-                      [
-                        "test4",
-                        "test5",
-                        "test6",
-                        "test7",
-                        "test8",
-                      ],
-                      [
-                        "test4",
-                        "test5",
-                        "test6",
-                        "test7",
-                        "test8",
-                      ],
-                      {},
-                    );
+                    await fileService.share(
+                        "test3",
+                        [
+                          "test4",
+                          "test5",
+                          "test6",
+                          "test7",
+                          "test8",
+                        ],
+                        [
+                          "test4",
+                          "test5",
+                          "test6",
+                          "test7",
+                          "test8",
+                        ],
+                        {},
+                        ShareFileType.PDF);
                     Navigator.of(context).pop();
                   },
                 ),
@@ -120,24 +123,24 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
                   key: Key("send2"),
                   child: Text("test9"),
                   onPressed: () async {
-                    await generateAndSharePdf(
-                      "test10",
-                      [
+                    await fileService.share(
                         "test10",
-                        "test11",
-                        "test12",
-                        "test13",
-                        "test14",
-                      ],
-                      [
-                        "test10",
-                        "test11",
-                        "test12",
-                        "test13",
-                        "test14",
-                      ],
-                      {},
-                    );
+                        [
+                          "test10",
+                          "test11",
+                          "test12",
+                          "test13",
+                          "test14",
+                        ],
+                        [
+                          "test10",
+                          "test11",
+                          "test12",
+                          "test13",
+                          "test14",
+                        ],
+                        {},
+                        ShareFileType.PDF);
 
                     Navigator.of(context).pop();
                   },
@@ -177,23 +180,19 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
                     key: Key("download"),
                     child: Icon(Icons.download),
                     onPressed: () async {
-                      downloadPDF(
-                        [
-                          "male",
-                          "male",
-                          "male",
-                          "male",
-                          "male",
-                        ],
-                        [
-                          "male",
-                          "male",
-                          "male",
-                          "male",
-                          "male",
-                        ],
-                        {},
-                      );
+                      fileService.download([
+                        "male",
+                        "male",
+                        "male",
+                        "male",
+                        "male",
+                      ], [
+                        "male",
+                        "male",
+                        "male",
+                        "male",
+                        "male",
+                      ], {}, ShareFileType.PDF);
 //TODO: think of a way to do the other option to chose where to download the file to (like the share option)
                       showDialog(
                         context: context,
