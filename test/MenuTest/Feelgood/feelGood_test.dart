@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/pages/FeelGood/add_Image_item.dart';
+import 'package:mazilon/pages/FeelGood/feelGood.dart';
 import 'package:mazilon/pages/FeelGood/image_display_item.dart';
 
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
@@ -10,9 +11,8 @@ import 'package:mazilon/iFx/service_locator.dart';
 
 import 'package:mazilon/pages/WellnessTools/VideoPlayerPageFactory.dart';
 
-import 'package:mazilon/pages/FeelGood/feelGood.dart';
 import 'package:mazilon/pages/home.dart';
-
+import 'package:mazilon/file_service.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mockito/annotations.dart';
@@ -27,6 +27,7 @@ import 'FeelGood_test.mocks.dart';
 
 @GenerateNiceMocks([
   MockSpec<VideoPlayerPageFactory>(),
+  MockSpec<FileService>(),
   MockSpec<ImagePickerService>(),
   MockSpec<SharedPreferences>(),
   MockSpec<UserInformation>(),
@@ -47,7 +48,8 @@ void main() {
 
       // Reset getIt before each test
       locator.reset();
-
+      final mockFileServiceImpl = MockFileService();
+      getIt.registerLazySingleton<FileService>(() => mockFileServiceImpl);
       final mockFactory = MockVideoPlayerPageFactory();
       getIt.registerSingleton<VideoPlayerPageFactory>(mockFactory);
       final imageFactory = MockImagePickerService();
@@ -122,7 +124,7 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 1));
       await tester.tap(find.text('להרגיש טוב'));
       await tester.pumpAndSettle(const Duration(seconds: 1));
-
+      expect(find.byKey(const Key("addImgButtonText")), findsOneWidget);
       await tester.tap(find.byKey(const Key("addImgButtonText")));
       await tester.pumpAndSettle(const Duration(seconds: 1));
       expect(find.byKey(const Key("cameraButtonText")), findsOneWidget);

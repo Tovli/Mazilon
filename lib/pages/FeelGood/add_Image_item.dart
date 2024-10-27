@@ -28,10 +28,10 @@ class _ImageAddItemState extends State<ImageAddItem> {
       strokeWidth: 2,
       child: Center(
         child: TextButton(
+          key: Key('addImgButtonText'),
           child: Directionality(
             textDirection: TextDirection.rtl,
             child: Text(
-              key: Key('addImgButtonText'),
               appInfoProvider.feelGoodPageTitles['addImgButtonText'] ??
                   'הוספת תמונה',
               style: const TextStyle(

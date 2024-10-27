@@ -17,7 +17,7 @@ Future<void> savePdf(Uint8List pdfData) async {
     //If the user cancels the download
     if (outputFile == null) {
       // Show him a message
-      showToast(message: 'ההורדה בוטלה');
+      showToast(message: 'ההורדה נכשלה');
       return;
     }
     // Show a toast message to the user

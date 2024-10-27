@@ -1,15 +1,16 @@
 import 'package:fluttericon/elusive_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
+import 'package:mazilon/file_service.dart';
+import 'package:mazilon/util/SignIn/popup_toast.dart';
 
 import 'package:mazilon/util/personalPlanItem.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/HomePage/sectionBarHome.dart';
-import 'package:mazilon/util/PDF/save_pdf_web.dart'
-    if (dart.library.io) 'package:mazilon/util/PDF/save_pdf_io.dart';
-import 'package:mazilon/util/PDF/shareAndDownload.dart';
+
 import 'dart:math';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,7 @@ class PersonalPlanWidget extends StatefulWidget {
 }
 
 class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
+  late FileService fileService;
   late List<String> randomItems = ['1', '2'];
   List<String> feelBetter = [];
   void loadFeelBetter() {
@@ -60,165 +62,9 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
 
   @override
   void initState() {
+    fileService = GetIt.instance<FileService>();
     loadFeelBetter();
     super.initState();
-  }
-
-  // the share function, that shows the share dialog
-  void share(appInfoProvider, gender) async {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Container(
-              width: 300,
-              height: 50,
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: myAutoSizedText(
-                    appInfoProvider.formSharePageTitles[
-                        'shareTitle$gender'], // the title of the share dialog
-                    TextStyle(
-                      fontSize: 14.sp, // the font size of the title
-                      fontWeight: FontWeight.normal,
-                    ),
-                    TextAlign.right,
-                    26),
-              ),
-            ),
-            // the buttons of the share dialog to whatsapp (routine and emergency) ,
-            // and the share button , and the cancel button
-            actions: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  // the routine button to share the routine message on whatsapp
-                  Container(
-                    width: 100.w,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        String text = appInfoProvider.shareMessages['regular']!;
-                        Uri whatsappUrl =
-                            Uri.parse("https://wa.me/?text=$text");
-                        if (await canLaunchUrl(whatsappUrl)) {
-                          await launchUrl(whatsappUrl);
-                        } else {
-                          throw 'Could not launch $whatsappUrl';
-                        }
-                      },
-                      // the text of the routine button
-                      child: Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: myAutoSizedText(
-                            appInfoProvider
-                                .formSharePageTitles['routineSendButtonText']!,
-                            TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.sp // the font size of the text
-                                ),
-                            null,
-                            35),
-                      ),
-                    ),
-                  ),
-                  // the emergency button to share the emergency message on whatsapp
-                  Container(
-                    width: 100.w,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        String text = appInfoProvider.shareMessages[
-                            'emergency']!; // Your message for the routine button
-                        Uri whatsappUrl =
-                            Uri.parse("https://wa.me/?text=$text");
-                        if (await canLaunchUrl(whatsappUrl)) {
-                          await launchUrl(whatsappUrl);
-                        } else {
-                          throw 'Could not launch $whatsappUrl';
-                        }
-                      },
-                      // the text of the emergency button
-                      child: Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: myAutoSizedText(
-                            appInfoProvider.formSharePageTitles[
-                                'emergencySendButtonText']!,
-                            TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.sp // the font size of the text
-                                ),
-                            null,
-                            35),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              //gap between the routine, emergency buttons and the share and cancel buttons
-              SizedBox(height: 35),
-              // the share button , to share the pdf file of the personal plan
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(
-                    width: 70.w,
-                    height: 50,
-                    child: IconButton(
-                      icon: const Icon(Icons.share), // the share icon
-                      onPressed: () async {
-                        // the function to generate and share the pdf file of the personal plan
-                        await generateAndSharePdf(
-                          appInfoProvider.shareMessages['regular']!,
-                          [
-                            appInfoProvider
-                                .formDifficultEventsTitles['header$gender'],
-                            appInfoProvider
-                                .formMakeSaferTitles['header$gender'],
-                            appInfoProvider
-                                .formFeelBetterTitles['header$gender'],
-                            appInfoProvider
-                                .formDistractionsTitles['header$gender'],
-                            appInfoProvider.formPhonePage['header$gender'],
-                          ],
-                          [
-                            appInfoProvider
-                                .formDifficultEventsTitles['subTitle$gender'],
-                            appInfoProvider
-                                .formMakeSaferTitles['subTitle$gender'],
-                            appInfoProvider
-                                .formFeelBetterTitles['subTitle$gender'],
-                            appInfoProvider
-                                .formDistractionsTitles['subTitle$gender'],
-                            appInfoProvider.formPhonePage['subTitle$gender'],
-                          ],
-                          appInfoProvider.sharePDFtexts,
-                        );
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
-                  // the cancel button to close the share dialog
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: const Text(
-                        "ביטול",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red // the color of the text
-                            ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          );
-        });
   }
 
 // the build function of the personal plan widget
@@ -250,8 +96,7 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
                       textDirection: TextDirection.rtl,
                       child: myAutoSizedText(
                           appInfoProvider.personalPlanMainTitle[
-                              'PersonalPlanMainTitle-' +
-                                  userInfoProvider.gender],
+                              'PersonalPlanMainTitle-${userInfoProvider.gender}'],
                           TextStyle(
                             fontSize: 24.sp, // the font size of the title
                             fontWeight: FontWeight.bold,
@@ -263,65 +108,56 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
                 icon: Icons.note_add, // the icon of the personal plan section
                 icons: [
                   // the share and download buttons
-                  myTextButton(() {
-                    share(appInfoProvider, gender);
+                  myTextButton(() async {
+                    await fileService.share(
+                        appInfoProvider.shareMessages['emergency']!,
+                        [
+                          appInfoProvider
+                              .formDifficultEventsTitles['header$gender'],
+                          appInfoProvider.formMakeSaferTitles['header$gender'],
+                          appInfoProvider.formFeelBetterTitles['header$gender'],
+                          appInfoProvider
+                              .formDistractionsTitles['header$gender'],
+                          appInfoProvider.formPhonePage['header$gender'],
+                        ],
+                        [
+                          appInfoProvider
+                              .formDifficultEventsTitles['subTitle$gender'],
+                          appInfoProvider
+                              .formMakeSaferTitles['subTitle$gender'],
+                          appInfoProvider
+                              .formFeelBetterTitles['subTitle$gender'],
+                          appInfoProvider
+                              .formDistractionsTitles['subTitle$gender'],
+                          appInfoProvider.formPhonePage['subTitle$gender'],
+                        ],
+                        appInfoProvider.sharePDFtexts,
+                        ShareFileType.PDF);
                   }, Elusive.share, Colors.black),
                   myTextButton(() async {
                     // the function to download the pdf file of the personal plan
-                    await downloadPDF(
-                      [
-                        appInfoProvider
-                            .formDifficultEventsTitles['header$gender'],
-                        appInfoProvider.formMakeSaferTitles['header$gender'],
-                        appInfoProvider.formFeelBetterTitles['header$gender'],
-                        appInfoProvider.formDistractionsTitles['header$gender'],
-                        appInfoProvider.formPhonePage['header$gender'],
-                      ],
-                      [
-                        appInfoProvider
-                            .formDifficultEventsTitles['subTitle$gender'],
-                        appInfoProvider.formMakeSaferTitles['subTitle$gender'],
-                        appInfoProvider.formFeelBetterTitles['subTitle$gender'],
-                        appInfoProvider
-                            .formDistractionsTitles['subTitle$gender'],
-                        appInfoProvider.formPhonePage['subTitle$gender'],
-                      ],
-                      appInfoProvider.sharePDFtexts,
-                    );
-//TODO: think of a way to do the other option to chose where to download the file to (like the share option)
-                    showDialog(
-                      // the dialog that shows the user that the download has started and finished
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: Text(appInfoProvider
-                                    .returnToPlanStrings['StartedDownload'] ??
-                                'ההורדה החלה'),
-                          ),
-                          content: Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: Text(appInfoProvider
-                                    .returnToPlanStrings['FinishDownload'] ??
-                                'התוכנית ירדה'),
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              child: Directionality(
-                                textDirection: TextDirection.rtl,
-                                child: Text(appInfoProvider
-                                        .returnToPlanStrings['Finish'] ??
-                                    'סיום'),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                    var result = await fileService.download([
+                      appInfoProvider
+                          .formDifficultEventsTitles['header$gender'],
+                      appInfoProvider.formMakeSaferTitles['header$gender'],
+                      appInfoProvider.formFeelBetterTitles['header$gender'],
+                      appInfoProvider.formDistractionsTitles['header$gender'],
+                      appInfoProvider.formPhonePage['header$gender'],
+                    ], [
+                      appInfoProvider
+                          .formDifficultEventsTitles['subTitle$gender'],
+                      appInfoProvider.formMakeSaferTitles['subTitle$gender'],
+                      appInfoProvider.formFeelBetterTitles['subTitle$gender'],
+                      appInfoProvider.formDistractionsTitles['subTitle$gender'],
+                      appInfoProvider.formPhonePage['subTitle$gender'],
+                    ], appInfoProvider.sharePDFtexts, ShareFileType.PDF);
+                    if (result == null) {
+                      // Show him a message
+                      showToast(message: 'ההורדה נכשלה');
+                      return;
+                    }
+                    // Show a toast message to the user
+                    showToast(message: 'הקובץ שלך ירד');
                   }, Icons.download, Colors.black) // the download icon
                 ],
                 // the sub title of the personal plan section in the home page
