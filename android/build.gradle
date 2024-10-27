@@ -1,9 +1,10 @@
 buildscript {
-       ext.kotlin_version = '1.9.25'
+    ext.kotlin_version = '1.9.25'
     ext {
        compileSdkVersion   = 34                // or higher / as desired
        targetSdkVersion    = 34                // or higher / as desired
    }
+
     repositories {
         google()
         mavenCentral()
@@ -11,8 +12,6 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.4.1'  // Ensure this is the correct version
-        classpath 'com.android.tools.build:gradle:7.3.1'
     }
 }
 
@@ -23,17 +22,11 @@ allprojects {
     }
 }
 
-subprojects { afterEvaluate { android { 
-     compileSdkVersion 34
-    if (namespace == null) {
-        namespace project.group
-    } }}}
+subprojects { afterEvaluate { android { compileSdkVersion 34 } } }
 
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
     project.evaluationDependsOn(':app')
 }
 
