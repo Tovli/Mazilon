@@ -3,12 +3,8 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/PDF/create_pdf.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -69,21 +65,11 @@ class FileServiceImpl implements FileService {
     return formattedText;
   }
 
-  static Future<pw.Image> loadAssetImage(String path) async {
-    // Load an image from assets and convert it to a format usable by the PDF generator
-    final data = await rootBundle.load(path);
-    final bytes = data.buffer.asUint8List();
-    final image = pw.MemoryImage(bytes);
-    return pw.Image(image);
-  }
-
   static organizeDataForFile(List<dynamic> titles, List<dynamic> subTitles,
       Map<String, String> texts) async {
-    final pageFormat = PdfPageFormat.a4; // Set the page format to A4
+    // Set the page format to A4
 
     // Load the font for the PDF
-    final ByteData fontData = await rootBundle.load('assets/fonts/CALIBRI.TTF');
-    final ttf = pw.Font.ttf(fontData.buffer.asByteData());
     // Create a new PDF document
     final dataForPDF = await getPrefsData();
     // Retrieve user data from SharedPreferences
@@ -123,15 +109,11 @@ class FileServiceImpl implements FileService {
     // Prepare the data to be included in the PDF
 
     // Load the logo image for the PDF
-    final image = await loadAssetImage('assets/images/Logo.png');
 
     // Create widgets for the PDF content
     return {
-      "image": image,
       "mainTitle": mainTitle,
       "realData": realData,
-      "ttf": ttf,
-      "PDFpageFormat": pageFormat,
       "texts": {
         "text1": text1,
         "text2": text2,
@@ -158,15 +140,11 @@ class FileServiceImpl implements FileService {
       Map<String, dynamic> file;
       switch (saveFormat) {
         case ShareFileType.PDF:
-          file = createPDF(
-              titles,
-              subTitles,
-              dataForFile["texts"]!,
-              dataForFile["image"]!,
-              dataForFile["mainTitle"]!,
-              dataForFile["ttf"]!,
-              dataForFile["PDFpageFormat"]!,
-              dataForFile["realData"]!);
+          file = await createPDF(titles, subTitles, dataForFile["texts"]!,
+              dataForFile["mainTitle"]!, dataForFile["realData"]!);
+          final tempFile = await saveTempPDF(file["file"], file["format"]);
+          XFile tempXFile = XFile(tempFile.path);
+          await Share.shareXFiles([tempXFile], text: message);
           break;
         default:
           file = {"file": null, "format": null};
@@ -176,22 +154,19 @@ class FileServiceImpl implements FileService {
       if (file["file"] == null || file["format"] == null) {
         return;
       }
-      final tempFile = await saveTemp(file["file"], file["format"]);
-      XFile tempXFile = XFile(tempFile.path);
-      await Share.shareXFiles([tempXFile], text: message);
     } catch (e) {
       print('Error: $e');
     }
   }
 
-  static Future<String?> saveAndroid(Uint8List pdfData, String format) async {
-    print(pdfData); // Print the PDF data for debugging purposes
+  static Future<String?> saveAndroid(Uint8List data, String format) async {
+    print(data); // Print the PDF data for debugging purposes
     try {
       // Open a save file dialog to allow the user to select a location to save the PDF
       String? outputFile = await FilePicker.platform.saveFile(
         dialogTitle: 'Please select an output file:', // Dialog title
         fileName: 'התוכנית שלי.$format', // Default file name
-        bytes: pdfData, // PDF data to be saved
+        bytes: data, // PDF data to be saved
       );
       //If the user cancels the download
       return outputFile;
@@ -201,7 +176,7 @@ class FileServiceImpl implements FileService {
     }
   }
 
-  static Future<String?> saveWeb(List<int> pdfData) async {
+  static Future<String?> saveWeb(List<int> data) async {
     // Create a Blob object from the PDF data
     /*final blob = html.Blob([pdfData], 'application/pdf');
 
@@ -218,50 +193,32 @@ class FileServiceImpl implements FileService {
     return null;
   }
 
-  static Future<File> saveTemp(pw.Document pdf, String format) async {
-    Uint8List fileData = await pdf.save();
-    final tempDir = await getTemporaryDirectory();
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final tempFile = File('${tempDir.path}/התוכנית שלי$timestamp.$format');
-    await tempFile.writeAsBytes(fileData);
-    return tempFile;
-  }
-
   @override
   Future<String?> download(List<dynamic> titles, List<dynamic> subTitles,
       Map<String, String> texts, ShareFileType saveFormat) async {
     final dataForFile = await organizeDataForFile(titles, subTitles, texts);
     Map<String, dynamic> file;
-    print("this is filke");
-    print(dataForFile);
+    Uint8List data = Uint8List(0);
     switch (saveFormat) {
       case ShareFileType.PDF:
-        file = createPDF(
-            titles,
-            subTitles,
-            dataForFile["texts"]!,
-            dataForFile["image"]!,
-            dataForFile["mainTitle"]!,
-            dataForFile["ttf"]!,
-            dataForFile["PDFpageFormat"]!,
-            dataForFile["realData"]!);
+        file = await createPDF(titles, subTitles, dataForFile["texts"]!,
+            dataForFile["mainTitle"]!, dataForFile["realData"]!);
+        // Save the PDF and share it
+
+        // Save the PDF for download
+        data = await file["file"].save();
         break;
       default:
         file = {"file": null, "format": null};
     }
-    print("this is filke");
-    print(file);
-    // Save the PDF and share it
     if (file["file"] == null || file["format"] == null) {
       return null;
     }
-    // Save the PDF for download
-    Uint8List pdfData = await file["file"].save();
     if (Platform.isAndroid) {
-      return await saveAndroid(pdfData, file["format"]);
+      return await saveAndroid(data, file["format"]);
     }
     if (kIsWeb) {
-      return await saveWeb(pdfData);
+      return await saveWeb(data);
     }
     return null;
   }

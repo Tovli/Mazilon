@@ -1,16 +1,23 @@
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:pdf/widgets.dart';
 
-Map<String, dynamic> createPDF(
+Future<Map<String, dynamic>> createPDF(
     List<dynamic> titles,
     List<dynamic> subTitles,
     Map<String, String> texts,
-    Image image,
     String mainTitle,
-    Font ttf,
-    PdfPageFormat pageFormat,
-    List<List<String>> data) {
+    List<List<String>> data) async {
+  final pageFormat = PdfPageFormat.a4;
+  final ByteData fontData = await rootBundle.load('assets/fonts/CALIBRI.TTF');
+  final ttf = pw.Font.ttf(fontData.buffer.asByteData());
+  final imageData = await rootBundle.load(
+    'assets/images/Logo.png',
+  );
+  final imageBytes = imageData.buffer.asUint8List();
+  final image = pw.Image(pw.MemoryImage(imageBytes));
   final pdf = pw.Document();
   List<pw.Widget> widgets = [];
   for (var i = 0; i < data.length; i++) {
@@ -202,4 +209,13 @@ Map<String, dynamic> createPDF(
     ),
   );
   return {"file": pdf, "format": "pdf"};
+}
+
+Future<File> saveTempPDF(pw.Document pdf, String format) async {
+  Uint8List fileData = await pdf.save();
+  final tempDir = await getTemporaryDirectory();
+  final timestamp = DateTime.now().millisecondsSinceEpoch;
+  final tempFile = File('${tempDir.path}/התוכנית שלי$timestamp.$format');
+  await tempFile.writeAsBytes(fileData);
+  return tempFile;
 }
