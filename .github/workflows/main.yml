@@ -48,6 +48,11 @@ jobs:
         with:
           flutter-version: "3.24.0"
           cache: true
+      - name: Install dependencies
+        run: flutter pub get
+        
+      - name: Run tests
+        run: flutter test
 
       - name: Get version from pubspec.yaml
         id: get_version
@@ -71,9 +76,6 @@ jobs:
           BUILD_NUMBER="${GITHUB_RUN_NUMBER}"
           echo "BUILD_NAME=$BUILD_NAME" >> $GITHUB_ENV
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
-
-      - name: Install dependencies
-        run: flutter pub get
 
       - name: Build App Bundle
         run: |
