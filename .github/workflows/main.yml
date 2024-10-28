@@ -125,6 +125,11 @@ jobs:
       - name: Install CocoaPods
         run: |
           brew install cocoapods
+          cd ios
+          if [ ! -f "Podfile" ]; then
+            pod init
+          fi
+          cd ..
           pod install --project-directory=ios
 
       - name: Get version from pubspec.yaml
