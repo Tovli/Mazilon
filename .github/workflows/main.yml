@@ -129,7 +129,6 @@ jobs:
           if [ ! -f "Podfile" ]; then
             pod init
           fi
-          cd ..
           pod install --project-directory=ios
 
       - name: Get version from pubspec.yaml
