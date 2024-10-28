@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-abstract class LoggerService {
+abstract class IncidentLoggerService {
   Future<void> initializeSentry(Widget MyApp);
   Future<void> captureException(dynamic exception, {StackTrace? stackTrace});
 }
 
-class SentryServiceImpl implements LoggerService {
+class SentryServiceImpl implements IncidentLoggerService {
   @override
   Future<void> initializeSentry(Widget MyApp) async {
     try {
@@ -34,15 +34,12 @@ class SentryServiceImpl implements LoggerService {
   @override
   Future<void> captureException(dynamic exception,
       {StackTrace? stackTrace}) async {
-    if (!Sentry.isEnabled) {
-      print('Warning: Sentry is not initialized.');
-      print("an error as occured");
+    if (Sentry.isEnabled) {
+      await Sentry.captureException(
+        exception,
+        stackTrace: stackTrace,
+      );
       return;
     }
-
-    await Sentry.captureException(
-      exception,
-      stackTrace: stackTrace,
-    );
   }
 }

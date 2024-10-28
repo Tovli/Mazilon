@@ -158,7 +158,8 @@ class FileServiceImpl implements FileService {
         return;
       }
     } catch (error, stackTrace) {
-      LoggerService loggerService = GetIt.instance<LoggerService>();
+      IncidentLoggerService loggerService =
+          GetIt.instance<IncidentLoggerService>();
       await loggerService.captureException(
         error,
         stackTrace: stackTrace,
@@ -178,7 +179,8 @@ class FileServiceImpl implements FileService {
       //If the user cancels the download
       return outputFile;
     } catch (error, stackTrace) {
-      LoggerService loggerService = GetIt.instance<LoggerService>();
+      IncidentLoggerService loggerService =
+          GetIt.instance<IncidentLoggerService>();
       await loggerService.captureException(
         error,
         stackTrace: stackTrace,

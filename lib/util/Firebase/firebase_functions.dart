@@ -37,7 +37,8 @@ class FirebaseAuthService {
       if (error.code == 'email-already-in-use') {
         showToast(message: 'The email address is already in use.');
       } else {
-        LoggerService loggerService = GetIt.instance<LoggerService>();
+        IncidentLoggerService loggerService =
+            GetIt.instance<IncidentLoggerService>();
         await loggerService.captureException(
           error,
           stackTrace: stackTrace,
@@ -60,7 +61,8 @@ class FirebaseAuthService {
         showToast(message: 'Invalid email or password.');
       } else {
         showToast(message: 'An error occurred');
-        LoggerService loggerService = GetIt.instance<LoggerService>();
+        IncidentLoggerService loggerService =
+            GetIt.instance<IncidentLoggerService>();
         await loggerService.captureException(
           error,
           stackTrace: stackTrace,
@@ -379,7 +381,8 @@ Future<bool> loadAppInfoFromJson(
       appInfo.updateSyncPages(json['syncPages'].cast<String, String>());
       return true;
     } catch (error, stackTrace) {
-      LoggerService loggerService = GetIt.instance<LoggerService>();
+      IncidentLoggerService loggerService =
+          GetIt.instance<IncidentLoggerService>();
       await loggerService.captureException(
         error,
         stackTrace: stackTrace,
@@ -806,7 +809,8 @@ Future<void> loadAppInformation(AppInformation appInfo, checkboxCollectionNames,
         appInfo, checkboxCollectionNames, collections, checkboxModels);
     return;
   } catch (error, stackTrace) {
-    LoggerService loggerService = GetIt.instance<LoggerService>();
+    IncidentLoggerService loggerService =
+        GetIt.instance<IncidentLoggerService>();
     await loggerService.captureException(
       error,
       stackTrace: stackTrace,

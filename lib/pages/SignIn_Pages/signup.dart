@@ -93,7 +93,8 @@ class _SignUpPageState extends State<SignUpPage> {
         return false;
       }
     } catch (error, stackTrace) {
-      LoggerService loggerService = GetIt.instance<LoggerService>();
+      IncidentLoggerService loggerService =
+          GetIt.instance<IncidentLoggerService>();
       await loggerService.captureException(
         error,
         stackTrace: stackTrace,

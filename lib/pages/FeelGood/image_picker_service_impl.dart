@@ -47,7 +47,8 @@ class ImagePickerServiceImpl implements ImagePickerService {
         saveImagePaths(imagePaths);
       }
     } catch (error, stackTrace) {
-      LoggerService loggerService = GetIt.instance<LoggerService>();
+      IncidentLoggerService loggerService =
+          GetIt.instance<IncidentLoggerService>();
       await loggerService.captureException(
         error,
         stackTrace: stackTrace,
@@ -71,7 +72,8 @@ class ImagePickerServiceImpl implements ImagePickerService {
       imagePaths.addAll(
           contents.split('\n').where((path) => path.isNotEmpty).toList());
     } catch (error, stackTrace) {
-      LoggerService loggerService = GetIt.instance<LoggerService>();
+      IncidentLoggerService loggerService =
+          GetIt.instance<IncidentLoggerService>();
       await loggerService.captureException(
         error,
         stackTrace: stackTrace,
