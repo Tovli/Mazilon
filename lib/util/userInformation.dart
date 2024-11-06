@@ -14,14 +14,12 @@ class UserInformation with ChangeNotifier {
   List<String> distractions;
   bool loggedIn;
   String userId;
-  List<String> notifications;
   UserInformation({
     this.gender = '',
     this.name = '',
     this.age = '',
     this.binary = false,
     this.difficultEvents = const [],
-    this.notifications = const [],
     this.makeSafer = const [],
     this.feelBetter = const [],
     this.distractions = const [],
@@ -129,16 +127,6 @@ class UserInformation with ChangeNotifier {
 
   void updateUserId(String value) {
     userId = value;
-    notifyListeners();
-  }
-
-  void updateNotifications(List<String> value) {
-    notifications = [...value];
-    notifyListeners();
-  }
-
-  void addNotification(String value) {
-    notifications.add(value);
     notifyListeners();
   }
 }
