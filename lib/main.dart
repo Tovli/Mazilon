@@ -179,8 +179,6 @@ class _MyAppState extends State<MyApp> {
     final appInfoProvider = Provider.of<AppInformation>(context, listen: false);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
-    FirebaseApp dbUsersApp =
-        Provider.of<FirebaseAppProvider>(context, listen: false).dbUsersApp;
 
     if (widgetNotifier.value == null) {
       Future.wait([
@@ -198,7 +196,6 @@ class _MyAppState extends State<MyApp> {
                 checkboxModels: checkboxModels,
                 firsttime: firsttime,
                 hasFilled: hasFilled,
-                dbUsersApp: dbUsersApp,
                 phonePageData: phonePageData)
             //first login:
             : const Center(child: Introduction());
