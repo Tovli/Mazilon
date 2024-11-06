@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mazilon/util/logger_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 abstract class ImagePickerService {
   Future<XFile?> pickImage({required ImageSource source});
@@ -40,15 +43,16 @@ class ImagePickerServiceImpl implements ImagePickerService {
         final fileName = DateTime.now().millisecondsSinceEpoch.toString();
         final savedImage =
             await File(pickedFile.path).copy('${appDir.path}/$fileName');
-
-        print("took");
-        print(savedImage.path);
         imagePaths.add(savedImage.path);
         saveImagePaths(imagePaths);
       }
-    } catch (e) {
-      print(e);
-      print('No Image Selected');
+    } catch (error, stackTrace) {
+      IncidentLoggerService loggerService =
+          GetIt.instance<IncidentLoggerService>();
+      await loggerService.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -67,11 +71,16 @@ class ImagePickerServiceImpl implements ImagePickerService {
 
       imagePaths.addAll(
           contents.split('\n').where((path) => path.isNotEmpty).toList());
-    } catch (e) {
-      // If encountering an error, return an empty list
-
+    } catch (error, stackTrace) {
+      IncidentLoggerService loggerService =
+          GetIt.instance<IncidentLoggerService>();
+      await loggerService.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       imagePaths = [];
     }
+    // If encountering an error, return an empty list
   }
 
   Future<File> getImagePathFile() async {

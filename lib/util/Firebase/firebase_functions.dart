@@ -1,6 +1,9 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/util/logger_service.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,11 +33,17 @@ class FirebaseAuthService {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       return credential.user;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
+    } on FirebaseAuthException catch (error, stackTrace) {
+      if (error.code == 'email-already-in-use') {
         showToast(message: 'The email address is already in use.');
       } else {
-        showToast(message: 'An error occurred: ${e.code}');
+        IncidentLoggerService loggerService =
+            GetIt.instance<IncidentLoggerService>();
+        await loggerService.captureException(
+          error,
+          stackTrace: stackTrace,
+        );
+        showToast(message: 'An error occurred');
       }
     }
     return null;
@@ -47,11 +56,17 @@ class FirebaseAuthService {
           email: email, password: password);
 
       return credential.user;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+    } on FirebaseAuthException catch (error, stackTrace) {
+      if (error.code == 'user-not-found' || error.code == 'wrong-password') {
         showToast(message: 'Invalid email or password.');
       } else {
-        showToast(message: 'An error occurred: ${e.code}');
+        showToast(message: 'An error occurred');
+        IncidentLoggerService loggerService =
+            GetIt.instance<IncidentLoggerService>();
+        await loggerService.captureException(
+          error,
+          stackTrace: stackTrace,
+        );
       }
     }
     return null;
@@ -365,8 +380,13 @@ Future<bool> loadAppInfoFromJson(
 
       appInfo.updateSyncPages(json['syncPages'].cast<String, String>());
       return true;
-    } catch (e) {
-      print(e);
+    } catch (error, stackTrace) {
+      IncidentLoggerService loggerService =
+          GetIt.instance<IncidentLoggerService>();
+      await loggerService.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
       return false;
     }
   }
@@ -765,8 +785,7 @@ Future<void> loadAppFromFirebase(
   String json = jsonEncode(createJson(appInfo));
   // print(json);
   if (!kIsWeb) {
-    Directory directory2 =
-        await getApplicationDocumentsDirectory() ?? Directory('');
+    Directory directory2 = await getApplicationDocumentsDirectory();
     File('${directory2.path}/data.json').writeAsString(json);
   }
 }
@@ -775,8 +794,7 @@ Future<void> loadAppInformation(AppInformation appInfo, checkboxCollectionNames,
     collections, checkboxModels) async {
   try {
     if (!kIsWeb) {
-      Directory directory =
-          await getApplicationDocumentsDirectory() ?? Directory('');
+      Directory directory = await getApplicationDocumentsDirectory();
 
       bool loaded = await loadAppInfoFromJson(
         appInfo,
@@ -790,9 +808,13 @@ Future<void> loadAppInformation(AppInformation appInfo, checkboxCollectionNames,
     await loadAppFromFirebase(
         appInfo, checkboxCollectionNames, collections, checkboxModels);
     return;
-  } catch (e) {
-    print(e);
-    print("couldn't load from json for... IDK ");
+  } catch (error, stackTrace) {
+    IncidentLoggerService loggerService =
+        GetIt.instance<IncidentLoggerService>();
+    await loggerService.captureException(
+      error,
+      stackTrace: stackTrace,
+    );
     await loadAppFromFirebase(
         appInfo, checkboxCollectionNames, collections, checkboxModels);
     // setReady();

@@ -24,7 +24,7 @@ if (keystorePropertiesFile.exists()) {
     signingKeyPassword = keystoreProperties['keyPassword']
     signingKeyFile = keystoreProperties['storeFile']
     signingKeyStorePassword = keystoreProperties['storePassword']
-   
+
 }else {
     signingKeyPassword = System.getenv("APPSIGNINGKEYPASSWORD")
     signingKeyFile = System.getenv("KEYSTORE_FILE")
@@ -34,7 +34,7 @@ if (keystorePropertiesFile.exists()) {
 if (signingKeyFile.isEmpty() || signingKeyPassword.isEmpty() || signingKeyStorePassword.isEmpty()) {
     throw new Exception("Keystore credentials are not properly set in either key.properties or environment variables.")
 }
-    
+
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
@@ -50,7 +50,7 @@ android {
     namespace "com.example.mezilon"
     ndkVersion flutter.ndkVersion
     compileSdkVersion flutter.compileSdkVersion
-    
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

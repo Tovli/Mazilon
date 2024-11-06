@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/iFx/service_locator.dart';
-import 'package:mazilon/util/sentry_service.dart';
+import 'package:mazilon/util/logger_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'util/Firebase/firebase_options.dart';
@@ -52,7 +52,7 @@ Future<FirebaseApp> initializeApp() async {
 
 void main() async {
   FirebaseApp dbUsersApp = await initializeApp();
-  SentryService sentryService = GetIt.instance<SentryService>();
+  IncidentLoggerService sentryService = GetIt.instance<IncidentLoggerService>();
   await sentryService.initializeSentry(
     MultiProvider(
       providers: [
