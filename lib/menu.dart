@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mazilon/pages/about.dart';
 import 'package:mazilon/pages/FeelGood/feelGood.dart';
 import 'package:mazilon/pages/WellnessTools/wellnessTools.dart';
-<<<<<<< HEAD
 
-=======
->>>>>>> 817b9fb (version 0.2)
 import 'package:mazilon/pages/notifications/notification_page.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +15,7 @@ import 'package:mazilon/pages/journal.dart';
 import 'package:mazilon/pages/phone.dart';
 import 'package:mazilon/pages/positive.dart';
 import 'package:mazilon/pages/PersonalPlan/schedule2.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Form/checkbox_model.dart';
@@ -298,30 +295,6 @@ class _MenuState extends State<Menu> {
                                                       currentScreen =
                                                           NotificationPage();
                                                       current = 9;
-                                                    });
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                                TextButton(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      Directionality(
-                                                        textDirection:
-                                                            TextDirection.rtl,
-                                                        child: Text(
-                                                            'הוספת תזכורת'),
-                                                      ),
-                                                      SizedBox(width: 20),
-                                                      Icon(Icons.add_alert),
-                                                    ],
-                                                  ),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      currentScreen =
-                                                          NotificationPage();
-                                                      current = 10;
                                                     });
                                                     Navigator.of(context).pop();
                                                   },

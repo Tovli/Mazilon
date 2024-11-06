@@ -10,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 import 'package:workmanager/workmanager.dart';
 
@@ -53,20 +52,19 @@ class _NotificationPageState extends State<NotificationPage> {
       NotificationsService.cancelNotifications(null);
       Workmanager().cancelAll();
     }
+
     Workmanager().registerPeriodicTask(
       id,
-      "periodicSimpleTask",
+      "simpleTask",
       inputData: {
         "text": quotes,
         "NotificationId": id,
         "timeHour": _currentHour,
         "timeMinute": _currentMinute
       },
-      frequency: Duration(hours: 10),
+      frequency: Duration(minutes: 15),
     );
-    int number = Random().nextInt(quotes.length);
-    NotificationsService.schedulNotification(
-        calculatedTime, id, quotes[number]);
+
     prefs.setString("notificationId", id);
   }
 

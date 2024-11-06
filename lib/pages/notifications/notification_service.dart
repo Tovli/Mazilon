@@ -1,10 +1,14 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:workmanager/workmanager.dart';
 
 class NotificationsService {
+  static bool _isInitialized = false;
   static final FlutterLocalNotificationsPlugin
       _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -16,6 +20,10 @@ class NotificationsService {
   );
 
   static Future<void> init() async {
+    if (_isInitialized) {
+      // Already initialized, no need to initialize again
+      return;
+    }
     print("Initialization");
     tz.initializeTimeZones();
     // Get the device's current time zone
@@ -25,6 +33,7 @@ class NotificationsService {
     // Set the local time zone
     tz.setLocalLocation(tz.getLocation(timeZoneName ?? 'Asia/Jerusalem'));
     await _flutterLocalNotificationsPlugin.initialize(_initializationSettings);
+    _isInitialized = true;
   }
 
   static Future<void> showNotification(String title, String body) async {
@@ -64,24 +73,6 @@ class NotificationsService {
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
-    /*await _flutterLocalNotificationsPlugin.periodicallyShow(
-      (id), // Use a different ID for each notification if needed
-      'מצילון',
-      'שלום ממצילון, מה שלומך היום?',
-      RepeatInterval.everyMinute,
-
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'channel_id', // Channel ID
-          'channel_name', // Channel name
-          importance: Importance.max,
-          priority: Priority.high,
-          enableVibration: true, // Ensure it works even if the device is idle
-          playSound: true, // Ensure it works even if the device is idle
-        ),
-      ),
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-    );*/
   }
 
   // Cancel a specific notification
