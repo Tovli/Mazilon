@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:mazilon/pages/notifications/notification_service.dart'; // Assuming this now refers to NotificationsHelper
 import 'package:mazilon/util/appInformation.dart';
@@ -9,7 +7,6 @@ import 'package:numberpicker/numberpicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:workmanager/workmanager.dart';
 
