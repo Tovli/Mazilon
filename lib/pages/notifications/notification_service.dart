@@ -47,14 +47,14 @@ class NotificationsService {
         .show(0, title, body, notificationDetails, payload: 'item x');
   }
 
-  static Future<void> schedulNotification(
+  static Future<void> scheduleNotification(
       TimeOfDay timeOfDay, String id, String text) async {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-    tz.TZDateTime scheduledDate2 = tz.TZDateTime(tz.local, now.year, now.month,
+    tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month,
         now.day, timeOfDay.hour, timeOfDay.minute);
 
-    if (scheduledDate2.isBefore(now)) {
-      scheduledDate2 = scheduledDate2.add(const Duration(days: 1));
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
 
     await _flutterLocalNotificationsPlugin.zonedSchedule(
@@ -62,7 +62,7 @@ class NotificationsService {
         (int.parse(id)), // Use a different ID for each notification if needed
         'מצילון',
         text,
-        scheduledDate2,
+        scheduledDate,
         const NotificationDetails(
             android: AndroidNotificationDetails(
                 'your channel id', 'your channel name',

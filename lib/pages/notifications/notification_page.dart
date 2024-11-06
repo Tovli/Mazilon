@@ -21,7 +21,6 @@ class _NotificationPageState extends State<NotificationPage> {
   int _currentHour = 12;
   int _currentMinute = 0;
   TimeOfDay? scheduleTime;
-  List<bool> checkedDays = List<bool>.filled(7, false);
   TimeOfDay calculateTime() {
     TimeOfDay time = TimeOfDay(hour: _currentHour, minute: _currentMinute);
     print(time);

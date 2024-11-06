@@ -103,11 +103,6 @@ class _MenuState extends State<Menu> {
             gender: userInformation.gender,
             phonePageData: widget.phonePageData);
       }*/
-      else if (index == 9) {
-        currentScreen = NotificationPage(
-            // Pass the title here
-            );
-      }
     });
   }
 
