@@ -88,10 +88,116 @@ jobs:
           name: app-release
           path: ${{ env.AAB_PATH }}
 
-      # - name: Build APK
-      #   run: flutter build apk --release
-      # - name: Upload APK
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: app-release-apk
-      #     path: ${{ env.APK_PATH }}
+  build_ios:
+    runs-on: macos-latest
+    env:
+      FIREBASE_OPTIONS_PATH: lib/util/Firebase/firebase_options.dart
+      IOS_OUTPUT_PATH: build/ios/ipa
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Export secrets as env vars
+        uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}
+      - name: Create .env file            
+        uses: SpicyPizza/create-envfile@v2.0.3
+        with:
+            envkey_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+            file_name: .env
+      - name: Write firebase options file
+        run: |
+          echo "$FIREBASE_OPTIONS" | base64 --decode > "${{ env.FIREBASE_OPTIONS_PATH }}"
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: "adopt"
+          java-version: "17.x"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.0"
+          cache: true
+
+      - name: Install CocoaPods
+        run: |
+          brew install cocoapods
+          cd ios
+          if [ ! -f "Podfile" ]; then
+            pod init
+          fi
+          pod install
+
+      - name: Get version from pubspec.yaml
+        id: get_version
+        run: |
+          VERSION_LINE=$(grep '^version: ' pubspec.yaml)
+          VERSION_STRING=${VERSION_LINE#version: }
+          echo "VERSION_STRING=$VERSION_STRING" >> $GITHUB_ENV
+
+      - name: Parse version components
+        run: |
+          VERSION_NO_BUILD="${VERSION_STRING%%+*}"
+          echo "VERSION_NO_BUILD=$VERSION_NO_BUILD" >> $GITHUB_ENV
+
+      - name: Get short commit hash
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
+
+      - name: Set build name and number
+        run: |
+          BUILD_NAME="${VERSION_NO_BUILD}+${COMMIT_HASH}"
+          BUILD_NUMBER="${GITHUB_RUN_NUMBER}"
+          echo "BUILD_NAME=$BUILD_NAME" >> $GITHUB_ENV
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Set up Keychain
+        run: |
+          security create-keychain -p "actions" ios-build.keychain
+          security default-keychain -s ios-build.keychain
+          security unlock-keychain -p "actions" ios-build.keychain
+          security set-keychain-settings -t 3600 -u ios-build.keychain
+
+      - name: Import Distribution Certificate
+        env:
+          IOS_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+        run: |
+          echo "$IOS_CERTIFICATE_BASE64" | base64 --decode > ios_distribution.p12
+          security import ios_distribution.p12 -k ~/Library/Keychains/ios-build.keychain -P "$IOS_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+
+      - name: Install Provisioning Profile
+        env:
+          IOS_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "$IOS_PROVISIONING_PROFILE_BASE64" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/MyApp_AppStore_Profile.mobileprovision
+
+      - name: Set Signing Identity
+        run: |
+          sudo security set-key-partition-list -S apple-tool:,apple: -s -k "actions" ~/Library/Keychains/ios-build.keychain
+
+          - name: Build iOS IPA
+        run: |
+          flutter build ipa --release \
+            --build-name="${BUILD_NAME}" \
+            --build-number="${BUILD_NUMBER}"
+
+      - name: Upload iOS IPA
+        uses: actions/upload-artifact@v3
+        with:
+          name: ios-release
+          path: ${{ env.IOS_OUTPUT_PATH }}
+      - name: Deploy to TestFlight
+        env:
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+          FASTLANE_USER: ${{ secrets.APPLE_ID }}
+        run: |
+          cd ios
+          fastlane pilot upload --ipa "${{ env.IOS_OUTPUT_PATH }}/Runner.ipa"
