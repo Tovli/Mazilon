@@ -183,7 +183,7 @@ jobs:
         run: |
           sudo security set-key-partition-list -S apple-tool:,apple: -s -k "actions" ~/Library/Keychains/ios-build.keychain
 
-          - name: Build iOS IPA
+      - name: Build iOS IPA
         run: |
           flutter build ipa --release \
             --build-name="${BUILD_NAME}" \
