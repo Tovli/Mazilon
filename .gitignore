@@ -84,3 +84,4 @@ lib/util/Firebase/firebase_options.dart
 *.pem
 *.key
 *.mobileprovision
+*.p8
