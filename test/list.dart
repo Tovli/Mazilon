@@ -60,8 +60,8 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                         size: 30,
                       ),
                       onPressed: () {
-                        setState(() async {
-                          await widget.add("Test Text");
+                        setState(() {
+                          widget.add("Test Text");
                         });
                       },
                     ),
@@ -176,7 +176,12 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                   child: Padding(
                     padding: EdgeInsets.all(0.0),
                     child: ThanksItemSuggested(
-                        add: widget.addSuggested, inputText: ""),
+                        add: () => {
+                              setState(() {
+                                widget.addSuggested();
+                              })
+                            },
+                        inputText: ""),
                   ),
                 ),
                 Row(

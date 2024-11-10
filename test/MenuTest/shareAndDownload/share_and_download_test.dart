@@ -43,7 +43,7 @@ void main() {
   var counterDownload = 0;
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('FeelGood Widget Tests', () {
+  group('PersonalPlanWidget download and share Tests', () {
     late MockSharedPreferences mockSharedPreferences;
     late UserInformation mockUserInformation;
     late AppInformation mockAppInformation;

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/util/logger_service.dart';
+import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:workmanager/workmanager.dart';
 
 class NotificationsService {
   static bool _isInitialized = false;
@@ -21,23 +24,37 @@ class NotificationsService {
       // Already initialized, no need to initialize again
       return;
     }
-    print("Initialization");
-    tz.initializeTimeZones();
-    // Get the device's current time zone
-    final String timeZoneName = await FlutterTimezone.getLocalTimezone();
-    //  String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
 
-    // Set the local time zone
-    tz.setLocalLocation(tz.getLocation(timeZoneName ?? 'Asia/Jerusalem'));
-    await _flutterLocalNotificationsPlugin.initialize(_initializationSettings);
-    _isInitialized = true;
+    tz_data.initializeTimeZones();
+    // Get the device's current time zone
+    try {
+      final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+      //  String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+
+      // Set the local time zone
+      tz.setLocalLocation(tz.getLocation(timeZoneName));
+      await _flutterLocalNotificationsPlugin
+          .initialize(_initializationSettings);
+      _isInitialized = true;
+    } catch (error, stackTrace) {
+      tz.setLocalLocation(tz.getLocation('Asia/Jerusalem'));
+      await _flutterLocalNotificationsPlugin
+          .initialize(_initializationSettings);
+      _isInitialized = true;
+      IncidentLoggerService loggerService =
+          GetIt.instance<IncidentLoggerService>();
+      await loggerService.captureException(
+        error,
+        stackTrace: stackTrace,
+      );
+    }
   }
 
   static Future<void> showNotification(String title, String body) async {
     print("trying to show notification");
     const AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails('your channel id', 'your channel name',
-            channelDescription: 'your channel description',
+        AndroidNotificationDetails('testingID', 'testing',
+            channelDescription: 'this is for testing purposes',
             importance: Importance.max,
             priority: Priority.high,
             ticker: 'ticker');
@@ -45,6 +62,29 @@ class NotificationsService {
         NotificationDetails(android: androidNotificationDetails);
     await _flutterLocalNotificationsPlugin
         .show(0, title, body, notificationDetails, payload: 'item x');
+  }
+
+  static TimeOfDay calculateTime(int h, int m) {
+    return TimeOfDay(hour: h, minute: m);
+  }
+
+  static initializeNotification(
+      List<String> quotes, int hour, int minute) async {
+    TimeOfDay calculatedTime = calculateTime(hour, minute);
+    String id = "${calculatedTime.hour}${calculatedTime.minute}";
+    await cancelNotifications(null);
+    await Workmanager().cancelAll();
+    Workmanager().registerPeriodicTask(
+      id,
+      "simpleTask",
+      inputData: {
+        "text": quotes,
+        "timeHour": hour,
+        "timeMinute": minute,
+        "id": id
+      },
+      frequency: Duration(hours: 10),
+    );
   }
 
   static Future<void> scheduleNotification(
@@ -65,8 +105,9 @@ class NotificationsService {
         scheduledDate,
         const NotificationDetails(
             android: AndroidNotificationDetails(
-                'your channel id', 'your channel name',
-                channelDescription: 'your channel description')),
+                'MazilonNotificationServiceID', 'Mazilon Notifications',
+                channelDescription:
+                    'Mazilon Notifications allows you to receive daily reminders from the Mazilon app to keep track of your mental health')),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);

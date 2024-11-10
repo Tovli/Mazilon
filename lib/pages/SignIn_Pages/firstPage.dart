@@ -47,6 +47,7 @@ class _FirstPageState extends State<FirstPage> {
     }
 
     // If the user is not logged in, navigate to the LoginPage.
+    //TODO: Should This be removed? or kept for when we want to enable it?
     /* if (false) {
       return LoginPage(
         collections: widget.collections,
