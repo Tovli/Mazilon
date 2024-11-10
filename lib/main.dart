@@ -21,7 +21,6 @@ import 'package:mazilon/util/Firebase/firebase_functions.dart';
 import 'package:mazilon/util/Form/checkbox_model.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/initialForm/form.dart';
-import 'package:mazilon/util/userSyncFirebaseProvider.dart';
 
 //testing:
 import 'package:cloud_firestore/cloud_firestore.dart';

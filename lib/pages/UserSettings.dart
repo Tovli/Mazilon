@@ -11,8 +11,6 @@ import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mazilon/util/Form/checkbox_model.dart';
-import 'package:mazilon/util/userSyncFirebaseProvider.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class UserSettings extends StatefulWidget {
   final String username;
