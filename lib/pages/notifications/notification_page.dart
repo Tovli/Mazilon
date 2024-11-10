@@ -20,10 +20,7 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage> {
   int _currentHour = 12;
   int _currentMinute = 0;
-  TimeOfDay? scheduleTime;
   TimeOfDay calculateTime() {
-    TimeOfDay time = TimeOfDay(hour: _currentHour, minute: _currentMinute);
-    print(time);
     return TimeOfDay(hour: _currentHour, minute: _currentMinute);
   }
 
