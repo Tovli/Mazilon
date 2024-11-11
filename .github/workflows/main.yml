@@ -161,15 +161,6 @@ jobs:
       - name: Install Fastlane
         run: sudo gem install fastlane
 
-      - name: Fetch App Store Connect Team ID
-        env:
-          FASTLANE_USER: ${{ secrets.APPLE_ID }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
-        run: |
-          sudo gem install fastlane
-          fastlane spaceauth -u "$FASTLANE_USER" 
-          fastlane run internal_get_team_id
-
       - name: Set up Fastlane App Store Connect API Key
         env:
           APP_STORE_CONNECT_API_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_BASE64 }}
@@ -191,6 +182,12 @@ jobs:
           }
           EOF
 
+      - name: Fetch App Store Connect Team ID
+        env:
+          FASTLANE_USER: ${{ secrets.APPLE_ID }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+        run: |
+          fastlane run internal_get_team_id --api_key_path ~/.fastlane/api_key.json
       - name: Run Fastlane Cert
         run: |
           fastlane cert --api_key_path ~/.fastlane/api_key.json
