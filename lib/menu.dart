@@ -277,8 +277,7 @@ class _MenuState extends State<Menu> {
                                                       Directionality(
                                                         textDirection:
                                                             TextDirection.rtl,
-                                                        child: Text(
-                                                            'notifications'),
+                                                        child: Text('התראות'),
                                                       ),
                                                       SizedBox(width: 20),
                                                       Icon(Icons.people),

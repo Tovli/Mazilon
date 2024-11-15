@@ -14,7 +14,11 @@ class UserInformation with ChangeNotifier {
   List<String> distractions;
   bool loggedIn;
   String userId;
+  int notificationMinute;
+  int notificationHour;
   UserInformation({
+    this.notificationHour = 12,
+    this.notificationMinute = 0,
     this.gender = '',
     this.name = '',
     this.age = '',
@@ -27,39 +31,10 @@ class UserInformation with ChangeNotifier {
     this.loggedIn = false,
     this.userId = '',
   });
-  Map<String, dynamic> toJson() {
-    return {
-      'gender': gender,
-      'name': name,
-      'age': age,
-      'binary': binary,
-      'disclaimerSigned': disclaimerSigned,
-      'difficultEvents': difficultEvents,
-      'makeSafer': makeSafer,
-      'feelBetter': feelBetter,
-      'distractions': distractions,
-      'loggedIn': loggedIn,
-      'userId': userId,
-    };
-  }
 
-  factory UserInformation.fromJson(Map<String, dynamic> json) {
-    return UserInformation(
-      gender: json['gender'] as String? ?? '',
-      name: json['name'] as String? ?? '',
-      userId: json['userId'] as String? ?? '',
-      age: json['age'] as String? ?? '',
-      binary: json['binary'] as bool? ?? false,
-      loggedIn: json['loggedIn'] as bool? ?? false,
-      disclaimerSigned: json['disclaimerSigned'] as bool? ?? false,
-      difficultEvents:
-          List<String>.from(json['difficultEvents'] as List? ?? []),
-      makeSafer: List<String>.from(json['makeSafer'] as List? ?? []),
-      feelBetter: List<String>.from(json['feelBetter'] as List? ?? []),
-      distractions: List<String>.from(json['distractions'] as List? ?? []),
-    );
-  }
   void reset() {
+    notificationHour = 12;
+    notificationMinute = 0;
     gender = '';
     name = '';
     age = '';
@@ -127,6 +102,16 @@ class UserInformation with ChangeNotifier {
 
   void updateUserId(String value) {
     userId = value;
+    notifyListeners();
+  }
+
+  void updateNotificationHour(int value) {
+    notificationHour = value;
+    notifyListeners();
+  }
+
+  void updateNotificationMinute(int value) {
+    notificationMinute = value;
     notifyListeners();
   }
 }

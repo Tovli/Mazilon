@@ -3,7 +3,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/util/logger_service.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -144,6 +143,8 @@ Future<void> loadUserInformation(UserInformation userInfo) async {
 
   userInfo
       .updateDisclaimerSigned(prefs.getBool('disclaimerConfirmed') ?? false);
+  userInfo.updateNotificationMinute(prefs.getInt('notificationMinute') ?? 0);
+  userInfo.updateNotificationHour(prefs.getInt('notificationHour') ?? 12);
 }
 
 //upon adding CMS(rowy) texts, this will need to be updated:
@@ -275,6 +276,7 @@ Future<bool> loadAppInfoFromJson(
         model.addItem(addedStrings);
         model.loadDatabaseItems(collection);
       }
+
       print("data is still new, no need to update it");
       appInfo.updateReminderMainTitle(json['reminderMainTitle']);
       appInfo.updateReminderSubTitle(json['reminderSubTitle']);
@@ -379,6 +381,7 @@ Future<bool> loadAppInfoFromJson(
           json['extraMenuStrings'].cast<String, String>());
 
       appInfo.updateSyncPages(json['syncPages'].cast<String, String>());
+
       return true;
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
@@ -672,6 +675,7 @@ Future<void> loadAppFromFirebase(
     Map<String, dynamic> d = doc.data() as Map<String, dynamic>? ?? {};
     appInfo.updateAppVersion(d['version']);
   }
+
   appInfo.updateOtherSuggestions(OS);
   appInfo.updatePopupBack(BT);
   appInfo.updateTraitMainTitle(TMT);

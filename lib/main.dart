@@ -50,7 +50,7 @@ void callbackDispatcher() {
       }
       int number = Random().nextInt(inputData["text"].length);
       await NotificationsService.init();
-      await NotificationsService.cancelNotifications(null);
+      await NotificationsService.cancelNotifications(null, cancelWorker: false);
       TimeOfDay calculatedTime = NotificationsService.calculateTime(
           inputData["timeHour"],
           inputData["timeMinute"]); // Calculate the time for the notification

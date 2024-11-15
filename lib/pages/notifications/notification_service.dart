@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/util/SignIn/popup_toast.dart';
 import 'package:mazilon/util/logger_service.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
@@ -72,8 +73,7 @@ class NotificationsService {
       List<String> quotes, int hour, int minute) async {
     TimeOfDay calculatedTime = calculateTime(hour, minute);
     String id = "${calculatedTime.hour}${calculatedTime.minute}";
-    await cancelNotifications(null);
-    await Workmanager().cancelAll();
+    await cancelNotifications(null, cancelWorker: true);
     Workmanager().registerPeriodicTask(
       id,
       "simpleTask",
@@ -85,6 +85,9 @@ class NotificationsService {
       },
       frequency: Duration(hours: 10),
     );
+    var message =
+        "התראה נקבעה לשעה ${hour < 10 ? "0${hour}" : hour}:${minute < 10 ? "0${minute}" : minute}";
+    showToast(message: message);
   }
 
   static Future<void> scheduleNotification(
@@ -114,7 +117,10 @@ class NotificationsService {
   }
 
   // Cancel a specific notification
-  static Future<void> cancelNotifications(int? id) async {
+  static Future<void> cancelNotifications(int? id, {bool? cancelWorker}) async {
+    if (cancelWorker != null && cancelWorker) {
+      await Workmanager().cancelAll();
+    }
     if (id == null) {
       await _flutterLocalNotificationsPlugin.cancelAll();
     } else {
