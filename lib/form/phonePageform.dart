@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:contacts_service/contacts_service.dart';
+
 import 'package:permission_handler/permission_handler.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 
 class PhonePageForm extends StatefulWidget {
   final Function next;
@@ -39,10 +40,13 @@ class _PhonePageFormState extends State<PhonePageForm> {
 
   //add contact to the list from the contact list in the phone
   void addItem(Contact contact) {
+    print(contact.displayName);
+    print(contact.phones[0].normalizedNumber);
+    print(contact.phones[0].number);
+    //  print(contact.phones);
     String? phoneName = contact.displayName;
     String? phoneNumber =
-        contact.phones?.isNotEmpty == true ? contact.phones?.first.value : null;
-
+        contact.phones.isNotEmpty == true ? contact.phones[0].number : null;
     if (phoneName != null && phoneNumber != null) {
       widget.phonePageData.addItem(phoneName, phoneNumber);
       editingIndex = widget.phonePageData.savedPhoneNames.length -
@@ -53,6 +57,7 @@ class _PhonePageFormState extends State<PhonePageForm> {
       print("Both fields must be filled");
     }
   }
+
   //add contact to the list manually
   void addItemManual() {
     String phoneName = controller1.text;
@@ -70,13 +75,11 @@ class _PhonePageFormState extends State<PhonePageForm> {
   Future<void> pickContact() async {
     PermissionStatus status = await Permission.contacts.status;
 
-    if (!status.isGranted) {
-      status = await Permission.contacts.request();
-    }
-
-    if (status.isGranted) {
-      Contact? contact = await ContactsService.openDeviceContactPicker();
+    if (await FlutterContacts.requestPermission(readonly: true)) {
+      final contact = await FlutterContacts.openExternalPick();
+      //Contact? contact = await ContactsService.openDeviceContactPicker();
       if (contact != null) {
+        print(contact);
         addItem(contact);
       }
       setState(() {});
@@ -207,7 +210,7 @@ class _PhonePageFormState extends State<PhonePageForm> {
                               children: [
                                 //buttons only shown if the user chose to start editing:
                                 if (isEditing)
-                                //DELETE BUTTON:(mostleft button)
+                                  //DELETE BUTTON:(mostleft button)
                                   IconButton(
                                     icon: Icon(Icons.delete,
                                         size: returnSizedBox(context, 40)),
