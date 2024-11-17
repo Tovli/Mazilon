@@ -65,6 +65,7 @@ class AppInformation with ChangeNotifier {
   //add me here
   AppInformation({
     //add me here as well
+
     this.reminderMainTitle = '',
     this.reminderSubTitle = '',
     this.homeTitleGreeting = '',
@@ -388,5 +389,6 @@ class AppInformation with ChangeNotifier {
     othersuggestions = {...title};
     notifyListeners();
   }
+
   //add me here
 }

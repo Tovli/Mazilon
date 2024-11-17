@@ -11,8 +11,6 @@ import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mazilon/util/Form/checkbox_model.dart';
-import 'package:mazilon/util/userSyncFirebaseProvider.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class UserSettings extends StatefulWidget {
   final String username;
@@ -52,7 +50,7 @@ class _UserSettingsState extends State<UserSettings> {
   List<String> genders = ['זכר', 'נקבה', 'לא בינארי', 'לא מעוניין להגיד'];
 
   //remove log-in data and reset all data that user has filled in the app:
-  Future<void> resetData(UserInformation userInfo, dbUsersApp) async {
+  Future<void> resetData(UserInformation userInfo) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
     widget.phonePageData.reset();
@@ -73,7 +71,6 @@ class _UserSettingsState extends State<UserSettings> {
                 collections: widget.collections,
                 collectionNames: widget.collectionNames,
                 phonePageData: widget.phonePageData,
-                dbUsersApp: dbUsersApp,
                 firsttime: firsttime,
                 hasFilled: hasFilled)),
         (Route<dynamic> route) => false);
@@ -139,8 +136,7 @@ class _UserSettingsState extends State<UserSettings> {
   Widget build(BuildContext context) {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
-    FirebaseApp dbUsersApp =
-        Provider.of<FirebaseAppProvider>(context, listen: false).dbUsersApp;
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -330,7 +326,7 @@ class _UserSettingsState extends State<UserSettings> {
                     myTextStyle.copyWith(fontSize: 20.sp)),
                 const SizedBox(height: 20),
                 CancelButton(context, () {
-                  resetData(userInfoProvider, dbUsersApp);
+                  resetData(userInfoProvider);
                 }, widget.titles["Reset-" + userInfoProvider.gender],
                     myTextStyle.copyWith(fontSize: 20.sp)),
                 const SizedBox(height: 20)

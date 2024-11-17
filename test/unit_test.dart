@@ -9,6 +9,7 @@ import 'text_widget.dart';
 import 'phone_widget.dart';
 import 'InspirationalQuotestest.dart';
 import 'list.dart';
+import 'thanksItemSugtest.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -222,7 +223,9 @@ void main() {
     expect(find.text("Edit Text"), findsNothing);
     final addSuggestedButton = find.byKey(Key('addSuggesstion'));
     expect(addSuggestedButton, findsWidgets);
-    await tester.tap(addSuggestedButton);
+    //print(addSuggestedButton[0]);
+    expect(find.byType(ThanksItemSuggested), findsWidgets);
+    await tester.tap(find.byKey(Key('addSuggesstion')));
     await tester.pump();
     expect(find.text("Suggested"), findsOneWidget);
   });

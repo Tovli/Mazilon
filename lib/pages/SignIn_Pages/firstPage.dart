@@ -21,7 +21,6 @@ class FirstPage extends StatefulWidget {
   bool
       firsttime; // Flag indicating if this is the first time the user is using the app
   bool hasFilled; // Flag indicating if the user has filled out required forms
-  FirebaseApp dbUsersApp; // Firebase app instance for user database
 
   FirstPage(
       {super.key,
@@ -30,7 +29,6 @@ class FirstPage extends StatefulWidget {
       required this.checkboxModels,
       required this.firsttime,
       required this.hasFilled,
-      required this.dbUsersApp,
       required this.phonePageData});
 
   @override
@@ -49,15 +47,6 @@ class _FirstPageState extends State<FirstPage> {
     }
 
     // If the user is not logged in, navigate to the LoginPage.
-    if (false) {
-      return LoginPage(
-        collections: widget.collections,
-        collectionNames: widget.collectionNames,
-        checkboxModels: widget.checkboxModels,
-        phonePageData: widget.phonePageData,
-        dbUsersApp: widget.dbUsersApp,
-      );
-    }
 
     // If this is the user's first time using the app, show the initial form progress indicator.
     if (widget.firsttime) {

@@ -1,11 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/iFx/service_locator.dart';
+import 'package:mazilon/pages/notifications/notification_service.dart';
 import 'package:mazilon/util/logger_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
 import 'util/Firebase/firebase_options.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -17,7 +21,6 @@ import 'package:mazilon/util/Firebase/firebase_functions.dart';
 import 'package:mazilon/util/Form/checkbox_model.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/initialForm/form.dart';
-import 'package:mazilon/util/userSyncFirebaseProvider.dart';
 
 //testing:
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -32,7 +35,41 @@ List<String> checkboxCollectionNames = [
   'PersonalPlan-Distractions',
   // Add the new table name
 ];
-Future<FirebaseApp> initializeApp() async {
+
+@pragma(
+    'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    try {
+      if (inputData == null ||
+          !inputData.containsKey("text") ||
+          !inputData.containsKey("timeHour") ||
+          !inputData.containsKey("timeMinute") ||
+          !inputData.containsKey("id")) {
+        throw ArgumentError("Invalid input data for notification");
+      }
+      int number = Random().nextInt(inputData["text"].length);
+      await NotificationsService.init();
+      await NotificationsService.cancelNotifications(null, cancelWorker: false);
+      TimeOfDay calculatedTime = NotificationsService.calculateTime(
+          inputData["timeHour"],
+          inputData["timeMinute"]); // Calculate the time for the notification
+
+      NotificationsService.scheduleNotification(
+          calculatedTime, inputData["id"], inputData["text"][number]);
+      return Future.value(true);
+    } catch (error, stackTrace) {
+      IncidentLoggerService loggerService =
+          GetIt.instance<IncidentLoggerService>();
+      await loggerService.captureException(error,
+          stackTrace: stackTrace,
+          exceptionData: {'name': 'inputData', 'value': inputData});
+    }
+    return Future.value(false);
+  });
+}
+
+Future<void> initializeApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -41,18 +78,15 @@ Future<FirebaseApp> initializeApp() async {
   setupLocator();
   //REMOVE COMMENT ON FUTURE UPDATES FOR SYNC DEVICE FUNCTIONALITY
   // Initialize the second Firebase app for dbUsers
-
-  FirebaseApp dbUsersApp = await Firebase.initializeApp(
-    name: 'dbRealTime', // Name this instance to differentiate it
-    options: DefaultFirebaseOptions
-        .currentPlatform, // Use your custom FirebaseOptions
-  );
-  return dbUsersApp;
 }
 
 void main() async {
-  FirebaseApp dbUsersApp = await initializeApp();
+  await initializeApp();
   IncidentLoggerService sentryService = GetIt.instance<IncidentLoggerService>();
+  Workmanager().initialize(
+    callbackDispatcher,
+    isInDebugMode: false,
+  );
   await sentryService.initializeSentry(
     MultiProvider(
       providers: [
@@ -81,8 +115,7 @@ void main() async {
         ),
         //REMOVE COMMENT ON FUTURE UPDATES FOR SYNC DEVICE FUNCTIONALITY
         // Initialize the FirebaseAppProvider for dbUsersApp-REALTIME DB
-        ChangeNotifierProvider(
-            create: (context) => FirebaseAppProvider(dbUsersApp)),
+
         // Initialize the APP information provider
         ChangeNotifierProvider(create: (context) => AppInformation()),
         // Initialize the User information provider
@@ -179,8 +212,6 @@ class _MyAppState extends State<MyApp> {
     final appInfoProvider = Provider.of<AppInformation>(context, listen: false);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
-    FirebaseApp dbUsersApp =
-        Provider.of<FirebaseAppProvider>(context, listen: false).dbUsersApp;
 
     if (widgetNotifier.value == null) {
       Future.wait([
@@ -198,7 +229,6 @@ class _MyAppState extends State<MyApp> {
                 checkboxModels: checkboxModels,
                 firsttime: firsttime,
                 hasFilled: hasFilled,
-                dbUsersApp: dbUsersApp,
                 phonePageData: phonePageData)
             //first login:
             : const Center(child: Introduction());
