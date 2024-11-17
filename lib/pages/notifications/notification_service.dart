@@ -54,8 +54,9 @@ class NotificationsService {
   static Future<void> showNotification(String title, String body) async {
     print("trying to show notification");
     const AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails('testingID', 'testing',
-            channelDescription: 'this is for testing purposes',
+        AndroidNotificationDetails('exampleID', 'ShowExampleChannelTitle',
+            channelDescription:
+                'This is a channel for the user to show an example notification',
             importance: Importance.max,
             priority: Priority.high,
             ticker: 'ticker');
