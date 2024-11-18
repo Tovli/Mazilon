@@ -51,7 +51,7 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
       - name: Run tests
-        run: flutter test
+        run: flutter test --reporter=expanded
 
       - name: Get version from pubspec.yaml
         id: get_version
