@@ -182,12 +182,6 @@ jobs:
           }
           EOF
 
-      - name: Fetch App Store Connect Team ID
-        env:
-          FASTLANE_USER: ${{ secrets.APPLE_ID }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
-        run: |
-          fastlane run internal_get_team_id --api_key_path ~/.fastlane/api_key.json
       - name: Run Fastlane Cert
         run: |
           fastlane cert --api_key_path ~/.fastlane/api_key.json
