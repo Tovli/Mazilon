@@ -31,19 +31,20 @@ void main() {
     return ChangeNotifierProvider<UserInformation>(
       create: (_) => UserInformation(),
       child: MaterialApp(
-          home: InitialFormPage2(
-            next: mockNext,
-            prev: mockPrev,
-            updateName: mockUpdateName,
-            titles: mockTitles,
-            formTitles: mockFormTitles,
-          ),
+        home: InitialFormPage2(
+          next: mockNext,
+          prev: mockPrev,
+          updateName: mockUpdateName,
+          titles: mockTitles,
+          formTitles: mockFormTitles,
         ),
+      ),
       //),
     );
   }
 
-  testWidgets('InitialFormPage2 renders correctly', (WidgetTester tester) async {
+  testWidgets('InitialFormPage2 renders correctly',
+      (WidgetTester tester) async {
     await tester.pumpWidget(createTestWidget());
 
     // Verify the presence of the main title and subtitle
@@ -71,7 +72,8 @@ void main() {
     expect(find.text('Test Name'), findsOneWidget);
   });
 
-  testWidgets('InitialFormPage2 dropdown menu selection', (WidgetTester tester) async {
+  testWidgets('InitialFormPage2 dropdown menu selection',
+      (WidgetTester tester) async {
     await tester.pumpWidget(createTestWidget());
 
     // Tap on the age dropdown menu and select an option
@@ -105,14 +107,14 @@ void main() {
       ChangeNotifierProvider<UserInformation>(
         create: (_) => UserInformation(),
         child: MaterialApp(
-            home: InitialFormPage2(
-              next: mockNext,
-              prev: mockPrev,
-              updateName: mockUpdateName,
-              titles: mockTitles,
-              formTitles: mockFormTitles,
-            ),
+          home: InitialFormPage2(
+            next: mockNext,
+            prev: mockPrev,
+            updateName: mockUpdateName,
+            titles: mockTitles,
+            formTitles: mockFormTitles,
           ),
+        ),
         //),
       ),
     );

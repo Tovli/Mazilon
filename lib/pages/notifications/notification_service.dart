@@ -117,9 +117,10 @@ class NotificationsService {
             UILocalNotificationDateInterpretation.absoluteTime);
   }
 
-  // Cancel a specific notification
-  static Future<void> cancelNotifications(int? id, {bool? cancelWorker}) async {
-    if (cancelWorker != null && cancelWorker) {
+  // Cancel notifications
+  static Future<void> cancelNotifications(int? id,
+      {bool cancelWorker = false}) async {
+    if (cancelWorker) {
       await Workmanager().cancelAll();
     }
     if (id == null) {
@@ -129,6 +130,4 @@ class NotificationsService {
     }
     print('Notification with ID $id cancelled');
   }
-
-  // Cancel all notifications
 }

@@ -27,6 +27,17 @@ class _SetNotificationWidgetState extends State<SetNotificationWidget> {
     });
   }
 
+  void cancelNotification() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    NotificationsService.cancelNotifications(null, cancelWorker: true);
+    await prefs.remove('notificationHour');
+    await prefs.remove('notificationMinute');
+    setState(() {
+      _currentHour = 12;
+      _currentMinute = 0;
+    });
+  }
+
   void saveNotificationTime(
       int hour, int minute, UserInformation userInfo) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -117,6 +128,24 @@ class _SetNotificationWidgetState extends State<SetNotificationWidget> {
               },
               child: Text(
                 'הצג התראה לדוגמא',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 25),
+        Center(
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 139, 96, 96).withOpacity(0.7),
+              borderRadius: BorderRadius.circular(7),
+            ),
+            child: TextButton(
+              onPressed: () => {cancelNotification()},
+              child: Text(
+                'בטל את כל התזכורות',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white),
               ),
