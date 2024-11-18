@@ -50,8 +50,11 @@ class _AddFormState extends State<AddForm> {
               SizedBox(
                 height: 10,
               ),
-              myAutoSizedText('${widget.formTitle} חדשה',
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 20), null, 40),
+              myAutoSizedText(
+                  '${widget.formTitle} חדשה',
+                  TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  null,
+                  40),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Form(
@@ -101,7 +104,10 @@ class _AddFormState extends State<AddForm> {
                   TextButton(
                     key: Key('cancelButton'),
                     child: myAutoSizedText(
-                        'בטל', TextStyle(fontWeight: FontWeight.bold, fontSize: 18), null, 30),
+                        'בטל',
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        null,
+                        30),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -109,7 +115,10 @@ class _AddFormState extends State<AddForm> {
                   TextButton(
                     key: Key('saveButton'),
                     child: myAutoSizedText(
-                        'שמור', TextStyle(fontWeight: FontWeight.bold, fontSize: 18), null, 30),
+                        'שמור',
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        null,
+                        30),
                     onPressed: () {
                       // Save the reminder
                       setState(() {
