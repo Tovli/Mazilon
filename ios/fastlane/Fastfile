@@ -4,18 +4,32 @@ platform :ios do
   desc "Deploy the app to the App Store"
   lane :release do
     api_key = app_store_connect_api_key(
-      key_id: ENV['APP_STORE_CONNECT_API_KEY_ID'],
+      key_id: ENV['APP_STORE_API_KEY_ID'],
       issuer_id: ENV['APP_STORE_CONNECT_API_ISSUER_ID'],
       key_content: ENV['APP_STORE_CONNECT_API_KEY_CONTENT'],
       in_house: false
+    )
+
+    increment_build_number(
+      xcodeproj: "Runner.xcodeproj"
     )
 
     build_ios_app(
       workspace: "Runner.xcworkspace",
       scheme: "Runner",
       export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          "com.clubhouse.mazilon" => "mazilon_app_profile"
+        }
+      },
       output_directory: "../build/ios/archive",
       clean: true
+    )
+
+    upload_to_testflight(
+      api_key: api_key,
+      skip_waiting_for_build_processing: true
     )
 
     upload_to_app_store(
