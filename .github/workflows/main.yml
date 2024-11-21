@@ -161,6 +161,17 @@ jobs:
       - name: Install Fastlane
         run: sudo gem install fastlane
 
+      - name: Debugging Certificate Variables
+        run: |
+          echo "Length of IOS_CERTIFICATE: ${#IOS_CERTIFICATE}"
+          echo "Length of CERTIFICATE_PASSWORD: ${#CERTIFICATE_PASSWORD}"
+      
+      - name: Verify Certificate File
+        run: |
+          echo "$IOS_CERTIFICATE" | base64 --decode > certificate.p12
+          ls -l certificate.p12
+          openssl pkcs12 -info -in certificate.p12 -nokeys -passin pass:"$CERTIFICATE_PASSWORD"
+      
       - name: Decrypt and Install Certificates
         if: env.IOS_CERTIFICATE
         env:
