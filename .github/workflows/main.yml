@@ -168,12 +168,12 @@ jobs:
           CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
         run: |
           echo "$IOS_CERTIFICATE" | base64 --decode > certificate.p12
-          security create-keychain -p "" build.keychain
+          security create-keychain -p "keychain_password" build.keychain
           security import certificate.p12 -k build.keychain -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
           security list-keychains -s build.keychain
           security default-keychain -s build.keychain
-          security unlock-keychain -p "" build.keychain
-          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+          security unlock-keychain -p "keychain_password" build.keychain
+          security set-key-partition-list -S apple-tool:,apple: -s -k "keychain_password" build.keychain
      
       - name: Install Provisioning Profile
         env:
