@@ -112,7 +112,7 @@ class NotificationsService {
                 'MazilonNotificationServiceID', 'Mazilon Notifications',
                 channelDescription:
                     'Mazilon Notifications allows you to receive daily reminders from the Mazilon app to keep track of your mental health')),
-        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
   }
