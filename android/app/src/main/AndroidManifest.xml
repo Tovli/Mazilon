@@ -6,7 +6,6 @@
   <!-- As per the documentation of flutter local notifications
    https://pub.dev/packages/flutter_local_notifications-->
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-  <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
     <application
         tools:replace="android:label"
