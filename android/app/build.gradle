@@ -90,7 +90,7 @@ android {
     }
         applicationVariants.all { variant ->
         variant.outputs.all {
-              outputFileName = "Living Positively.apk"
+              outputFileName = "LivingPositively.apk"
         }
     }
 }
