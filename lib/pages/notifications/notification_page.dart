@@ -31,7 +31,7 @@ class _NotificationPageState extends State<NotificationPage> {
                 children: <Widget>[
                   SizedBox(height: 100),
                   Text(
-                    'הוספת תזכורות לשימוש במצילון',
+                    'הוספת תזכורות לשימוש ב Living Positively',
                   ),
                   SizedBox(height: 20),
                   SetNotificationWidget()

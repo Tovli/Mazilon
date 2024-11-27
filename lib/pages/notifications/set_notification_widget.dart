@@ -123,8 +123,8 @@ class _SetNotificationWidgetState extends State<SetNotificationWidget> {
             ),
             child: TextButton(
               onPressed: () => {
-                NotificationsService.showNotification(
-                    'מצילון', quotes[Random().nextInt(quotes.length)]),
+                NotificationsService.showNotification('Living Positively',
+                    quotes[Random().nextInt(quotes.length)]),
               },
               child: Text(
                 'הצג התראה לדוגמא',

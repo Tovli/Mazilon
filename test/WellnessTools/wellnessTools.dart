@@ -56,8 +56,9 @@ class _WellnessToolsState extends State<WellnessTools> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'מצילון',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                      'Living Positively',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                     ),
                     Container(
                       height: 100,

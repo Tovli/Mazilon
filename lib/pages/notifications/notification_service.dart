@@ -104,7 +104,7 @@ class NotificationsService {
     await _flutterLocalNotificationsPlugin.zonedSchedule(
         matchDateTimeComponents: DateTimeComponents.time,
         (int.parse(id)), // Use a different ID for each notification if needed
-        'מצילון',
+        'Living Positively',
         text,
         scheduledDate,
         const NotificationDetails(

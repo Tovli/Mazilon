@@ -186,7 +186,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: myAutoSizedText(
                       appInfoProvider.signUpLoginPage[
                               'LoginTitle-' + userInfoProvider.gender] ??
-                          'התחברות למצילון',
+                          'התחברות לLiving Positively',
                       TextStyle(fontSize: 28.sp, fontWeight: FontWeight.bold),
                       null,
                       80),
