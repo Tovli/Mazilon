@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
 import 'package:mazilon/pages/SignIn_Pages/login.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
@@ -40,6 +42,7 @@ class UserSettings extends StatefulWidget {
 }
 
 class _UserSettingsState extends State<UserSettings> {
+  late ImagePickerService pickerService;
   String? dropdownValueAge = '18-30';
   TextEditingController _namecontroller = TextEditingController();
   bool firsttime = true;
@@ -62,6 +65,7 @@ class _UserSettingsState extends State<UserSettings> {
       value.reset();
     });
     userInfo.reset();
+    await pickerService.deleteImages();
     final GoogleSignIn googleSignIn = GoogleSignIn();
     await googleSignIn.signOut();
     Navigator.of(context).pushAndRemoveUntil(
@@ -124,6 +128,7 @@ class _UserSettingsState extends State<UserSettings> {
         : (widget.gender == 'female' ? 'נקבה' : '');
     super.initState();
     _namecontroller = TextEditingController(text: widget.username);
+    pickerService = GetIt.instance<ImagePickerService>();
   }
 
   @override

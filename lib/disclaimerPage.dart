@@ -42,7 +42,7 @@ class _DisclaimerPageState extends State<DisclaimerPage> {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
     // show the disclaimer text and a button to confirm the disclaimer
-    print(appInfoProvider.disclaimerText);
+
     return PopScope(
       canPop: false, //can't go back from this page
       child: Scaffold(
