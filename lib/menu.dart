@@ -6,6 +6,7 @@ import 'package:mazilon/pages/about.dart';
 import 'package:mazilon/pages/FeelGood/feelGood.dart';
 import 'package:mazilon/pages/WellnessTools/wellnessTools.dart';
 import 'package:mazilon/pages/notifications/notification_page.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -44,6 +45,7 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> {
   int current = 0;
+  String version = "1.0.0";
 
   bool isFullScreen = false;
   late Widget currentScreen;
@@ -87,7 +89,7 @@ class _MenuState extends State<Menu> {
       } else if (index == 5) {
         //we dont want current screen to change here
       } else if (index == 6) {
-        currentScreen = About();
+        currentScreen = About(version: version);
       } else if (index == 9) {
         currentScreen = NotificationPage();
       } else if (index == 7) {
@@ -106,10 +108,15 @@ class _MenuState extends State<Menu> {
     });
   }
 
+  void getVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    version = packageInfo.version;
+  }
+
   @override
   void initState() {
     loadFirstTime();
-
+    getVersion();
     super.initState();
     //this is the initial page
     currentScreen = Home(
@@ -263,7 +270,8 @@ class _MenuState extends State<Menu> {
                                                   ),
                                                   onPressed: () {
                                                     setState(() {
-                                                      currentScreen = About();
+                                                      currentScreen = About(
+                                                          version: version);
                                                       current = 6;
                                                     });
                                                     Navigator.of(context).pop();
