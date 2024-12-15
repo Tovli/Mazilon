@@ -4,7 +4,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 abstract class IncidentLoggerService {
   Future<void> initializeSentry(Widget MyApp);
-  Future<void> captureException(dynamic exception,
+  Future<void> captureLog(dynamic exception,
       {StackTrace? stackTrace, dynamic exceptionData});
 }
 
@@ -29,25 +29,6 @@ class SentryServiceImpl implements IncidentLoggerService {
       print("sentry will not be initialized,error");
       print(e);
       runApp(MyApp);
-    }
-  }
-
-  @override
-  Future<void> captureException(dynamic exception,
-      {StackTrace? stackTrace, dynamic exceptionData}) async {
-    if (Sentry.isEnabled) {
-      if (exceptionData != null &&
-          exceptionData.containsKey("name") &&
-          exceptionData.containsKey("value")) {
-        Sentry.configureScope((scope) {
-          scope.setContexts('${exceptionData["name"]}', exceptionData["value"]);
-        });
-      }
-      await Sentry.captureException(
-        exception,
-        stackTrace: stackTrace,
-      );
-      return;
     }
   }
 

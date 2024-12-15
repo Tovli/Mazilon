@@ -159,7 +159,7 @@ class FileServiceImpl implements FileService {
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureException(
+      await loggerService.captureLog(
         error,
         stackTrace: stackTrace,
       );
@@ -180,7 +180,7 @@ class FileServiceImpl implements FileService {
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureException(
+      await loggerService.captureLog(
         error,
         stackTrace: stackTrace,
       );

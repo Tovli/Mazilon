@@ -59,7 +59,9 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
                 fontSize: 18.sp,
                 fontWeight: FontWeight.normal,
                 color: Colors.black),
-            TextAlign.right,
+            AppLocalizations.of(context)!.textDirection == "rtl"
+                ? TextAlign.right
+                : TextAlign.left,
             24),
         myAutoSizedText(
             sep[1],
@@ -67,7 +69,9 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
                 fontSize: 16.sp,
                 fontWeight: FontWeight.normal,
                 color: Colors.black),
-            TextAlign.right,
+            AppLocalizations.of(context)!.textDirection == "rtl"
+                ? TextAlign.right
+                : TextAlign.left,
             22),
       ],
     );
@@ -91,7 +95,7 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
     dropdownValueGender = (userInfoProvider.binary)
         ? applocal.nonBinary
         : (userInfoProvider.gender == 'male'
-            ? applocal!.male
+            ? applocal.male
             : userInfoProvider.gender == 'female'
                 ? applocal.female
                 : applocal.notWillingToSay);

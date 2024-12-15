@@ -44,7 +44,7 @@ class NotificationsService {
       _isInitialized = true;
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureException(
+      await loggerService.captureLog(
         error,
         stackTrace: stackTrace,
       );
@@ -113,14 +113,15 @@ class NotificationsService {
                 'LPNotificationServiceID', 'LP Notifications',
                 channelDescription:
                     'LP Notifications allows you to receive daily reminders from the Mazilon app to keep track of your mental health')),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
   }
 
   // Cancel a specific notification
-  static Future<void> cancelNotifications(int? id, {bool? cancelWorker}) async {
-    if (cancelWorker != null && cancelWorker) {
+  static Future<void> cancelNotifications(int? id,
+      {bool cancelWorker = false}) async {
+    if (cancelWorker) {
       await Workmanager().cancelAll();
     }
     if (id == null) {

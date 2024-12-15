@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
 
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Form/myDropdownMenuEntry.dart';
@@ -37,6 +39,7 @@ class UserSettings extends StatefulWidget {
 }
 
 class _UserSettingsState extends State<UserSettings> {
+  late ImagePickerService pickerService;
   String? dropdownValueAge = '18-30';
   TextEditingController _namecontroller = TextEditingController();
   bool firsttime = true;
@@ -68,6 +71,7 @@ class _UserSettingsState extends State<UserSettings> {
     });
 
     userInfo.reset();
+    await pickerService.deleteImages();
     final GoogleSignIn googleSignIn = GoogleSignIn();
     await googleSignIn.signOut();
     Navigator.of(context).pushAndRemoveUntil(
@@ -98,7 +102,9 @@ class _UserSettingsState extends State<UserSettings> {
                   fontSize: 18.sp,
                   fontWeight: FontWeight.normal,
                   color: Colors.black),
-              TextAlign.right,
+              AppLocalizations.of(context)!.textDirection == "rtl"
+                  ? TextAlign.right
+                  : TextAlign.left,
               24),
         ],
       );
@@ -115,7 +121,9 @@ class _UserSettingsState extends State<UserSettings> {
                 fontSize: 18.sp,
                 fontWeight: FontWeight.normal,
                 color: Colors.black),
-            TextAlign.right,
+            AppLocalizations.of(context)!.textDirection == "rtl"
+                ? TextAlign.right
+                : TextAlign.left,
             24),
         myAutoSizedText(
             sep[1],
@@ -123,7 +131,9 @@ class _UserSettingsState extends State<UserSettings> {
                 fontSize: 16.sp,
                 fontWeight: FontWeight.normal,
                 color: Colors.black),
-            TextAlign.right,
+            AppLocalizations.of(context)!.textDirection == "rtl"
+                ? TextAlign.right
+                : TextAlign.left,
             22),
       ],
     );
@@ -135,6 +145,7 @@ class _UserSettingsState extends State<UserSettings> {
 
     super.initState();
     _namecontroller = TextEditingController(text: widget.username);
+    pickerService = GetIt.instance<ImagePickerService>();
   }
 
   @override

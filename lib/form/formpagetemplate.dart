@@ -221,7 +221,7 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
                   child: Row(
                     //mainAxisSize: MediaQuery.of(context).size.width,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //textDirection: TextDirection.rtl,
+
                     children: [
                       TextButton(
                         onPressed: () {

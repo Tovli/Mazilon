@@ -37,7 +37,7 @@ class FirebaseAuthService {
       } else {
         IncidentLoggerService loggerService =
             GetIt.instance<IncidentLoggerService>();
-        await loggerService.captureException(
+        await loggerService.captureLog(
           error,
           stackTrace: stackTrace,
         );
@@ -61,7 +61,7 @@ class FirebaseAuthService {
         showToast(message: 'An error occurred');
         IncidentLoggerService loggerService =
             GetIt.instance<IncidentLoggerService>();
-        await loggerService.captureException(
+        await loggerService.captureLog(
           error,
           stackTrace: stackTrace,
         );
@@ -317,7 +317,7 @@ Future<bool> loadAppInfoFromJson(
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureException(
+      await loggerService.captureLog(
         error,
         stackTrace: stackTrace,
       );
@@ -688,7 +688,7 @@ Future<void> loadAppInformation(
   } catch (error, stackTrace) {
     IncidentLoggerService loggerService =
         GetIt.instance<IncidentLoggerService>();
-    await loggerService.captureException(
+    await loggerService.captureLog(
       error,
       stackTrace: stackTrace,
     );

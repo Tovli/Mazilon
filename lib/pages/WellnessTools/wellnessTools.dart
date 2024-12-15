@@ -97,7 +97,9 @@ class _WellnessToolsState extends State<WellnessTools> {
                           fontSize: 24.sp,
                           fontWeight: FontWeight.bold,
                         ),
-                        null,
+                        AppLocalizations.of(context)!.textDirection == "rtl"
+                            ? TextAlign.right
+                            : TextAlign.left,
                         28,
                         3),
                   ),
@@ -122,7 +124,9 @@ class _WellnessToolsState extends State<WellnessTools> {
                           fontSize: 18.sp,
                           fontWeight: FontWeight.normal,
                         ),
-                        null,
+                        AppLocalizations.of(context)!.textDirection == "rtl"
+                            ? TextAlign.right
+                            : TextAlign.left,
                         20,
                         3),
                   ),
@@ -137,7 +141,9 @@ class _WellnessToolsState extends State<WellnessTools> {
                           fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
                         ),
-                        null,
+                        AppLocalizations.of(context)!.textDirection == "rtl"
+                            ? TextAlign.right
+                            : TextAlign.left,
                         20,
                         3),
                   ),

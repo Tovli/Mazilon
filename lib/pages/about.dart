@@ -7,6 +7,10 @@ import 'package:mazilon/util/styles.dart';
 //the text is fetched from the appInformation provider, which fetches the text from the firebase database.
 //the logos are in the assets/images folder
 class About extends StatelessWidget {
+  final String version;
+  About({
+    required this.version,
+  });
   @override
   Widget build(BuildContext context) {
     final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
@@ -102,6 +106,19 @@ class About extends StatelessWidget {
                       35),
                 ),
               ),
+              Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: Text(
+                          "Living Positively App Version : ${version}",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal, fontSize: 20),
+                        )),
+                  )),
               Row(
                 mainAxisAlignment:
                     MainAxisAlignment.spaceEvenly, // Adjust alignment as needed

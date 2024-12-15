@@ -63,7 +63,7 @@ void callbackDispatcher() {
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureException(error,
+      await loggerService.captureLog(error,
           stackTrace: stackTrace,
           exceptionData: {'name': 'inputData', 'value': inputData});
     }

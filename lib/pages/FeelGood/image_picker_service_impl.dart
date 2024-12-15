@@ -15,6 +15,7 @@ abstract class ImagePickerService {
   Future<void> loadImagePaths(List<String> imagePaths);
   displayImage(String path, {BoxFit fit = BoxFit.none});
   Widget getOnlineImage(String url);
+  Future<void> deleteImages();
 }
 
 class ImagePickerServiceImpl implements ImagePickerService {
@@ -23,6 +24,18 @@ class ImagePickerServiceImpl implements ImagePickerService {
   @override
   Future<XFile?> pickImage({required ImageSource source}) {
     return _picker.pickImage(source: source);
+  }
+
+  @override
+  Future<void> deleteImages() async {
+    List<String> tempPath = [];
+    await loadImagePaths(tempPath);
+    print(tempPath);
+    while (tempPath.isNotEmpty) {
+      File(tempPath[0]).deleteSync();
+      tempPath.removeAt(0);
+      saveImagePaths(tempPath);
+    }
   }
 
   @override
@@ -49,7 +62,7 @@ class ImagePickerServiceImpl implements ImagePickerService {
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureException(
+      await loggerService.captureLog(
         error,
         stackTrace: stackTrace,
       );
@@ -74,7 +87,7 @@ class ImagePickerServiceImpl implements ImagePickerService {
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureException(
+      await loggerService.captureLog(
         error,
         stackTrace: stackTrace,
       );
