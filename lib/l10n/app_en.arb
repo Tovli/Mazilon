@@ -535,6 +535,10 @@
     "@downloadFailed": { 
     "description": ""
     },
+     "selectLanguage": "{gender,select,male{Select language} female{Select language} other{Select language}}",
+    "@selectLanguage": { 
+    "description": ""
+    },
         
       "validateEmpty": "Field cannot be empty",
     "@validateEmpty": { 

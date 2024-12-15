@@ -154,7 +154,7 @@
       
 
           "newTraitOrThanks": "{item} חדשה",
-      
+        "selectLanguage": "{gender,select,male{בחר שפה} female{בחרי שפה} other{בחר.י שפה}}",
       "validateEmpty": "השדה אינו יכול להיות ריק",
       "moreVideos": "סרטונים נוספים",
       

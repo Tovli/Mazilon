@@ -297,10 +297,22 @@ class _UserSettingsState extends State<UserSettings> {
                         },
                       ),
                     ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                    myAutoSizedText(
+                        AppLocalizations.of(context)!.selectLanguage(gender),
+                        TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black),
+                        null,
+                        30),
                     Container(
                       width: 300,
                       child: DropdownMenu<String>(
-                        initialSelection: locales[0],
+                        initialSelection: locales[
+                            locales.indexOf(userInfoProvider.localeName)],
                         width: 300,
                         dropdownMenuEntries: [
                           ...locales
