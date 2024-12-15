@@ -23,7 +23,7 @@ import 'package:mockito/mockito.dart';
 import '../TestMenu.dart';
 import '../test_data.dart';
 
-import 'feelGood_test.mocks.dart';
+import 'FeelGood_test.mocks.dart';
 
 @GenerateNiceMocks([
   MockSpec<VideoPlayerPageFactory>(),

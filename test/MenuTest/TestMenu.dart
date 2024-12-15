@@ -17,9 +17,6 @@ Widget getMenuForTests(
       home: ScreenUtilInit(
         designSize: const Size(360, 690),
         child: Menu(
-          collections: const [],
-          collectionNames: const [],
-          checkboxModels: const {},
           phonePageData: PhonePageData(
             key: 'phonePageData',
             header: 'header',
@@ -33,6 +30,7 @@ Widget getMenuForTests(
             savedPhoneNumbers: [],
             phoneDescription: [],
           ),
+          changeLocale: (String locale) {},
           hasFilled: false,
         ),
       ),

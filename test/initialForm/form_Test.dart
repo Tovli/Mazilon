@@ -6,7 +6,7 @@ import 'package:mazilon/initialForm/initialFormPage1.dart';
 import 'package:mazilon/initialForm/initialFormPage2.dart';
 import 'package:mazilon/initialForm/toFormPage.dart';
 import 'package:mazilon/menu.dart';
-import 'package:mazilon/util/Form/checkbox_model.dart';
+
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
@@ -17,9 +17,7 @@ import 'package:mazilon/initialForm/form.dart';
 
 void main() {
   // Mock data for testing
-  List<List<String>> collections = [];
-  List<String> collectionNames = [];
-  Map<String, CheckboxModel> checkboxModels = {};
+
   PhonePageData phonePageData = PhonePageData(
       header: '',
       phoneNames: [],
@@ -51,10 +49,8 @@ void main() {
       ],
       child: MaterialApp(
         home: InitialFormProgressIndicator(
-          collections: collections,
-          collectionNames: collectionNames,
-          checkboxModels: checkboxModels,
           phonePageData: phonePageData,
+          changeLocale: (String locale) {},
         ),
       ),
     );

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // the disclaimer page widget,
 // it shows the disclaimer text and a button to confirm the disclaimer
@@ -41,8 +42,9 @@ class _DisclaimerPageState extends State<DisclaimerPage> {
     final appInfoProvider = Provider.of<AppInformation>(context, listen: false);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
+    final gender = userInfoProvider.gender;
     // show the disclaimer text and a button to confirm the disclaimer
-
+    print(appInfoProvider.disclaimerText);
     return PopScope(
       canPop: false, //can't go back from this page
       child: Scaffold(
@@ -54,20 +56,17 @@ class _DisclaimerPageState extends State<DisclaimerPage> {
                   SizedBox(
                       height:
                           20.0), //space between the top of the screen and the disclaimer text
-                  Directionality(
-                    textDirection: TextDirection.rtl, //text direction
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                      child: myAutoSizedText(
-                          appInfoProvider
-                              .disclaimerText, //disclaimer text from CMS(Saved in appinfo)
-                          TextStyle(
-                            fontSize: 16.sp, //text size
-                            fontWeight: FontWeight.normal,
-                          ),
-                          TextAlign.right,
-                          40),
-                    ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                    child: myAutoSizedText(
+                        appInfoProvider
+                            .disclaimerText, //disclaimer text from CMS(Saved in appinfo)
+                        TextStyle(
+                          fontSize: 16.sp, //text size
+                          fontWeight: FontWeight.normal,
+                        ),
+                        TextAlign.right,
+                        40),
                   ),
                   // the confirm disclaimer button
                   ConfirmationButton(context, () {
@@ -78,7 +77,7 @@ class _DisclaimerPageState extends State<DisclaimerPage> {
                     });
                   },
                       //disclaimer next button text from CMS(Saved in appinfo)
-                      appInfoProvider.disclaimerNext,
+                      AppLocalizations.of(context)!.confirmButton(gender),
                       myTextStyle.copyWith(
                         fontSize: 20.sp,
                       )),

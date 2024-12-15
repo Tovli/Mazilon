@@ -1,30 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mazilon/util/Form/myDropdownMenuEntry.dart';
-import 'package:mazilon/util/styles.dart';
+
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/initialForm/initialFormPage2.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() {
   // Mock functions
   void mockNext() {}
   void mockPrev() {}
   void mockUpdateName(String name) {}
-
-  // Mock titles
-  final Map<String, String> mockTitles = {
-    'mainTitle': 'Main Title',
-    'subTitle': 'Subtitle'
-  };
-
-  // Mock form titles
-  final Map<String, String> mockFormTitles = {
-    'name': 'Name (required)',
-    'age': 'Age (required)',
-    'gender': 'Gender (required)'
-  };
 
   // Create the test widget
   Widget createTestWidget() {
@@ -35,8 +20,6 @@ void main() {
           next: mockNext,
           prev: mockPrev,
           updateName: mockUpdateName,
-          titles: mockTitles,
-          formTitles: mockFormTitles,
         ),
       ),
       //),
@@ -111,8 +94,6 @@ void main() {
             next: mockNext,
             prev: mockPrev,
             updateName: mockUpdateName,
-            titles: mockTitles,
-            formTitles: mockFormTitles,
           ),
         ),
         //),

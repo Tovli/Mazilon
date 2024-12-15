@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:mazilon/util/styles.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 //Template for the "title" of sections in the home page
 //i.e "התוכנית שלי", "רשימת מעלות", "תודו ליסט"
@@ -28,12 +29,11 @@ class SectionBarHomeState extends State<SectionBarHome> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(children: widget.icons),
             Row(
               children: [
                 widget.textWidget,
@@ -44,23 +44,23 @@ class SectionBarHomeState extends State<SectionBarHome> {
                 ),
               ],
             ),
+            Row(children: widget.icons),
           ],
         ),
         widget.subHeader.isNotEmpty
             ? Padding(
                 padding: const EdgeInsets.only(right: 18.0, left: 5),
-                child: Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: myAutoSizedText(
-                      widget.subHeader,
-                      TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.sp,
-                        color: darkGray,
-                      ),
-                      TextAlign.right,
-                      30),
-                ),
+                child: myAutoSizedText(
+                    widget.subHeader,
+                    TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.sp,
+                      color: darkGray,
+                    ),
+                    AppLocalizations.of(context)!.textDirection == "rtl"
+                        ? TextAlign.right
+                        : TextAlign.left,
+                    30),
               )
             : Container(),
       ],

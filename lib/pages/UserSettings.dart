@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get_it/get_it.dart';
-import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
-import 'package:mazilon/pages/SignIn_Pages/login.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -12,7 +9,8 @@ import 'package:mazilon/util/Form/myDropdownMenuEntry.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mazilon/util/Form/checkbox_model.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserSettings extends StatefulWidget {
   final String username;
@@ -20,9 +18,8 @@ class UserSettings extends StatefulWidget {
   final String gender;
   final Function updateData;
   final Map<String, String> titles;
-  final List<List<String>> collections;
-  final List<String> collectionNames;
-  final Map<String, CheckboxModel> checkboxModels;
+
+  final Function changeLocale;
   PhonePageData phonePageData;
 
   UserSettings({
@@ -32,17 +29,14 @@ class UserSettings extends StatefulWidget {
     required this.gender,
     required this.updateData,
     required this.titles,
-    required this.collections,
-    required this.collectionNames,
-    required this.checkboxModels,
     required this.phonePageData,
+    required this.changeLocale,
   });
   @override
   State<UserSettings> createState() => _UserSettingsState();
 }
 
 class _UserSettingsState extends State<UserSettings> {
-  late ImagePickerService pickerService;
   String? dropdownValueAge = '18-30';
   TextEditingController _namecontroller = TextEditingController();
   bool firsttime = true;
@@ -50,7 +44,18 @@ class _UserSettingsState extends State<UserSettings> {
   String? dropdownValueGender = '';
   String? name = '';
   List<String> ages = ['18-', '18-30', '30-40', '40-55', '55+'];
-  List<String> genders = ['זכר', 'נקבה', 'לא בינארי', 'לא מעוניין להגיד'];
+  List<String> genders = [];
+  List<String> locales =
+      AppLocalizations.supportedLocales.map((e) => e.languageCode).toList();
+  Future<void> updateLocale(
+      String locale, UserInformation userInfoProvider) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('localeName', locale);
+    setState(() {
+      widget.changeLocale(locale);
+      userInfoProvider.updateLocaleName(locale);
+    });
+  }
 
   //remove log-in data and reset all data that user has filled in the app:
   Future<void> resetData(UserInformation userInfo) async {
@@ -61,61 +66,65 @@ class _UserSettingsState extends State<UserSettings> {
       firsttime = prefs.getBool('firstTime') ?? true;
       hasFilled = prefs.getBool('hasFilled') ?? false;
     });
-    widget.checkboxModels.forEach((key, value) {
-      value.reset();
-    });
+
     userInfo.reset();
-    await pickerService.deleteImages();
     final GoogleSignIn googleSignIn = GoogleSignIn();
     await googleSignIn.signOut();
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
             builder: (context) => FirstPage(
-                checkboxModels: widget.checkboxModels,
-                collections: widget.collections,
-                collectionNames: widget.collectionNames,
                 phonePageData: widget.phonePageData,
                 firsttime: firsttime,
+                changeLocale: widget.changeLocale,
                 hasFilled: hasFilled)),
         (Route<dynamic> route) => false);
   }
 
   // save the changes the user made
-  void savePage(age, gender) {
-    widget.updateData(_namecontroller.text, gender, age);
+  void savePage(age, gender, isNonBinary) {
+    widget.updateData(_namecontroller.text, gender, age, isNonBinary);
     Navigator.pop(context);
   }
 
   // create the "what's your name?" title
   Column resizeText(text) {
-    List<String> sep = text.split("(");
-
-    sep[1] = "(${sep[1]}";
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Directionality(
-          textDirection: TextDirection.rtl,
-          child: myAutoSizedText(
-              sep[0],
+    if (text == '') {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          myAutoSizedText(
+              text,
               TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.normal,
                   color: Colors.black),
               TextAlign.right,
               24),
-        ),
-        Directionality(
-          textDirection: TextDirection.rtl,
-          child: myAutoSizedText(
-              sep[1],
-              TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black),
-              TextAlign.right,
-              22),
-        ),
+        ],
+      );
+    }
+    List<String> sep = text.split("(");
+
+    sep[1] = "(${sep[1]}";
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        myAutoSizedText(
+            sep[0],
+            TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.normal,
+                color: Colors.black),
+            TextAlign.right,
+            24),
+        myAutoSizedText(
+            sep[1],
+            TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.normal,
+                color: Colors.black),
+            TextAlign.right,
+            22),
       ],
     );
   }
@@ -123,12 +132,9 @@ class _UserSettingsState extends State<UserSettings> {
   @override
   void initState() {
     dropdownValueAge = widget.age;
-    dropdownValueGender = widget.gender == 'male'
-        ? 'זכר'
-        : (widget.gender == 'female' ? 'נקבה' : '');
+
     super.initState();
     _namecontroller = TextEditingController(text: widget.username);
-    pickerService = GetIt.instance<ImagePickerService>();
   }
 
   @override
@@ -139,8 +145,19 @@ class _UserSettingsState extends State<UserSettings> {
 
   @override
   Widget build(BuildContext context) {
+    final applocal = AppLocalizations.of(context);
+    genders = [
+      applocal!.male,
+      applocal.female,
+      applocal.nonBinary,
+      applocal.notWillingToSay
+    ];
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
+    dropdownValueGender = widget.gender == 'male'
+        ? applocal.male
+        : (widget.gender == 'female' ? applocal.female : '');
+    final gender = userInfoProvider.gender;
 
     return GestureDetector(
       onTap: () {
@@ -149,152 +166,149 @@ class _UserSettingsState extends State<UserSettings> {
       child: Scaffold(
         backgroundColor: appWhite,
         appBar: AppBar(
-          title: Directionality(
-            textDirection: TextDirection.rtl,
-            child: myAutoSizedText(
-                widget.titles["header-" + userInfoProvider.gender],
-                TextStyle(fontSize: 20.sp),
-                null,
-                40),
-          ),
+          title: myAutoSizedText(
+              AppLocalizations.of(context)!.userSettingsTitle(gender),
+              TextStyle(fontSize: 20.sp),
+              null,
+              40),
         ),
         body: SingleChildScrollView(
           child: Center(
             child: Column(
               children: [
-                Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: myAutoSizedText(
-                      widget.titles["Title-" + userInfoProvider.gender],
-                      TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 40.sp,
-                      ),
-                      null,
-                      60),
-                ),
+                myAutoSizedText(
+                    AppLocalizations.of(context)!.userSettingsTitle(gender),
+                    TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 40.sp,
+                    ),
+                    null,
+                    60),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.05,
                 ),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: resizeText(
-                            widget.titles["name-" + userInfoProvider.gender])),
+                    resizeText(
+                      AppLocalizations.of(context)!.userSettingsName(gender),
+                    ),
                     Container(
                       width: 300,
-                      child: Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: Container(
-                          height: 35,
-                          child: TextField(
-                            controller: _namecontroller,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 6.0),
-                            ),
-                            onChanged: (text) {
-                              // Do something with the text
-                              name = text;
-                              userInfoProvider.updateName(text);
-                            },
+                      child: Container(
+                        height: 35,
+                        child: TextField(
+                          controller: _namecontroller,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(vertical: 6.0),
                           ),
+                          onChanged: (text) {
+                            // Do something with the text
+                            name = text;
+                            userInfoProvider.updateName(text);
+                          },
                         ),
                       ),
                     ),
-                    Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: myAutoSizedText(
-                          widget.titles["age-" + userInfoProvider.gender],
-                          TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black),
-                          null,
-                          30),
-                    ),
+                    myAutoSizedText(
+                        AppLocalizations.of(context)!.userSettingsAge(gender),
+                        TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black),
+                        null,
+                        30),
                     //AGE:
                     Container(
                       width: 300,
-                      child: Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: DropdownMenu<String>(
-                          width: 300,
-                          initialSelection: dropdownValueAge,
-                          dropdownMenuEntries: [
-                            ...ages
-                                .map((age) => buildDropdownMenuEntry(
-                                      age,
-                                      dropdownValueAge == age
-                                          ? const Color.fromARGB(
-                                              255, 68, 0, 255)
-                                          : Colors.black,
-                                    ))
-                                .toList()
-                          ],
-                          onSelected: (String? newValue) {
-                            setState(() {
-                              if (newValue != null) {
-                                dropdownValueAge = newValue;
-                              }
-                            });
-                            // Do something with the selected value
-                          },
-                        ),
+                      child: DropdownMenu<String>(
+                        width: 300,
+                        initialSelection: dropdownValueAge,
+                        dropdownMenuEntries: [
+                          ...ages
+                              .map((age) => buildDropdownMenuEntry(
+                                    age,
+                                    dropdownValueAge == age
+                                        ? const Color.fromARGB(255, 68, 0, 255)
+                                        : Colors.black,
+                                  ))
+                              .toList()
+                        ],
+                        onSelected: (String? newValue) {
+                          setState(() {
+                            if (newValue != null) {
+                              dropdownValueAge = newValue;
+                            }
+                          });
+                          // Do something with the selected value
+                        },
                       ),
                     ),
-                    Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: myAutoSizedText(
-                          widget.titles["gender-" + userInfoProvider.gender],
-                          TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black),
-                          null,
-                          30),
-                    ),
+                    myAutoSizedText(
+                        AppLocalizations.of(context)!
+                            .userSettingsGender(gender),
+                        TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black),
+                        null,
+                        30),
                     //GENDER:
                     Container(
                       width: 300,
-                      child: Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: DropdownMenu<String>(
-                          initialSelection: userInfoProvider.binary
-                              ? 'לא בינארי'
-                              : userInfoProvider.gender == 'male'
-                                  ? 'זכר'
-                                  : userInfoProvider.gender == 'female'
-                                      ? 'נקבה'
-                                      : 'לא מעוניין להגיד'
-                          //userInfoProvider.gender == 'nonbinary'
-                          // ? 'לא בינארי'
-                          // : 'לא מעוניין להגיד'
-                          ,
-                          width: 300,
-                          dropdownMenuEntries: [
-                            ...genders
-                                .map((gender) => buildDropdownMenuEntry(
-                                      gender,
-                                      dropdownValueGender == gender
-                                          ? const Color.fromARGB(
-                                              255, 68, 0, 255)
-                                          : Colors.black,
-                                    ))
-                                .toList()
-                          ],
-                          onSelected: (String? newValue) {
-                            setState(() {
-                              if (newValue != null) {
-                                dropdownValueGender = newValue;
-                              }
-                            });
-                            // Do something with the selected value
-                          },
-                        ),
+                      child: DropdownMenu<String>(
+                        initialSelection: (userInfoProvider.binary)
+                            ? applocal!.nonBinary
+                            : (userInfoProvider.gender == 'male'
+                                ? applocal.male
+                                : userInfoProvider.gender == 'female'
+                                    ? applocal.female
+                                    : applocal.notWillingToSay),
+                        width: 300,
+                        dropdownMenuEntries: [
+                          ...genders
+                              .map((gender) => buildDropdownMenuEntry(
+                                    gender,
+                                    dropdownValueGender == gender
+                                        ? const Color.fromARGB(255, 68, 0, 255)
+                                        : Colors.black,
+                                  ))
+                              .toList()
+                        ],
+                        onSelected: (String? newValue) {
+                          setState(() {
+                            if (newValue != null) {
+                              dropdownValueGender = newValue;
+                            }
+                          });
+                          // Do something with the selected value
+                        },
+                      ),
+                    ),
+                    Container(
+                      width: 300,
+                      child: DropdownMenu<String>(
+                        initialSelection: locales[0],
+                        width: 300,
+                        dropdownMenuEntries: [
+                          ...locales
+                              .map((locale) => buildDropdownMenuEntry(
+                                    locale,
+                                    locale == 'en'
+                                        ? const Color.fromARGB(255, 68, 0, 255)
+                                        : Colors.black,
+                                  ))
+                              .toList()
+                        ],
+                        onSelected: (String? newValue) {
+                          setState(() {
+                            if (newValue != null) {
+                              updateLocale(newValue, userInfoProvider);
+                            }
+                          });
+                          // Do something with the selected value
+                        },
                       ),
                     ),
                   ],
@@ -307,32 +321,32 @@ class _UserSettingsState extends State<UserSettings> {
 
                   userInfoProvider.updateName(_namecontroller.text);
                   userInfoProvider
-                      .updateBinary(dropdownValueGender! == 'לא בינארי');
+                      .updateBinary(dropdownValueGender! == applocal.nonBinary);
                   userInfoProvider.updateAge(dropdownValueAge!);
-                  switch (dropdownValueGender!) {
-                    case 'זכר':
+
+                  if (dropdownValueGender != null) {
+                    if (dropdownValueGender == applocal.male) {
                       userInfoProvider.updateGender('male');
-                      savePage(dropdownValueAge!, 'male');
-                      break;
-                    case 'נקבה':
+                      savePage(dropdownValueAge!, 'male', false);
+                    } else if (dropdownValueGender == applocal.female) {
                       userInfoProvider.updateGender('female');
-                      savePage(dropdownValueAge!, 'female');
-                      break;
-                    case 'לא בינארי':
+                      savePage(dropdownValueAge!, 'female', false);
+                    } else if (dropdownValueGender == applocal.nonBinary) {
                       userInfoProvider.updateGender('');
-                      savePage(dropdownValueAge!, '');
-                      break;
-                    default:
+                      savePage(dropdownValueAge!, '', false);
+                    } else {
                       userInfoProvider.updateGender('');
-                      savePage(dropdownValueAge!, '');
+                      savePage(dropdownValueAge!, '', true);
+                    }
                   }
+
                   //savePage(dropdownValueAge!, dropdownValueGender!);
-                }, widget.titles["Confirm-" + userInfoProvider.gender],
+                }, AppLocalizations.of(context)!.confirmButton(gender),
                     myTextStyle.copyWith(fontSize: 20.sp)),
                 const SizedBox(height: 20),
                 CancelButton(context, () {
                   resetData(userInfoProvider);
-                }, widget.titles["Reset-" + userInfoProvider.gender],
+                }, AppLocalizations.of(context)!.userSettingsReset(gender),
                     myTextStyle.copyWith(fontSize: 20.sp)),
                 const SizedBox(height: 20)
               ],

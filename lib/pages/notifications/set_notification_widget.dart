@@ -9,6 +9,7 @@ import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SetNotificationWidget extends StatefulWidget {
   const SetNotificationWidget({super.key});
@@ -27,17 +28,6 @@ class _SetNotificationWidgetState extends State<SetNotificationWidget> {
     });
   }
 
-  void cancelNotification() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    NotificationsService.cancelNotifications(null, cancelWorker: true);
-    await prefs.remove('notificationHour');
-    await prefs.remove('notificationMinute');
-    setState(() {
-      _currentHour = 12;
-      _currentMinute = 0;
-    });
-  }
-
   void saveNotificationTime(
       int hour, int minute, UserInformation userInfo) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -52,9 +42,10 @@ class _SetNotificationWidgetState extends State<SetNotificationWidget> {
     });
   }
 
-  void initializeNotification(List<String> quotes, UserInformation userInfo) {
+  void initializeNotification(
+      List<String> quotes, UserInformation userInfo, Function createText) {
     NotificationsService.initializeNotification(
-        quotes, _currentHour, _currentMinute);
+        quotes, _currentHour, _currentMinute, createText);
     saveNotificationTime(_currentHour, _currentMinute, userInfo);
   }
 
@@ -77,6 +68,7 @@ class _SetNotificationWidgetState extends State<SetNotificationWidget> {
     final userInfoProvider = Provider.of<UserInformation>(context);
     var quotes = appInfoProvider
         .homePageInspirationalQuotes['quotes-${userInfoProvider.gender}']!;
+    var gender = userInfoProvider.gender;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -103,10 +95,12 @@ class _SetNotificationWidgetState extends State<SetNotificationWidget> {
               borderRadius: BorderRadius.circular(7),
             ),
             child: TextButton(
-              onPressed: () =>
-                  {initializeNotification(quotes, userInfoProvider)},
+              onPressed: () => {
+                initializeNotification(quotes, userInfoProvider,
+                    AppLocalizations.of(context)!.notifyOnscheduledNotification)
+              },
               child: Text(
-                'קבע תזכורת לזמן שנבחר',
+                AppLocalizations.of(context)!.notificationSetTimeText(gender),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white),
               ),
@@ -127,25 +121,8 @@ class _SetNotificationWidgetState extends State<SetNotificationWidget> {
                     quotes[Random().nextInt(quotes.length)]),
               },
               child: Text(
-                'הצג התראה לדוגמא',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(height: 25),
-        Center(
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 139, 96, 96).withOpacity(0.7),
-              borderRadius: BorderRadius.circular(7),
-            ),
-            child: TextButton(
-              onPressed: () => {cancelNotification()},
-              child: Text(
-                'בטל את כל התזכורות',
+                AppLocalizations.of(context)!
+                    .notificationShowExampleNotification(gender),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white),
               ),

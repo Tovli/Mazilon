@@ -7,7 +7,6 @@ import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:mazilon/util/Form/checkbox_model.dart';
 import 'package:mazilon/util/SignIn/popup_toast.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
@@ -79,46 +78,6 @@ class Warning {
   Warning({required this.text, required this.warnings});
 }
 
-Future<void> loadCollections(
-  checkboxCollectionNames,
-  collections,
-  checkboxModels,
-  appInfo,
-) async {
-  print('loadCollections started');
-
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  print(checkboxCollectionNames);
-  // Load the collections from the database for checkboxes:
-  for (String collectionName in checkboxCollectionNames) {
-    String dbName = '${collectionName.split('-')[1]}-Sug';
-    final doc = await FirebaseFirestore.instance.collection(dbName).get();
-    List<String> collection = [];
-    for (var doc in doc.docs) {
-      collection.add(doc.get('content'));
-    }
-    prefs.setStringList('databaseItems$collectionName', collection);
-    collections.add(collection);
-    // Create a CheckboxModel for each collection
-    CheckboxModel model = CheckboxModel(
-      collectionName,
-      collectionName,
-      '',
-      '',
-      '',
-      '',
-    );
-    checkboxModels[collectionName] = model;
-    // Load the values from the SharedPreferences
-
-    List<String> addedStrings =
-        prefs.getStringList('addedStrings$collectionName') ?? [];
-
-    model.addItem(addedStrings);
-    model.loadDatabaseItems(collection);
-  }
-}
-
 //upon adding user information, the load function will need to be updated
 //use or create functions in userinfo class to update the user information:
 Future<void> loadUserInformation(UserInformation userInfo) async {
@@ -145,6 +104,12 @@ Future<void> loadUserInformation(UserInformation userInfo) async {
       .updateDisclaimerSigned(prefs.getBool('disclaimerConfirmed') ?? false);
   userInfo.updateNotificationMinute(prefs.getInt('notificationMinute') ?? 0);
   userInfo.updateNotificationHour(prefs.getInt('notificationHour') ?? 12);
+  userInfo.updateLocaleName(prefs.getString('localeName') ?? "en");
+  userInfo.updatePositiveTraits(prefs.getStringList('positiveTraits') ?? []);
+  userInfo.updateThanks({
+    "thanks": prefs.getStringList('thankYous') ?? [],
+    "dates": prefs.getStringList('dates') ?? []
+  });
 }
 
 //upon adding CMS(rowy) texts, this will need to be updated:
@@ -220,9 +185,6 @@ Map<String, dynamic> createJson(
 Future<bool> loadAppInfoFromJson(
   AppInformation appInfo,
   String path,
-  checkboxCollectionNames,
-  collections,
-  checkboxModels,
 ) async {
   //Get app version from firestore
 
@@ -244,37 +206,6 @@ Future<bool> loadAppInfoFromJson(
       //check if the versions match
       if (storedVersion != appVersion) {
         return false;
-      }
-
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      for (String collectionName in checkboxCollectionNames) {
-        String appInfoName = '${collectionName.split('-')[1]}Sug';
-        //List<String> collection = [];
-
-        List<String> collection = json[appInfoName].cast<String>();
-        //.map((doc) => (doc.data() as Map<String, dynamic>)['content'] as String)
-        // .toList();
-
-        prefs.setStringList('databaseItems$collectionName', collection);
-
-        //collections.add(collection);
-        // Create a CheckboxModel for each collection
-        collections.add(collection);
-        CheckboxModel model = CheckboxModel(
-          collectionName,
-          collectionName,
-          '',
-          '',
-          '',
-          '',
-        );
-        checkboxModels[collectionName] = model;
-        // Load the values from the SharedPreferences
-        List<String> addedStrings =
-            prefs.getStringList('addedStrings$collectionName') ?? [];
-        model.addItem(addedStrings);
-        model.loadDatabaseItems(collection);
       }
 
       print("data is still new, no need to update it");
@@ -405,12 +336,7 @@ Future<bool> loadAppInfoFromJson(
 //4.2. add the new variable to the switch statement or get the specific item from the firestore query
 //4.3. add the new variable to the map that will be used to update the appInfo class
 //4.4. add the new variable to the appInfo.update function
-Future<void> loadAppFromFirebase(
-  AppInformation appInfo,
-  checkboxCollectionNames,
-  collections,
-  checkboxModels,
-) async {
+Future<void> loadAppFromFirebase(AppInformation appInfo) async {
   print('fetching app info from firebase');
 
   //InitialFormFirstPage
@@ -704,54 +630,6 @@ Future<void> loadAppFromFirebase(
   appInfo.updateAddFormPageTemplateStrings(AFPTS);
   appInfo.updateIntroductionRestart(IR);
 
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  for (String collectionName in checkboxCollectionNames) {
-    String dbName = '${collectionName.split('-')[1]}-Sug';
-    String appInfoName = '${collectionName.split('-')[1]}Sug';
-    final doc = await FirebaseFirestore.instance.collection(dbName).get();
-    List<String> collection = [];
-    for (var doc in doc.docs) {
-      collection.add(doc.get('content'));
-    }
-    switch (appInfoName) {
-      case 'DifficultEventsSug':
-        appInfo.updateDifficultEventsSug(collection);
-        break;
-      case 'DistractionsSug':
-        appInfo.updateDistractionsSug(collection);
-        break;
-      case 'FeelBetterSug':
-        appInfo.updateFeelBetterSug(collection);
-
-        break;
-      case 'MakeSaferSug':
-        appInfo.updateMakeSaferSug(collection);
-
-        break;
-      default:
-    }
-
-    prefs.setStringList('databaseItems$collectionName', collection);
-    collections.add(collection);
-    // Create a CheckboxModel for each collection
-    CheckboxModel model = CheckboxModel(
-      collectionName,
-      collectionName,
-      '',
-      '',
-      '',
-      '',
-    );
-    checkboxModels[collectionName] = model;
-    // Load the values from the SharedPreferences
-    List<String> addedStrings =
-        prefs.getStringList('addedStrings$collectionName') ?? [];
-
-    model.addItem(addedStrings);
-    model.loadDatabaseItems(collection);
-  }
-
   List<String> thanksSuggestionsList = await getThanksSuggestionsList();
   Map<String, List<String>> positiveTraitsSuggestionsList =
       await getPositiveTraitsSuggestionsList();
@@ -794,23 +672,18 @@ Future<void> loadAppFromFirebase(
   }
 }
 
-Future<void> loadAppInformation(AppInformation appInfo, checkboxCollectionNames,
-    collections, checkboxModels) async {
+Future<void> loadAppInformation(
+  AppInformation appInfo,
+) async {
   try {
     if (!kIsWeb) {
       Directory directory = await getApplicationDocumentsDirectory();
 
-      bool loaded = await loadAppInfoFromJson(
-        appInfo,
-        '${directory.path}/data.json',
-        checkboxCollectionNames,
-        collections,
-        checkboxModels,
-      );
+      bool loaded =
+          await loadAppInfoFromJson(appInfo, '${directory.path}/data.json');
       if (loaded) return;
     }
-    await loadAppFromFirebase(
-        appInfo, checkboxCollectionNames, collections, checkboxModels);
+    await loadAppFromFirebase(appInfo);
     return;
   } catch (error, stackTrace) {
     IncidentLoggerService loggerService =
@@ -819,8 +692,7 @@ Future<void> loadAppInformation(AppInformation appInfo, checkboxCollectionNames,
       error,
       stackTrace: stackTrace,
     );
-    await loadAppFromFirebase(
-        appInfo, checkboxCollectionNames, collections, checkboxModels);
+    await loadAppFromFirebase(appInfo);
     // setReady();
     return;
   }

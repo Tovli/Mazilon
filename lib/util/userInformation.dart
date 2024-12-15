@@ -1,14 +1,15 @@
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 //this it the user's information class, with it we store and display it across the app
 class UserInformation with ChangeNotifier {
+  String localeName;
   String gender;
   String name;
   String age;
   bool binary;
   bool disclaimerSigned;
   List<String> difficultEvents;
+  List<String> positiveTraits;
   List<String> makeSafer;
   List<String> feelBetter;
   List<String> distractions;
@@ -16,7 +17,12 @@ class UserInformation with ChangeNotifier {
   String userId;
   int notificationMinute;
   int notificationHour;
+  Map<String, List<String>> thanks;
+
   UserInformation({
+    this.thanks = const <String, List<String>>{},
+    this.positiveTraits = const [],
+    this.localeName = '',
     this.notificationHour = 12,
     this.notificationMinute = 0,
     this.gender = '',
@@ -46,6 +52,10 @@ class UserInformation with ChangeNotifier {
     distractions = [];
     loggedIn = false;
     userId = '';
+    thanks = {};
+    positiveTraits = [];
+    localeName = 'he';
+
     notifyListeners();
   }
 
@@ -112,6 +122,21 @@ class UserInformation with ChangeNotifier {
 
   void updateNotificationMinute(int value) {
     notificationMinute = value;
+    notifyListeners();
+  }
+
+  void updateLocaleName(String value) {
+    localeName = value;
+    notifyListeners();
+  }
+
+  void updatePositiveTraits(List<String> value) {
+    positiveTraits = [...value];
+    notifyListeners();
+  }
+
+  void updateThanks(Map<String, List<String>> value) {
+    thanks = value.map((key, list) => MapEntry(key, List<String>.from(list)));
     notifyListeners();
   }
 }

@@ -1,0 +1,596 @@
+{
+    "language": "English",
+    "@language": {
+        "description": "The Current Language"
+    },
+    "textDirection": "ltr",
+       "@textDirection": {
+        "description": "direction of the text"
+    },
+     "pageHomeWelcomeGender": "{gender, select, male {Hi man!} female {Hi woman!} other {Hi there!}}",
+     "@pageHomeWelcomeGender": {
+        "description": "testing gender"
+     },
+     "greetings": "Welcome, {username}",
+     "@greetings": {
+        "description": "a greeting message",
+        "placeholder": {
+            "username": {
+                "type" : "String"
+            }
+        }
+     },
+ "otherSuggestions": "{gender,select,male{other suggestions} female{other suggestions} other{other suggestions}}",
+    "@otherSuggestions": { 
+    "description": ""
+    },
+     "introductionRestartGreeting": "{gender,select,male{Welcome to Living Positively} female{Welcome to Living Positively} other{Welcome to Living Positively}}",
+    "@introductionRestartGreeting": { 
+    "description": ""
+    },
+     "addFormPageTemplateAdd": "{gender,select,male{Add} female{Add} other{Add}}",
+    "@addFormPageTemplateAdd": { 
+    "description": ""
+    },
+     "addThanksFormThank": "{gender,select,male{Thanks} female{Thanks} other{Thanks}}",
+    "@addThanksFormThank": { 
+    "description": ""
+    },
+     "addFormEdit": "{gender,select,male{Edit} female{Edit} other{Edit}}",
+    "@addFormEdit": { 
+    "description": ""
+    },
+     "signupLoginLoginTitle": "{gender,select,male{Login to Living Positively} female{Login to Living Positively} other{Login to Living Positively}}",
+    "@signupLoginLoginTitle": { 
+    "description": ""
+    },
+     "signupLoginLoginButton": "{gender,select,male{Login} female{Login} other{Login}}",
+    "@signupLoginLoginButton": { 
+    "description": ""
+    },
+     "signupLoginLoginGoogleButton": "{gender,select,male{Login using Google} female{Login using Google} other{Login using Google}}",
+    "@signupLoginLoginGoogleButton": { 
+    "description": ""
+    },
+     "signupLoginLoginNoAccount": "{gender,select,male{Don't have an account yet?} female{Don't have an account yet?} other{Don't have an account yet?}}",
+    "@signupLoginLoginNoAccount": { 
+    "description": ""
+    },
+     "signupLoginLoginToSignup": "{gender,select,male{Signup} female{Signup} other{Signup}}",
+    "@signupLoginLoginToSignup": { 
+    "description": ""
+    },
+     "signupLoginLoginSkip": "{gender,select,male{Skip Signup} female{Skip Signup} other{Skip Signup}}",
+    "@signupLoginLoginSkip": { 
+    "description": ""
+    },
+     "signupLoginSignUpTitle": "{gender,select,male{Signup to Living Positively} female{Signup to Living Positively} other{Signup to Living Positively}}",
+    "@signupLoginSignUpTitle": { 
+    "description": ""
+    },
+     "signupLoginSignUpButton": "{gender,select,male{Signup} female{Signup} other{Signup}}",
+    "@signupLoginSignUpButton": { 
+    "description": ""
+    },
+     "signupLoginSignUpExists": "{gender,select,male{Already have an account?} female{Already have an account?} other{Already have an account?}}",
+    "@signupLoginSignUpExists": { 
+    "description": ""
+    },
+     "signupLoginSignUpToLogin": "{gender,select,male{Login} female{Login} other{Login}}",
+    "@signupLoginSignUpToLogin": { 
+    "description": ""
+    },
+     "personalPlanPageMyPlan": "{gender,select,male{My Plan} female{My Plan} other{My Plan}}",
+    "@personalPlanPageMyPlan": { 
+    "description": ""
+    },
+     "personalPlanPageAllPlan": "{gender,select,male{To see My Plan} female{To see My Plan} other{To see My Plan}}",
+    "@personalPlanPageAllPlan": { 
+    "description": ""
+    },
+     "personalPlanPageTitle": "{gender,select,male{My Personal Plan} female{My Personal Plan} other{My Personal Plan}}",
+    "@personalPlanPageTitle": { 
+    "description": ""
+    },
+     "personalPlanPageStartedDownload": "{gender,select,male{Started downloading} female{Started downloading} other{Started downloading}}",
+    "@personalPlanPageStartedDownload": { 
+    "description": ""
+    },
+     "personalPlanPageFinishDownload": "{gender,select,male{Your plan was saved to \"Downloads\"} female{Your plan was saved to \"Downloads\"} other{Your plan was saved to \"Downloads\"}}",
+    "@personalPlanPageFinishDownload": { 
+    "description": ""
+    },
+     "personalPlanPageFinish": "{gender,select,male{Finish} female{Finish} other{Finish}}",
+    "@personalPlanPageFinish": { 
+    "description": ""
+    },
+     "personalPlanPageHasFilled": "{gender,select,male{To update the plan} female{To update the plan} other{To update the plan}}",
+    "@personalPlanPageHasFilled": { 
+    "description": ""
+    },
+     "personalPlanPageDidNotFill": "{gender,select,male{To fill the plan} female{To fill the plan} other{To fill the plan}}",
+    "@personalPlanPageDidNotFill": { 
+    "description": ""
+    },
+
+     "homePagePersonalPlanMainTitle": "{gender,select,male{My Plan} female{My Plan} other{My Plan}}",
+    "@homePagePersonalPlanMainTitle": { 
+    "description": ""
+    },
+     "homePagePersonalPlanSecondaryTitle": "{gender,select,male{Things that will make me feel well now} female{Things that will make me feel well now} other{Things that will make me feel well now}}",
+    "@homePagePersonalPlanSecondaryTitle": { 
+    "description": ""
+    },
+     "homePageTraitsMainTitle": "{gender,select,male{Qualities List} female{Qualities List} other{Qualities List}}",
+    "@homePageTraitsMainTitle": { 
+    "description": ""
+    },
+     "homePageTraitsSecondaryTitle": "{gender,select,male{What I'm good at, recommended to read once a day} female{What I'm good at, recommended to read once a day} other{What I'm good at, recommended to read once a day}}",
+    "@homePageTraitsSecondaryTitle": { 
+    "description": ""
+    },
+     "homePageThanksMainTitle": "{gender,select,male{Thanks list} female{Thanks list} other{Thanks list}}",
+    "@homePageThanksMainTitle": { 
+    "description": ""
+    },
+     "homePageThanksSecondaryTitle": "{gender,select,male{What I'm thankful about today} female{What I'm thankful about today} other{What I'm thankful about today}}",
+    "@homePageThanksSecondaryTitle": { 
+    "description": ""
+    },
+     "homePageThankyouPopup": "{gender,select,male{This is the way to strengthen your positive happiness muscle. The recommendation is to thank for at least 5 things in your life every day. Keep up the good work, and we'll meet again tomorrow} female{This is the way to strengthen your positive happiness muscle. The recommendation is to thank for at least 5 things in your life every day. Keep up the good work, and we'll meet again tomorrow} other{This is the way to strengthen your positive happiness muscle. The recommendation is to thank for at least 5 things in your life every day. Keep up the good work, and we'll meet again tomorrow}}",
+    "@homePageThankyouPopup": { 
+    "description": ""
+    },
+     "homePagePositiveTraitPopup": "{gender,select,male{The recommendation is to look at your list of virtues every day. And when there's something to add, don't be shy—add it without judgment and with a full heart.} female{The recommendation is to look at your list of virtues every day. And when there's something to add, don't be shy—add it without judgment and with a full heart.} other{The recommendation is to look at your list of virtues every day. And when there's something to add, don't be shy—add it without judgment and with a full heart.}}",
+    "@homePagePositiveTraitPopup": { 
+    "description": ""
+    },
+     "homePageGreetings": "{gender,select,male{It's good to have you back :)} female{It's good to have you back :)} other{It's good to have you back :)}}",
+    "@homePageGreetings": { 
+    "description": ""
+    },
+     "homePageAbout": "{gender,select,male{About} female{About} other{About}}",
+    "@homePageAbout": { 
+    "description": ""
+    },
+     "homePageWellnessTools": "{gender,select,male{Wellness Tools} female{Wellness Tools} other{Wellness Tools}}",
+    "@homePageWellnessTools": { 
+    "description": ""
+    },
+     "homePageFeelGood": "{gender,select,male{Feel Good} female{Feel Good} other{Feel Good}}",
+    "@homePageFeelGood": { 
+    "description": ""
+    },
+     "homePageSync": "{gender,select,male{Sync Accounts} female{Sync Accounts} other{Sync Accounts}}",
+    "@homePageSync": { 
+    "description": ""
+    },
+     "homePageBack": "{gender,select,male{Close} female{Close} other{Close}}",
+    "@homePageBack": { 
+    "description": ""
+    },
+
+     "sharePageHeader": "{gender,select,male{Great!} female{Great!} other{Great!}}",
+    "@sharePageHeader": { 
+    "description": ""
+    },
+     "sharePageSubTitle": "{gender,select,male{ou've created a guide that will help you during moments of crisis! Let's explore more tools for self-help and mental resilience} female{ou've created a guide that will help you during moments of crisis! Let's explore more tools for self-help and mental resilience} other{ou've created a guide that will help you during moments of crisis! Let's explore more tools for self-help and mental resilience}}",
+    "@sharePageSubTitle": { 
+    "description": ""
+    },
+     "sharePageMidTitle": "{gender,select,male{Now you can share your plan with the people close to you, or download it to your phone} female{Now you can share your plan with the people close to you, or download it to your phone} other{Now you can share your plan with the people close to you, or download it to your phone}}",
+    "@sharePageMidTitle": { 
+    "description": ""
+    },
+     "sharePageFinishButton": "{gender,select,male{I'm Done!} female{I'm Done!} other{I'm Done!}}",
+    "@sharePageFinishButton": { 
+    "description": ""
+    },
+     "sharePageShareTitle": "{gender,select,male{How would you like to share your plan?} female{How would you like to share your plan?} other{How would you like to share your plan?}}",
+    "@sharePageShareTitle": { 
+    "description": ""
+    },
+     "sharePageEmergencySendButtonText": "{gender,select,male{Emergency} female{Emergency} other{Emergency}}",
+    "@sharePageEmergencySendButtonText": { 
+    "description": ""
+    },
+     "sharePageRoutineSendButtonText": "{gender,select,male{Routine} female{Routine} other{Routine}}",
+    "@sharePageRoutineSendButtonText": { 
+    "description": ""
+    },
+     "userSettingsTitle": "{gender,select,male{Update Settings} female{Update Settings} other{Update Settings}}",
+    "@userSettingsTitle": { 
+    "description": ""
+    },
+     "userSettingsHeader": "{gender,select,male{User Settings} female{User Settings} other{User Settings}}",
+    "@userSettingsHeader": { 
+    "description": ""
+    },
+
+     "userSettingsReset": "{gender,select,male{Reset Data} female{Reset Data} other{Reset Data}}",
+    "@userSettingsReset": { 
+    "description": ""
+    },
+     "userSettingsName": "{gender,select,male{What should we call you?(feel free to use a nickname)} female{What should we call you?(feel free to use a nickname)} other{What should we call you?(feel free to use a nickname)}}",
+    "@userSettingsName": { 
+    "description": ""
+    },
+     "userSettingsGender": "{gender,select,male{How would you like to be referred to?} female{How would you like to be referred to?} other{How would you like to be referred to?}}",
+    "@userSettingsGender": { 
+    "description": ""
+    },
+     "userSettingsAge": "{gender,select,male{What is your age?} female{What is your age?} other{What is your age?}}",
+    "@userSettingsAge": { 
+    "description": ""
+    },
+     "introductionFormFirstPageMainTitle": "{gender,select,male{What keeps me safe} female{What keeps me safe} other{What keeps me safe}}",
+    "@introductionFormFirstPageMainTitle": { 
+    "description": ""
+    },
+     "introductionFormFirstPageSubTitle1": "{gender,select,male{Living Positively - for improving quality of life, increasing resilience, and happiness} female{Living Positively - for improving quality of life, increasing resilience, and happiness} other{Living Positively - for improving quality of life, increasing resilience, and happiness}}",
+    "@introductionFormFirstPageSubTitle1": { 
+    "description": ""
+    },
+     "introductionFormFirstPageSubTitle2": "{gender,select,male{Excellent tools for self-help and developing mental resilience.} female{Excellent tools for self-help and developing mental resilience.} other{Excellent tools for self-help and developing mental resilience.}}",
+    "@introductionFormFirstPageSubTitle2": { 
+    "description": ""
+    },
+     "introductionFormFirstPageSkip": "{gender,select,male{Skip} female{Skip} other{Skip}}",
+    "@introductionFormFirstPageSkip": { 
+    "description": ""
+    },
+     "introductionFormLastPageSkip": "{gender,select,male{Skip the Questionnaire} female{Skip the Questionnaire} other{Skip the Questionnaire}}",
+    "@introductionFormLastPageSkip": { 
+    "description": ""
+    },
+     "introductionFormLastPageMainTitle": "{gender,select,male{My Personal Plan} female{My Personal Plan} other{My Personal Plan}}",
+    "@introductionFormLastPageMainTitle": { 
+    "description": ""
+    },
+     "introductionFormLastPageSubTitle1": "{gender,select,male{You are invited to create a personal plan that will provide you and your surroundings with support in moments when everything becomes too much} female{You are invited to create a personal plan that will provide you and your surroundings with support in moments when everything becomes too much} other{You are invited to create a personal plan that will provide you and your surroundings with support in moments when everything becomes too much}}",
+    "@introductionFormLastPageSubTitle1": { 
+    "description": ""
+    },
+     "introductionFormLastPageSubTitle2": "{gender,select,male{It is recommended to dedicate a few minutes now, to easily navigate future moments of crisis} female{It is recommended to dedicate a few minutes now, to easily navigate future moments of crisis} other{It is recommended to dedicate a few minutes now, to easily navigate future moments of crisis}}",
+    "@introductionFormLastPageSubTitle2": { 
+    "description": ""
+    },
+     "introductionFormSecondPageMainTitle": "{gender,select,male{Let's get to know you!} female{Let's get to know you!} other{Let's get to know you!}}",
+    "@introductionFormSecondPageMainTitle": { 
+    "description": ""
+    },
+     "introductionFormSecondPageSubTitle": "{gender,select,male{Hi, we're happy you're here! We'd love to get to know you a bit so we can know how to address you} female{Hi, we're happy you're here! We'd love to get to know you a bit so we can know how to address you} other{Hi, we're happy you're here! We'd love to get to know you a bit so we can know how to address you}}",
+    "@introductionFormSecondPageSubTitle": { 
+    "description": ""
+    },
+     "difficultEventsHeader": "{gender,select,male{Reminders of common triggers and escalation factors} female{Reminders of common triggers and escalation factors} other{Reminders of common triggers and escalation factors}}",
+    "@difficultEventsHeader": { 
+    "description": ""
+    },
+     "difficultEventsSubTitle": "{gender,select,male{Factors and events that have been challenging for me in the past} female{Factors and events that have been challenging for me in the past} other{Factors and events that have been challenging for me in the past}}",
+    "@difficultEventsSubTitle": { 
+    "description": ""
+    },
+     "difficultEventsMidTitle": "{gender,select,male{No idea? Here are some suggestions} female{No idea? Here are some suggestions} other{No idea? Here are some suggestions}}",
+    "@difficultEventsMidTitle": { 
+    "description": ""
+    },
+     "difficultEventsMidSubTitle": "{gender,select,male{Click to add options that suit your personal plan} female{Click to add options that suit your personal plan} other{Click to add options that suit your personal plan}}",
+    "@difficultEventsMidSubTitle": { 
+    "description": ""
+    },
+     "distractionsHeader": "{gender,select,male{Symptoms and warning signs, unusual behaviors for me} female{Symptoms and warning signs, unusual behaviors for me} other{Symptoms and warning signs, unusual behaviors for me}}",
+    "@distractionsHeader": { 
+    "description": ""
+    },
+     "distractionsSubTitle": "{gender,select,male{Reminders of things that have appeared personally for me in the past} female{Reminders of things that have appeared personally for me in the past} other{Reminders of things that have appeared personally for me in the past}}",
+    "@distractionsSubTitle": { 
+    "description": ""
+    },
+     "distractionsMidTitle": "{gender,select,male{No idea? Here are some suggestions} female{No idea? Here are some suggestions} other{No idea? Here are some suggestions}}",
+    "@distractionsMidTitle": { 
+    "description": ""
+    },
+     "distractionsMidSubTitle": "{gender,select,male{Click to add options that suit you to your personal plan} female{Click to add options that suit you to your personal plan} other{Click to add options that suit you to your personal plan}}",
+    "@distractionsMidSubTitle": { 
+    "description": ""
+    },
+     "feelBetterHeader": "{gender,select,male{For balance and a healthy lifestyle - Wellness Tools - Personal Medications} female{For balance and a healthy lifestyle - Wellness Tools - Personal Medications} other{For balance and a healthy lifestyle - Wellness Tools - Personal Medications}}",
+    "@feelBetterHeader": { 
+    "description": ""
+    },
+     "feelBetterSubTitle": "{gender,select,male{What helps me improve my mood, relax, feel a little less stress. Ways I should use and rely on for preventive maintenance, and when needed in emergency situations, even increase dosages} female{What helps me improve my mood, relax, feel a little less stress. Ways I should use and rely on for preventive maintenance, and when needed in emergency situations, even increase dosages} other{What helps me improve my mood, relax, feel a little less stress. Ways I should use and rely on for preventive maintenance, and when needed in emergency situations, even increase dosages}}",
+    "@feelBetterSubTitle": { 
+    "description": ""
+    },
+     "feelBetterMidTitle": "{gender,select,male{No idea? Here are some suggestions} female{No idea? Here are some suggestions} other{No idea? Here are some suggestions}}",
+    "@feelBetterMidTitle": { 
+    "description": ""
+    },
+     "feelBetterMidSubTitle": "{gender,select,male{Click to add options that suit you to your personal plan} female{Click to add options that suit you to your personal plan} other{Click to add options that suit you to your personal plan}}",
+    "@feelBetterMidSubTitle": { 
+    "description": ""
+    },
+     "makeSaferHeader": "{gender,select,male{Support and help from the environment when I experience early warning signs, how I would like to be helped} female{Support and help from the environment when I experience early warning signs, how I would like to be helped} other{Support and help from the environment when I experience early warning signs, how I would like to be helped}}",
+    "@makeSaferHeader": { 
+    "description": ""
+    },
+     "makeSaferSubTitle": "{gender,select,male{Ways the environment can help me cope} female{Ways the environment can help me cope} other{Ways the environment can help me cope}}",
+    "@makeSaferSubTitle": { 
+    "description": ""
+    },
+     "makeSaferMidTitle": "{gender,select,male{No idea? Here are some suggestions} female{No idea? Here are some suggestions} other{No idea? Here are some suggestions}}",
+    "@makeSaferMidTitle": { 
+    "description": ""
+    },
+     "makeSaferMidSubTitle": "{gender,select,male{Click to add options that suit you to your personal plan} female{Click to add options that suit you to your personal plan} other{Click to add options that suit you to your personal plan}}",
+    "@makeSaferMidSubTitle": { 
+    "description": ""
+    },
+     "phonesPagePhone": "{gender,select,male{Phone} female{Phone} other{Phone}}",
+    "@phonesPagePhone": { 
+    "description": ""
+    },
+     "phonesPageName": "{gender,select,male{Name} female{Name} other{Name}}",
+    "@phonesPageName": { 
+    "description": ""
+    },
+     "phonesPageHeader": "{gender,select,male{Who are the people that support me, whom I can turn to if I am in distress or thinking of harming myself} female{Who are the people that support me, whom I can turn to if I am in distress or thinking of harming myself} other{Who are the people that support me, whom I can turn to if I am in distress or thinking of harming myself}}",
+    "@phonesPageHeader": { 
+    "description": ""
+    },
+     "phonesPageSubTitle": "{gender,select,male{The people who love me and will help me get through the tough moments are:} female{The people who love me and will help me get through the tough moments are:} other{The people who love me and will help me get through the tough moments are:}}",
+    "@phonesPageSubTitle": { 
+    "description": ""
+    },
+     "phonesPageManualTitle": "{gender,select,male{Add manually} female{Add manually} other{Add manually}}",
+    "@phonesPageManualTitle": { 
+    "description": ""
+    },
+     "phonesPageContactImportTitle": "{gender,select,male{Add from contacts list} female{Add from contacts list} other{Add from contacts list}}",
+    "@phonesPageContactImportTitle": { 
+    "description": ""
+    },
+    
+     "saveButton": "{gender,select,male{Save} female{Save} other{Save}}",
+    "@SaveButton": { 
+    "description": ""
+    },
+     "closeButton": "{gender,select,male{Cancel} female{Cancel} other{Cancel}}",
+    "@CloseButton": { 
+    "description": ""
+    },
+     "nextButton": "{gender,select,male{Continue} female{Continue} other{Continue}}",
+    "@nextButton": { 
+    "description": ""
+    },
+    
+     "showMoreButton": "{gender,select,male{Show more} female{Show more} other{Show more}}",
+    "@showMoreButton": { 
+    "description": ""
+    },
+     "introductionFormLastPageNext": "{gender,select,male{To the Questionnaire} female{To the Questionnaire} other{To the Questionnaire}}",
+    "@introductionFormLastPageNext": { 
+    "description": ""
+    },
+     "saveAndQuitButton": "{gender,select,male{To menu} female{To menu} other{To menu}}",
+    "@saveAndQuitButton": { 
+    "description": ""
+    },
+     "confirmButton": "{gender,select,male{Confirm} female{Confirm} other{Confirm}}",
+    "@confirmButton": { 
+    "description": ""
+    },
+     "deleteButton": "{gender,select,male{Delete} female{Delete} other{Delete}}",
+    "@deleteButton": { 
+    "description": ""
+    },
+     "menu": "{gender,select,male{Menu} female{Menu} other{Menu}}",
+    "@menu": { 
+    "description": ""
+    },
+     "notifications": "{gender,select,male{Notifications} female{Notifications} other{Notifications}}",
+    "@notifications": { 
+    "description": ""
+    },
+     "home": "{gender,select,male{Home} female{Home} other{Home}}",
+    "@home": { 
+    "description": ""
+    },
+     "skipButton": "{gender,select,male{Skip} female{Skip} other{Skip}}",
+    "@skipButton": { 
+    "description": ""
+    },
+
+
+    
+     "select": "{gender,select,male{Select} female{Select} other{Select}}",
+    "@select": { 
+    "description": ""
+    },
+     "backButton": "{gender,select,male{Go back} female{Go back} other{Go back}}",
+    "@backButton": { 
+    "description": ""
+    },
+     "dialButton": "{gender,select,male{Call} female{Call} other{Call}}",
+    "@dialButton": { 
+    "description": ""
+    },
+     "yourContacts": "{gender,select,male{Your contacts} female{Your contacts} other{Your contacts}}",
+    "@yourContacts": { 
+    "description": ""
+    },
+     "emergencyNumbers": "{gender,select,male{Emergency Numbers} female{Emergency Numbers} other{Emergency Numbers}}",
+    "@emergencyNumbers": { 
+    "description": ""
+    },
+     "phonePageTitle": "{gender,select,male{You are not alone! If you are in distress right now, please reach out to one of the contacts listed here} female{You are not alone! If you are in distress right now, please reach out to one of the contacts listed here} other{You are not alone! If you are in distress right now, please reach out to one of the contacts listed here}}",
+    "@phonePageTitle": { 
+    "description": ""
+    },
+     "whatsApp": "WhatsApp",
+    "@whatsApp": { 
+    "description": ""
+    },
+     "thanks": "thanks",
+    "@thanks": { 
+    "description": ""
+    },
+     "trait": "trait",
+    "@trait": { 
+    "description": ""
+    },
+    
+     "link": "Link to site",
+    "@link": { 
+    "description": ""
+    },
+     "gallery": "Gallery",
+    "@gallery": { 
+    "description": ""
+    },
+     "camera": "Camera",
+    "@camera": { 
+    "description": ""
+    },
+         "addImageButton": "{gender,select,male{Add Image} female{Add Image} other{Add Image}}",
+    "@addImgButton": { 
+    "description": ""
+    },
+    "addImageTitle": "{gender,select,male{Where to add from} female{Where to add from} other{Where to add from}}",
+    "@addImageTitle": { 
+    "description": ""
+    },
+    "feelGoodTitle": "{gender,select,male{Encouraging and uplifting images} female{Encouraging and uplifting images} other{Encouraging and uplifting images}}",
+    "@feelGoodTitle": { 
+    "description": ""
+    },
+    "feelGoodSubTitle": "{gender,select,male{It is recommended to add encouraging, uplifting, and joyful images. Smiling pictures of family, friends, hobbies, successful trips, and more} female{It is recommended to add encouraging, uplifting, and joyful images. Smiling pictures of family, friends, hobbies, successful trips, and more} other{It is recommended to add encouraging, uplifting, and joyful images. Smiling pictures of family, friends, hobbies, successful trips, and more}}",
+    "@feelGoodSubTitle": { 
+    "description": ""
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     "male": "Male",
+    "@male": { 
+    "description": ""
+    },
+
+   "notWillingToSay": "Not interested sharing",
+    "@notSharingInformation": { 
+    "description": ""
+    },
+     "female": "Female",
+    "@female": { 
+    "description": ""
+    },
+     "nonBinary": "Non binary",
+    "@nonBinary": { 
+    "description": ""
+    },
+
+     "showAll": "{gender,select,male{Show all} female{Show all} other{Show all}}",
+    "@showAll": { 
+    "description": ""
+    },
+     "notificationPageHeader": "{gender,select,male{Add a reminder to use Living Positively} female{Add a reminder to use Living Positively} other{Add a reminder to use Living Positively}}",
+    "@notificationPageHeader": { 
+    "description": ""
+    },
+     "notificationSetTimeText": "{gender,select,male{Schedule a notification for the selected time} female{Schedule a notification for the selected time} other{Schedule a notification for the selected time}}",
+    "@notificationSetTimeText": { 
+    "description": ""
+    },
+     "notificationShowExampleNotification": "{gender,select,male{Show an example notification} female{Show an example notification} other{Show an example notification}}",
+    "@notificationSetTimeText": { 
+    "description": ""
+    },
+
+     "finishedDownloading": "{gender,select,male{finishedDownloading} female{finishedDownloading} other{finishedDownloading}}",
+    "@finishedDownloading": { 
+    "description": ""
+    },
+     "downloadFailed": "{gender,select,male{download failed} female{download failed} other{download failed}}",
+    "@downloadFailed": { 
+    "description": ""
+    },
+        
+      "validateEmpty": "Field cannot be empty",
+    "@validateEmpty": { 
+    "description": ""
+    },
+      "moreVideos": "More videos",
+    "@moreVideos": { 
+    "description": ""
+    },
+     "notifyOnscheduledNotification": "Notification set for {time}",
+     "@notifyOnscheduledNotification": {
+        "description": "message",
+        "placeholder": {
+            "time": {
+                "type" : "String"
+            }
+        }
+     },
+ "newTraitOrThanks": "New {item}",
+    "@newTraitOrThanks": { 
+    "description": "",
+            "placeholder": {
+            "item": {
+                "type" : "String"
+            }
+        }
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     "todoListName": "{gender,select,male{Thanks List} female{Thanks List} other{Thanks List}}",
+    "@TodoListName": { 
+    "description": ""
+    }
+}

@@ -7,8 +7,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:mazilon/lists.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:mazilon/pages/UserSettings.dart';
@@ -17,7 +18,7 @@ import 'package:mazilon/MainPageHelpers/traitListWidget.dart';
 import 'package:mazilon/MainPageHelpers/thanksListWidget.dart';
 import 'package:mazilon/util/HomePage/inspirationalQuote.dart';
 import 'package:mazilon/util/styles.dart';
-import 'package:mazilon/util/Form/checkbox_model.dart';
+
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/util/HomePage/NameBar.dart';
 import 'package:mazilon/util/appInformation.dart';
@@ -25,23 +26,20 @@ import 'package:mazilon/util/Thanks/AddForm.dart';
 
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 //the main page of the app
 //allows navigation to all other pages
 class Home extends StatefulWidget {
-  final List<List<String>> collections;
-  final List<String> collectionNames;
-  final Map<String, CheckboxModel> checkboxModels;
   PhonePageData phonePageData;
-  final Function(int) changeCurrentIndex;
+  final Function(BuildContext, int) changeCurrentIndex;
+  final Function changeLocale;
 
   Home({
     super.key,
-    required this.collections,
-    required this.collectionNames,
-    required this.checkboxModels,
     required this.phonePageData,
     required this.changeCurrentIndex,
+    required this.changeLocale,
   });
 
   @override
@@ -81,7 +79,7 @@ class _HomeState extends State<Home> {
   List<String> todayThankYousFunc(List<String> thankYous, List<String> dates) {
     List<String> todayThankYous = [];
     DateTime now = DateTime.now();
-    String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
+    String formattedDate = intl.DateFormat('yyyy-MM-dd – kk:mm').format(now);
 
     for (int i = 0; i < dates.length; i++) {
       if (dates[i].substring(0, 10) == formattedDate.substring(0, 10)) {
@@ -101,24 +99,23 @@ class _HomeState extends State<Home> {
       final userInfoProvider =
           Provider.of<UserInformation>(context, listen: false);
       final gender = userInfoProvider.gender;
+
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text(''),
             content: Text(
-              appInfoProvider.journalPopUpText['thankyouPopup-' + gender] ?? '',
+              AppLocalizations.of(context)!.homePageThankyouPopup(gender),
               style: TextStyle(fontWeight: FontWeight.normal, fontSize: 15.sp),
               textAlign: TextAlign.center,
             ),
-            //  ' כל הכבוד 😊 זאת הדרך לחזק את שריר האושר החיובי שלך. ההמלצה היא כל יום להודות לפחות על 5 דברים בחיים שלך. יישר כוח וניפגש שוב מחר 💜'),
             actions: <Widget>[
               TextButton(
-                child:
-                    Text(appInfoProvider.popupBack['popupBack' + gender] ?? '',
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                        )),
+                child: Text(AppLocalizations.of(context)!.confirmButton(gender),
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                    )),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -146,9 +143,9 @@ class _HomeState extends State<Home> {
   }
 
 //function to update the user information(name,age,gender) in shared preferences
-  void updateUsername(newName, newGender, newAge) async {
+  void updateUserData(newName, newGender, newAge, isNonBinary) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('binary', newGender == 'לא בינארי');
+    prefs.setBool('binary', isNonBinary);
     prefs.setString('name', newName);
     if (newGender != '') {
       prefs.setString('gender', newGender);
@@ -177,7 +174,7 @@ class _HomeState extends State<Home> {
     thankYous_temp.add(thankYou);
 
     DateTime now = DateTime.now();
-    String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
+    String formattedDate = intl.DateFormat('yyyy-MM-dd – kk:mm').format(now);
     dates_temp.add(formattedDate);
 
     setState(() {
@@ -204,7 +201,7 @@ class _HomeState extends State<Home> {
   }
 
 //fuction to show the add form for a thank you
-  void addThanksNotification() {
+  void addThanksNotification(String thanks) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -213,12 +210,12 @@ class _HomeState extends State<Home> {
               index: 0,
               edit: changeThankYou,
               text: '',
-              formTitle: 'תודה');
+              formTitle: thanks);
         });
   }
 
 //fuction to show the edit form for a thank you
-  void editThanksNotification(String text, int index) {
+  void editThanksNotification(String text, int index, String thanks) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -227,7 +224,7 @@ class _HomeState extends State<Home> {
               index: index,
               edit: changeThankYou,
               text: text,
-              formTitle: 'תודה');
+              formTitle: thanks);
         });
   }
 
@@ -260,7 +257,7 @@ class _HomeState extends State<Home> {
     positiveTraits_temp.add(positiveTrait);
 
     DateTime now = DateTime.now();
-    String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
+    String formattedDate = intl.DateFormat('yyyy-MM-dd – kk:mm').format(now);
     positiveDates_temp.add(formattedDate);
 
     setState(() {
@@ -274,7 +271,7 @@ class _HomeState extends State<Home> {
   }
 
 //fuction to show the add form for a trait
-  void addTraitNotification() {
+  void addTraitNotification(String trait) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -283,7 +280,7 @@ class _HomeState extends State<Home> {
             index: 0,
             edit: changePositiveTrait,
             text: '',
-            formTitle: 'מעלה',
+            formTitle: trait,
           );
         });
   }
@@ -318,7 +315,7 @@ class _HomeState extends State<Home> {
   }
 
 //fuction to show the change form for a thank you
-  void editTraitNotification(String text, int index) {
+  void editTraitNotification(String text, int index, String trait) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -327,13 +324,13 @@ class _HomeState extends State<Home> {
             index: index,
             edit: changePositiveTrait,
             text: text,
-            formTitle: 'מעלה',
+            formTitle: trait,
           );
         });
   }
 
 //this selects what information to show in the personal plan widget boxes
-  void setRandomPersonalWidgetText(userInfo, appInfo) {
+  void setRandomPersonalWidgetText(userInfo, appInfo, appLocale) {
     var random = Random();
     var randomHeader = random.nextInt(4);
 
@@ -341,8 +338,7 @@ class _HomeState extends State<Home> {
       case 0:
         setState(() {
           homeTitles = {
-            'SubTitle':
-                appInfo.formMakeSaferTitles['subTitle${userInfo.gender}'],
+            'SubTitle': appLocale.makeSaferSubTitle(userInfo.gender),
             'list': userInfo.makeSafer
           };
         });
@@ -350,8 +346,7 @@ class _HomeState extends State<Home> {
       case 1:
         setState(() {
           homeTitles = {
-            'SubTitle':
-                appInfo.formDifficultEventsTitles['subTitle${userInfo.gender}'],
+            'SubTitle': appLocale.difficultEventsSubTitle(userInfo.gender),
             'list': userInfo.difficultEvents
           };
         });
@@ -359,8 +354,7 @@ class _HomeState extends State<Home> {
       case 2:
         setState(() {
           homeTitles = {
-            'SubTitle':
-                appInfo.formFeelBetterTitles['subTitle${userInfo.gender}'],
+            'SubTitle': appLocale.feelBetterSubTitle(userInfo.gender),
             'list': userInfo.feelBetter
           };
         });
@@ -368,8 +362,7 @@ class _HomeState extends State<Home> {
       case 3:
         setState(() {
           homeTitles = {
-            'SubTitle':
-                appInfo.formDistractionsTitles['subTitle${userInfo.gender}'],
+            'SubTitle': appLocale.distractionsSubTitle(userInfo.gender),
             'list': userInfo.distractions
           };
         });
@@ -384,12 +377,19 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final appInfoProvider = Provider.of<AppInformation>(context);
-    final userInfoProvider = Provider.of<UserInformation>(context);
+    final userInfoProvider =
+        Provider.of<UserInformation>(context, listen: true);
     final gender = userInfoProvider.gender;
     final age = userInfoProvider.age;
+    final appLocale = AppLocalizations.of(context)!;
     //add random header and user-selected info from personal plan:
-    setRandomPersonalWidgetText(userInfoProvider, appInfoProvider);
+    print(appInfoProvider.thanksSuggestionsList.length);
+    print(appLocale.localeName);
+    print("In here look here");
+    print(userInfoProvider.localeName);
 
+    setRandomPersonalWidgetText(userInfoProvider, appInfoProvider, appLocale);
+    print(inspirationalQuotes[appLocale.localeName]);
     return Scaffold(
       backgroundColor: lightGray,
       appBar: AppBar(
@@ -402,8 +402,8 @@ class _HomeState extends State<Home> {
             children: [
               //This shows the "hello <username>" banner and settings button
               NameBar(
-                  username: userInfoProvider.name,
-                  greetingString: appInfoProvider.homeTitleGreeting,
+                  greetingString:
+                      AppLocalizations.of(context)!.homePageGreetings(gender),
                   icons: [
                     //settings button:
                     myTextButton(() {
@@ -411,19 +411,18 @@ class _HomeState extends State<Home> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => UserSettings(
-                                collections: widget.collections,
-                                collectionNames: widget.collectionNames,
-                                checkboxModels: widget.checkboxModels,
                                 phonePageData: widget.phonePageData,
                                 username: userInfoProvider.name,
                                 age: age,
                                 gender: gender,
-                                updateData: updateUsername,
+                                updateData: updateUserData,
+                                changeLocale: widget.changeLocale,
                                 titles:
                                     appInfoProvider.personalInformationForm)),
                       );
                     }, Icons.settings_outlined, primaryPurple)
                   ]),
+
               Padding(
                 padding: const EdgeInsets.only(right: 10, left: 10),
                 child: Column(
@@ -437,17 +436,24 @@ class _HomeState extends State<Home> {
                     ),
 
                     //inspirational quote widget:
+
                     InspirationalQuote(
-                        quotes: appInfoProvider.homePageInspirationalQuotes[
-                            'quotes-${userInfoProvider.gender}']!),
+                        quotes: inspirationalQuotes[appLocale.localeName]![
+                            gender == "" ? "other" : gender]!),
 
                     const SizedBox(height: 20),
                     //This is the main widget for the positive traits list
                     TraitListWidget(
                       traits: threeLatestTraits,
-                      add: addTraitNotification,
+                      add: () => {
+                        addTraitNotification(
+                            AppLocalizations.of(context)!.trait)
+                      },
                       addSuggested: addPositiveTrait,
-                      edit: editTraitNotification,
+                      edit: (String text, int index) => {
+                        editTraitNotification(
+                            text, index, AppLocalizations.of(context)!.trait)
+                      },
                       remove: removePositiveTrait,
                       traitListLength: positiveTraits.length,
                       onTabTapped: widget.changeCurrentIndex,
@@ -456,20 +462,22 @@ class _HomeState extends State<Home> {
                     //This is the main widget for the thank yous list
                     ThanksListWidget(
                         thanks: todayThankYous,
-                        add: addThanksNotification,
+                        add: () => {
+                              addThanksNotification(
+                                  AppLocalizations.of(context)!.thanks)
+                            },
                         addSuggested: addThankYou,
-                        edit: editThanksNotification,
+                        edit: (String text, int index) => {
+                              editThanksNotification(text, index,
+                                  AppLocalizations.of(context)!.thanks)
+                            },
                         remove: removeThankYou,
                         thanksListLength: thankYous.length,
                         onTabTapped: widget.changeCurrentIndex),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
-              const SizedBox(height: 20),
-              const SizedBox(
-                height: 30,
-              ),
+              const SizedBox(height: 70),
             ],
           ),
         ),

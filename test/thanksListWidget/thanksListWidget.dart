@@ -4,7 +4,7 @@ import 'package:fluttericon/font_awesome5_icons.dart';
 import 'sectionBarHome.dart';
 //import 'package:mazilon/util/Thanks/thanksItem.dart';
 import 'thanksItemSug.dart';
-import 'AddForm.dart';
+import 'addForm.dart';
 
 class ThanksListWidget extends StatefulWidget {
   final List<String> thanks;

@@ -6,25 +6,20 @@ import 'package:mazilon/menu.dart';
 import 'package:mazilon/form/form.dart';
 
 import 'package:mazilon/util/styles.dart';
-import 'package:mazilon/util/Form/checkbox_model.dart';
+
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 //the page before the personal plan questionnaire that allows the user to fill the questionnaire or skip it.
 class ToFormPage extends StatefulWidget {
-  final List<List<String>> collections;
-  final List<String> collectionNames;
-  final Map<String, CheckboxModel> checkboxModels;
   final PhonePageData phonePageData;
+  final Function changeLocale;
 
   const ToFormPage(
-      {Key? key,
-      required this.collections,
-      required this.collectionNames,
-      required this.checkboxModels,
-      required this.phonePageData})
+      {Key? key, required this.phonePageData, required this.changeLocale})
       : super(key: key);
 
   @override
@@ -52,53 +47,45 @@ class _ToFormPageState extends State<ToFormPage> {
   Widget build(BuildContext context) {
     final appInfoProvider = Provider.of<AppInformation>(context);
     final userInfoProvider = Provider.of<UserInformation>(context);
-
+    var gender = userInfoProvider.gender;
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(children: [
-        Directionality(
-          textDirection: TextDirection.rtl,
-          child: myAutoSizedText(
-              appInfoProvider.introductionFormLastPage['mainTitle'],
-              TextStyle(
-                  fontSize: 40.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-              TextAlign.center,
-              60),
-        ),
+        myAutoSizedText(
+            AppLocalizations.of(context)!
+                .introductionFormLastPageMainTitle(gender),
+            TextStyle(
+                fontSize: 40.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black),
+            TextAlign.center,
+            60),
         Padding(
           padding: const EdgeInsets.fromLTRB(60, 0, 60, 0),
-          child: Directionality(
-            textDirection: TextDirection.rtl,
-            child: myAutoSizedText(
-                appInfoProvider.introductionFormLastPage[
-                    'subTitle1-' + userInfoProvider.gender],
-                TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                    color: darkGray),
-                TextAlign.center,
-                35),
-          ),
+          child: myAutoSizedText(
+              AppLocalizations.of(context)!
+                  .introductionFormLastPageSubTitle1(gender),
+              TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                  color: darkGray),
+              TextAlign.center,
+              35),
         ),
         SizedBox(
           height: returnSizedBox(context, 20),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-          child: Directionality(
-            textDirection: TextDirection.rtl,
-            child: myAutoSizedText(
-                appInfoProvider.introductionFormLastPage[
-                    'subTitle2-' + userInfoProvider.gender],
-                TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                    color: appGreen),
-                TextAlign.center,
-                35),
-          ),
+          child: myAutoSizedText(
+              AppLocalizations.of(context)!
+                  .introductionFormLastPageSubTitle2(gender),
+              TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
+                  color: appGreen),
+              TextAlign.center,
+              35),
         ),
         SizedBox(
           height: returnSizedBox(context, 20),
@@ -112,10 +99,8 @@ class _ToFormPageState extends State<ToFormPage> {
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) =>
                       FormProgressIndicator(
-                    collections: widget.collections,
-                    collectionNames: widget.collectionNames,
-                    checkboxModels: widget.checkboxModels,
                     phonePageData: widget.phonePageData,
+                    changeLocale: widget.changeLocale,
                   ), //place collections here
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) {
@@ -139,16 +124,13 @@ class _ToFormPageState extends State<ToFormPage> {
               );
             },
             style: myButtonStyle,
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: myAutoSizedText(
-                  appInfoProvider.introductionFormLastPage[
-                      'Next-' + userInfoProvider.gender],
-                  myTextStyle.copyWith(
-                      fontWeight: FontWeight.bold, fontSize: 20.sp),
-                  null,
-                  50),
-            )),
+            child: myAutoSizedText(
+                AppLocalizations.of(context)!
+                    .introductionFormLastPageNext(gender),
+                myTextStyle.copyWith(
+                    fontWeight: FontWeight.bold, fontSize: 20.sp),
+                null,
+                50)),
         SizedBox(height: returnSizedBox(context, 15)),
         TextButton(
             onPressed: () {
@@ -156,11 +138,9 @@ class _ToFormPageState extends State<ToFormPage> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => Menu(
-                        collections: widget.collections,
-                        collectionNames: widget.collectionNames,
-                        checkboxModels: widget.checkboxModels,
                         phonePageData: widget.phonePageData,
-                        hasFilled: hasFilled)),
+                        hasFilled: hasFilled,
+                        changeLocale: widget.changeLocale)),
                 (Route<dynamic> route) => false,
               );
             },
@@ -168,16 +148,12 @@ class _ToFormPageState extends State<ToFormPage> {
                 padding: WidgetStateProperty.all(EdgeInsets.symmetric(
                     horizontal: returnSizedBox(context, 20),
                     vertical: returnSizedBox(context, 10)))),
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: myAutoSizedText(
-                  appInfoProvider.introductionFormLastPage[
-                      'Skip-' + userInfoProvider.gender],
-                  myTextStyle.copyWith(
-                      fontWeight: FontWeight.bold, fontSize: 20.sp),
-                  null,
-                  50),
-            ))
+            child: myAutoSizedText(
+                AppLocalizations.of(context)!.skipButton(gender),
+                myTextStyle.copyWith(
+                    fontWeight: FontWeight.bold, fontSize: 20.sp),
+                null,
+                50))
       ]),
     ));
   }

@@ -3,11 +3,9 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i7;
 import 'dart:ui' as _i4;
 
 import 'package:mazilon/util/appInformation.dart' as _i2;
-import 'package:mazilon/util/Form/checkbox_model.dart' as _i6;
 import 'package:mazilon/util/userInformation.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i3;
@@ -1440,6 +1438,24 @@ class MockUserInformation extends _i1.Mock implements _i5.UserInformation {
   }
 
   @override
+  String get localeName => (super.noSuchMethod(
+        Invocation.getter(#localeName),
+        returnValue: _i3.dummyValue<String>(
+          this,
+          Invocation.getter(#localeName),
+        ),
+      ) as String);
+
+  @override
+  set localeName(String? _localeName) => super.noSuchMethod(
+        Invocation.setter(
+          #localeName,
+          _localeName,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   String get gender => (super.noSuchMethod(
         Invocation.getter(#gender),
         returnValue: _i3.dummyValue<String>(
@@ -1539,6 +1555,21 @@ class MockUserInformation extends _i1.Mock implements _i5.UserInformation {
       );
 
   @override
+  List<String> get positiveTraits => (super.noSuchMethod(
+        Invocation.getter(#positiveTraits),
+        returnValue: <String>[],
+      ) as List<String>);
+
+  @override
+  set positiveTraits(List<String>? _positiveTraits) => super.noSuchMethod(
+        Invocation.setter(
+          #positiveTraits,
+          _positiveTraits,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   List<String> get makeSafer => (super.noSuchMethod(
         Invocation.getter(#makeSafer),
         returnValue: <String>[],
@@ -1617,19 +1648,55 @@ class MockUserInformation extends _i1.Mock implements _i5.UserInformation {
       );
 
   @override
+  int get notificationMinute => (super.noSuchMethod(
+        Invocation.getter(#notificationMinute),
+        returnValue: 0,
+      ) as int);
+
+  @override
+  set notificationMinute(int? _notificationMinute) => super.noSuchMethod(
+        Invocation.setter(
+          #notificationMinute,
+          _notificationMinute,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  int get notificationHour => (super.noSuchMethod(
+        Invocation.getter(#notificationHour),
+        returnValue: 0,
+      ) as int);
+
+  @override
+  set notificationHour(int? _notificationHour) => super.noSuchMethod(
+        Invocation.setter(
+          #notificationHour,
+          _notificationHour,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  Map<String, List<String>> get thanks => (super.noSuchMethod(
+        Invocation.getter(#thanks),
+        returnValue: <String, List<String>>{},
+      ) as Map<String, List<String>>);
+
+  @override
+  set thanks(Map<String, List<String>>? _thanks) => super.noSuchMethod(
+        Invocation.setter(
+          #thanks,
+          _thanks,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   bool get hasListeners => (super.noSuchMethod(
         Invocation.getter(#hasListeners),
         returnValue: false,
       ) as bool);
-
-  @override
-  Map<String, dynamic> toJson() => (super.noSuchMethod(
-        Invocation.method(
-          #toJson,
-          [],
-        ),
-        returnValue: <String, dynamic>{},
-      ) as Map<String, dynamic>);
 
   @override
   void reset() => super.noSuchMethod(
@@ -1740,375 +1807,46 @@ class MockUserInformation extends _i1.Mock implements _i5.UserInformation {
       );
 
   @override
-  void addListener(_i4.VoidCallback? listener) => super.noSuchMethod(
+  void updateNotificationHour(int? value) => super.noSuchMethod(
         Invocation.method(
-          #addListener,
-          [listener],
+          #updateNotificationHour,
+          [value],
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  void removeListener(_i4.VoidCallback? listener) => super.noSuchMethod(
+  void updateNotificationMinute(int? value) => super.noSuchMethod(
         Invocation.method(
-          #removeListener,
-          [listener],
+          #updateNotificationMinute,
+          [value],
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  void dispose() => super.noSuchMethod(
+  void updateLocaleName(String? value) => super.noSuchMethod(
         Invocation.method(
-          #dispose,
-          [],
+          #updateLocaleName,
+          [value],
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  void notifyListeners() => super.noSuchMethod(
+  void updatePositiveTraits(List<String>? value) => super.noSuchMethod(
         Invocation.method(
-          #notifyListeners,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
-}
-
-/// A class which mocks [CheckboxModel].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockCheckboxModel extends _i1.Mock implements _i6.CheckboxModel {
-  MockCheckboxModel() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  List<bool> get selectedItems => (super.noSuchMethod(
-        Invocation.getter(#selectedItems),
-        returnValue: <bool>[],
-      ) as List<bool>);
-
-  @override
-  set selectedItems(List<bool>? _selectedItems) => super.noSuchMethod(
-        Invocation.setter(
-          #selectedItems,
-          _selectedItems,
+          #updatePositiveTraits,
+          [value],
         ),
         returnValueForMissingStub: null,
       );
 
   @override
-  List<String> get addedStrings => (super.noSuchMethod(
-        Invocation.getter(#addedStrings),
-        returnValue: <String>[],
-      ) as List<String>);
-
-  @override
-  set addedStrings(List<String>? _addedStrings) => super.noSuchMethod(
-        Invocation.setter(
-          #addedStrings,
-          _addedStrings,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  List<String> get databaseItems => (super.noSuchMethod(
-        Invocation.getter(#databaseItems),
-        returnValue: <String>[],
-      ) as List<String>);
-
-  @override
-  set databaseItems(List<String>? _databaseItems) => super.noSuchMethod(
-        Invocation.setter(
-          #databaseItems,
-          _databaseItems,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  String get header => (super.noSuchMethod(
-        Invocation.getter(#header),
-        returnValue: _i3.dummyValue<String>(
-          this,
-          Invocation.getter(#header),
-        ),
-      ) as String);
-
-  @override
-  set header(String? _header) => super.noSuchMethod(
-        Invocation.setter(
-          #header,
-          _header,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  String get subTitle => (super.noSuchMethod(
-        Invocation.getter(#subTitle),
-        returnValue: _i3.dummyValue<String>(
-          this,
-          Invocation.getter(#subTitle),
-        ),
-      ) as String);
-
-  @override
-  set subTitle(String? _subTitle) => super.noSuchMethod(
-        Invocation.setter(
-          #subTitle,
-          _subTitle,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  String get midTitle => (super.noSuchMethod(
-        Invocation.getter(#midTitle),
-        returnValue: _i3.dummyValue<String>(
-          this,
-          Invocation.getter(#midTitle),
-        ),
-      ) as String);
-
-  @override
-  set midTitle(String? _midTitle) => super.noSuchMethod(
-        Invocation.setter(
-          #midTitle,
-          _midTitle,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  String get midSubTitle => (super.noSuchMethod(
-        Invocation.getter(#midSubTitle),
-        returnValue: _i3.dummyValue<String>(
-          this,
-          Invocation.getter(#midSubTitle),
-        ),
-      ) as String);
-
-  @override
-  set midSubTitle(String? _midSubTitle) => super.noSuchMethod(
-        Invocation.setter(
-          #midSubTitle,
-          _midSubTitle,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  String get formKey => (super.noSuchMethod(
-        Invocation.getter(#formKey),
-        returnValue: _i3.dummyValue<String>(
-          this,
-          Invocation.getter(#formKey),
-        ),
-      ) as String);
-
-  @override
-  set formKey(String? _formKey) => super.noSuchMethod(
-        Invocation.setter(
-          #formKey,
-          _formKey,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  int get length => (super.noSuchMethod(
-        Invocation.getter(#length),
-        returnValue: 0,
-      ) as int);
-
-  @override
-  set length(int? _length) => super.noSuchMethod(
-        Invocation.setter(
-          #length,
-          _length,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  String get getFormKey => (super.noSuchMethod(
-        Invocation.getter(#getFormKey),
-        returnValue: _i3.dummyValue<String>(
-          this,
-          Invocation.getter(#getFormKey),
-        ),
-      ) as String);
-
-  @override
-  bool get hasListeners => (super.noSuchMethod(
-        Invocation.getter(#hasListeners),
-        returnValue: false,
-      ) as bool);
-
-  @override
-  void reset() => super.noSuchMethod(
+  void updateThanks(Map<String, List<String>>? value) => super.noSuchMethod(
         Invocation.method(
-          #reset,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i7.Future<void> init() => (super.noSuchMethod(
-        Invocation.method(
-          #init,
-          [],
-        ),
-        returnValue: _i7.Future<void>.value(),
-        returnValueForMissingStub: _i7.Future<void>.value(),
-      ) as _i7.Future<void>);
-
-  @override
-  void editItem(
-    int? index,
-    String? text,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #editItem,
-          [
-            index,
-            text,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  void updateProperties(
-    String? newHeader,
-    String? newSubTitle,
-    String? newMidTitle,
-    String? newMidSubTitle,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #updateProperties,
-          [
-            newHeader,
-            newSubTitle,
-            newMidTitle,
-            newMidSubTitle,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  void deleteitem(int? index) => super.noSuchMethod(
-        Invocation.method(
-          #deleteitem,
-          [index],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  void addItem(List<String>? item) => super.noSuchMethod(
-        Invocation.method(
-          #addItem,
-          [item],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  void increase() => super.noSuchMethod(
-        Invocation.method(
-          #increase,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i7.Future<void> loadSelectedItems() => (super.noSuchMethod(
-        Invocation.method(
-          #loadSelectedItems,
-          [],
-        ),
-        returnValue: _i7.Future<void>.value(),
-        returnValueForMissingStub: _i7.Future<void>.value(),
-      ) as _i7.Future<void>);
-
-  @override
-  void createSelection(dynamic userInfo) => super.noSuchMethod(
-        Invocation.method(
-          #createSelection,
-          [userInfo],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  void addDatabaseItems(dynamic item) => super.noSuchMethod(
-        Invocation.method(
-          #addDatabaseItems,
-          [item],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  void loadDatabaseItems(dynamic items) => super.noSuchMethod(
-        Invocation.method(
-          #loadDatabaseItems,
-          [items],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  void saveSelectedItems() => super.noSuchMethod(
-        Invocation.method(
-          #saveSelectedItems,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  bool isSelected(int? index) => (super.noSuchMethod(
-        Invocation.method(
-          #isSelected,
-          [index],
-        ),
-        returnValue: false,
-      ) as bool);
-
-  @override
-  void setSelected(
-    int? index,
-    bool? value,
-    String? item,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #setSelected,
-          [
-            index,
-            value,
-            item,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  void update() => super.noSuchMethod(
-        Invocation.method(
-          #update,
-          [],
+          #updateThanks,
+          [value],
         ),
         returnValueForMissingStub: null,
       );

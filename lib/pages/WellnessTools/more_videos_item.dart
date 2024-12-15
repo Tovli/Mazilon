@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
-import 'package:mazilon/pages/WellnessTools/VideoPlayerInheritedWidget.dart';
-import 'package:mazilon/pages/WellnessTools/VideoPlayerPageFactory.dart';
+
 import 'package:mazilon/util/styles.dart';
 
 class MoreVideosItem extends StatelessWidget {
@@ -41,7 +40,6 @@ class MoreVideosItem extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                textDirection: TextDirection.rtl,
                 children: [
                   myAutoSizedText(
                     videoData['videoHeadline']![index],
@@ -49,7 +47,7 @@ class MoreVideosItem extends StatelessWidget {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.normal,
                     ),
-                    TextAlign.right,
+                    null,
                     20,
                     2,
                   ),

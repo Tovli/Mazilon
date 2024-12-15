@@ -50,4 +50,23 @@ class SentryServiceImpl implements IncidentLoggerService {
       return;
     }
   }
+
+  @override
+  Future<void> captureLog(dynamic log,
+      {StackTrace? stackTrace, dynamic exceptionData}) async {
+    if (Sentry.isEnabled) {
+      if (exceptionData != null &&
+          exceptionData.containsKey("name") &&
+          exceptionData.containsKey("value")) {
+        Sentry.configureScope((scope) {
+          scope.setContexts('${exceptionData["name"]}', exceptionData["value"]);
+        });
+      }
+      await Sentry.captureException(
+        log,
+        stackTrace: stackTrace,
+      );
+      return;
+    }
+  }
 }
