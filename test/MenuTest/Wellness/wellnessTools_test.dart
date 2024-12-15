@@ -73,6 +73,8 @@ void main() {
       mockSharedPreferences = MockSharedPreferences();
       mockUserInformation = UserInformation();
       mockAppInformation = AppInformation();
+      mockUserInformation.gender = "male";
+      mockUserInformation.localeName = "he";
       getData(mockAppInformation);
 
       when(mockSharedPreferences.getBool('firstTime')).thenReturn(true);

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Introduction widget serves as an initial loading screen or introduction page.
 class Introduction extends StatefulWidget {
@@ -28,18 +30,16 @@ class _IntroductionState extends State<Introduction> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Displaying a welcome message in Hebrew with custom styling
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: myAutoSizedText(
-                  "ברוכים הבאים ל Living Positively", // Welcome message in Hebrew
-                  TextStyle(
-                    fontSize: 40.sp,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  null,
-                  100),
-            ),
+            myAutoSizedText(
+                AppLocalizations.of(context)!.introductionRestartGreeting(
+                    userInfoProvider.gender), // Welcome message in Hebrew
+                TextStyle(
+                  fontSize: 40.sp,
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                ),
+                null,
+                100),
             const SizedBox(height: 20.0),
             // Displaying a large circular progress indicator (spinner)
             const SizedBox(

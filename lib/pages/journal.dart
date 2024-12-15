@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mazilon/util/userInformation.dart';
@@ -11,12 +10,15 @@ import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Thanks/AddForm.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/lists.dart';
 
 //Journal page, where the user can write thank you notes (add , edit, remove notes)
 //the user can also see suggested thank you notes and refresh them
 //(the code here is not related to todo list in home page, its the thank you notes page)
 class Journal extends StatefulWidget {
-  const Journal({super.key});
+  final List<String> fullSuggestionList;
+  const Journal({required this.fullSuggestionList, super.key});
 
   @override
   State<Journal> createState() => _JournalState();
@@ -39,7 +41,6 @@ class _JournalState extends State<Journal> {
   //load the thank you notes and suggestions from the shared preferences
   Future<void> loadData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final appInfoProvider = Provider.of<AppInformation>(context, listen: false);
 
     setState(() {
       thankYous = prefs.getStringList('thankYous') ?? [];
@@ -48,7 +49,7 @@ class _JournalState extends State<Journal> {
         focusNodes.add(FocusNode());
       }
       List<String> tempThanksSuggestionList =
-          List.from(appInfoProvider.thanksSuggestionsList);
+          List.from(widget.fullSuggestionList);
       thanksSuggestionList = List.from(tempThanksSuggestionList);
 
       // remove the thank you notes suggestions that are already in the thank you notes list
@@ -126,8 +127,7 @@ class _JournalState extends State<Journal> {
           return AlertDialog(
             title: const Text(''),
             content: Text(
-              appInfoProvider.journalPopUpText['journalPopUpText-' + gender] ??
-                  '',
+              AppLocalizations.of(context)!.homePageThankyouPopup(gender),
               style: TextStyle(fontWeight: FontWeight.normal, fontSize: 15.sp),
               textAlign: TextAlign.center,
             ),
@@ -135,8 +135,7 @@ class _JournalState extends State<Journal> {
               TextButton(
                 child:
                     //the text of the  close button in the popup according to gender
-                    Text(
-                        appInfoProvider.popupBack['popupBack-' + gender] ?? ''),
+                    Text(AppLocalizations.of(context)!.confirmButton(gender)),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -167,26 +166,29 @@ class _JournalState extends State<Journal> {
   }
 
 // function we call when we want to add/edit a thank you note (to open the popup with the text field which is AddForm widget)
-  void editNotification(String text, int index) {
+  void editNotification(String text, int index, String thanks) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AddForm(
-            add: addThankYou,
-            index: index,
-            edit: changeThankYou,
-            text: text,
-            formTitle: 'תודה',
-          );
+              add: addThankYou,
+              index: index,
+              edit: changeThankYou,
+              text: text,
+              formTitle: thanks);
         });
   }
 
 // build the journal page
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context)!;
     // get the app and user information providers
-    final appInfoProvider = Provider.of<AppInformation>(context);
-    final userInfoProvider = Provider.of<UserInformation>(context);
+    final appInfoProvider = Provider.of<AppInformation>(context, listen: false);
+    final userInfoProvider =
+        Provider.of<UserInformation>(context, listen: false);
+    final gender = userInfoProvider.gender;
+
     return KeyboardDismisser(
       gestures: const [GestureType.onTap, GestureType.onPanUpdateAnyDirection],
       child: Scaffold(
@@ -200,49 +202,48 @@ class _JournalState extends State<Journal> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child: myAutoSizedText(
+                            AppLocalizations.of(context)!
+                                .homePageThanksMainTitle(gender),
+                            TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30.sp,
+                            ),
+                            null,
+                            60),
+                      ),
+
                       //the add button to add a new thank you note
                       IconButton(
                           //when the button is pressed, open the popup with empty text field to write a new thank you note
                           onPressed: () {
-                            editNotification("", 0);
+                            editNotification(
+                                "", 0, AppLocalizations.of(context)!.thanks);
                           },
                           icon: Icon(
                             Icons.add,
                             size: 50.0,
                             color: primaryPurple,
                           )),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child:
-                            //the title of the journal page
-                            myAutoSizedText(
-                                appInfoProvider.journalMainTitle[
-                                        'ThanksMainTitle-' +
-                                            userInfoProvider.gender] ??
-                                    '',
-                                TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 30.sp,
-                                ),
-                                null,
-                                60),
-                      ),
                     ],
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       //the subtitle of the journal page
-                      myAutoSizedText(
-                          appInfoProvider.journalSubTitle['ThanksSubTitle-' +
-                                  userInfoProvider.gender] ??
-                              '',
-                          TextStyle(
-                              color: darkGray,
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.bold),
-                          null,
-                          30),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child: myAutoSizedText(
+                            AppLocalizations.of(context)!
+                                .homePageThanksSecondaryTitle(gender),
+                            TextStyle(
+                                color: darkGray,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold),
+                            null,
+                            30),
+                      ),
                     ],
                   ),
                 ],
@@ -255,7 +256,10 @@ class _JournalState extends State<Journal> {
                 itemBuilder: (context, index) => ThankYou(
                       text: thankYous[index],
                       number: (index + 1),
-                      edit: editNotification,
+                      edit: (String text, int index) {
+                        editNotification(
+                            text, index, AppLocalizations.of(context)!.thanks);
+                      },
                       remove: removeThankYou,
                       myFocusNode: focusNodes[index],
                       date: dates[index],
@@ -271,17 +275,20 @@ class _JournalState extends State<Journal> {
                   ),
             //the suggested thank you notes
             ThanksItemSuggested(
-              add: addThankYou,
-              inputText: sug1,
-            ),
+                add: addThankYou,
+                inputText: sug1,
+                fullSuggestionList: thanksList[appLocale.localeName]![
+                    gender == "" ? "other" : gender]!),
             ThanksItemSuggested(
-              add: addThankYou,
-              inputText: sug2,
-            ),
+                add: addThankYou,
+                inputText: sug2,
+                fullSuggestionList: thanksList[appLocale.localeName]![
+                    gender == "" ? "other" : gender]!),
             ThanksItemSuggested(
-              add: addThankYou,
-              inputText: sug3,
-            ),
+                add: addThankYou,
+                inputText: sug3,
+                fullSuggestionList: thanksList[appLocale.localeName]![
+                    gender == "" ? "other" : gender]!),
             //the button to refresh the suggested thank you notes and get 3 new suggestions
             TextButton(
               onPressed: () async {
@@ -295,7 +302,7 @@ class _JournalState extends State<Journal> {
 
                   //remove the thank you notes suggestions that are already in the thank you notes list (a.k.a chosen by the user already)
                   List<String> tempThanksSuggestionList =
-                      List.from(appInfoProvider.thanksSuggestionsList);
+                      List.from(widget.fullSuggestionList);
                   thanksSuggestionList = List.from(tempThanksSuggestionList);
                   for (String suggestion in tempThanksSuggestionList) {
                     if (thanksSuggestionList.length > 3 &&
@@ -318,9 +325,7 @@ class _JournalState extends State<Journal> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    appInfoProvider.othersuggestions[
-                            'othersuggestions-' + userInfoProvider.gender] ??
-                        'הצעות אחרות',
+                    AppLocalizations.of(context)!.otherSuggestions(gender),
                     style:
                         TextStyle(fontWeight: FontWeight.bold, color: appGreen),
                   ),

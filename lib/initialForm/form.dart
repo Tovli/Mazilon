@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
-import 'package:mazilon/util/Form/checkbox_model.dart';
+
 import 'package:mazilon/util/styles.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/initialForm/toFormPage.dart';
@@ -15,17 +15,13 @@ import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/disclaimerPage.dart';
 
 class InitialFormProgressIndicator extends StatefulWidget {
-  final List<List<String>> collections;
-  final List<String> collectionNames;
-  final Map<String, CheckboxModel> checkboxModels;
   PhonePageData phonePageData;
+  final Function changeLocale;
 
   InitialFormProgressIndicator({
     super.key,
-    required this.collections,
-    required this.collectionNames,
-    required this.checkboxModels,
     required this.phonePageData,
+    required this.changeLocale,
   });
 
   @override
@@ -90,11 +86,9 @@ class InitialFormProgressIndicatorState
       context,
       MaterialPageRoute(
           builder: (context) => Menu(
-                collections: widget.collections,
-                collectionNames: widget.collectionNames,
-                checkboxModels: widget.checkboxModels,
                 phonePageData: widget.phonePageData,
                 hasFilled: hasFilled,
+                changeLocale: widget.changeLocale,
               )),
       (Route<dynamic> route) => false,
     );
@@ -112,6 +106,7 @@ class InitialFormProgressIndicatorState
     final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
+    final gender = userInfoProvider.gender;
     if (!userInfoProvider.disclaimerSigned) {
       return const DisclaimerPage();
     }
@@ -119,23 +114,19 @@ class InitialFormProgressIndicatorState
       //<<<<<<<<<<<INITIALFORM PAGES START HERE
       //IF YOU WANT TO ADD PAGES TO INITAL FORM DO IT HERE:
       InitialFormPage1(
-          next: next,
-          prev: prev,
-          skip: skip,
-          updateName: updateName,
-          titles: appInfoProvider.introductionFormFirstPage),
+        next: next,
+        prev: prev,
+        skip: skip,
+        updateName: updateName,
+      ),
       InitialFormPage2(
         next: next,
         prev: prev,
         updateName: updateName,
-        titles: appInfoProvider.introductionFormSecondPage,
-        formTitles: appInfoProvider.personalInformationForm,
       ),
       ToFormPage(
-          collections: widget.collections,
-          collectionNames: widget.collectionNames,
-          checkboxModels: widget.checkboxModels,
-          phonePageData: widget.phonePageData),
+          phonePageData: widget.phonePageData,
+          changeLocale: widget.changeLocale),
 
       //<<<<<<<<<<<PAGES END HERE
     ];
@@ -157,30 +148,23 @@ class InitialFormProgressIndicatorState
             automaticallyImplyLeading: currentStep != (steps.length - 1),
             leading: currentStep != (steps.length - 1)
                 ? IconButton(
-                    icon: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: myAutoSizedText(
-                          'דלג/י',
-                          TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 12.sp),
-                          null,
-                          25),
-                    ),
+                    icon: myAutoSizedText(
+                        AppLocalizations.of(context)!.skipButton(gender),
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 12.sp),
+                        null,
+                        25),
                     onPressed: () {
                       //## this is the part that skips BOTH forms from the initial screen.##//
+                      print('skipping');
                       next();
                     },
                   )
-                : null,
-            actions: [
-              if (currentStep == (steps.length - 1))
-                IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios),
-                  onPressed: () {
-                    prev();
-                  },
-                ),
-            ],
+                : IconButton(
+                    icon: const Icon(Icons.arrow_back_ios),
+                    onPressed: () {
+                      prev();
+                    },
+                  ),
           ),
         ),
         body: AnimatedSwitcher(
@@ -216,7 +200,7 @@ class InitialFormProgressIndicatorState
                   borderRadius: BorderRadius.circular(5.0),
                 ),
               ),
-            ).reversed.toList(),
+            ).toList(),
           ),
         ),
       ),

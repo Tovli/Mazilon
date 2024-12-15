@@ -8,16 +8,13 @@ DropdownMenuEntry<String> buildDropdownMenuEntry(text, backgroundColor) {
       value: text,
       label: text,
       labelWidget: Container(
-        child: Directionality(
-          textDirection: TextDirection.rtl,
-          child: myText(
-              text,
-              TextStyle(
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black,
-                  fontSize: 16.sp > 25 ? 25 : 16.sp),
-              null),
-        ),
+        child: myText(
+            text,
+            TextStyle(
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+                fontSize: 16.sp > 25 ? 25 : 16.sp),
+            null),
       ),
       style: MenuItemButton.styleFrom(foregroundColor: backgroundColor));
 }

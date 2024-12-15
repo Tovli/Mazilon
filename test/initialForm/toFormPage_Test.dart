@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mazilon/form/form.dart';
 import 'package:mazilon/menu.dart';
-import 'package:mazilon/util/Form/checkbox_model.dart';
+
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/styles.dart';
@@ -18,14 +18,7 @@ import 'package:mockito/mockito.dart';
 void main() {
   try {
     // Mock data for the test
-    final List<List<String>> mockCollections = [
-      ['Collection1', 'Item1'],
-      ['Collection2', 'Item2']
-    ];
-    final List<String> mockCollectionNames = ['Collection1', 'Collection2'];
-    final Map<String, CheckboxModel> mockCheckboxModels = {
-      'checkbox1': CheckboxModel('', '', '', '', '', ''),
-    };
+
     /* PhonePageData mockPhonePageData = PhonePageData(
         header: '',
         phoneNames: [],
@@ -42,28 +35,6 @@ void main() {
     print(e);
   }
 
-  // Mock shared preferences
-  //SharedPreferences.setMockInitialValues({'hasFilled': true});
-
-  // Create the test widget
-  /*Widget createTestWidget() {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<AppInformation>(create: (_) => AppInformation()),
-        ChangeNotifierProvider<UserInformation>(
-            create: (_) => UserInformation()),
-      ],
-      child: MaterialApp(
-        home: ToFormPage(
-          collections: mockCollections,
-          collectionNames: mockCollectionNames,
-          checkboxModels: mockCheckboxModels,
-          phonePageData: mockPhonePageData,
-        ),
-      ),
-      //),
-    );
-  */
   group('FeelGood Widget Tests', () {
     testWidgets('ToFormPage renders correctly', (WidgetTester tester) async {
       //await tester.pumpWidget(createTestWidget());

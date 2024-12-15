@@ -27,6 +27,18 @@ class ImagePickerServiceImpl implements ImagePickerService {
   }
 
   @override
+  Future<void> deleteImages() async {
+    List<String> tempPath = [];
+    await loadImagePaths(tempPath);
+    print(tempPath);
+    while (tempPath.isNotEmpty) {
+      File(tempPath[0]).deleteSync();
+      tempPath.removeAt(0);
+      saveImagePaths(tempPath);
+    }
+  }
+
+  @override
   Future<File> saveImagePaths(List<String> imagePaths) async {
     final file = await getImagePathFile();
     return file.writeAsString(imagePaths.join('\n'));
@@ -50,7 +62,7 @@ class ImagePickerServiceImpl implements ImagePickerService {
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureException(
+      await loggerService.captureLog(
         error,
         stackTrace: stackTrace,
       );
@@ -65,18 +77,6 @@ class ImagePickerServiceImpl implements ImagePickerService {
   }
 
   @override
-  Future<void> deleteImages() async {
-    List<String> tempPath = [];
-    await loadImagePaths(tempPath);
-    print(tempPath);
-    while (tempPath.isNotEmpty) {
-      File(tempPath[0]).deleteSync();
-      tempPath.removeAt(0);
-      saveImagePaths(tempPath);
-    }
-  }
-
-  @override
   Future<void> loadImagePaths(List<String> imagePaths) async {
     try {
       final file = await getImagePathFile();
@@ -84,11 +84,10 @@ class ImagePickerServiceImpl implements ImagePickerService {
 
       imagePaths.addAll(
           contents.split('\n').where((path) => path.isNotEmpty).toList());
-      print(imagePaths);
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureException(
+      await loggerService.captureLog(
         error,
         stackTrace: stackTrace,
       );

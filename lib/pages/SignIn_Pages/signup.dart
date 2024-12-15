@@ -8,7 +8,7 @@ import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/logger_service.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Firebase/firebase_functions.dart';
-import 'package:mazilon/util/Form/checkbox_model.dart';
+
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/util/SignIn/form_container.dart';
 import 'package:mazilon/util/SignIn/popup_toast.dart';
@@ -21,20 +21,14 @@ import 'package:provider/provider.dart';
 
 // SignUpPage is a stateful widget that handles user registration, allowing new users to create an account.
 class SignUpPage extends StatefulWidget {
-  final List<List<String>> collections; // Data collections for the form
-  final List<String> collectionNames; // Names of the data collections
-  final Map<String, CheckboxModel>
-      checkboxModels; // Checkbox models used in the form
   PhonePageData phonePageData; // Data related to phone page
   FirebaseApp dbUsersApp; // FirebaseApp instance
-
+  final Function changeLocale;
   SignUpPage(
       {super.key,
-      required this.collections,
-      required this.collectionNames,
-      required this.checkboxModels,
       required this.dbUsersApp,
-      required this.phonePageData});
+      required this.phonePageData,
+      required this.changeLocale});
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
@@ -95,7 +89,7 @@ class _SignUpPageState extends State<SignUpPage> {
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureException(
+      await loggerService.captureLog(
         error,
         stackTrace: stackTrace,
       );
@@ -134,11 +128,9 @@ class _SignUpPageState extends State<SignUpPage> {
             context,
             MaterialPageRoute(
               builder: (context) => LoginPage(
-                collections: widget.collections,
-                collectionNames: widget.collectionNames,
-                checkboxModels: widget.checkboxModels,
                 phonePageData: widget.phonePageData,
                 dbUsersApp: widget.dbUsersApp,
+                changeLocale: widget.changeLocale,
               ),
             ),
             (route) => false,
@@ -256,11 +248,9 @@ class _SignUpPageState extends State<SignUpPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => LoginPage(
-                              collections: widget.collections,
-                              collectionNames: widget.collectionNames,
-                              checkboxModels: widget.checkboxModels,
                               phonePageData: widget.phonePageData,
                               dbUsersApp: widget.dbUsersApp,
+                              changeLocale: widget.changeLocale,
                             ),
                           ),
                           (route) => false,

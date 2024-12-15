@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mazilon/pages/FeelGood/FeelGoodInheritedWidget.dart';
 import 'package:mazilon/util/appInformation.dart';
+import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ImageDisplay extends StatelessWidget {
   final String imagePath;
@@ -16,6 +18,9 @@ class ImageDisplay extends StatelessWidget {
 
     final AppInformation appInfoProvider =
         Provider.of<AppInformation>(context, listen: true);
+    final UserInformation userInfoProvider =
+        Provider.of<UserInformation>(context, listen: true);
+    final gender = userInfoProvider.gender;
     final Function(int index) deleteImageFunction =
         FeelGoodInheritedWidget.of(context)?.deleteImage ?? (int index) {};
     return GestureDetector(
@@ -43,23 +48,17 @@ class ImageDisplay extends StatelessWidget {
                             builder: (context) => AlertDialog(
                               actions: [
                                 TextButton(
-                                  child: Directionality(
-                                    textDirection: TextDirection.rtl,
-                                    child: Text(
-                                        appInfoProvider.feelGoodPageTitles[
-                                                'cancelDeleteButtonText'] ??
-                                            'ביטול'),
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .closeButton(gender),
                                   ),
                                   onPressed: () => Navigator.of(context).pop(),
                                 ),
                                 TextButton(
                                   key: Key('deleteButtonText'),
-                                  child: Directionality(
-                                    textDirection: TextDirection.rtl,
-                                    child: Text(
-                                        appInfoProvider.feelGoodPageTitles[
-                                                'deleteButtonText'] ??
-                                            'מחיקה'),
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .deleteButton(gender),
                                   ),
                                   onPressed: () {
                                     deleteImageFunction(index); // Delete image

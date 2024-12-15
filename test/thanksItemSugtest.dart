@@ -48,11 +48,8 @@ class _ThanksItemSuggestedState extends State<ThanksItemSuggested> {
                           ? 600
                           : MediaQuery.of(context).size.width * 0.6 + 36,
                       height: MediaQuery.of(context).size.height * 0.1,
-                      child: Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: Text(
-                          widget.inputText == '' ? text : widget.inputText,
-                        ),
+                      child: Text(
+                        widget.inputText == '' ? text : widget.inputText,
                       ),
                     ),
                   ],

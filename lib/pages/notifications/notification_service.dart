@@ -44,7 +44,7 @@ class NotificationsService {
       _isInitialized = true;
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureException(
+      await loggerService.captureLog(
         error,
         stackTrace: stackTrace,
       );
@@ -71,7 +71,7 @@ class NotificationsService {
   }
 
   static initializeNotification(
-      List<String> quotes, int hour, int minute) async {
+      List<String> quotes, int hour, int minute, Function createText) async {
     TimeOfDay calculatedTime = calculateTime(hour, minute);
     String id = "${calculatedTime.hour}${calculatedTime.minute}";
     await cancelNotifications(null, cancelWorker: true);
@@ -86,8 +86,9 @@ class NotificationsService {
       },
       frequency: Duration(hours: 10),
     );
-    var message =
-        "התראה נקבעה לשעה ${hour < 10 ? "0${hour}" : hour}:${minute < 10 ? "0${minute}" : minute}";
+
+    var message = createText(
+        '${hour < 10 ? "0${hour}" : hour}:${minute < 10 ? "0${minute}" : minute}');
     showToast(message: message);
   }
 
@@ -109,15 +110,15 @@ class NotificationsService {
         scheduledDate,
         const NotificationDetails(
             android: AndroidNotificationDetails(
-                'MazilonNotificationServiceID', 'Mazilon Notifications',
+                'LPNotificationServiceID', 'LP Notifications',
                 channelDescription:
-                    'Mazilon Notifications allows you to receive daily reminders from the Mazilon app to keep track of your mental health')),
+                    'LP Notifications allows you to receive daily reminders from the Mazilon app to keep track of your mental health')),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime);
   }
 
-  // Cancel notifications
+  // Cancel a specific notification
   static Future<void> cancelNotifications(int? id,
       {bool cancelWorker = false}) async {
     if (cancelWorker) {
@@ -130,4 +131,6 @@ class NotificationsService {
     }
     print('Notification with ID $id cancelled');
   }
+
+  // Cancel all notifications
 }

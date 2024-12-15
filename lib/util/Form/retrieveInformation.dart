@@ -1,66 +1,66 @@
+import 'package:mazilon/lists.dart';
+
 //this function is used in the form pages to get the correct information for each page
-Map<String, String> retrieveInformation(appInfoProvider, name, gender) {
+Map<String, dynamic> retrieveInformation(name, gender, textLocalization) {
   String header;
   String subTitle;
   String midTitle;
   String midSubTitle;
   String nextButtonText;
   String showMoreButtonText;
+  List<String> list;
 
   switch (name) {
     case 'PersonalPlan-DifficultEvents':
-      header = appInfoProvider.formDifficultEventsTitles['header$gender']!;
-      subTitle = appInfoProvider.formDifficultEventsTitles['subTitle$gender']!;
-      midTitle = appInfoProvider.formDifficultEventsTitles['midTitle$gender']!;
-      midSubTitle =
-          appInfoProvider.formDifficultEventsTitles['midSubTitle$gender']!;
-
-      nextButtonText = appInfoProvider.formDifficultEventsTitles['nextButton']!;
-      showMoreButtonText =
-          appInfoProvider.formDifficultEventsTitles['showMoreButton']!;
+      header = textLocalization.difficultEventsHeader(gender);
+      subTitle = textLocalization.difficultEventsSubTitle(gender);
+      midTitle = textLocalization.difficultEventsMidTitle(gender);
+      midSubTitle = textLocalization.difficultEventsMidSubTitle(gender);
+      list = difficultEventsList[textLocalization.localeName]![
+              gender == "" ? "other" : gender] ??
+          [];
 
       break;
     case 'PersonalPlan-MakeSafer':
-      header = appInfoProvider.formMakeSaferTitles['header$gender']!;
-      subTitle = appInfoProvider.formMakeSaferTitles['subTitle$gender']!;
-      midTitle = appInfoProvider.formMakeSaferTitles['midTitle$gender']!;
-      midSubTitle = appInfoProvider.formMakeSaferTitles['midSubTitle$gender']!;
-
-      nextButtonText = appInfoProvider.formMakeSaferTitles['nextButton']!;
-      showMoreButtonText =
-          appInfoProvider.formMakeSaferTitles['showMoreButton']!;
+      header = textLocalization.makeSaferHeader(gender);
+      subTitle = textLocalization.makeSaferSubTitle(gender);
+      midTitle = textLocalization.makeSaferMidTitle(gender);
+      midSubTitle = textLocalization.makeSaferMidSubTitle(gender);
+      list = makeSaferList[textLocalization.localeName]![
+              gender == "" ? "other" : gender] ??
+          [];
       break;
     case 'PersonalPlan-FeelBetter':
-      header = appInfoProvider.formFeelBetterTitles['header$gender']!;
-      subTitle = appInfoProvider.formFeelBetterTitles['subTitle$gender']!;
-      midTitle = appInfoProvider.formFeelBetterTitles['midTitle$gender']!;
-      midSubTitle = appInfoProvider.formFeelBetterTitles['midSubTitle$gender']!;
-
-      nextButtonText = appInfoProvider.formFeelBetterTitles['nextButton']!;
-      showMoreButtonText =
-          appInfoProvider.formFeelBetterTitles['showMoreButton']!;
+      header = textLocalization.feelBetterHeader(gender);
+      subTitle = textLocalization.feelBetterSubTitle(gender);
+      midTitle = textLocalization.feelBetterMidTitle(gender);
+      midSubTitle = textLocalization.feelBetterMidSubTitle(gender);
+      list = feelBetterList[textLocalization.localeName]![
+              gender == "" ? "other" : gender] ??
+          [];
       break;
     case 'PersonalPlan-Distractions':
-      header = appInfoProvider.formDistractionsTitles['header$gender']!;
-      subTitle = appInfoProvider.formDistractionsTitles['subTitle$gender']!;
-      midTitle = appInfoProvider.formDistractionsTitles['midTitle$gender']!;
-      midSubTitle =
-          appInfoProvider.formDistractionsTitles['midSubTitle$gender']!;
-
-      nextButtonText = appInfoProvider.formDistractionsTitles['nextButton']!;
-      showMoreButtonText =
-          appInfoProvider.formDistractionsTitles['showMoreButton']!;
+      header = textLocalization.distractionsHeader(gender);
+      subTitle = textLocalization.distractionsSubTitle(gender);
+      midTitle = textLocalization.distractionsMidTitle(gender);
+      midSubTitle = textLocalization.distractionsMidSubTitle(gender);
+      list = distractionsList[textLocalization.localeName]![
+              gender == "" ? "other" : gender] ??
+          [];
       break;
     default:
       throw Exception('Invalid collection name');
   }
-
+  nextButtonText = textLocalization.nextButton(gender);
+  showMoreButtonText = textLocalization.showMoreButton(gender);
+  print(list);
   return {
     'header': header,
     'subTitle': subTitle,
     'midTitle': midTitle,
     'midSubTitle': midSubTitle,
     'nextButtonText': nextButtonText,
-    'showMoreButtonText': showMoreButtonText
+    'showMoreButtonText': showMoreButtonText,
+    'list': list,
   };
 }

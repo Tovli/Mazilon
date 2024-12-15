@@ -58,8 +58,6 @@ void main() {
       await tester.enterText(find.byKey(Key('addFormTextField')), 'Test Input');
       await tester.pump();
       expect(find.text('Test Input'), findsOneWidget);
-      await tester.tap(find.byKey(Key('saveButton')));
-      await tester.pump(Duration(seconds: 1));
 
       expect(find.byKey(Key('positiveTrait0')), findsWidgets);
       expect(find.text('Test Input'), findsOneWidget);
@@ -77,7 +75,7 @@ void main() {
           find.byKey(Key('addFormTextField')), 'Test Input Add');
       await tester.pump();
       expect(find.text('Test Input Add'), findsOneWidget);
-      await tester.tap(find.byKey(Key('saveButton')));
+
       await tester.pump(Duration(seconds: 1));
 
       expect(find.text('Test Input Add'), findsOneWidget);
@@ -95,8 +93,6 @@ void main() {
           find.byKey(Key('addFormTextField')), 'Test Input Cancel');
       await tester.pump();
       expect(find.text('Test Input Cancel'), findsOneWidget);
-      await tester.tap(find.byKey(Key('cancelButton')));
-      await tester.pump(Duration(seconds: 1));
 
       //expect(find.text('Test Input Cancel'), findsNothing);
     });

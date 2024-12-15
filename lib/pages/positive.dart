@@ -9,13 +9,13 @@ import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Thanks/AddForm.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:provider/provider.dart';
-import 'dart:math';
 import 'package:mazilon/util/userInformation.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 // positive traits page, where the user can add/edit/remove positive traits
 // the user can also see suggestions for positive traits and refresh them
 // the code here is not related to the "מעלות" section in homepage , its the positive triats page.
 //the code here is similar to journal.dart page code
+import 'package:mazilon/lists.dart';
 
 class Positive extends StatefulWidget {
   const Positive({super.key});
@@ -27,7 +27,7 @@ class Positive extends StatefulWidget {
 class _PositiveState extends State<Positive> {
   List<String> positiveTraits = []; //list of positive traits
   List<FocusNode> focusNodes = []; //list of focus nodes
-  List<String> dates = []; //list of dates
+
   FocusNode myFocusNode = FocusNode(); //focus node
   String positiveTraitsMainTitle = ''; //main title
   String positiveTraitsSubTitle = ''; //sub title
@@ -37,23 +37,18 @@ class _PositiveState extends State<Positive> {
   List<String> positiveSuggestionList = []; //list of suggestions
 
   //load the data from the shared preferences
-  Future<void> loadData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final appInfoProvider = Provider.of<AppInformation>(context, listen: false);
+  void loadData(BuildContext context) {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
     setState(() {
-      positiveTraits = prefs.getStringList('positiveTraits') ?? [];
-      dates = prefs.getStringList('positiveDates') ?? [];
+      positiveTraits = userInfoProvider.positiveTraits;
+
       for (var _ in positiveTraits) {
         focusNodes.add(FocusNode());
       }
       String gender = userInfoProvider.gender;
-      List<String> tempPositiveSuggestionList = gender == 'male'
-          ? appInfoProvider.positiveTraitsSuggestionsList['traits-male']!
-          : (gender == 'female'
-              ? appInfoProvider.positiveTraitsSuggestionsList['traits-female']!
-              : appInfoProvider.positiveTraitsSuggestionsList['traits']!);
+      List<String> tempPositiveSuggestionList = traitsList[
+          userInfoProvider.localeName]![gender == "" ? "other" : gender]!;
       //  List<String> tempPositiveSuggestionList =
       //     List.from(appInfoProvider.positiveTraitsSuggestionsList);
 
@@ -66,53 +61,56 @@ class _PositiveState extends State<Positive> {
           positiveSuggestionList.remove(suggestion);
         }
       }
+      var indices = List<int>.generate(positiveSuggestionList.length, (i) => i);
+      indices.shuffle();
+      sug1 = positiveSuggestionList[indices[0]];
+      sug2 = positiveSuggestionList[
+          indices[positiveSuggestionList.length > 1 ? 1 : 0]];
+      sug3 = positiveSuggestionList[
+          indices[positiveSuggestionList.length > 2 ? 2 : 0]];
     });
   }
 
   //change the positive trait at the given index to the given text
-  void changePositiveTrait(String text, int index) async {
+  void changePositiveTrait(
+      String text, int index, UserInformation userInfo) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       positiveTraits[index] = text;
       prefs.setStringList('positiveTraits', positiveTraits);
+      userInfo.updatePositiveTraits(positiveTraits);
     });
   }
 
   //remove the positive trait at the given index
-  void removePositiveTrait(int removeIndex) async {
+  void removePositiveTrait(int removeIndex, UserInformation userInfo) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> positiveTraits_temp =
         prefs.getStringList('positiveTraits') ?? [];
-    List<String> positiveDates_temp =
-        prefs.getStringList('positiveDates') ?? [];
+
     positiveTraits_temp.removeAt(removeIndex);
-    positiveDates_temp.removeAt(removeIndex);
+
     setState(() {
       prefs.setStringList('positiveTraits', positiveTraits_temp);
       positiveTraits = positiveTraits_temp;
       focusNodes.removeAt(removeIndex);
-      prefs.setStringList('positiveDates', positiveDates_temp);
-      dates = positiveDates_temp;
+      userInfo.updatePositiveTraits(positiveTraits);
     });
   }
 
   //add the given positive trait to the list
-  void addPositiveTrait(String positiveTrait) async {
+  void addPositiveTrait(String positiveTrait, UserInformation userInfo) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> positiveTraits_temp =
         prefs.getStringList('positiveTraits') ?? [];
-    List<String> positiveDates_temp =
-        prefs.getStringList('positiveDates') ?? [];
+
     positiveTraits_temp.add(positiveTrait);
-    DateTime now = DateTime.now();
-    String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
-    positiveDates_temp.add(formattedDate);
+    userInfo.updatePositiveTraits(positiveTraits_temp);
+
     setState(() {
       prefs.setStringList('positiveTraits', positiveTraits_temp);
       positiveTraits = positiveTraits_temp;
       focusNodes.add(FocusNode());
-      prefs.setStringList('positiveDates', positiveDates_temp);
-      dates = positiveDates_temp;
     });
   }
 
@@ -133,17 +131,15 @@ class _PositiveState extends State<Positive> {
             title: Text(''),
             //popup text
             content: Text(
-                appInfoProvider.positiveTraitsPopUpText[
-                        'PositiveTraitPopup-' + gender] ??
-                    '',
+                AppLocalizations.of(context)!
+                    .homePagePositiveTraitPopup(gender),
                 style:
                     TextStyle(fontWeight: FontWeight.normal, fontSize: 15.sp),
                 textAlign: TextAlign.center),
             actions: <Widget>[
               // close button
               TextButton(
-                child: Text(
-                    appInfoProvider.popupBack['popupBack-' + gender] ?? ''),
+                child: Text(AppLocalizations.of(context)!.backButton(gender)),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -153,32 +149,24 @@ class _PositiveState extends State<Positive> {
         },
       );
     });
-    loadData().then((_) {
-      setState(() {
-        //shuffle 3 random suggestions from the suggestions list
-        var indices =
-            List<int>.generate(positiveSuggestionList.length, (i) => i);
-        indices.shuffle();
-        sug1 = positiveSuggestionList[indices[0]];
-        sug2 = positiveSuggestionList[
-            indices[positiveSuggestionList.length > 1 ? 1 : 0]];
-        sug3 = positiveSuggestionList[
-            indices[positiveSuggestionList.length > 2 ? 2 : 0]];
-      });
-    });
   }
 
   //the function we call when we want to add/edit a positive trait,(it opens a popup with a text field and a save button)
-  void editNotification(String text, int index) {
+  void editNotification(
+      String text, int index, String trait, UserInformation userInfoProvider) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AddForm(
-            add: addPositiveTrait,
+            add: (String text) {
+              addPositiveTrait(text, userInfoProvider);
+            },
             index: index,
-            edit: changePositiveTrait,
+            edit: (String text, int index) {
+              changePositiveTrait(text, index, userInfoProvider);
+            },
             text: text,
-            formTitle: 'מעלה',
+            formTitle: trait,
           );
         });
   }
@@ -191,6 +179,7 @@ class _PositiveState extends State<Positive> {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
     final gender = userInfoProvider.gender;
+    loadData(context);
     return KeyboardDismisser(
       gestures: const [GestureType.onTap, GestureType.onPanUpdateAnyDirection],
       child: Scaffold(
@@ -204,23 +193,11 @@ class _PositiveState extends State<Positive> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      //add button
-                      IconButton(
-                          onPressed: () {
-                            editNotification("", 0);
-                          },
-                          icon: Icon(
-                            Icons.add,
-                            size: 50.0,
-                            color: primaryPurple,
-                          )),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        //main title
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                         child: myAutoSizedText(
-                            appInfoProvider.traitMainTitle[
-                                    'TraitsMainTitle-' + gender] ??
-                                '',
+                            AppLocalizations.of(context)!
+                                .homePageTraitsMainTitle(gender),
                             TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 30.sp,
@@ -228,22 +205,45 @@ class _PositiveState extends State<Positive> {
                             null,
                             60),
                       ),
+                      //add button
+                      IconButton(
+                          onPressed: () {
+                            editNotification(
+                                "",
+                                0,
+                                AppLocalizations.of(context)!.trait,
+                                userInfoProvider);
+                          },
+                          icon: Icon(
+                            Icons.add,
+                            size: 50.0,
+                            color: primaryPurple,
+                          )),
                     ],
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       //sub title
-                      myAutoSizedText(
-                          appInfoProvider.traitSubTitle[
-                                  'TraitsSecondaryTitle-' + gender] ??
-                              '',
-                          TextStyle(
-                              color: darkGray,
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.bold),
-                          null,
-                          30),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          child: myAutoSizedText(
+                              AppLocalizations.of(context)!
+                                  .homePageTraitsSecondaryTitle(gender),
+                              //TODO: WORK HERE
+                              TextStyle(
+                                color: darkGray,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              AppLocalizations.of(context)!.textDirection ==
+                                      "rtl"
+                                  ? TextAlign.right
+                                  : TextAlign.left,
+                              30,
+                              3),
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -251,18 +251,24 @@ class _PositiveState extends State<Positive> {
             ),
             //list of positive traits
             ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) => ThankYou(
-                      text: positiveTraits[index],
-                      number: (index + 1),
-                      edit: editNotification,
-                      remove: removePositiveTrait,
-                      myFocusNode: focusNodes[index],
-                      date: dates[index],
-                      color: Colors.purple,
-                    ),
-                itemCount: positiveTraits.length),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: positiveTraits.length,
+              itemBuilder: (context, index) => ThankYou(
+                text: positiveTraits[index],
+                number: (index + 1),
+                edit: (String text, int index) {
+                  editNotification(text, index,
+                      AppLocalizations.of(context)!.trait, userInfoProvider);
+                },
+                remove: (int index) {
+                  removePositiveTrait(index, userInfoProvider);
+                },
+                myFocusNode: focusNodes[index],
+                date: "",
+                color: primaryPurple,
+              ),
+            ),
             positiveTraits.isEmpty
                 ? Container()
                 : Divider(
@@ -272,16 +278,28 @@ class _PositiveState extends State<Positive> {
                   ),
             //suggestions
             PositiveTraitItemSug(
-              add: addPositiveTrait,
+              add: (String text) {
+                addPositiveTrait(text, userInfoProvider);
+              },
               inputText: sug1,
+              fullSuggestionList: traitsList[userInfoProvider.localeName]![
+                  gender == "" ? "other" : gender]!,
             ),
             PositiveTraitItemSug(
-              add: addPositiveTrait,
+              add: (String text) {
+                addPositiveTrait(text, userInfoProvider);
+              },
               inputText: sug2,
+              fullSuggestionList: traitsList[userInfoProvider.localeName]![
+                  gender == "" ? "other" : gender]!,
             ),
             PositiveTraitItemSug(
-              add: addPositiveTrait,
+              add: (String text) {
+                addPositiveTrait(text, userInfoProvider);
+              },
               inputText: sug3,
+              fullSuggestionList: traitsList[userInfoProvider.localeName]![
+                  gender == "" ? "other" : gender]!,
             ),
             //refresh button
             TextButton(
@@ -319,9 +337,7 @@ class _PositiveState extends State<Positive> {
                 children: <Widget>[
                   //refresh button text
                   Text(
-                    appInfoProvider.othersuggestions[
-                            'othersuggestions-' + userInfoProvider.gender] ??
-                        'הצעות אחרות',
+                    AppLocalizations.of(context)!.otherSuggestions(gender),
                     style:
                         TextStyle(fontWeight: FontWeight.bold, color: appGreen),
                   ),

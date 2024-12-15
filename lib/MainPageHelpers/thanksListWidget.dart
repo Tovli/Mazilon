@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:mazilon/lists.dart';
+
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/HomePage/sectionBarHome.dart';
-//import 'package:mazilon/util/Thanks/thanksItem.dart';
+
 import 'package:mazilon/util/Thanks/thanksItemSug.dart';
-import 'package:mazilon/util/styles.dart';
+
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // the thank you list widget, it shows the list of the thank yous
 // this code is related to todo list in homepage.
@@ -20,7 +22,7 @@ class ThanksListWidget extends StatefulWidget {
   final Function remove; // the function to remove a thank you
   final int thanksListLength; // the length of the thank you list
   final Function addSuggested; // the function to add a suggested thank you
-  final Function(int)
+  final Function(BuildContext, int)
       onTabTapped; // the function to call when pressing on the "see more" to go to wanted page (journal page)
   const ThanksListWidget(
       {super.key,
@@ -45,6 +47,7 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
   @override
   Widget build(BuildContext context) {
     // get the user information provider and the app information provider
+    final appLocale = AppLocalizations.of(context)!;
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
     final appInfoProvider = Provider.of<AppInformation>(context);
@@ -65,23 +68,18 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
             SectionBarHome(
               textWidget: TextButton(
                 onPressed: () {
-                  widget.onTabTapped(3); // 3 is the index of the journal page
+                  widget.onTabTapped(
+                      context, 3); // 3 is the index of the journal page
                 },
-                child: Directionality(
-                  // the title of the thank you list
-                  textDirection: TextDirection.rtl,
-                  child: myAutoSizedText(
-                      appInfoProvider
-                              .journalMainTitle['ThanksMainTitle-' + gender] ??
-                          '',
-                      TextStyle(
-                        fontSize: 24.sp, // the size of the title
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black, // the color of the title
-                      ),
-                      null,
-                      40),
-                ),
+                child: myAutoSizedText(
+                    AppLocalizations.of(context)!.todoListName(gender),
+                    TextStyle(
+                      fontSize: 24.sp, // the size of the title
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black, // the color of the title
+                    ),
+                    null,
+                    40),
               ),
               icon: FontAwesome5
                   .praying_hands, // the icon of the thank you list , adjust as needed
@@ -99,9 +97,7 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                 ),
               ],
               // the sub title of the thank you list
-              subHeader:
-                  appInfoProvider.journalSubTitle['ThanksSubTitle-' + gender] ??
-                      '',
+              subHeader: AppLocalizations.of(context)!.todoListName(gender),
             ),
             // gap between the section bar and the list
             const SizedBox(height: 10),
@@ -110,7 +106,6 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
               constraints: const BoxConstraints(maxHeight: 315), //max height
               child: SingleChildScrollView(
                 child: Wrap(
-                    textDirection: TextDirection.rtl,
                     spacing: 8.0, // gap between adjacent chips
                     runSpacing: 4.0, // gap between lines
                     children: widget.thanks.asMap().entries.map((entry) {
@@ -119,8 +114,34 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                       return Container(
                         padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            // the number of the thank you/trait (in a circle)
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                padding: index + 1 < 10
+                                    ? const EdgeInsets.symmetric(
+                                        horizontal: 13, vertical: 7)
+                                    : const EdgeInsets.symmetric(
+                                        horizontal: 11, vertical: 7),
+                                color: primaryPurple, // the color of the circle
+                                child: myAutoSizedText(
+                                    '${index + 1}', // number + 1 because we start from 0 in code :)
+                                    TextStyle(
+                                        color: Colors
+                                            .white, // the color of the number
+                                        fontSize: // the size of the number
+                                            index + 1 < 10 ? (14.sp) : (10.sp),
+                                        fontWeight: FontWeight.bold),
+                                    null,
+                                    30),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+
                             Container(
                               constraints: BoxConstraints(
                                 minHeight: 20,
@@ -138,24 +159,25 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   children: [
-                                    // the delete button
-                                    Container(
-                                      width: 32,
-                                      child: MaterialButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            widget.remove(
-                                                widget.thanksListLength -
-                                                    widget.thanks.length +
-                                                    index);
-                                          });
-                                        },
-                                        splashColor: Colors.transparent,
-                                        enableFeedback: false,
-                                        child: const Icon(
-                                          Icons.delete, // the delete icon
+                                    const SizedBox(
+                                      width: 15,
+                                    ),
+                                    Expanded(
+                                      // the text of the thank you/trait
+                                      child: Container(
+                                        child: Text(
+                                          thank,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontFamily: "Rubix",
+                                              fontSize:
+                                                  16.sp, // the size of the text
+                                              fontWeight: FontWeight.normal),
                                         ),
                                       ),
+                                    ),
+                                    const SizedBox(
+                                      width: 15,
                                     ),
                                     // the edit button
                                     Container(
@@ -177,65 +199,31 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                    Expanded(
-                                      // the text of the thank you/trait
-                                      child: Container(
-                                        child: Directionality(
-                                          textDirection: TextDirection.rtl,
-                                          child: Text(
-                                            thank,
-                                            textAlign: TextAlign.right,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontFamily: "Rubix",
-                                                fontSize: 16
-                                                    .sp, // the size of the text
-                                                fontWeight: FontWeight.normal),
-                                          ),
+
+                                    // the delete button
+                                    Container(
+                                      width: 32,
+                                      child: MaterialButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            widget.remove(
+                                                widget.thanksListLength -
+                                                    widget.thanks.length +
+                                                    index);
+                                          });
+                                        },
+                                        splashColor: Colors.transparent,
+                                        enableFeedback: false,
+                                        child: const Icon(
+                                          Icons.delete, // the delete icon
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 15,
                                     ),
                                   ],
                                 ),
                               ),
                             ),
                             //gap between the text and the number
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            // the number of the thank you/trait (in a circle)
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: Container(
-                                padding: index + 1 < 10
-                                    ? const EdgeInsets.symmetric(
-                                        horizontal: 13, vertical: 7)
-                                    : const EdgeInsets.symmetric(
-                                        horizontal: 11, vertical: 7),
-                                color: primaryPurple, // the color of the circle
-                                child: Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: myAutoSizedText(
-                                      '${index + 1}', // number + 1 because we start from 0 in code :)
-                                      TextStyle(
-                                          color: Colors
-                                              .white, // the color of the number
-                                          fontSize: // the size of the number
-                                              index + 1 < 10
-                                                  ? (14.sp)
-                                                  : (10.sp),
-                                          fontWeight: FontWeight.bold),
-                                      null,
-                                      30),
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                       );
@@ -247,7 +235,11 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
               child: Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: ThanksItemSuggested(
-                    add: widget.addSuggested, inputText: ""),
+                  add: widget.addSuggested,
+                  inputText: "",
+                  fullSuggestionList: thanksList[appLocale.localeName]![
+                      gender == "" ? "other" : gender]!,
+                ),
               ),
             ),
             // the "see more" button to go to the journal page
@@ -255,25 +247,16 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
               children: [
                 TextButton(
                   onPressed: () {
-                    widget.onTabTapped(3);
+                    widget.onTabTapped(context, 3);
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
+                      Text(AppLocalizations.of(context)!.showAll(gender),
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                       const Icon(
-                        Icons.arrow_back_ios,
+                        Icons.arrow_forward_ios,
                         size: 12,
-                      ),
-                      Directionality(
-                        textDirection: TextDirection.rtl,
-                        // according to the gender of the user .
-                        child: Text(
-                            userInfoProvider.gender == 'female'
-                                ? 'ראי הכל'
-                                : (userInfoProvider.gender == 'male'
-                                    ? 'ראה הכל'
-                                    : 'ראה.י הכל'),
-                            style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),

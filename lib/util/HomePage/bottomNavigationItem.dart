@@ -16,15 +16,12 @@ Widget bottomNavigationItem(current, icon, text) {
         ),
       ),
       Expanded(
-        child: Directionality(
-          textDirection: TextDirection.rtl,
-          child: myAutoSizedText(
-              text,
-              TextStyle(
-                  fontWeight: FontWeight.bold, color: color, fontSize: 14.sp),
-              null,
-              25),
-        ),
+        child: myAutoSizedText(
+            text,
+            TextStyle(
+                fontWeight: FontWeight.bold, color: color, fontSize: 14.sp),
+            null,
+            25),
       )
     ],
   );

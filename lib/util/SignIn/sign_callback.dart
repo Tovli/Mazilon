@@ -10,13 +10,13 @@ void callback(result, widget, context) {
       context,
       MaterialPageRoute(
         builder: (context) => InitialFormProgressIndicator(
-          collections: widget.collections, // Pass collections data to the next page
-          collectionNames: widget.collectionNames, // Pass collection names to the next page
-          checkboxModels: widget.checkboxModels, // Pass checkbox models to the next page
-          phonePageData: widget.phonePageData, // Pass phone page data to the next page
+          phonePageData:
+              widget.phonePageData, // Pass phone page data to the next page
+          changeLocale: widget
+              .changeLocale, // Pass the changeLocale function to the next page
         ),
       ),
-          (route) => false, // Remove all previous routes from the stack
+      (route) => false, // Remove all previous routes from the stack
     );
   }
 }

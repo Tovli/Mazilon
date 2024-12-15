@@ -113,7 +113,7 @@ class About extends StatelessWidget {
                     child: Directionality(
                         textDirection: TextDirection.ltr,
                         child: Text(
-                          "Mazilon App Version : ${version}",
+                          "Living Positively App Version : ${version}",
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               fontWeight: FontWeight.normal, fontSize: 20),
