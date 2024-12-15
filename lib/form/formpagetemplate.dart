@@ -137,11 +137,6 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
         retrieveInformation(widget.collectionName, gender, textLocalization);
     length = displayInformation['list'].length;
     loadItems(userInfoProvider);
-    print("*********************************************");
-    print(widget.collectionName);
-
-    print("*********************************************");
-    print("-");
     bool validate = false;
     return Scaffold(
       body: SingleChildScrollView(

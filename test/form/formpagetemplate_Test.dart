@@ -1,68 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
-
-import 'package:mazilon/pages/FormAnswer.dart';
-import 'package:mazilon/util/Form/retrieveInformation.dart';
-import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/form/formpagetemplate.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-@GenerateMocks([AppInformation, UserInformation])
+import 'formpagetemplate_Test.mocks.dart';
+
+@GenerateNiceMocks([
+  MockSpec<UserInformation>(),
+  MockSpec<AppInformation>(),
+])
 void main() {
-  testWidgets('FormPageTemplate widget test', (WidgetTester tester) async {
-    // Mocking providers and dependencies
-    final mockAppInfo = AppInformation();
-    final mockUserInfo = UserInformation()..gender = 'male';
+  TestWidgetsFlutterBinding.ensureInitialized();
 
-    when(mockUserInfo.gender).thenReturn('Male');
-
-    // Providing mock data to displayInformation
-    when(retrieveInformation(mockAppInfo, any, any)).thenReturn({
-      'header': 'Test Header',
-      'subTitle': 'Test SubTitle',
-      'midTitle': 'Test MidTitle',
-      'midSubTitle': 'Test MidSubTitle',
-      'showMoreButtonText': 'Show More',
-      'nextButtonText': 'Next',
+  group('FeelGood Widget Tests', () {
+    late UserInformation mockUserInformation;
+    late AppInformation mockAppInformation;
+    setUp(() {
+      mockUserInformation = UserInformation();
+      mockUserInformation.gender = "male";
+      mockAppInformation = AppInformation();
     });
+    testWidgets('FormPageTemplate widget test', (WidgetTester tester) async {
+      // Mocking providers and dependencies
 
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider<AppInformation>.value(value: mockAppInfo),
-          ChangeNotifierProvider<UserInformation>.value(value: mockUserInfo),
-        ],
-        child: MaterialApp(
-          home: FormPageTemplate(
-            next: () {},
-            prev: () {},
-            collectionName: 'collection1',
+      // Providing mock data to displayInformation
+
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<AppInformation>.value(
+                value: mockAppInformation),
+            ChangeNotifierProvider<UserInformation>.value(
+                value: mockUserInformation),
+          ],
+          child: MaterialApp(
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: Locale('he'),
+            localizationsDelegates: [
+              AppLocalizations.localizationsDelegates[0],
+              GlobalMaterialLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate
+            ],
+            home: ScreenUtilInit(
+              designSize: const Size(360, 690),
+              child: FormPageTemplate(
+                next: () {},
+                prev: () {},
+                collectionName: 'PersonalPlan-DifficultEvents',
+              ),
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    // Verifying initial UI elements
-    expect(find.text('Test Header'), findsOneWidget);
-    expect(find.text('Test SubTitle'), findsOneWidget);
-    expect(find.text('Test MidTitle'), findsOneWidget);
-    expect(find.text('Test MidSubTitle'), findsOneWidget);
-    expect(find.text('Show More'), findsOneWidget);
-    expect(find.text('Next'), findsOneWidget);
+      // Verifying initial UI elements
+      expect(find.text('תזכורות לטריגרים נפוצים וגורמי הסלמה'), findsOneWidget);
+      expect(find.text('גורמים ואירועים שהקשו עלי בעבר'), findsOneWidget);
+      expect(find.text('אין לך רעיון? הנה כמה הצעות'), findsOneWidget);
+      expect(find.text('לחץ כדי להוסיף אפשרויות המתאימות לך לתכנית האישית שלך'),
+          findsOneWidget);
+      expect(find.text('להציג עוד'), findsOneWidget);
+      expect(find.text('המשך'), findsOneWidget);
 
-    // Verifying interactions
-    await tester.enterText(find.byType(TextField), 'New Suggestion');
-    await tester.tap(find.text('הוספה'));
-    await tester.pump();
+      // Verifying interactions
+      await tester.enterText(find.byType(TextField), 'New Suggestion');
+      await tester.tap(find.text('הוספה'));
+      await tester.pump();
 
-    await tester.tap(find.text('Show More'));
-    await tester.pump();
+      await tester.tap(find.text('להציג עוד'));
+      await tester.pump();
 
-    await tester.tap(find.text('Next'));
-    await tester.pump();
+      await tester.tap(find.text('המשך'));
+      await tester.pump();
+    });
   });
 }

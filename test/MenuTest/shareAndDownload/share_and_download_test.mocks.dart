@@ -2435,4 +2435,14 @@ class MockImagePickerService extends _i1.Mock
           ),
         ),
       ) as _i2.Widget);
+
+  @override
+  _i6.Future<void> deleteImages() => (super.noSuchMethod(
+        Invocation.method(
+          #deleteImages,
+          [],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 }
