@@ -1,17 +1,17 @@
-## This is a guide for installing flutter for new devs.
+# This is a guide for installing flutter for new devs.
 ## This assumes thatyou're using Visual Studio Code.
 
 ## Required apps (Windows) for developing on VS Code:
-- [Android Studio] (https://developer.android.com/studio)
-- [Visual Studio Community] (https://visualstudio.microsoft.com/vs/community)
-- [Visual Studio Code] (https://code.visualstudio.com)
-- [Google Chrome] (https://www.google.com/chrome)
-- [Flutter - VS Code Plugin] (https://marketplace.visualstudio.com/items?itemName=Dart-Code.flutter)
-- [Git for Windows] (https://git-scm.com/downloads/win)
+- Android Studio - https://developer.android.com/studio
+- Visual Studio Community - https://visualstudio.microsoft.com/vs/community
+- Visual Studio Code - https://code.visualstudio.com
+- Google Chrome - https://www.google.com/chrome
+- Flutter - VS Code Plugin - https://marketplace.visualstudio.com/items?itemName=Dart-Code.flutter
+- Git for Windows - https://git-scm.com/downloads/win
 
 ## Optional - might be required for some installations
-- [Gradle for Java - VS Code Plugin] (https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-gradle)
-- [Github Desktop - allows UI for Github] (https://github.com/apps/desktop)
+- Gradle for Java - VS Code Plugin - https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-gradle
+- Github Desktop - allows UI for Github - https://github.com/apps/desktop
 
 ## Flutter for VS Code notes
 This plugin will require you to choose a folder to download the Flutter SDK into, it's recommended to use C:/ where the flutter folder will be installed.
@@ -59,4 +59,28 @@ It should say:
 - [√] Connected device (num available)
 - [√] Network resources
 
-- anything that includes an X should be addressed, the solution is also provided there
+anything that includes an X should be addressed, the solution is provided in the same message near the X.
+
+
+## Required apps (Linux) for developing on VS Code:
+
+Unfortunately, as of now the results across various Linux distros are inconsistent and each distro requires a different approach. Due to varying configurations on each distro some SDK components work and some don't, that will require troubleshooting, which one doesn't work depends on the config of each distro. The following approach is more of a band aid solution, it should work across multiple distros but even that isn't a guarantee.
+
+The solution is to install a virtual machine with a Windows 11 image on Virtualbox, as well an Android image on Genymotion.
+
+## required apps:
+
+- Genymotion - https://www.genymotion.com
+- VirtualBox - installation varies across repos. Further instructions here: https://www.virtualbox.org/wiki/Linux_Downloads
+- guest additions for VirtualBox - usually comes with VB but may require a separate installation
+
+After you've set up your Windows VM, you install everything mentioned above as well as the android platform tools from within the VM.
+
+- Platform Tools - https://developer.android.com/tools/releases/platform-tools
+
+Genymotion is an android VM app that can be set up to work with VirtualBox. You can get it to communicate with the Windows VM. The reason for this is because you can't run an Android VM from within the Windows VM.
+Set up the Windows VM network settings to have two network virtual devices: a "bridged adapter" and a "host-only adapter". This will allow the Windows VM to connect to the internet as well as communicate with the Android VM.
+
+Ideally you'd want your host machine to have 32 gigs of RAM, you can get away with only 16 but that will slow down the resources of your host machine as the two VMs require a lot of RAM. With 16 gigs it's possible but the host machine will have trouble as the VMs require a lot of RAM to function well.
+
+If you're having any trouble consult Chat GPT.
