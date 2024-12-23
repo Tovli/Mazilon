@@ -1,5 +1,5 @@
 # This is a guide for installing flutter for new devs.
-## This assumes thatyou're using Visual Studio Code.
+## This assumes that you're using Visual Studio Code.
 
 ## Required apps (Windows) for developing on VS Code:
 - Android Studio - https://developer.android.com/studio
@@ -74,6 +74,7 @@ The solution is to install a virtual machine with a Windows 11 image on Virtualb
 - VirtualBox - installation varies across repos. Further instructions here: https://www.virtualbox.org/wiki/Linux_Downloads
 - guest additions for VirtualBox - usually comes with VB but may require a separate installation
 
+VB may not work if you have Secure Boot enabled on your machine. There are workarounds but the easiest solution is to turn it off.
 After you've set up your Windows VM, you install everything mentioned above as well as the android platform tools from within the VM.
 
 - Platform Tools - https://developer.android.com/tools/releases/platform-tools
