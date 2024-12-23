@@ -48,7 +48,7 @@ This is assuming that Android Studio is still open after the prior section.
 5. Choose the folder to install the repo. Ideally in Documents.
 6. Go to Terminal in VS Code and type in "flutter doctor" for diagnostics on what is installed.
 It should say:
-`[√] Flutter (Channel stable, num.num.num, on Microsoft Windows [Version num.num.num.num], locale)
+[√] Flutter (Channel stable, num.num.num, on Microsoft Windows [Version num.num.num.num], locale)
 [√] Windows Version (Installed version of Windows is version 10 or higher)
 [√] Android toolchain - develop for Android devices (Android SDK version num.num.num)
 [√] Chrome - develop for the web
@@ -56,6 +56,6 @@ It should say:
 [√] Android Studio (version num.num)
 [√] VS Code (version num.num.num)
 [√] Connected device (num available)
-[√] Network resources`
+[√] Network resources
 
 - anything that includes an X should be addressed, the solution is also provided there
