@@ -16,8 +16,7 @@ class ImageDisplay extends StatelessWidget {
         FeelGoodInheritedWidget.of(context)?.displayImage ??
             (String path, {BoxFit fit = BoxFit.none}) {};
 
-    final AppInformation appInfoProvider =
-        Provider.of<AppInformation>(context, listen: true);
+    final appLocale = AppLocalizations.of(context);
     final UserInformation userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
     final gender = userInfoProvider.gender;
@@ -49,16 +48,14 @@ class ImageDisplay extends StatelessWidget {
                               actions: [
                                 TextButton(
                                   child: Text(
-                                    AppLocalizations.of(context)!
-                                        .closeButton(gender),
+                                    appLocale!.closeButton(gender),
                                   ),
                                   onPressed: () => Navigator.of(context).pop(),
                                 ),
                                 TextButton(
                                   key: Key('deleteButtonText'),
                                   child: Text(
-                                    AppLocalizations.of(context)!
-                                        .deleteButton(gender),
+                                    appLocale!.deleteButton(gender),
                                   ),
                                   onPressed: () {
                                     deleteImageFunction(index); // Delete image

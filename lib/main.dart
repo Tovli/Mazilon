@@ -1,10 +1,12 @@
 import 'dart:math';
+import 'package:language_code/language_code.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/Locale/locale_service.dart';
 import 'package:mazilon/iFx/service_locator.dart';
 import 'package:mazilon/l10n/l10n.dart';
 import 'package:mazilon/pages/notifications/notification_service.dart';
@@ -84,6 +86,7 @@ Future<void> initializeApp() async {
 
 void main() async {
   await initializeApp();
+
   IncidentLoggerService sentryService = GetIt.instance<IncidentLoggerService>();
   Workmanager().initialize(
     callbackDispatcher,
@@ -158,10 +161,15 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> setLocale() async {
+    LocaleService localeService = GetIt.instance<LocaleService>();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String prefsLocale = prefs.getString('localeName') ?? 'he';
+
+    String? prefsLocale = prefs.getString('localeName');
+
     setState(() {
-      localeName = prefsLocale;
+      localeService.setLocale(prefsLocale);
+
+      localeName = localeService.getLocale();
     });
   }
 
@@ -195,8 +203,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   void changeLocale(String locale) {
+    LocaleService localeService = GetIt.instance<LocaleService>();
     setState(() {
-      localeName = locale;
+      localeService.setLocale(locale);
     });
   }
 
@@ -205,15 +214,15 @@ class _MyAppState extends State<MyApp> {
   //app start this runs:
   @override
   Widget build(BuildContext context) {
+    LocaleService localeService = GetIt.instance<LocaleService>();
     final appInfoProvider = Provider.of<AppInformation>(context, listen: false);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
-
     if (widgetNotifier.value == null) {
       Future.wait([
         //load from DB or from json:
         loadAppInformation(appInfoProvider),
-        loadUserInformation(userInfoProvider),
+        loadUserInformation(userInfoProvider, localeService.getLocale()),
         setLocale()
       ]).then((_) {
         //initialize which widget will run first:
@@ -236,7 +245,7 @@ class _MyAppState extends State<MyApp> {
       designSize: Size(360, 690),
       builder: (context, child) => MaterialApp(
         supportedLocales: AppLocalizations.supportedLocales,
-        locale: Locale(localeName),
+        locale: Locale(localeService.getLocale()),
         localizationsDelegates: [
           AppLocalizations.localizationsDelegates[0],
           GlobalMaterialLocalizations.delegate,

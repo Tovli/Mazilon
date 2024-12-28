@@ -20,10 +20,9 @@ class Introduction extends StatefulWidget {
 class _IntroductionState extends State<Introduction> {
   @override
   Widget build(BuildContext context) {
-    final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
-
+    final appLocale = AppLocalizations.of(context);
     return Scaffold(
       body: Center(
         child: Column(
@@ -31,7 +30,7 @@ class _IntroductionState extends State<Introduction> {
           children: [
             // Displaying a welcome message in Hebrew with custom styling
             myAutoSizedText(
-                AppLocalizations.of(context)!.introductionRestartGreeting(
+                appLocale!.introductionRestartGreeting(
                     userInfoProvider.gender), // Welcome message in Hebrew
                 TextStyle(
                   fontSize: 40.sp,

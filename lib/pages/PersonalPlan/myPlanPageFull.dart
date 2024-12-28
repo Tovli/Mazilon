@@ -97,7 +97,7 @@ class _MyPlanPageFullState extends State<MyPlanPageFull> {
     final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
-    final textLocalization = AppLocalizations.of(context)!;
+    final appLocale = AppLocalizations.of(context);
     // Set up phone and answer information based on the user's data
     setPhones(widget.phonePageData.savedPhoneNames,
         widget.phonePageData.savedPhoneNumbers);
@@ -123,8 +123,7 @@ class _MyPlanPageFullState extends State<MyPlanPageFull> {
           title: SingleChildScrollView(
             child: Center(
                 child: myAutoSizedText(
-                    AppLocalizations.of(context)!
-                        .personalPlanPageMyPlan(gender),
+                    appLocale!.personalPlanPageMyPlan(gender),
                     TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
                     null,
                     40)),
@@ -143,8 +142,8 @@ class _MyPlanPageFullState extends State<MyPlanPageFull> {
             // Display a list of plan sections with their corresponding answers
             ListView.builder(
               itemBuilder: (context, index) {
-                var info = retrieveInformation(fieldNames[index],
-                    userInfoProvider.gender, textLocalization);
+                var info = retrieveInformation(
+                    fieldNames[index], userInfoProvider.gender, appLocale);
 
                 return MyPlanSection(
                   title: info["header"] ?? '',
@@ -158,9 +157,8 @@ class _MyPlanPageFullState extends State<MyPlanPageFull> {
             ),
             // Additional section for phone-related information
             MyPlanSection(
-              title: AppLocalizations.of(context)!.phonesPageHeader(gender),
-              subTitle:
-                  AppLocalizations.of(context)!.phonesPageSubTitle(gender),
+              title: appLocale!.phonesPageHeader(gender),
+              subTitle: appLocale!.phonesPageSubTitle(gender),
               answers: phoneInformation,
             ),
             SizedBox(
@@ -266,10 +264,8 @@ class _MyPlanPageFullState extends State<MyPlanPageFull> {
               ),
               child: myAutoSizedText(
                   widget.hasFilled
-                      ? AppLocalizations.of(context)!
-                          .personalPlanPageHasFilled(gender)
-                      : AppLocalizations.of(context)!
-                          .personalPlanPageDidNotFill(gender),
+                      ? appLocale!.personalPlanPageHasFilled(gender)
+                      : appLocale!.personalPlanPageDidNotFill(gender),
                   TextStyle(
                       fontSize: 20.sp,
                       fontWeight: FontWeight.bold,

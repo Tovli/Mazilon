@@ -61,6 +61,7 @@ class _WellnessToolsState extends State<WellnessTools> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context);
     return VideoPlayerInheritedWidget(
         videoId: selectedVideoId,
         changeVideo: changeVideo,
@@ -97,7 +98,7 @@ class _WellnessToolsState extends State<WellnessTools> {
                           fontSize: 24.sp,
                           fontWeight: FontWeight.bold,
                         ),
-                        AppLocalizations.of(context)!.textDirection == "rtl"
+                        appLocale!.textDirection == "rtl"
                             ? TextAlign.right
                             : TextAlign.left,
                         28,
@@ -124,7 +125,7 @@ class _WellnessToolsState extends State<WellnessTools> {
                           fontSize: 18.sp,
                           fontWeight: FontWeight.normal,
                         ),
-                        AppLocalizations.of(context)!.textDirection == "rtl"
+                        appLocale!.textDirection == "rtl"
                             ? TextAlign.right
                             : TextAlign.left,
                         20,
@@ -136,12 +137,12 @@ class _WellnessToolsState extends State<WellnessTools> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 4.0, 4, 20),
                     child: myAutoSizedText(
-                        AppLocalizations.of(context)!.moreVideos,
+                        appLocale!.moreVideos,
                         TextStyle(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
                         ),
-                        AppLocalizations.of(context)!.textDirection == "rtl"
+                        appLocale!.textDirection == "rtl"
                             ? TextAlign.right
                             : TextAlign.left,
                         20,

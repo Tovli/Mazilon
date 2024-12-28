@@ -43,6 +43,7 @@ class _DisclaimerPageState extends State<DisclaimerPage> {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
     final gender = userInfoProvider.gender;
+    final appLocale = AppLocalizations.of(context);
     // show the disclaimer text and a button to confirm the disclaimer
     print(appInfoProvider.disclaimerText);
     return PopScope(
@@ -77,7 +78,7 @@ class _DisclaimerPageState extends State<DisclaimerPage> {
                     });
                   },
                       //disclaimer next button text from CMS(Saved in appinfo)
-                      AppLocalizations.of(context)!.confirmButton(gender),
+                      appLocale!.confirmButton(gender),
                       myTextStyle.copyWith(
                         fontSize: 20.sp,
                       )),

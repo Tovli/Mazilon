@@ -71,8 +71,9 @@ class _PositiveTraitItemSugState extends State<PositiveTraitItemSug> {
 // build the positive trait item suggested widget
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context);
     // get the appInformation and userInformation providers
-    final appInfoProvider = Provider.of<AppInformation>(context);
+
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
 
@@ -93,7 +94,8 @@ class _PositiveTraitItemSugState extends State<PositiveTraitItemSug> {
                   Provider.of<UserInformation>(context, listen: false);
 
               setState(() {
-                widget.add(widget.inputText == '' ? text : widget.inputText);
+                widget.add(widget.inputText == '' ? text : widget.inputText,
+                    userInfoProvider);
                 myPositiveTraits = prefs.getStringList('positiveTraits') ?? [];
                 myPositiveTraits
                     .add(widget.inputText == '' ? text : widget.inputText);
@@ -178,10 +180,9 @@ class _PositiveTraitItemSugState extends State<PositiveTraitItemSug> {
                 child: Row(
                   children: [
                     Container(
-                      alignment:
-                          AppLocalizations.of(context)!.textDirection == "rtl"
-                              ? Alignment.centerRight
-                              : Alignment.centerLeft,
+                      alignment: appLocale!.textDirection == "rtl"
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
                       width: MediaQuery.of(context).size.width > 1000
                           ? 600
                           : MediaQuery.of(context).size.width * 0.6 + 36,

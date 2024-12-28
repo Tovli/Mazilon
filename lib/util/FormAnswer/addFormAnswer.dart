@@ -36,8 +36,8 @@ class _AddFormAnswerState extends State<AddFormAnswer> {
 
   @override
   Widget build(BuildContext context) {
-    final appInfoProvider = Provider.of<AppInformation>(context,
-        listen: true); // Access the AppInformation provider
+    final appLocale = AppLocalizations.of(context);
+
     final userInfoProvider = Provider.of<UserInformation>(context,
         listen: true); // Access the UserInformation provider
     final gender = userInfoProvider.gender;
@@ -76,7 +76,7 @@ class _AddFormAnswerState extends State<AddFormAnswer> {
                                 true, // Automatically focus on the text field when the dialog is opened
                             maxLength: 100, // Set maximum length of text
                             decoration: InputDecoration(
-                              labelText: AppLocalizations.of(context)!.addFormEdit(
+                              labelText: appLocale!.addFormEdit(
                                   gender), // Set label text dynamically based on user gender
                               contentPadding: EdgeInsets.only(right: 8.0),
                               labelStyle: TextStyle(
@@ -93,7 +93,7 @@ class _AddFormAnswerState extends State<AddFormAnswer> {
                                     : 18.sp), // Set text field style
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return AppLocalizations.of(context)!
+                                return appLocale!
                                     .validateEmpty; // Validate that the field is not empty
                               }
                               return null;
@@ -112,7 +112,7 @@ class _AddFormAnswerState extends State<AddFormAnswer> {
               children: <Widget>[
                 TextButton(
                   child: myAutoSizedText(
-                      AppLocalizations.of(context)!.closeButton(
+                      appLocale!.closeButton(
                           gender), // Set cancel button text dynamically based on user gender
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp),
                       null,
@@ -123,7 +123,7 @@ class _AddFormAnswerState extends State<AddFormAnswer> {
                 ),
                 TextButton(
                   child: myAutoSizedText(
-                      AppLocalizations.of(context)!.saveButton(
+                      appLocale!.saveButton(
                           gender), // Set save button text dynamically based on user gender
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp),
                       null,

@@ -33,14 +33,14 @@ class _InitialFormPage1State extends State<InitialFormPage1> {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
     final gender = userInfoProvider.gender;
+    final appLocale = AppLocalizations.of(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: [
               myAutoSizedText(
-                  AppLocalizations.of(context)!
-                      .introductionFormFirstPageMainTitle(gender),
+                  appLocale!.introductionFormFirstPageMainTitle(gender),
                   TextStyle(
                     fontSize: 40.sp,
                     fontWeight: FontWeight.bold,
@@ -54,8 +54,7 @@ class _InitialFormPage1State extends State<InitialFormPage1> {
                     MediaQuery.of(context).size.width / 5,
                     0),
                 child: myAutoSizedText(
-                    AppLocalizations.of(context)!
-                        .introductionFormFirstPageSubTitle1(gender),
+                    appLocale!.introductionFormFirstPageSubTitle1(gender),
                     TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
@@ -73,8 +72,7 @@ class _InitialFormPage1State extends State<InitialFormPage1> {
                     MediaQuery.of(context).size.width / 6,
                     0),
                 child: myAutoSizedText(
-                    AppLocalizations.of(context)!
-                        .introductionFormFirstPageSubTitle2(gender),
+                    appLocale!.introductionFormFirstPageSubTitle2(gender),
                     TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
@@ -100,7 +98,7 @@ class _InitialFormPage1State extends State<InitialFormPage1> {
               ConfirmationButton(context, () {
                 widget.next();
               },
-                  AppLocalizations.of(context)!.nextButton(gender),
+                  appLocale!.nextButton(gender),
                   myTextStyle.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 20.sp,
@@ -111,7 +109,7 @@ class _InitialFormPage1State extends State<InitialFormPage1> {
               ConfirmationButton(context, () {
                 widget.skip();
               },
-                  AppLocalizations.of(context)!.skipButton(gender),
+                  appLocale!.skipButton(gender),
                   myTextStyle.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 20.sp,

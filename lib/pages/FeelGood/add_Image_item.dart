@@ -23,12 +23,10 @@ class _ImageAddItemState extends State<ImageAddItem> {
       FeelGoodInheritedWidget.of(context)?.getImage(source);
     }
 
-    final AppInformation appInfoProvider =
-        Provider.of<AppInformation>(context, listen: true);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
     final gender = userInfoProvider.gender;
-
+    final appLocale = AppLocalizations.of(context);
     return DottedBorder(
       color: Colors.grey,
       strokeWidth: 2,
@@ -36,7 +34,7 @@ class _ImageAddItemState extends State<ImageAddItem> {
         child: TextButton(
           key: Key('addImgButtonText'),
           child: Text(
-            AppLocalizations.of(context)!.addImageButton(gender),
+            appLocale!.addImageButton(gender),
             style: const TextStyle(
                 fontSize: 24.0), // adjust the font size as needed
           ),
@@ -45,7 +43,7 @@ class _ImageAddItemState extends State<ImageAddItem> {
               context: context,
               builder: (context) => AlertDialog(
                 title: Text(
-                  AppLocalizations.of(context)!.addImageTitle(gender),
+                  appLocale!.addImageTitle(gender),
                 ),
                 actions: <Widget>[
                   Row(
@@ -54,7 +52,7 @@ class _ImageAddItemState extends State<ImageAddItem> {
                       TextButton(
                         key: Key('cameraButtonText'),
                         child: Text(
-                          AppLocalizations.of(context)!.camera,
+                          appLocale!.camera,
                         ),
                         onPressed: () {
                           pickImage("camera");
@@ -62,7 +60,7 @@ class _ImageAddItemState extends State<ImageAddItem> {
                       ),
                       TextButton(
                         key: Key('galleryButtonText'),
-                        child: Text(AppLocalizations.of(context)!.gallery),
+                        child: Text(appLocale!.gallery),
                         onPressed: () {
                           pickImage("gallery");
                         },

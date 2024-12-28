@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //this it the user's information class, with it we store and display it across the app
 class UserInformation with ChangeNotifier {
@@ -38,7 +39,7 @@ class UserInformation with ChangeNotifier {
     this.userId = '',
   });
 
-  void reset() {
+  void reset(String locale) {
     notificationHour = 12;
     notificationMinute = 0;
     gender = '';
@@ -54,29 +55,52 @@ class UserInformation with ChangeNotifier {
     userId = '';
     thanks = {};
     positiveTraits = [];
-    localeName = 'he';
+    localeName = locale;
 
     notifyListeners();
   }
 
   void updateGender(String text) {
+    void saveGender(String value) async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('gender', value);
+    }
+
     gender = text;
+    saveGender(text);
     notifyListeners();
   }
 
   void updateName(String text) {
-    name = text;
+    void saveName(String value) async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('name', value);
+    }
 
+    name = text;
+    saveName(text);
     notifyListeners();
   }
 
   void updateAge(String text) {
+    void saveAge(String value) async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('age', value);
+    }
+
     age = text;
+    saveAge(text);
     notifyListeners();
   }
 
   void updateBinary(bool value) {
+    void saveBinary(bool value) async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setBool('binary', value);
+    }
+
     binary = value;
+    saveBinary(value);
     notifyListeners();
   }
 
@@ -131,12 +155,25 @@ class UserInformation with ChangeNotifier {
   }
 
   void updatePositiveTraits(List<String> value) {
+    Future<void> savePositiveTraits(List<String> value) async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setStringList('positiveTraits', value);
+    }
+
     positiveTraits = [...value];
+    savePositiveTraits(value);
     notifyListeners();
   }
 
   void updateThanks(Map<String, List<String>> value) {
-    thanks = value.map((key, list) => MapEntry(key, List<String>.from(list)));
+    Future<void> saveThanks(List<String> thanks, List<String> dates) async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setStringList('thankYous', thanks);
+      prefs.setStringList('dates', dates);
+    }
+
+    thanks = {"thanks": value["thanks"] ?? [], "dates": value["dates"] ?? []};
+    saveThanks(value["thanks"] ?? [], value["dates"] ?? []);
     notifyListeners();
   }
 }

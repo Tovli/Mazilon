@@ -1,12 +1,11 @@
 //import 'package:mazilon/pages/schedule.dart';
 
 import 'package:flutter/material.dart';
-import 'package:mazilon/lists.dart';
-
 import 'package:mazilon/pages/about.dart';
 import 'package:mazilon/pages/FeelGood/feelGood.dart';
 import 'package:mazilon/pages/WellnessTools/wellnessTools.dart';
 import 'package:mazilon/pages/notifications/notification_page.dart';
+import 'package:mazilon/util/Form/retrieveInformation.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -62,6 +61,7 @@ class _MenuState extends State<Menu> {
 
 //Function to change the current displayed page in the "home"
   void changeCurrentIndex(BuildContext context, int index) {
+    final appLocale = AppLocalizations.of(context)!;
     final userInformation =
         Provider.of<UserInformation>(context, listen: false);
     final gender = userInformation.gender;
@@ -78,8 +78,8 @@ class _MenuState extends State<Menu> {
         currentScreen = Positive();
       } else if (index == 3) {
         currentScreen = Journal(
-          fullSuggestionList: thanksList[AppLocalizations.of(context)!
-              .localeName]![gender == "" ? "other" : gender]!,
+          fullSuggestionList:
+              retrieveThanksList(appLocale, gender == "" ? "other" : gender),
         );
       } else if (index == 4) {
         currentScreen = PhonePage(phonePageData: widget.phonePageData);
@@ -124,6 +124,7 @@ class _MenuState extends State<Menu> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context)!;
     final userInformation = Provider.of<UserInformation>(context);
     final appInfoProvider = Provider.of<AppInformation>(context);
     final gender = userInformation.gender;
@@ -197,10 +198,9 @@ class _MenuState extends State<Menu> {
                     children: [
                       Container(
                         width: 70,
-                        alignment:
-                            AppLocalizations.of(context)!.textDirection == "rtl"
-                                ? Alignment.centerLeft
-                                : Alignment.centerRight,
+                        alignment: appLocale!.textDirection == "rtl"
+                            ? Alignment.centerLeft
+                            : Alignment.centerRight,
                         child: TextButton(
                             onPressed: () {
                               setState(() {
@@ -212,16 +212,13 @@ class _MenuState extends State<Menu> {
                                 current = 0;
                               });
                             },
-                            child: bottomNavigationItem(
-                                current == 0,
-                                Icons.home,
-                                AppLocalizations.of(context)!.home(gender))),
+                            child: bottomNavigationItem(current == 0,
+                                Icons.home, appLocale!.home(gender))),
                       ),
                       Container(
-                        alignment:
-                            AppLocalizations.of(context)!.textDirection == "rtl"
-                                ? Alignment.centerLeft
-                                : Alignment.centerRight,
+                        alignment: appLocale!.textDirection == "rtl"
+                            ? Alignment.centerLeft
+                            : Alignment.centerRight,
                         width: 100,
                         child: TextButton(
                             onPressed: () {
@@ -237,17 +234,14 @@ class _MenuState extends State<Menu> {
                             child: bottomNavigationItem(
                                 current == 1,
                                 Icons.assignment,
-                                AppLocalizations.of(context)!
-                                    .personalPlanPageMyPlan(gender))),
+                                appLocale!.personalPlanPageMyPlan(gender))),
                       ),
                       Container(
                         width: 200,
                         child: Align(
-                          alignment:
-                              AppLocalizations.of(context)!.textDirection ==
-                                      "rtl"
-                                  ? Alignment.centerLeft
-                                  : Alignment.centerRight,
+                          alignment: appLocale!.textDirection == "rtl"
+                              ? Alignment.centerLeft
+                              : Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {
                               showGeneralDialog(
@@ -264,9 +258,7 @@ class _MenuState extends State<Menu> {
                                   return FractionallySizedBox(
                                     heightFactor: 0.85,
                                     widthFactor: 0.6,
-                                    alignment: AppLocalizations.of(context)!
-                                                .textDirection ==
-                                            "rtl"
+                                    alignment: appLocale!.textDirection == "rtl"
                                         ? Alignment.centerLeft
                                         : Alignment.centerRight,
                                     child: Align(
@@ -414,10 +406,8 @@ class _MenuState extends State<Menu> {
                                 current = 5;
                               });
                             },
-                            child: bottomNavigationItem(
-                                current == 5,
-                                Icons.menu,
-                                AppLocalizations.of(context)!.menu(gender)),
+                            child: bottomNavigationItem(current == 5,
+                                Icons.menu, appLocale!.menu(gender)),
                           ),
                         ),
                       ),

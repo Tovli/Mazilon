@@ -134,8 +134,8 @@ class _PhonePageFormState extends State<PhonePageForm> {
   Widget build(BuildContext context) {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
-    final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
 
+    final appLocale = AppLocalizations.of(context)!;
     final gender = userInfoProvider.gender;
     return Scaffold(
       body: SingleChildScrollView(
@@ -152,7 +152,7 @@ class _PhonePageFormState extends State<PhonePageForm> {
                     alignment: Alignment.topCenter,
                     margin: EdgeInsets.symmetric(horizontal: 15),
                     child: myAutoSizedText(
-                        AppLocalizations.of(context)!.phonesPageHeader(gender),
+                        appLocale!.phonesPageHeader(gender),
                         TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.sp,
@@ -168,7 +168,7 @@ class _PhonePageFormState extends State<PhonePageForm> {
                   alignment: Alignment.topCenter,
                   margin: EdgeInsets.symmetric(horizontal: 15),
                   child: myAutoSizedText(
-                      AppLocalizations.of(context)!.phonesPageSubTitle(gender),
+                      appLocale!.phonesPageSubTitle(gender),
                       TextStyle(
                           fontWeight: FontWeight.bold,
                           color: darkGray,
@@ -197,8 +197,7 @@ class _PhonePageFormState extends State<PhonePageForm> {
                         padding: const EdgeInsets.all(6),
                       ),
                       child: myText(
-                          AppLocalizations.of(context)!
-                              .phonesPageContactImportTitle(gender),
+                          appLocale!.phonesPageContactImportTitle(gender),
                           TextStyle(
                             fontWeight: FontWeight.bold,
                             color: primaryPurple,
@@ -219,7 +218,7 @@ class _PhonePageFormState extends State<PhonePageForm> {
               widget.phonePageData.update();
               widget.next();
             },
-                AppLocalizations.of(context)!.nextButton(gender),
+                appLocale!.nextButton(gender),
                 myTextStyle.copyWith(
                     fontWeight: FontWeight.bold, fontSize: 20.sp)),
           ],

@@ -34,20 +34,9 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
   List<String> ages = ['18-', '18-30', '30-40', '40-55', '55+'];
   List<String> genders = [];
 
-  void savePage(name, age, gender, appInfo) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    age.isEmpty ? prefs.setString('age', '') : prefs.setString('age', age);
-    name.isEmpty ? prefs.setString('name', '') : prefs.setString('name', name);
-
-    gender.isEmpty
-        ? prefs.setString('gender', '')
-        : prefs.setString('gender', gender);
-
-    widget.next();
-  }
-
   Column resizeText(text) {
     List<String> sep = text.split("(");
+    final appLocale = AppLocalizations.of(context);
 
     sep[1] = "(${sep[1]}";
     return Column(
@@ -59,7 +48,7 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
                 fontSize: 18.sp,
                 fontWeight: FontWeight.normal,
                 color: Colors.black),
-            AppLocalizations.of(context)!.textDirection == "rtl"
+            appLocale!.textDirection == "rtl"
                 ? TextAlign.right
                 : TextAlign.left,
             24),
@@ -69,7 +58,7 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
                 fontSize: 16.sp,
                 fontWeight: FontWeight.normal,
                 color: Colors.black),
-            AppLocalizations.of(context)!.textDirection == "rtl"
+            appLocale!.textDirection == "rtl"
                 ? TextAlign.right
                 : TextAlign.left,
             22),
@@ -80,25 +69,25 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
   @override
   Widget build(BuildContext context) {
     final userInfoProvider = Provider.of<UserInformation>(context);
-    final appInfoProvider = Provider.of<AppInformation>(context);
-    final applocal = AppLocalizations.of(context);
+
+    final appLocale = AppLocalizations.of(context);
     genders = [
-      applocal!.male,
-      applocal.female,
-      applocal.nonBinary,
-      applocal.notWillingToSay
+      appLocale!.male,
+      appLocale!.female,
+      appLocale!.nonBinary,
+      appLocale.notWillingToSay
     ];
     var gender = userInfoProvider.gender;
     dropdownValueAge = userInfoProvider.age;
     //add genders here
-    //requires CMS(rowy) support for the entire app if added:
+
     dropdownValueGender = (userInfoProvider.binary)
-        ? applocal.nonBinary
+        ? appLocale.nonBinary
         : (userInfoProvider.gender == 'male'
-            ? applocal.male
+            ? appLocale.male
             : userInfoProvider.gender == 'female'
-                ? applocal.female
-                : applocal.notWillingToSay);
+                ? appLocale.female
+                : appLocale.notWillingToSay);
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -111,8 +100,7 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                   child: myAutoSizedText(
-                      AppLocalizations.of(context)!
-                          .introductionFormSecondPageMainTitle(gender),
+                      appLocale!.introductionFormSecondPageMainTitle(gender),
                       TextStyle(
                         fontSize: 40.sp,
                         fontWeight: FontWeight.bold,
@@ -123,8 +111,7 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
                   child: myAutoSizedText(
-                      AppLocalizations.of(context)!
-                          .introductionFormSecondPageSubTitle(gender),
+                      appLocale!.introductionFormSecondPageSubTitle(gender),
                       TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
@@ -139,7 +126,7 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     resizeText(
-                      AppLocalizations.of(context)!.userSettingsName(gender),
+                      appLocale!.userSettingsName(gender),
                     ),
                     Container(
                       width: 300,
@@ -159,7 +146,7 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
                       ),
                     ),
                     myAutoSizedText(
-                        AppLocalizations.of(context)!.userSettingsAge(gender),
+                        appLocale!.userSettingsAge(gender),
                         TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.normal,
@@ -186,7 +173,7 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
                           setState(() {
                             if (newValue != null) {
                               dropdownValueAge = newValue;
-                              userInfoProvider.age = newValue;
+                              userInfoProvider.updateAge(newValue);
                             }
                           });
                           // Do something with the selected value
@@ -195,8 +182,7 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
                     ),
 
                     myAutoSizedText(
-                        AppLocalizations.of(context)!
-                            .userSettingsGender(gender),
+                        appLocale!.userSettingsGender(gender),
                         TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.normal,
@@ -209,12 +195,12 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
                       child: DropdownMenu<String>(
                         width: 300,
                         initialSelection: (userInfoProvider.binary)
-                            ? applocal!.nonBinary
+                            ? appLocale!.nonBinary
                             : (userInfoProvider.gender == 'male'
-                                ? applocal.male
+                                ? appLocale.male
                                 : userInfoProvider.gender == 'female'
-                                    ? applocal.female
-                                    : applocal.notWillingToSay),
+                                    ? appLocale.female
+                                    : appLocale.notWillingToSay),
                         dropdownMenuEntries: [
                           ...genders
                               .map((gender) => buildDropdownMenuEntry(
@@ -230,13 +216,13 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
                           setState(() {
                             if (newValue != null) {
                               dropdownValueGender = newValue;
-                              if (newValue == applocal.male) {
+                              if (newValue == appLocale.male) {
                                 userInfoProvider.updateGender('male');
                                 userInfoProvider.updateBinary(false);
-                              } else if (newValue == applocal.female) {
+                              } else if (newValue == appLocale.female) {
                                 userInfoProvider.updateGender('female');
                                 userInfoProvider.updateBinary(false);
-                              } else if (newValue == applocal.nonBinary) {
+                              } else if (newValue == appLocale.nonBinary) {
                                 userInfoProvider.updateGender('');
                                 userInfoProvider.updateBinary(true);
                               } else {
@@ -260,27 +246,19 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
                   userInfoProvider.updateAge(dropdownValueAge ?? '');
                   userInfoProvider.updateName(name!);
                   userInfoProvider
-                      .updateBinary(dropdownValueGender == applocal.nonBinary);
+                      .updateBinary(dropdownValueGender == appLocale.nonBinary);
 
                   if (dropdownValueGender != null) {
-                    if (dropdownValueGender == applocal.male) {
+                    if (dropdownValueGender == appLocale.male) {
                       userInfoProvider.updateGender('male');
-                      savePage(
-                          name, dropdownValueAge!, 'male', userInfoProvider);
-                    } else if (dropdownValueGender == applocal.female) {
+                    } else if (dropdownValueGender == appLocale.female) {
                       userInfoProvider.updateGender('female');
-                      savePage(
-                          name, dropdownValueAge!, 'female', userInfoProvider);
-                    } else if (dropdownValueGender == applocal.nonBinary) {
-                      userInfoProvider.updateGender('');
-                      savePage(name, dropdownValueAge!, '', userInfoProvider);
                     } else {
                       userInfoProvider.updateGender('');
-                      savePage(name, dropdownValueAge!, '', userInfoProvider);
                     }
                   }
-                  //savePage(name, dropdownValueAge!, dropdownValueGender!);
-                }, AppLocalizations.of(context)!.nextButton(gender),
+                  widget.next();
+                }, appLocale!.nextButton(gender),
                     myTextStyle.copyWith(fontSize: 20.sp)),
               ],
             ),

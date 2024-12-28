@@ -47,9 +47,9 @@ class _PhonePageState extends State<PhonePage> {
   Widget build(BuildContext context) {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
-    final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
-    final gender = userInfoProvider.gender;
 
+    final gender = userInfoProvider.gender;
+    final appLocale = AppLocalizations.of(context);
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.only(
@@ -63,21 +63,20 @@ class _PhonePageState extends State<PhonePage> {
               child: Column(
                 children: <Widget>[
                   myAutoSizedText(
-                      AppLocalizations.of(context)!.phonePageTitle(gender),
+                      appLocale!.phonePageTitle(gender),
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 24.sp),
                       TextAlign.center,
                       60),
                   const SizedBox(height: 50.0),
                   Align(
-                    alignment:
-                        AppLocalizations.of(context)!.textDirection == "rtl"
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
+                    alignment: appLocale!.textDirection == "rtl"
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: Padding(
                       padding: const EdgeInsets.only(
                           right: 30.0), // adjust the value as needed
                       child: myAutoSizedText(
-                          AppLocalizations.of(context)!.yourContacts(gender),
+                          appLocale!.yourContacts(gender),
                           TextStyle(
                               fontSize: 18.sp, fontWeight: FontWeight.normal),
                           null,
@@ -100,16 +99,14 @@ class _PhonePageState extends State<PhonePage> {
                           )),
                   const SizedBox(height: 10.0),
                   Align(
-                    alignment:
-                        AppLocalizations.of(context)!.textDirection == "rtl"
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
+                    alignment: appLocale!.textDirection == "rtl"
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: Padding(
                       padding: const EdgeInsets.only(
                           right: 30.0), // adjust the value as needed
                       child: myAutoSizedText(
-                          AppLocalizations.of(context)!
-                              .emergencyNumbers(gender),
+                          appLocale!.emergencyNumbers(gender),
                           TextStyle(
                               fontSize: 18.sp, fontWeight: FontWeight.normal),
                           null,

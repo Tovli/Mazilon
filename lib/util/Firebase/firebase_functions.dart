@@ -80,7 +80,8 @@ class Warning {
 
 //upon adding user information, the load function will need to be updated
 //use or create functions in userinfo class to update the user information:
-Future<void> loadUserInformation(UserInformation userInfo) async {
+Future<void> loadUserInformation(
+    UserInformation userInfo, String locale) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   userInfo.updateName(prefs.getString('name') ?? '');
@@ -110,6 +111,7 @@ Future<void> loadUserInformation(UserInformation userInfo) async {
     "thanks": prefs.getStringList('thankYous') ?? [],
     "dates": prefs.getStringList('dates') ?? []
   });
+  userInfo.updateLocaleName(locale);
 }
 
 //upon adding CMS(rowy) texts, this will need to be updated:

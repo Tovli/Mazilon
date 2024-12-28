@@ -32,6 +32,7 @@ class _MyPlanSectionState extends State<MyPlanSection> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context);
     return Container(
       padding: EdgeInsets.all(10.0),
       color: Colors
@@ -89,8 +90,7 @@ class _MyPlanSectionState extends State<MyPlanSection> {
                                     fontWeight: FontWeight.normal,
                                     fontSize: 12.sp,
                                     color: Colors.black),
-                                AppLocalizations.of(context)!.textDirection ==
-                                        "rtl"
+                                appLocale!.textDirection == "rtl"
                                     ? TextAlign.right
                                     : TextAlign.left,
                                 40))

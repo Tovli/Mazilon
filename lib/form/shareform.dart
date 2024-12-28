@@ -49,6 +49,7 @@ class _ShareFormState extends State<ShareForm> {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
     final gender = userInfoProvider.gender;
+    final appLocale = AppLocalizations.of(context);
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -60,7 +61,7 @@ class _ShareFormState extends State<ShareForm> {
                   height: returnSizedBox(context, 100),
                 ),
                 myAutoSizedText(
-                    AppLocalizations.of(context)!.sharePageHeader(gender),
+                    appLocale!.sharePageHeader(gender),
                     TextStyle(
                         fontSize: 40.sp,
                         fontWeight: FontWeight.bold,
@@ -68,7 +69,7 @@ class _ShareFormState extends State<ShareForm> {
                     null,
                     80),
                 myAutoSizedText(
-                    AppLocalizations.of(context)!.sharePageSubTitle(gender),
+                    appLocale!.sharePageSubTitle(gender),
                     TextStyle(
                         fontWeight: FontWeight.normal,
                         fontSize: 16.sp,
@@ -79,7 +80,7 @@ class _ShareFormState extends State<ShareForm> {
                 Container(
                   width: MediaQuery.sizeOf(context).width * 0.8,
                   child: myAutoSizedText(
-                      AppLocalizations.of(context)!.sharePageMidTitle(gender),
+                      appLocale!.sharePageMidTitle(gender),
                       TextStyle(fontWeight: FontWeight.normal, fontSize: 18.sp),
                       null,
                       35),
@@ -101,28 +102,18 @@ class _ShareFormState extends State<ShareForm> {
                             await fileService.share(
                                 "",
                                 [
-                                  AppLocalizations.of(context)!
-                                      .difficultEventsHeader(gender),
-                                  AppLocalizations.of(context)!
-                                      .makeSaferHeader(gender),
-                                  AppLocalizations.of(context)!
-                                      .feelBetterHeader(gender),
-                                  AppLocalizations.of(context)!
-                                      .distractionsHeader(gender),
-                                  AppLocalizations.of(context)!
-                                      .phonesPageHeader(gender),
+                                  appLocale!.difficultEventsHeader(gender),
+                                  appLocale!.makeSaferHeader(gender),
+                                  appLocale!.feelBetterHeader(gender),
+                                  appLocale!.distractionsHeader(gender),
+                                  appLocale!.phonesPageHeader(gender),
                                 ],
                                 [
-                                  AppLocalizations.of(context)!
-                                      .difficultEventsSubTitle(gender),
-                                  AppLocalizations.of(context)!
-                                      .makeSaferSubTitle(gender),
-                                  AppLocalizations.of(context)!
-                                      .feelBetterSubTitle(gender),
-                                  AppLocalizations.of(context)!
-                                      .distractionsSubTitle(gender),
-                                  AppLocalizations.of(context)!
-                                      .phonesPageHeader(gender),
+                                  appLocale!.difficultEventsSubTitle(gender),
+                                  appLocale!.makeSaferSubTitle(gender),
+                                  appLocale!.feelBetterSubTitle(gender),
+                                  appLocale!.distractionsSubTitle(gender),
+                                  appLocale!.phonesPageHeader(gender),
                                 ],
                                 appInfoProvider.sharePDFtexts,
                                 ShareFileType.PDF);
@@ -146,40 +137,29 @@ class _ShareFormState extends State<ShareForm> {
                         IconButton(
                           onPressed: () async {
                             var result = await fileService.download([
-                              AppLocalizations.of(context)!
-                                  .difficultEventsHeader(gender),
-                              AppLocalizations.of(context)!
-                                  .makeSaferHeader(gender),
-                              AppLocalizations.of(context)!
-                                  .feelBetterHeader(gender),
-                              AppLocalizations.of(context)!
-                                  .distractionsHeader(gender),
-                              AppLocalizations.of(context)!
-                                  .phonesPageHeader(gender),
+                              appLocale!.difficultEventsHeader(gender),
+                              appLocale!.makeSaferHeader(gender),
+                              appLocale!.feelBetterHeader(gender),
+                              appLocale!.distractionsHeader(gender),
+                              appLocale!.phonesPageHeader(gender),
                             ], [
-                              AppLocalizations.of(context)!
-                                  .difficultEventsSubTitle(gender),
-                              AppLocalizations.of(context)!
-                                  .makeSaferSubTitle(gender),
-                              AppLocalizations.of(context)!
-                                  .feelBetterSubTitle(gender),
-                              AppLocalizations.of(context)!
-                                  .distractionsSubTitle(gender),
-                              AppLocalizations.of(context)!
-                                  .phonesPageHeader(gender),
+                              appLocale!.difficultEventsSubTitle(gender),
+                              appLocale!.makeSaferSubTitle(gender),
+                              appLocale!.feelBetterSubTitle(gender),
+                              appLocale!.distractionsSubTitle(gender),
+                              appLocale!.phonesPageHeader(gender),
                             ], appInfoProvider.sharePDFtexts,
                                 ShareFileType.PDF);
                             if (result == null) {
                               // Show him a message
                               showToast(
-                                  message: AppLocalizations.of(context)!
-                                      .downloadFailed(gender));
+                                  message: appLocale!.downloadFailed(gender));
                               return;
                             }
                             // Show a toast message to the user
                             showToast(
-                                message: AppLocalizations.of(context)!
-                                    .finishedDownloading(gender));
+                                message:
+                                    appLocale!.finishedDownloading(gender));
                           },
 
                           style: TextButton.styleFrom(
@@ -205,7 +185,7 @@ class _ShareFormState extends State<ShareForm> {
                 ConfirmationButton(context, () {
                   widget.submit(context);
                 },
-                    AppLocalizations.of(context)!.sharePageFinishButton(gender),
+                    appLocale!.sharePageFinishButton(gender),
                     myTextStyle.copyWith(
                         fontWeight: FontWeight.bold, fontSize: 22.sp)),
                 const SizedBox(

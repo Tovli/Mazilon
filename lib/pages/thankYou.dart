@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mazilon/util/styles.dart';
+import 'package:mazilon/util/userInformation.dart';
+import 'package:provider/provider.dart';
 
 // the thank you widget, it shows the thank you text and the number of the thank you
 //although its name is thank you, it can be used for any trait , we used it for the positive trait also.
@@ -41,6 +43,8 @@ class _ThankYouState extends State<ThankYou> {
 // build the thank you widget
   @override
   Widget build(BuildContext context) {
+    final userInfoProvider =
+        Provider.of<UserInformation>(context, listen: false);
     return Container(
       padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
       child: Row(
@@ -126,7 +130,7 @@ class _ThankYouState extends State<ThankYou> {
                     width: 50,
                     child: MaterialButton(
                       onPressed: () {
-                        widget.remove(widget.number - 1);
+                        widget.remove(widget.number - 1, userInfoProvider);
                         setState(() {
                           editable = false;
                         });

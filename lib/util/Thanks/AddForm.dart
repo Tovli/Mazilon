@@ -44,11 +44,11 @@ class _AddFormState extends State<AddForm> {
   @override
   Widget build(BuildContext context) {
     // get the appInformation and userInformation providers
-    final appInfoProvider =
-        Provider.of<AppInformation>(context, listen: true); //
+
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true); //
     final gender = userInfoProvider.gender;
+    final appLocale = AppLocalizations.of(context);
     return Dialog(
       child: Container(
         // set the width of the dialog to 800 if the screen width is more than 1000, else set it to the screen width
@@ -64,8 +64,7 @@ class _AddFormState extends State<AddForm> {
               ),
               // text on the top of the form
               myAutoSizedText(
-                  AppLocalizations.of(context)!
-                      .newTraitOrThanks(widget.formTitle),
+                  appLocale!.newTraitOrThanks(widget.formTitle),
                   TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 20.sp // text size
                       ),
@@ -100,8 +99,7 @@ class _AddFormState extends State<AddForm> {
                                 validator: (value) {
                                   // validate the text field
                                   if (value == null || value.isEmpty) {
-                                    return AppLocalizations.of(context)!
-                                        .validateEmpty;
+                                    return appLocale!.validateEmpty;
                                   }
                                   return null;
                                 },
@@ -120,7 +118,7 @@ class _AddFormState extends State<AddForm> {
                   // the close button
                   TextButton(
                     child: myAutoSizedText(
-                        AppLocalizations.of(context)!.closeButton(gender),
+                        appLocale!.closeButton(gender),
                         TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.sp // button text size
@@ -134,7 +132,7 @@ class _AddFormState extends State<AddForm> {
                   // the save button
                   TextButton(
                     child: myAutoSizedText(
-                        AppLocalizations.of(context)!.saveButton(gender),
+                        appLocale!.saveButton(gender),
                         TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.sp // button text size
@@ -145,9 +143,11 @@ class _AddFormState extends State<AddForm> {
                       // Save the item (add or edit) to the list
                       if (_formKey.currentState!.validate()) {
                         if (widget.text != '') {
-                          widget.edit(_controller.text, widget.index);
-                        } else
-                          widget.add(_controller.text);
+                          widget.edit(
+                              _controller.text, widget.index, userInfoProvider);
+                        } else {
+                          widget.add(_controller.text, userInfoProvider);
+                        }
                         Navigator.of(context).pop();
                       }
                     },

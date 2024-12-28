@@ -146,10 +146,9 @@ class FormProgressIndicatorState extends State<FormProgressIndicator> {
   Widget build(BuildContext context) {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
-    final AppInformation appInfoProvider =
-        Provider.of<AppInformation>(context, listen: true);
-    final gender = userInfoProvider.gender;
 
+    final gender = userInfoProvider.gender;
+    final appLocale = AppLocalizations.of(context);
     return PopScope(
       canPop: false,
       onPopInvoked: (didpop) async {
@@ -186,8 +185,7 @@ class FormProgressIndicatorState extends State<FormProgressIndicator> {
                             ),
                           IconButton(
                             icon: myAutoSizedText(
-                                AppLocalizations.of(context)!
-                                    .saveAndQuitButton(gender),
+                                appLocale!.saveAndQuitButton(gender),
                                 TextStyle(fontSize: 23.sp),
                                 null,
                                 23),

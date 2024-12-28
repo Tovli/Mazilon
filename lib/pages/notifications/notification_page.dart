@@ -24,7 +24,7 @@ class _NotificationPageState extends State<NotificationPage> {
   Widget build(BuildContext context) {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
-
+    final appLocale = AppLocalizations.of(context);
     final gender = userInfoProvider.gender;
     return Scaffold(
       body: SafeArea(
@@ -36,7 +36,7 @@ class _NotificationPageState extends State<NotificationPage> {
               children: <Widget>[
                 SizedBox(height: 100),
                 Text(
-                  AppLocalizations.of(context)!.notificationPageHeader(gender),
+                  appLocale!.notificationPageHeader(gender),
                 ),
                 SizedBox(height: 20),
                 SetNotificationWidget()

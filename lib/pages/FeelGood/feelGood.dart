@@ -39,12 +39,10 @@ class _FeelGoodPageState extends State<FeelGood> {
 
   @override
   Widget build(BuildContext context) {
-    final AppInformation appInfoProvider =
-        Provider.of<AppInformation>(context, listen: true);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
     final gender = userInfoProvider.gender;
-
+    final appLocale = AppLocalizations.of(context);
     return FeelGoodInheritedWidget(
       displayImage: pickerService.displayImage,
       imagePaths: [...imagePaths],
@@ -78,7 +76,7 @@ class _FeelGoodPageState extends State<FeelGood> {
               alignment: Alignment.topCenter,
               margin: const EdgeInsets.symmetric(horizontal: 15),
               child: myAutoSizedText(
-                  AppLocalizations.of(context)!.feelGoodTitle(gender),
+                  appLocale!.feelGoodTitle(gender),
                   const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 30,
@@ -89,11 +87,8 @@ class _FeelGoodPageState extends State<FeelGood> {
             const SizedBox(height: 5),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: myAutoSizedText(
-                  AppLocalizations.of(context)!.feelGoodSubTitle(gender),
-                  TextStyle(fontSize: 18.sp),
-                  null,
-                  18),
+              child: myAutoSizedText(appLocale!.feelGoodSubTitle(gender),
+                  TextStyle(fontSize: 18.sp), null, 18),
             ),
             Expanded(
               child: Padding(

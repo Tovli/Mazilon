@@ -23,6 +23,7 @@ class MoreVideosItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final ImagePickerService imageService =
         GetIt.instance<ImagePickerService>();
+    final appLocale = AppLocalizations.of(context);
     return Container(
       width: 150,
       height: 100,
@@ -48,7 +49,7 @@ class MoreVideosItem extends StatelessWidget {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.normal,
                     ),
-                    AppLocalizations.of(context)!.textDirection == "rtl"
+                    appLocale!.textDirection == "rtl"
                         ? TextAlign.right
                         : TextAlign.left,
                     20,

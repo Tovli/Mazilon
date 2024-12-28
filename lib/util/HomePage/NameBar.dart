@@ -25,7 +25,7 @@ class NameBarState extends State<NameBar> {
   @override
   Widget build(BuildContext context) {
     final userInfoProvider = Provider.of<UserInformation>(context);
-
+    final appLocale = AppLocalizations.of(context);
     return SizedBox(
       width: MediaQuery.of(context).size.width > 1000
           ? 800
@@ -41,8 +41,7 @@ class NameBarState extends State<NameBar> {
                 Row(
                   children: [
                     myAutoSizedText(
-                        AppLocalizations.of(context)!
-                            .greetings(userInfoProvider.name),
+                        appLocale!.greetings(userInfoProvider.name),
                         TextStyle(
                             fontSize: 30.sp,
                             fontWeight: FontWeight.bold,

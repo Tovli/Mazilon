@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mazilon/pages/notifications/notification_service.dart';
 import 'package:mazilon/pages/notifications/time_picker.dart';
+import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
@@ -64,11 +65,11 @@ class _SetNotificationWidgetState extends State<SetNotificationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final appInfoProvider = Provider.of<AppInformation>(context);
     final userInfoProvider = Provider.of<UserInformation>(context);
-    var quotes = appInfoProvider
-        .homePageInspirationalQuotes['quotes-${userInfoProvider.gender}']!;
+
     var gender = userInfoProvider.gender;
+    final appLocale = AppLocalizations.of(context);
+    final quotes = retrieveInspirationalQuotes(appLocale, gender);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -97,10 +98,10 @@ class _SetNotificationWidgetState extends State<SetNotificationWidget> {
             child: TextButton(
               onPressed: () => {
                 initializeNotification(quotes, userInfoProvider,
-                    AppLocalizations.of(context)!.notifyOnscheduledNotification)
+                    appLocale!.notifyOnscheduledNotification)
               },
               child: Text(
-                AppLocalizations.of(context)!.notificationSetTimeText(gender),
+                appLocale!.notificationSetTimeText(gender),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white),
               ),
@@ -121,8 +122,7 @@ class _SetNotificationWidgetState extends State<SetNotificationWidget> {
                     quotes[Random().nextInt(quotes.length)]),
               },
               child: Text(
-                AppLocalizations.of(context)!
-                    .notificationShowExampleNotification(gender),
+                appLocale!.notificationShowExampleNotification(gender),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white),
               ),

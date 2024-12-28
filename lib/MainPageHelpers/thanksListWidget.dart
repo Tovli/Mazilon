@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mazilon/lists.dart';
+import 'package:mazilon/util/Form/retrieveInformation.dart';
+import 'package:mazilon/util/Thanks/AddForm.dart';
 
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/HomePage/sectionBarHome.dart';
-
+import 'package:intl/intl.dart' as intl;
 import 'package:mazilon/util/Thanks/thanksItemSug.dart';
 
 import 'package:mazilon/util/userInformation.dart';
@@ -16,42 +17,148 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 // the thank you list widget, it shows the list of the thank yous
 // this code is related to todo list in homepage.
 class ThanksListWidget extends StatefulWidget {
-  final List<String> thanks; // the list of the thank yous
-  final Function add; // the function to add a thank you
-  final Function edit; // the function to edit a thank you
-  final Function remove; // the function to remove a thank you
-  final int thanksListLength; // the length of the thank you list
-  final Function addSuggested; // the function to add a suggested thank you
   final Function(BuildContext, int)
       onTabTapped; // the function to call when pressing on the "see more" to go to wanted page (journal page)
-  const ThanksListWidget(
-      {super.key,
-      required this.thanks,
-      required this.add,
-      required this.edit,
-      required this.remove,
-      required this.thanksListLength,
-      required this.addSuggested,
-      required this.onTabTapped});
+  const ThanksListWidget({super.key, required this.onTabTapped});
   @override
   State<ThanksListWidget> createState() => _ThanksListWidgetState();
 }
 
 class _ThanksListWidgetState extends State<ThanksListWidget> {
+  List<String> thankYous = [];
+  List<String> todayThankYous = [];
+
+  List<String> thankYouDates = [];
   @override
   void initState() {
     super.initState();
+  }
+
+  List<String> todayThankYousFunc(List<String> thankYous, List<String> dates) {
+    List<String> todayThankYous = [];
+    DateTime now = DateTime.now();
+    String formattedDate = intl.DateFormat('yyyy-MM-dd – kk:mm').format(now);
+
+    for (int i = 0; i < dates.length; i++) {
+      if (dates[i].substring(0, 10) == formattedDate.substring(0, 10)) {
+        todayThankYous.add(thankYous[i]);
+      }
+    }
+    return todayThankYous;
+  }
+
+//pop up to show after adding a thank you item
+// it triggers only after the first one each day
+  void showThankYouPopup(UserInformation userInfoProvider) {
+    Future.delayed(const Duration(seconds: 0), () {
+      final gender = userInfoProvider.gender;
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          final appLocale = AppLocalizations.of(context);
+          return AlertDialog(
+            title: const Text(''),
+            content: Text(
+              appLocale!.homePageThankyouPopup(gender),
+              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 15.sp),
+              textAlign: TextAlign.center,
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text(appLocale!.confirmButton(gender),
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                    )),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    });
+  }
+
+  void addThankYou(String thankYou, UserInformation userInfoProvider) {
+    List<String> thankYous_temp = userInfoProvider.thanks['thanks'] ?? [];
+    List<String> dates_temp = userInfoProvider.thanks['dates'] ?? [];
+
+    thankYous_temp.add(thankYou);
+
+    DateTime now = DateTime.now();
+    String formattedDate = intl.DateFormat('yyyy-MM-dd – kk:mm').format(now);
+    dates_temp.add(formattedDate);
+
+    setState(() {
+      userInfoProvider
+          .updateThanks({'thanks': thankYous_temp, 'dates': dates_temp});
+      thankYous = thankYous_temp;
+      thankYouDates = dates_temp;
+      todayThankYous = todayThankYousFunc(thankYous, thankYouDates);
+    });
+    if (todayThankYousFunc(userInfoProvider.thanks["thanks"] ?? [],
+                userInfoProvider.thanks["dates"] ?? [])
+            .length ==
+        1) {
+      showThankYouPopup(userInfoProvider);
+    }
+  }
+
+  void removeThankYou(int removeIndex, UserInformation userInfoProvider) {
+    List<String> thankYous_temp = userInfoProvider.thanks['thanks'] ?? [];
+    List<String> dates_temp = userInfoProvider.thanks['dates'] ?? [];
+
+    thankYous_temp.removeAt(removeIndex);
+    dates_temp.removeAt(removeIndex);
+    setState(() {
+      userInfoProvider
+          .updateThanks({'thanks': thankYous_temp, 'dates': dates_temp});
+      thankYous = thankYous_temp;
+      thankYouDates = dates_temp;
+      todayThankYous = todayThankYousFunc(thankYous, thankYouDates);
+    });
+  }
+
+//function to change a thank you
+  void editThankYou(String text, int index, UserInformation userinfoProvider) {
+    setState(() {
+      thankYous[index] = text;
+      userinfoProvider.updateThanks({
+        'thanks': thankYous,
+        'dates': userinfoProvider.thanks['dates'] ?? []
+      });
+      todayThankYous = todayThankYousFunc(thankYous, thankYouDates);
+    });
+  }
+
+//fuction to show the edit form for a thank you
+  void editThanks(String title, [String text = '', int index = 0]) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AddForm(
+              add: addThankYou,
+              index: index,
+              edit: editThankYou,
+              text: text,
+              formTitle: title);
+        });
   }
 
   // build the thank you list widget
   @override
   Widget build(BuildContext context) {
     // get the user information provider and the app information provider
-    final appLocale = AppLocalizations.of(context)!;
+    final appLocale = AppLocalizations.of(context);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
-    final appInfoProvider = Provider.of<AppInformation>(context);
+
     final gender = userInfoProvider.gender;
+    final thanksListLength = userInfoProvider.thanks['thanks']?.length ?? 0;
+    todayThankYous = todayThankYousFunc(userInfoProvider.thanks["thanks"] ?? [],
+        userInfoProvider.thanks["dates"] ?? []);
+
     return SizedBox(
       // width of the widget is 800 if the screen width is more than 1000, else it is the screen width
       width: MediaQuery.of(context).size.width > 1000
@@ -72,7 +179,7 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                       context, 3); // 3 is the index of the journal page
                 },
                 child: myAutoSizedText(
-                    AppLocalizations.of(context)!.todoListName(gender),
+                    appLocale!.todoListName(gender),
                     TextStyle(
                       fontSize: 24.sp, // the size of the title
                       fontWeight: FontWeight.bold,
@@ -92,12 +199,12 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                     size: 30, // the size of the icon
                   ),
                   onPressed: () {
-                    widget.add();
+                    editThanks(appLocale.thanks);
                   },
                 ),
               ],
               // the sub title of the thank you list
-              subHeader: AppLocalizations.of(context)!.todoListName(gender),
+              subHeader: appLocale!.todoListName(gender),
             ),
             // gap between the section bar and the list
             const SizedBox(height: 10),
@@ -108,7 +215,7 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                 child: Wrap(
                     spacing: 8.0, // gap between adjacent chips
                     runSpacing: 4.0, // gap between lines
-                    children: widget.thanks.asMap().entries.map((entry) {
+                    children: todayThankYous.asMap().entries.map((entry) {
                       int index = entry.key;
                       String thank = entry.value;
                       return Container(
@@ -185,10 +292,11 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                                       child: MaterialButton(
                                         onPressed: () {
                                           setState(() {
-                                            widget.edit(
-                                                widget.thanks[index],
-                                                widget.thanksListLength -
-                                                    widget.thanks.length +
+                                            editThanks(
+                                                appLocale.thanks,
+                                                todayThankYous[index],
+                                                thanksListLength -
+                                                    todayThankYous.length +
                                                     index);
                                           });
                                         },
@@ -206,10 +314,11 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                                       child: MaterialButton(
                                         onPressed: () {
                                           setState(() {
-                                            widget.remove(
-                                                widget.thanksListLength -
-                                                    widget.thanks.length +
-                                                    index);
+                                            removeThankYou(
+                                                thanksListLength -
+                                                    todayThankYous.length +
+                                                    index,
+                                                userInfoProvider);
                                           });
                                         },
                                         splashColor: Colors.transparent,
@@ -235,10 +344,10 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
               child: Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: ThanksItemSuggested(
-                  add: widget.addSuggested,
+                  add: addThankYou,
                   inputText: "",
-                  fullSuggestionList: thanksList[appLocale.localeName]![
-                      gender == "" ? "other" : gender]!,
+                  fullSuggestionList: retrieveThanksList(
+                      appLocale, gender == "" ? "other" : gender),
                 ),
               ),
             ),
@@ -252,7 +361,7 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text(AppLocalizations.of(context)!.showAll(gender),
+                      Text(appLocale!.showAll(gender),
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       const Icon(
                         Icons.arrow_forward_ios,

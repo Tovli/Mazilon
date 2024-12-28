@@ -103,9 +103,9 @@ class InitialFormProgressIndicatorState
 
   @override
   Widget build(BuildContext context) {
-    final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
+    final appLocale = AppLocalizations.of(context);
     final gender = userInfoProvider.gender;
     if (!userInfoProvider.disclaimerSigned) {
       return const DisclaimerPage();
@@ -149,7 +149,7 @@ class InitialFormProgressIndicatorState
             leading: currentStep != (steps.length - 1)
                 ? IconButton(
                     icon: myAutoSizedText(
-                        AppLocalizations.of(context)!.skipButton(gender),
+                        appLocale!.skipButton(gender),
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 12.sp),
                         null,
                         25),

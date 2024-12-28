@@ -30,6 +30,7 @@ class _FormAnswerState extends State<FormAnswer> {
   String tempMyAnswer = '';
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context);
     void editAnswer(String text, int index) {
       showDialog(
           context: context,
@@ -69,8 +70,7 @@ class _FormAnswerState extends State<FormAnswer> {
                               //maxLines: 10,
 
                               TextStyle(fontSize: 16.sp),
-                              AppLocalizations.of(context)!.textDirection ==
-                                      "rtl"
+                              appLocale!.textDirection == "rtl"
                                   ? TextAlign.right
                                   : TextAlign.left,
                               28)),

@@ -35,6 +35,7 @@ class _InspirationalQuoteState extends State<InspirationalQuote> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context);
     return Visibility(
       visible: showText,
       child: Container(
@@ -90,7 +91,7 @@ class _InspirationalQuoteState extends State<InspirationalQuote> {
                           fontWeight: FontWeight.normal,
                           color: appWhite,
                           fontSize: 26.sp),
-                      AppLocalizations.of(context)!.textDirection == "rtl"
+                      appLocale!.textDirection == "rtl"
                           ? TextAlign.right
                           : TextAlign.left,
                       26,

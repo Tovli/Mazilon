@@ -40,7 +40,8 @@ class _PhonePageListState extends State<PhonePageList> {
 
   @override
   Widget build(BuildContext context) {
-    final appInfoProvider = Provider.of<AppInformation>(context);
+    final appLocale = AppLocalizations.of(context)!;
+
     final userInfoProvider = Provider.of<UserInformation>(context);
     final phonePageData = Provider.of<PhonePageData>(context);
     final gender = userInfoProvider.gender;
@@ -55,7 +56,7 @@ class _PhonePageListState extends State<PhonePageList> {
               children: [
                 if (isEditing)
                   myText(
-                      AppLocalizations.of(context)!.phonesPageName(gender),
+                      appLocale!.phonesPageName(gender),
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
                       null),
                 if (isEditing)
@@ -89,7 +90,7 @@ class _PhonePageListState extends State<PhonePageList> {
                 const SizedBox(width: 10),
                 if (isEditing)
                   myText(
-                      AppLocalizations.of(context)!.phonesPagePhone(gender),
+                      appLocale!.phonesPagePhone(gender),
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 12.sp),
                       null),
                 Expanded(
@@ -191,7 +192,7 @@ class _PhonePageListState extends State<PhonePageList> {
             padding: const EdgeInsets.all(6),
           ),
           child: myText(
-              AppLocalizations.of(context)!.phonesPageManualTitle(gender),
+              appLocale!.phonesPageManualTitle(gender),
               TextStyle(
                 fontWeight: FontWeight.bold,
                 color: primaryPurple,

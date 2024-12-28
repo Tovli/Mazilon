@@ -127,14 +127,13 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
   @override
   Widget build(BuildContext context) {
     final appLocale = AppLocalizations.of(context)!;
-    final appInfoProvider = Provider.of<AppInformation>(context);
+
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
     final gender = userInfoProvider.gender;
 
-    final textLocalization = AppLocalizations.of(context)!;
     Map<String, dynamic> displayInformation =
-        retrieveInformation(widget.collectionName, gender, textLocalization);
+        retrieveInformation(widget.collectionName, gender, appLocale);
     length = displayInformation['list'].length;
     loadItems(userInfoProvider);
     bool validate = false;
@@ -247,7 +246,7 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
                               10), // This is the padding inside the button
                         ),
                         child: myAutoSizedText(
-                            textLocalization.addFormPageTemplateAdd(gender),
+                            appLocale.addFormPageTemplateAdd(gender),
                             TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 14.sp),
                             null,
@@ -329,9 +328,7 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
                                 color: appGreen,
                                 strokeWidth: 2,
                                 child: Container(
-                                  alignment: AppLocalizations.of(context)!
-                                              .textDirection ==
-                                          "rtl"
+                                  alignment: appLocale!.textDirection == "rtl"
                                       ? Alignment.centerRight
                                       : Alignment.centerLeft,
                                   constraints: BoxConstraints(minHeight: 55),
@@ -358,9 +355,7 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
                                 color: Colors.transparent,
                                 strokeWidth: 2,
                                 child: Container(
-                                  alignment: AppLocalizations.of(context)!
-                                              .textDirection ==
-                                          "rtl"
+                                  alignment: appLocale!.textDirection == "rtl"
                                       ? Alignment.centerRight
                                       : Alignment.centerLeft,
                                   //height: returnSizedBox(context, 70),

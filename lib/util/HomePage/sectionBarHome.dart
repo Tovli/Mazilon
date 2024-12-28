@@ -28,6 +28,7 @@ class SectionBarHome extends StatefulWidget {
 class SectionBarHomeState extends State<SectionBarHome> {
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -57,7 +58,7 @@ class SectionBarHomeState extends State<SectionBarHome> {
                       fontSize: 14.sp,
                       color: darkGray,
                     ),
-                    AppLocalizations.of(context)!.textDirection == "rtl"
+                    appLocale!.textDirection == "rtl"
                         ? TextAlign.right
                         : TextAlign.left,
                     30),

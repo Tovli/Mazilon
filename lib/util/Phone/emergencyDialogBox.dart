@@ -28,12 +28,12 @@ class EmergencyDialogBox extends StatelessWidget {
     AppInformation appInfoProvider = Provider.of<AppInformation>(context);
 
     UserInformation userInfoProvider = Provider.of<UserInformation>(context);
-
+    final appLocale = AppLocalizations.of(context);
     final gender = userInfoProvider.gender;
     return AlertDialog(
       // Title of the dialog box
       title: myText(
-          AppLocalizations.of(context)!.select(gender),
+          appLocale!.select(gender),
           TextStyle(
               fontWeight: FontWeight.normal, fontSize: 18.sp > 40 ? 40 : 20.sp),
           null),
@@ -45,21 +45,19 @@ class EmergencyDialogBox extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 getTextIconWidget(
-                  AppLocalizations.of(context)!.dialButton(gender),
+                  appLocale!.dialButton(gender),
                   () async {
                     await dialPhone(number);
                   },
                   Icons.phone,
                 ),
                 if (hasWhatsApp)
-                  getTextIconWidget(AppLocalizations.of(context)!.whatsApp,
-                      () async {
+                  getTextIconWidget(appLocale!.whatsApp, () async {
                     await openWhatsApp(number);
                   }, Icons.chat),
 
                 if (hasLink)
-                  getTextIconWidget(AppLocalizations.of(context)!.link,
-                      () async {
+                  getTextIconWidget(appLocale!.link, () async {
                     await openSite(appInfoProvider
                         .phonePageTitles['emergencyDialogWebsite']![index]);
                   }, Icons.search),
@@ -74,7 +72,7 @@ class EmergencyDialogBox extends StatelessWidget {
       actions: <Widget>[
         TextButton(
           child: myText(
-              AppLocalizations.of(context)!.backButton(gender),
+              appLocale!.backButton(gender),
               TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20.sp > 30 ? 30 : 20.sp),

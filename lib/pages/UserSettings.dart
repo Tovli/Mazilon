@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/Locale/locale_service.dart';
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -19,7 +20,6 @@ class UserSettings extends StatefulWidget {
   final String age;
   final String gender;
   final Function updateData;
-  final Map<String, String> titles;
 
   final Function changeLocale;
   PhonePageData phonePageData;
@@ -30,7 +30,6 @@ class UserSettings extends StatefulWidget {
     required this.age,
     required this.gender,
     required this.updateData,
-    required this.titles,
     required this.phonePageData,
     required this.changeLocale,
   });
@@ -63,6 +62,7 @@ class _UserSettingsState extends State<UserSettings> {
   //remove log-in data and reset all data that user has filled in the app:
   Future<void> resetData(UserInformation userInfo) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    LocaleService localeService = GetIt.instance<LocaleService>();
     await prefs.clear();
     widget.phonePageData.reset();
     setState(() {
@@ -70,7 +70,7 @@ class _UserSettingsState extends State<UserSettings> {
       hasFilled = prefs.getBool('hasFilled') ?? false;
     });
 
-    userInfo.reset();
+    userInfo.reset(localeService.getLocale());
     await pickerService.deleteImages();
     final GoogleSignIn googleSignIn = GoogleSignIn();
     await googleSignIn.signOut();
@@ -84,14 +84,9 @@ class _UserSettingsState extends State<UserSettings> {
         (Route<dynamic> route) => false);
   }
 
-  // save the changes the user made
-  void savePage(age, gender, isNonBinary) {
-    widget.updateData(_namecontroller.text, gender, age, isNonBinary);
-    Navigator.pop(context);
-  }
-
   // create the "what's your name?" title
   Column resizeText(text) {
+    final appLocale = AppLocalizations.of(context);
     if (text == '') {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,7 +97,7 @@ class _UserSettingsState extends State<UserSettings> {
                   fontSize: 18.sp,
                   fontWeight: FontWeight.normal,
                   color: Colors.black),
-              AppLocalizations.of(context)!.textDirection == "rtl"
+              appLocale!.textDirection == "rtl"
                   ? TextAlign.right
                   : TextAlign.left,
               24),
@@ -121,7 +116,7 @@ class _UserSettingsState extends State<UserSettings> {
                 fontSize: 18.sp,
                 fontWeight: FontWeight.normal,
                 color: Colors.black),
-            AppLocalizations.of(context)!.textDirection == "rtl"
+            appLocale!.textDirection == "rtl"
                 ? TextAlign.right
                 : TextAlign.left,
             24),
@@ -131,7 +126,7 @@ class _UserSettingsState extends State<UserSettings> {
                 fontSize: 16.sp,
                 fontWeight: FontWeight.normal,
                 color: Colors.black),
-            AppLocalizations.of(context)!.textDirection == "rtl"
+            appLocale!.textDirection == "rtl"
                 ? TextAlign.right
                 : TextAlign.left,
             22),
@@ -156,18 +151,18 @@ class _UserSettingsState extends State<UserSettings> {
 
   @override
   Widget build(BuildContext context) {
-    final applocal = AppLocalizations.of(context);
+    LocaleService localeService = GetIt.instance<LocaleService>();
+
+    final appLocale = AppLocalizations.of(context);
     genders = [
-      applocal!.male,
-      applocal.female,
-      applocal.nonBinary,
-      applocal.notWillingToSay
+      appLocale!.male,
+      appLocale.female,
+      appLocale.nonBinary,
+      appLocale.notWillingToSay
     ];
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
-    dropdownValueGender = widget.gender == 'male'
-        ? applocal.male
-        : (widget.gender == 'female' ? applocal.female : '');
+
     final gender = userInfoProvider.gender;
 
     return GestureDetector(
@@ -177,18 +172,15 @@ class _UserSettingsState extends State<UserSettings> {
       child: Scaffold(
         backgroundColor: appWhite,
         appBar: AppBar(
-          title: myAutoSizedText(
-              AppLocalizations.of(context)!.userSettingsTitle(gender),
-              TextStyle(fontSize: 20.sp),
-              null,
-              40),
+          title: myAutoSizedText(appLocale!.userSettingsTitle(gender),
+              TextStyle(fontSize: 20.sp), null, 40),
         ),
         body: SingleChildScrollView(
           child: Center(
             child: Column(
               children: [
                 myAutoSizedText(
-                    AppLocalizations.of(context)!.userSettingsTitle(gender),
+                    appLocale!.userSettingsTitle(gender),
                     TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 40.sp,
@@ -202,7 +194,7 @@ class _UserSettingsState extends State<UserSettings> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     resizeText(
-                      AppLocalizations.of(context)!.userSettingsName(gender),
+                      appLocale!.userSettingsName(gender),
                     ),
                     Container(
                       width: 300,
@@ -223,7 +215,7 @@ class _UserSettingsState extends State<UserSettings> {
                       ),
                     ),
                     myAutoSizedText(
-                        AppLocalizations.of(context)!.userSettingsAge(gender),
+                        appLocale!.userSettingsAge(gender),
                         TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.normal,
@@ -257,8 +249,7 @@ class _UserSettingsState extends State<UserSettings> {
                       ),
                     ),
                     myAutoSizedText(
-                        AppLocalizations.of(context)!
-                            .userSettingsGender(gender),
+                        appLocale!.userSettingsGender(gender),
                         TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.normal,
@@ -270,12 +261,12 @@ class _UserSettingsState extends State<UserSettings> {
                       width: 300,
                       child: DropdownMenu<String>(
                         initialSelection: (userInfoProvider.binary)
-                            ? applocal!.nonBinary
+                            ? appLocale!.nonBinary
                             : (userInfoProvider.gender == 'male'
-                                ? applocal.male
+                                ? appLocale.male
                                 : userInfoProvider.gender == 'female'
-                                    ? applocal.female
-                                    : applocal.notWillingToSay),
+                                    ? appLocale.female
+                                    : appLocale.notWillingToSay),
                         width: 300,
                         dropdownMenuEntries: [
                           ...genders
@@ -289,7 +280,9 @@ class _UserSettingsState extends State<UserSettings> {
                         ],
                         onSelected: (String? newValue) {
                           setState(() {
+                            print("thsi is the selected value");
                             if (newValue != null) {
+                              print(newValue);
                               dropdownValueGender = newValue;
                             }
                           });
@@ -301,7 +294,7 @@ class _UserSettingsState extends State<UserSettings> {
                       height: MediaQuery.of(context).size.height * 0.05,
                     ),
                     myAutoSizedText(
-                        AppLocalizations.of(context)!.selectLanguage(gender),
+                        appLocale!.selectLanguage(gender),
                         TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.normal,
@@ -343,33 +336,29 @@ class _UserSettingsState extends State<UserSettings> {
                   FocusScope.of(context).unfocus();
 
                   userInfoProvider.updateName(_namecontroller.text);
-                  userInfoProvider
-                      .updateBinary(dropdownValueGender! == applocal.nonBinary);
-                  userInfoProvider.updateAge(dropdownValueAge!);
-
+                  userInfoProvider.updateBinary(
+                      dropdownValueGender! == appLocale.nonBinary);
+                  userInfoProvider.updateAge(dropdownValueAge == ""
+                      ? userInfoProvider.age
+                      : dropdownValueAge!);
                   if (dropdownValueGender != null) {
-                    if (dropdownValueGender == applocal.male) {
+                    if (dropdownValueGender == appLocale.male) {
                       userInfoProvider.updateGender('male');
-                      savePage(dropdownValueAge!, 'male', false);
-                    } else if (dropdownValueGender == applocal.female) {
+                    } else if (dropdownValueGender == appLocale.female) {
                       userInfoProvider.updateGender('female');
-                      savePage(dropdownValueAge!, 'female', false);
-                    } else if (dropdownValueGender == applocal.nonBinary) {
-                      userInfoProvider.updateGender('');
-                      savePage(dropdownValueAge!, '', false);
                     } else {
                       userInfoProvider.updateGender('');
-                      savePage(dropdownValueAge!, '', true);
                     }
                   }
+                  Navigator.pop(context);
 
                   //savePage(dropdownValueAge!, dropdownValueGender!);
-                }, AppLocalizations.of(context)!.confirmButton(gender),
+                }, appLocale!.confirmButton(gender),
                     myTextStyle.copyWith(fontSize: 20.sp)),
                 const SizedBox(height: 20),
                 CancelButton(context, () {
                   resetData(userInfoProvider);
-                }, AppLocalizations.of(context)!.userSettingsReset(gender),
+                }, appLocale!.userSettingsReset(gender),
                     myTextStyle.copyWith(fontSize: 20.sp)),
                 const SizedBox(height: 20)
               ],

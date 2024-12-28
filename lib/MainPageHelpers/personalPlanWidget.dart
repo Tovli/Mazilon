@@ -71,6 +71,7 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
 // the build function of the personal plan widget
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context);
     loadFeelBetter();
     // the providers of the app information and the user information
     final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
@@ -94,8 +95,7 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
                     },
                     // the title of the personal plan section in the home page
                     child: myAutoSizedText(
-                        AppLocalizations.of(context)!
-                            .personalPlanPageMyPlan(gender),
+                        appLocale!.personalPlanPageMyPlan(gender),
                         TextStyle(
                           fontSize: 24.sp, // the font size of the title
                           fontWeight: FontWeight.bold,
@@ -110,27 +110,18 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
                     await fileService.share(
                         "",
                         [
-                          AppLocalizations.of(context)!
-                              .difficultEventsHeader(gender),
-                          AppLocalizations.of(context)!.makeSaferHeader(gender),
-                          AppLocalizations.of(context)!
-                              .feelBetterHeader(gender),
-                          AppLocalizations.of(context)!
-                              .distractionsHeader(gender),
-                          AppLocalizations.of(context)!
-                              .phonesPageHeader(gender),
+                          appLocale!.difficultEventsHeader(gender),
+                          appLocale!.makeSaferHeader(gender),
+                          appLocale!.feelBetterHeader(gender),
+                          appLocale!.distractionsHeader(gender),
+                          appLocale!.phonesPageHeader(gender),
                         ],
                         [
-                          AppLocalizations.of(context)!
-                              .difficultEventsSubTitle(gender),
-                          AppLocalizations.of(context)!
-                              .makeSaferSubTitle(gender),
-                          AppLocalizations.of(context)!
-                              .feelBetterSubTitle(gender),
-                          AppLocalizations.of(context)!
-                              .distractionsSubTitle(gender),
-                          AppLocalizations.of(context)!
-                              .phonesPageHeader(gender),
+                          appLocale!.difficultEventsSubTitle(gender),
+                          appLocale!.makeSaferSubTitle(gender),
+                          appLocale!.feelBetterSubTitle(gender),
+                          appLocale!.distractionsSubTitle(gender),
+                          appLocale!.phonesPageHeader(gender),
                         ],
                         appInfoProvider.sharePDFtexts,
                         ShareFileType.PDF);
@@ -138,32 +129,25 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
                   myTextButton(() async {
                     // the function to download the pdf file of the personal plan
                     var result = await fileService.download([
-                      AppLocalizations.of(context)!
-                          .difficultEventsHeader(gender),
-                      AppLocalizations.of(context)!.makeSaferHeader(gender),
-                      AppLocalizations.of(context)!.feelBetterHeader(gender),
-                      AppLocalizations.of(context)!.distractionsHeader(gender),
-                      AppLocalizations.of(context)!.phonesPageHeader(gender),
+                      appLocale!.difficultEventsHeader(gender),
+                      appLocale!.makeSaferHeader(gender),
+                      appLocale!.feelBetterHeader(gender),
+                      appLocale!.distractionsHeader(gender),
+                      appLocale!.phonesPageHeader(gender),
                     ], [
-                      AppLocalizations.of(context)!
-                          .difficultEventsSubTitle(gender),
-                      AppLocalizations.of(context)!.makeSaferSubTitle(gender),
-                      AppLocalizations.of(context)!.feelBetterSubTitle(gender),
-                      AppLocalizations.of(context)!
-                          .distractionsSubTitle(gender),
-                      AppLocalizations.of(context)!.phonesPageHeader(gender),
+                      appLocale!.difficultEventsSubTitle(gender),
+                      appLocale!.makeSaferSubTitle(gender),
+                      appLocale!.feelBetterSubTitle(gender),
+                      appLocale!.distractionsSubTitle(gender),
+                      appLocale!.phonesPageHeader(gender),
                     ], appInfoProvider.sharePDFtexts, ShareFileType.PDF);
                     if (result == null) {
                       // Show him a message
-                      showToast(
-                          message: AppLocalizations.of(context)!
-                              .downloadFailed(gender));
+                      showToast(message: appLocale!.downloadFailed(gender));
                       return;
                     }
                     // Show a toast message to the user
-                    showToast(
-                        message: AppLocalizations.of(context)!
-                            .finishedDownloading(gender));
+                    showToast(message: appLocale!.finishedDownloading(gender));
                   }, Icons.download, Colors.black) // the download icon
                 ],
                 // the sub title of the personal plan section in the home page
@@ -194,8 +178,7 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
               child: Row(
                 children: [
                   myAutoSizedText(
-                      AppLocalizations.of(context)!
-                          .personalPlanPageAllPlan(gender),
+                      appLocale!.personalPlanPageAllPlan(gender),
                       TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 12.sp // the font size of the text

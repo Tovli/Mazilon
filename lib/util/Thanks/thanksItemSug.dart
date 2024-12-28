@@ -84,8 +84,10 @@ class _ThanksItemSuggestedState extends State<ThanksItemSuggested> {
   // build the thanks item suggested widget
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context);
     // get the appInformation provider
-    final appInfoProvider = Provider.of<AppInformation>(context);
+
+    final userInfoProvider = Provider.of<UserInformation>(context);
     loadData(context);
     return Container(
       padding: const EdgeInsets.all(10),
@@ -97,13 +99,13 @@ class _ThanksItemSuggestedState extends State<ThanksItemSuggested> {
           GestureDetector(
             // when the add button is clicked ,
             // add the thank you to the list of thank yous and update the suggested thank you to a new one
-            onTap: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-
+            onTap: () {
               setState(() {
-                widget.add(widget.inputText == '' ? text : widget.inputText);
-                List<String> thankYous = prefs.getStringList('thankYous') ?? [];
-                List<String> dates = prefs.getStringList('dates') ?? [];
+                widget.add(widget.inputText == '' ? text : widget.inputText,
+                    userInfoProvider);
+                List<String> thankYous =
+                    userInfoProvider.thanks['thanks'] ?? [];
+                List<String> dates = userInfoProvider.thanks['dates'] ?? [];
                 myThanks = todayThankYousFunc(thankYous, dates);
                 myThanks.add(widget.inputText == '' ? text : widget.inputText);
                 List<String> tempThanksSuggestionList =
@@ -177,10 +179,9 @@ class _ThanksItemSuggestedState extends State<ThanksItemSuggested> {
                 child: Row(
                   children: [
                     Container(
-                      alignment:
-                          AppLocalizations.of(context)!.textDirection == "rtl"
-                              ? Alignment.centerRight
-                              : Alignment.centerLeft,
+                      alignment: appLocale!.textDirection == "rtl"
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
                       width: MediaQuery.of(context).size.width > 1000
                           ? 600
                           : MediaQuery.of(context).size.width * 0.6 + 36,

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mazilon/lists.dart';
+import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:mazilon/util/HomePage/sectionBarHome.dart';
+import 'package:mazilon/util/Thanks/AddForm.dart';
 //import 'package:mazilon/util/Thanks/thanksItem.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/userInformation.dart';
@@ -14,42 +15,89 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 // this code is related to "מעלות" section in homepage.
 // this code is similar to thanksListWidget.dart .
 class TraitListWidget extends StatefulWidget {
-  final List<String> traits; // the list of the traits
-  final Function add; // the function to add a trait
-  final Function edit; // the function to edit a trait
-  final Function remove; // the function to remove a trait
-  final int traitListLength; // the length of the trait list
-  final Function addSuggested; // the function to add a suggested trait
   final Function(BuildContext, int)
       onTabTapped; // the function to navigate to another page
-  const TraitListWidget(
-      {super.key,
-      required this.traits,
-      required this.add,
-      required this.edit,
-      required this.remove,
-      required this.traitListLength,
-      required this.addSuggested,
-      required this.onTabTapped});
+  const TraitListWidget({super.key, required this.onTabTapped});
   @override
   State<TraitListWidget> createState() => _TraitListWidgetState();
 }
 
 class _TraitListWidgetState extends State<TraitListWidget> {
+  List<String> threeLatestTraits = [];
   @override
   void initState() {
     super.initState();
+  }
+
+  void editTrait(String title, [String text = '', int index = 0]) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AddForm(
+            add: addPositiveTrait,
+            index: index,
+            edit: editPositiveTrait,
+            text: text,
+            formTitle: title,
+          );
+        });
+  }
+
+  List<String> threeLatestTraitsFunc(List<String> traits) {
+    List<String> threeLatestTraits = [];
+    if (traits.length <= 3) {
+      threeLatestTraits = traits;
+    } else {
+      for (int i = traits.length - 3; i < traits.length; i++) {
+        threeLatestTraits.add(traits[i]);
+      }
+    }
+    return threeLatestTraits;
+  }
+
+  void addPositiveTrait(
+      String positiveTrait, UserInformation userInfoProvider) {
+    List<String> positiveTraits_temp = userInfoProvider.positiveTraits;
+    positiveTraits_temp.add(positiveTrait);
+    print(positiveTraits_temp);
+    setState(() {
+      userInfoProvider.updatePositiveTraits(positiveTraits_temp);
+      threeLatestTraits = threeLatestTraitsFunc(positiveTraits_temp);
+    });
+  }
+
+//function to handle a change in a trait
+  void editPositiveTrait(
+      String text, int index, UserInformation userInfoProvider) {
+    List<String> positiveTraits = userInfoProvider.positiveTraits;
+    setState(() {
+      positiveTraits[index] = text;
+      userInfoProvider.updatePositiveTraits(positiveTraits);
+      threeLatestTraits = threeLatestTraitsFunc(positiveTraits);
+    });
+  }
+
+//fuction to handle the removal of a trait
+  void removePositiveTrait(int removeIndex, UserInformation userInfoProvider) {
+    List<String> positiveTraits_temp = userInfoProvider.positiveTraits;
+    positiveTraits_temp.removeAt(removeIndex);
+    setState(() {
+      userInfoProvider.updatePositiveTraits(positiveTraits_temp);
+
+      threeLatestTraits = threeLatestTraitsFunc(positiveTraits_temp);
+    });
   }
 
 // build the trait list widget
   @override
   Widget build(BuildContext context) {
     // get the app information provider and the user information provider
-    final appLocale = AppLocalizations.of(context)!;
-    final appInfoProvider = Provider.of<AppInformation>(context);
+    final appLocale = AppLocalizations.of(context);
+
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
     final gender = userInfoProvider.gender;
+    final traitsListlength = userInfoProvider.positiveTraits.length;
 
     return SizedBox(
       // the width of the widget is 800 if the screen width is more than 1000, otherwise it is the screen width
@@ -70,8 +118,7 @@ class _TraitListWidgetState extends State<TraitListWidget> {
                           context, 2); // 2 is the index of the trait page
                     },
                     child: myAutoSizedText(
-                        AppLocalizations.of(context)!
-                            .homePageTraitsMainTitle(gender),
+                        appLocale!.homePageTraitsMainTitle(gender),
                         TextStyle(
                           fontSize: 24.sp, // the font size of the title
                           fontWeight: FontWeight.bold,
@@ -89,14 +136,14 @@ class _TraitListWidgetState extends State<TraitListWidget> {
                       size: 30, // the size of the add icon
                     ),
                     onPressed: () {
-                      widget.add(); // the function to add a trait
+                      editTrait(
+                          appLocale!.trait); // the function to add a trait
                     },
                   ),
                 ],
 
                 // the subheader of the section bar
-                subHeader: AppLocalizations.of(context)!
-                    .homePageTraitsSecondaryTitle(gender)),
+                subHeader: appLocale!.homePageTraitsSecondaryTitle(gender)),
             // gap between the section bar and the trait list
             const SizedBox(height: 10),
             // the list of the traits
@@ -106,7 +153,10 @@ class _TraitListWidgetState extends State<TraitListWidget> {
                 child: Wrap(
                     spacing: 8.0, // gap between adjacent chips
                     runSpacing: 4.0, // gap between lines
-                    children: widget.traits.asMap().entries.map((entry) {
+                    children: userInfoProvider.positiveTraits
+                        .asMap()
+                        .entries
+                        .map((entry) {
                       int index = entry.key;
                       String trait = entry.value;
                       return Container(
@@ -183,10 +233,13 @@ class _TraitListWidgetState extends State<TraitListWidget> {
                                       child: MaterialButton(
                                         onPressed: () {
                                           setState(() {
-                                            widget.edit(
-                                                widget.traits[index],
-                                                widget.traitListLength -
-                                                    widget.traits.length +
+                                            editTrait(
+                                                appLocale!.trait,
+                                                userInfoProvider
+                                                    .positiveTraits[index],
+                                                traitsListlength -
+                                                    userInfoProvider
+                                                        .positiveTraits.length +
                                                     index);
                                           });
                                         },
@@ -205,10 +258,12 @@ class _TraitListWidgetState extends State<TraitListWidget> {
                                       child: MaterialButton(
                                         onPressed: () {
                                           setState(() {
-                                            widget.remove(
-                                                widget.traitListLength -
-                                                    widget.traits.length +
-                                                    index);
+                                            removePositiveTrait(
+                                                traitsListlength -
+                                                    userInfoProvider
+                                                        .positiveTraits.length +
+                                                    index,
+                                                userInfoProvider);
                                           });
                                         },
                                         splashColor: Colors.transparent,
@@ -233,10 +288,10 @@ class _TraitListWidgetState extends State<TraitListWidget> {
               child: Padding(
                 padding: const EdgeInsets.all(0.0),
                 child: PositiveTraitItemSug(
-                  add: widget.addSuggested,
+                  add: addPositiveTrait,
                   inputText: "",
-                  fullSuggestionList: traitsList[userInfoProvider.localeName]![
-                      gender == "" ? "other" : gender]!,
+                  fullSuggestionList: retrieveTraitsList(
+                      appLocale, gender == "" ? "other" : gender),
                 ),
               ),
             ),
@@ -250,7 +305,7 @@ class _TraitListWidgetState extends State<TraitListWidget> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text(AppLocalizations.of(context)!.showAll(gender),
+                      Text(appLocale!.showAll(gender),
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       const Icon(
                         Icons.arrow_forward_ios,

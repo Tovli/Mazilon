@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
@@ -11,7 +12,7 @@ import 'package:mazilon/util/Thanks/AddForm.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:mazilon/lists.dart';
+import 'package:intl/intl.dart' as intl;
 
 //Journal page, where the user can write thank you notes (add , edit, remove notes)
 //the user can also see suggested thank you notes and refresh them
@@ -37,14 +38,28 @@ class _JournalState extends State<Journal> {
   int counter =
       0; //counter for the number of thank you notes you added (reset to 0 every time you enter the journal page again)
   List<String> thanksSuggestionList = []; //list of thank you notes suggestions
+  List<String> todayThankYousFunc(List<String> thankYous, List<String> dates) {
+    List<String> todayThankYous = [];
+    DateTime now = DateTime.now();
+    String formattedDate = intl.DateFormat('yyyy-MM-dd – kk:mm').format(now);
+
+    for (int i = 0; i < dates.length; i++) {
+      if (dates[i].substring(0, 10) == formattedDate.substring(0, 10)) {
+        todayThankYous.add(thankYous[i]);
+      }
+    }
+    return todayThankYous;
+  }
 
   //load the thank you notes and suggestions from the shared preferences
-  Future<void> loadData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  void loadData(BuildContext context) {
+    print("loading journal");
+    final userInfoProvider =
+        Provider.of<UserInformation>(context, listen: true);
 
     setState(() {
-      thankYous = prefs.getStringList('thankYous') ?? [];
-      dates = prefs.getStringList('dates') ?? [];
+      thankYous = userInfoProvider.thanks['thanks'] ?? [];
+      dates = dates = userInfoProvider.thanks['dates'] ?? [];
       for (var _ in thankYous) {
         focusNodes.add(FocusNode());
       }
@@ -58,54 +73,65 @@ class _JournalState extends State<Journal> {
           thanksSuggestionList.remove(suggestion);
         }
       }
+      var indices = List<int>.generate(thanksSuggestionList.length, (i) => i);
+      indices.shuffle();
+      sug1 = thanksSuggestionList[indices[0]];
+      sug2 = thanksSuggestionList[
+          indices[thanksSuggestionList.length > 1 ? 1 : 0]];
+      sug3 = thanksSuggestionList[
+          indices[thanksSuggestionList.length > 2 ? 2 : 0]];
     });
   }
 
   // change the thank you note text at the index to the new text
-  void changeThankYou(String text, int index) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  void editThankYou(String text, int index, UserInformation userinfoProvider) {
     setState(() {
       thankYous[index] = text;
-      prefs.setStringList('thankYous', thankYous);
+      userinfoProvider.updateThanks({
+        'thanks': thankYous,
+        'dates': userinfoProvider.thanks['dates'] ?? []
+      });
     });
   }
 
   // remove the thank you note at the index
-  void removeThankYou(int removeIndex) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> thankYous_temp = prefs.getStringList('thankYous') ?? [];
-    List<String> dates_temp = prefs.getStringList('dates') ?? [];
+  void removeThankYou(int removeIndex, UserInformation userInfoProvider) {
+    List<String> thankYous_temp = userInfoProvider.thanks['thanks'] ?? [];
+    List<String> dates_temp = userInfoProvider.thanks['dates'] ?? [];
     thankYous_temp.removeAt(removeIndex);
     dates_temp.removeAt(removeIndex);
     setState(() {
-      prefs.setStringList('thankYous', thankYous_temp);
+      userInfoProvider
+          .updateThanks({'thanks': thankYous_temp, 'dates': dates_temp});
       thankYous = thankYous_temp;
       focusNodes.removeAt(removeIndex);
-      prefs.setStringList('dates', dates_temp);
       dates = dates_temp;
     });
   }
 
 // add the thank you note to the list
-  void addThankYou(String thankYou) async {
+  void addThankYou(String thankYou, UserInformation userInfoProvider) {
     counter = counter < 6 ? counter + 1 : counter;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> thankYous_temp = prefs.getStringList('thankYous') ?? [];
-    List<String> dates_temp = prefs.getStringList('dates') ?? [];
+    List<String> thankYous_temp = userInfoProvider.thanks['thanks'] ?? [];
+    List<String> dates_temp = userInfoProvider.thanks['dates'] ?? [];
     thankYous_temp.add(thankYou);
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
     dates_temp.add(formattedDate);
     setState(() {
-      prefs.setStringList('thankYous', thankYous_temp);
+      userInfoProvider
+          .updateThanks({'thanks': thankYous_temp, 'dates': dates_temp});
       thankYous = thankYous_temp;
       focusNodes.add(FocusNode());
-      prefs.setStringList('dates', dates_temp);
+
       dates = dates_temp;
     });
     //show the popup after adding the first thank you note (every time you enter the journal page)
-    if (counter == 1) {
-      showPopup();
+    if (todayThankYousFunc(userInfoProvider.thanks["thanks"] ?? [],
+                userInfoProvider.thanks["dates"] ?? [])
+            .length ==
+        1) {
+      showThankYouPopup(userInfoProvider);
     }
     //you can show the popup after adding the i-th thank you note (every time you enter the journal page)
     // if(counter == i){
@@ -114,28 +140,26 @@ class _JournalState extends State<Journal> {
   }
 
 //show the popup with the text from the shared preferences
-  void showPopup() {
+  void showThankYouPopup(UserInformation userInfoProvider) {
     Future.delayed(const Duration(seconds: 0), () {
-      final appInfoProvider =
-          Provider.of<AppInformation>(context, listen: false);
-      final userInfoProvider =
-          Provider.of<UserInformation>(context, listen: false);
       final gender = userInfoProvider.gender;
       showDialog(
         context: context,
         builder: (BuildContext context) {
+          final appLocale = AppLocalizations.of(context);
           return AlertDialog(
             title: const Text(''),
             content: Text(
-              AppLocalizations.of(context)!.homePageThankyouPopup(gender),
+              appLocale!.homePageThankyouPopup(gender),
               style: TextStyle(fontWeight: FontWeight.normal, fontSize: 15.sp),
               textAlign: TextAlign.center,
             ),
             actions: <Widget>[
               TextButton(
-                child:
-                    //the text of the  close button in the popup according to gender
-                    Text(AppLocalizations.of(context)!.confirmButton(gender)),
+                child: Text(appLocale!.confirmButton(gender),
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                    )),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -151,44 +175,33 @@ class _JournalState extends State<Journal> {
   @override
   void initState() {
     super.initState();
-    loadData().then((_) {
-      setState(() {
-        //get 3 random thank you notes suggestions from the list of suggestions to show in the page
-        var indices = List<int>.generate(thanksSuggestionList.length, (i) => i);
-        indices.shuffle();
-        sug1 = thanksSuggestionList[indices[0]];
-        sug2 = thanksSuggestionList[
-            indices[thanksSuggestionList.length > 1 ? 1 : 0]];
-        sug3 = thanksSuggestionList[
-            indices[thanksSuggestionList.length > 2 ? 2 : 0]];
-      });
-    });
   }
 
 // function we call when we want to add/edit a thank you note (to open the popup with the text field which is AddForm widget)
-  void editNotification(String text, int index, String thanks) {
+  void editThanks(String title, [String text = '', int index = 0]) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AddForm(
               add: addThankYou,
               index: index,
-              edit: changeThankYou,
+              edit: editThankYou,
               text: text,
-              formTitle: thanks);
+              formTitle: title);
         });
   }
 
 // build the journal page
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context)!;
+    final appLocale = AppLocalizations.of(context);
     // get the app and user information providers
-    final appInfoProvider = Provider.of<AppInformation>(context, listen: false);
+
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
     final gender = userInfoProvider.gender;
-
+    print("loading journal");
+    loadData(context);
     return KeyboardDismisser(
       gestures: const [GestureType.onTap, GestureType.onPanUpdateAnyDirection],
       child: Scaffold(
@@ -205,8 +218,7 @@ class _JournalState extends State<Journal> {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                         child: myAutoSizedText(
-                            AppLocalizations.of(context)!
-                                .homePageThanksMainTitle(gender),
+                            appLocale!.homePageThanksMainTitle(gender),
                             TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 30.sp,
@@ -219,8 +231,9 @@ class _JournalState extends State<Journal> {
                       IconButton(
                           //when the button is pressed, open the popup with empty text field to write a new thank you note
                           onPressed: () {
-                            editNotification(
-                                "", 0, AppLocalizations.of(context)!.thanks);
+                            editThanks(
+                              appLocale!.thanks,
+                            );
                           },
                           icon: Icon(
                             Icons.add,
@@ -235,8 +248,7 @@ class _JournalState extends State<Journal> {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                         child: myAutoSizedText(
-                            AppLocalizations.of(context)!
-                                .homePageThanksSecondaryTitle(gender),
+                            appLocale!.homePageThanksSecondaryTitle(gender),
                             TextStyle(
                                 color: darkGray,
                                 fontSize: 16.sp,
@@ -257,8 +269,11 @@ class _JournalState extends State<Journal> {
                       text: thankYous[index],
                       number: (index + 1),
                       edit: (String text, int index) {
-                        editNotification(
-                            text, index, AppLocalizations.of(context)!.thanks);
+                        editThanks(
+                          appLocale!.thanks,
+                          text,
+                          index,
+                        );
                       },
                       remove: removeThankYou,
                       myFocusNode: focusNodes[index],
@@ -277,29 +292,22 @@ class _JournalState extends State<Journal> {
             ThanksItemSuggested(
                 add: addThankYou,
                 inputText: sug1,
-                fullSuggestionList: thanksList[appLocale.localeName]![
-                    gender == "" ? "other" : gender]!),
+                fullSuggestionList: retrieveThanksList(
+                    appLocale, gender == "" ? "other" : gender)),
             ThanksItemSuggested(
                 add: addThankYou,
                 inputText: sug2,
-                fullSuggestionList: thanksList[appLocale.localeName]![
-                    gender == "" ? "other" : gender]!),
+                fullSuggestionList: retrieveThanksList(
+                    appLocale, gender == "" ? "other" : gender)),
             ThanksItemSuggested(
                 add: addThankYou,
                 inputText: sug3,
-                fullSuggestionList: thanksList[appLocale.localeName]![
-                    gender == "" ? "other" : gender]!),
+                fullSuggestionList: retrieveThanksList(
+                    appLocale, gender == "" ? "other" : gender)),
             //the button to refresh the suggested thank you notes and get 3 new suggestions
             TextButton(
               onPressed: () async {
                 setState(() {
-                  // sug1 = appInfoProvider.thanksSuggestionsList[Random()
-                  //     .nextInt(appInfoProvider.thanksSuggestionsList.length)];
-                  // sug2 = appInfoProvider.thanksSuggestionsList[Random()
-                  //     .nextInt(appInfoProvider.thanksSuggestionsList.length)];
-                  // sug3 = appInfoProvider.thanksSuggestionsList[Random()
-                  //     .nextInt(appInfoProvider.thanksSuggestionsList.length)];
-
                   //remove the thank you notes suggestions that are already in the thank you notes list (a.k.a chosen by the user already)
                   List<String> tempThanksSuggestionList =
                       List.from(widget.fullSuggestionList);
@@ -325,7 +333,7 @@ class _JournalState extends State<Journal> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    AppLocalizations.of(context)!.otherSuggestions(gender),
+                    appLocale!.otherSuggestions(gender),
                     style:
                         TextStyle(fontWeight: FontWeight.bold, color: appGreen),
                   ),

@@ -45,15 +45,14 @@ class _ToFormPageState extends State<ToFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    final appInfoProvider = Provider.of<AppInformation>(context);
     final userInfoProvider = Provider.of<UserInformation>(context);
     var gender = userInfoProvider.gender;
+    final appLocale = AppLocalizations.of(context);
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(children: [
         myAutoSizedText(
-            AppLocalizations.of(context)!
-                .introductionFormLastPageMainTitle(gender),
+            appLocale!.introductionFormLastPageMainTitle(gender),
             TextStyle(
                 fontSize: 40.sp,
                 fontWeight: FontWeight.bold,
@@ -63,8 +62,7 @@ class _ToFormPageState extends State<ToFormPage> {
         Padding(
           padding: const EdgeInsets.fromLTRB(60, 0, 60, 0),
           child: myAutoSizedText(
-              AppLocalizations.of(context)!
-                  .introductionFormLastPageSubTitle1(gender),
+              appLocale!.introductionFormLastPageSubTitle1(gender),
               TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
@@ -78,8 +76,7 @@ class _ToFormPageState extends State<ToFormPage> {
         Padding(
           padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
           child: myAutoSizedText(
-              AppLocalizations.of(context)!
-                  .introductionFormLastPageSubTitle2(gender),
+              appLocale!.introductionFormLastPageSubTitle2(gender),
               TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
@@ -125,8 +122,7 @@ class _ToFormPageState extends State<ToFormPage> {
             },
             style: myButtonStyle,
             child: myAutoSizedText(
-                AppLocalizations.of(context)!
-                    .introductionFormLastPageNext(gender),
+                appLocale!.introductionFormLastPageNext(gender),
                 myTextStyle.copyWith(
                     fontWeight: FontWeight.bold, fontSize: 20.sp),
                 null,
@@ -149,7 +145,7 @@ class _ToFormPageState extends State<ToFormPage> {
                     horizontal: returnSizedBox(context, 20),
                     vertical: returnSizedBox(context, 10)))),
             child: myAutoSizedText(
-                AppLocalizations.of(context)!.skipButton(gender),
+                appLocale!.skipButton(gender),
                 myTextStyle.copyWith(
                     fontWeight: FontWeight.bold, fontSize: 20.sp),
                 null,
