@@ -784,10 +784,10 @@ class MockUserInformation extends _i1.Mock implements _i13.UserInformation {
       ) as bool);
 
   @override
-  void reset() => super.noSuchMethod(
+  void reset(String? locale) => super.noSuchMethod(
         Invocation.method(
           #reset,
-          [],
+          [locale],
         ),
         returnValueForMissingStub: null,
       );

@@ -10,7 +10,7 @@ import 'package:mazilon/util/appInformation.dart' as _i5;
 import 'package:mazilon/util/userInformation.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i3;
-import 'package:shared_preferences/src/shared_preferences_legacy.dart' as _i6;
+import 'package:shared_preferences/shared_preferences.dart' as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -323,10 +323,10 @@ class MockUserInformation extends _i1.Mock implements _i2.UserInformation {
       ) as bool);
 
   @override
-  void reset() => super.noSuchMethod(
+  void reset(String? locale) => super.noSuchMethod(
         Invocation.method(
           #reset,
-          [],
+          [locale],
         ),
         returnValueForMissingStub: null,
       );
