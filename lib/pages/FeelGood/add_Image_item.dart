@@ -4,8 +4,10 @@ import 'package:mazilon/pages/FeelGood/FeelGoodInheritedWidget.dart';
 import 'package:mazilon/util/appInformation.dart';
 
 import 'package:dotted_border/dotted_border.dart';
+import 'package:mazilon/util/userInformation.dart';
 
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ImageAddItem extends StatefulWidget {
   ImageAddItem({Key? key}) : super(key: key);
@@ -21,58 +23,51 @@ class _ImageAddItemState extends State<ImageAddItem> {
       FeelGoodInheritedWidget.of(context)?.getImage(source);
     }
 
-    final AppInformation appInfoProvider =
-        Provider.of<AppInformation>(context, listen: true);
+    final userInfoProvider =
+        Provider.of<UserInformation>(context, listen: false);
+    final gender = userInfoProvider.gender;
+    final appLocale = AppLocalizations.of(context);
     return DottedBorder(
       color: Colors.grey,
       strokeWidth: 2,
       child: Center(
         child: TextButton(
           key: Key('addImgButtonText'),
-          child: Directionality(
-            textDirection: TextDirection.rtl,
-            child: Text(
-              appInfoProvider.feelGoodPageTitles['addImgButtonText'] ??
-                  'הוספת תמונה',
-              style: const TextStyle(
-                  fontSize: 24.0), // adjust the font size as needed
-            ),
+          child: Text(
+            appLocale!.addImageButton(gender),
+            style: const TextStyle(
+                fontSize: 24.0), // adjust the font size as needed
           ),
           onPressed: () {
             showDialog(
               context: context,
-              builder: (context) => Directionality(
-                textDirection: TextDirection.rtl,
-                child: AlertDialog(
-                  title: Text(
-                      appInfoProvider.feelGoodPageTitles['alertButtonTitle'] ??
-                          'הוספת תמונה'),
-                  actions: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        TextButton(
-                          key: Key('cameraButtonText'),
-                          child: Text(appInfoProvider
-                                  .feelGoodPageTitles['cameraButtonText'] ??
-                              'מצלמה'),
-                          onPressed: () {
-                            pickImage("camera");
-                          },
-                        ),
-                        TextButton(
-                          key: Key('galleryButtonText'),
-                          child: Text(appInfoProvider
-                                  .feelGoodPageTitles['galleryButtonText'] ??
-                              'גלריה'),
-                          onPressed: () {
-                            pickImage("gallery");
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
+              builder: (context) => AlertDialog(
+                title: Text(
+                  appLocale!.addImageTitle(gender),
                 ),
+                actions: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      TextButton(
+                        key: Key('cameraButtonText'),
+                        child: Text(
+                          appLocale!.camera,
+                        ),
+                        onPressed: () {
+                          pickImage("camera");
+                        },
+                      ),
+                      TextButton(
+                        key: Key('galleryButtonText'),
+                        child: Text(appLocale!.gallery),
+                        onPressed: () {
+                          pickImage("gallery");
+                        },
+                      ),
+                    ],
+                  ),
+                ],
               ),
             );
           },

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:mazilon/util/styles.dart';
+import 'package:mazilon/util/userInformation.dart';
+import 'package:provider/provider.dart';
 
 // the thank you widget, it shows the thank you text and the number of the thank you
 //although its name is thank you, it can be used for any trait , we used it for the positive trait also.
@@ -41,11 +43,36 @@ class _ThankYouState extends State<ThankYou> {
 // build the thank you widget
   @override
   Widget build(BuildContext context) {
+    final userInfoProvider =
+        Provider.of<UserInformation>(context, listen: false);
     return Container(
       padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          // the number of the thank you/trait (in a circle)
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              color: primaryPurple, // the color of the circle
+              child: myAutoSizedText(
+                  // the number of the thank you/trait
+                  widget.number.toString(),
+                  TextStyle(
+                      // the style of the number
+                      color: appWhite,
+                      fontSize: widget.number < 10 ? 14.sp : 10.sp,
+                      fontWeight: FontWeight.bold),
+                  null,
+                  30),
+            ),
+          ),
+          // gap between the text and the number
+          const SizedBox(
+            width: 10,
+          ),
+
           Container(
             constraints: BoxConstraints(
               minHeight: 20,
@@ -58,22 +85,30 @@ class _ThankYouState extends State<ThankYou> {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  // the delete button
-                  Container(
-                    width: 50,
-                    child: MaterialButton(
-                      onPressed: () {
-                        widget.remove(widget.number - 1);
-                        setState(() {
-                          editable = false;
-                        });
-                      },
-                      splashColor: Colors.transparent,
-                      enableFeedback: false,
-                      child: const Icon(
-                        Icons.delete,
+                  const SizedBox(
+                    width: 15,
+                  ),
+
+                  // the text of the thank you/trait
+                  Expanded(
+                    child: Container(
+                      child: AutoSizeText(
+                        widget.text,
+                        maxLines: 4,
+                        minFontSize: 14,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 20, // the size of the text
+                            fontWeight: FontWeight.normal,
+                            color: widget.color // the color of the text
+                            ),
                       ),
                     ),
+                  ),
+
+                  // gap between the buttons and the text
+                  const SizedBox(
+                    width: 15,
                   ),
                   // the edit button
                   Container(
@@ -89,58 +124,25 @@ class _ThankYouState extends State<ThankYou> {
                       ),
                     ),
                   ),
-                  // gap between the buttons and the text
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  // the text of the thank you/trait
-                  Expanded(
-                    child: Container(
-                      child: Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: AutoSizeText(
-                          widget.text,
-                          maxLines: 4,
-                          minFontSize: 14,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 20, // the size of the text
-                              fontWeight: FontWeight.normal,
-                              color: widget.color // the color of the text
-                              ),
-                        ),
+
+                  // the delete button
+                  Container(
+                    width: 50,
+                    child: MaterialButton(
+                      onPressed: () {
+                        widget.remove(widget.number - 1, userInfoProvider);
+                        setState(() {
+                          editable = false;
+                        });
+                      },
+                      splashColor: Colors.transparent,
+                      enableFeedback: false,
+                      child: const Icon(
+                        Icons.delete,
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    width: 15,
-                  ),
                 ],
-              ),
-            ),
-          ),
-          // gap between the text and the number
-          const SizedBox(
-            width: 10,
-          ),
-          // the number of the thank you/trait (in a circle)
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              color: primaryPurple, // the color of the circle
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: myAutoSizedText(
-                    // the number of the thank you/trait
-                    widget.number.toString(),
-                    TextStyle(
-                        // the style of the number
-                        color: appWhite,
-                        fontSize: widget.number < 10 ? 14.sp : 10.sp,
-                        fontWeight: FontWeight.bold),
-                    null,
-                    30),
               ),
             ),
           ),

@@ -3,6 +3,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:mazilon/pages/notifications/set_notification_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/util/userInformation.dart';
+import 'package:provider/provider.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
@@ -19,24 +22,25 @@ class _NotificationPageState extends State<NotificationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userInfoProvider =
+        Provider.of<UserInformation>(context, listen: false);
+    final appLocale = AppLocalizations.of(context);
+    final gender = userInfoProvider.gender;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(height: 100),
-                  Text(
-                    'הוספת תזכורות לשימוש ב Living Positively',
-                  ),
-                  SizedBox(height: 20),
-                  SetNotificationWidget()
-                ],
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(height: 100),
+                Text(
+                  appLocale!.notificationPageHeader(gender),
+                ),
+                SizedBox(height: 20),
+                SetNotificationWidget()
+              ],
             ),
           ),
         ),

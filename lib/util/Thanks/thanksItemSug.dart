@@ -3,12 +3,15 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dotted_border/dotted_border.dart';
+
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/appInformation.dart';
+import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // the thanks item suggested widget, it shows a suggested thank you text and an add button
 //its used in journal/homepage in todo list section to suggest a thank you to the user
@@ -18,8 +21,12 @@ class ThanksItemSuggested extends StatefulWidget {
   final Function
       add; // the function to add the thank you to the list of thank yous
   final String inputText; // the input text of the thank you
+  final List<String> fullSuggestionList;
   const ThanksItemSuggested(
-      {super.key, required this.add, required this.inputText});
+      {super.key,
+      required this.add,
+      required this.inputText,
+      required this.fullSuggestionList});
 
   @override
   State<ThanksItemSuggested> createState() => _ThanksItemSuggestedState();
@@ -44,17 +51,19 @@ class _ThanksItemSuggestedState extends State<ThanksItemSuggested> {
     return todayThankYous;
   }
 
-  Future<void> loadData() async {
+  void loadData(BuildContext context) {
     // get the shared preferences
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final appInfoProvider = Provider.of<AppInformation>(context, listen: false);
 
+    final userInfoProvider =
+        Provider.of<UserInformation>(context, listen: true);
     setState(() {
-      List<String> thankYous = prefs.getStringList('thankYous') ?? [];
-      List<String> dates = prefs.getStringList('dates') ?? [];
+      List<String> thankYous = userInfoProvider.thanks['thanks'] ?? [];
+      List<String> dates = userInfoProvider.thanks['dates'] ?? [];
+
       myThanks = todayThankYousFunc(thankYous, dates);
       List<String> tempThanksSuggestionList =
-          List.from(appInfoProvider.thanksSuggestionsList);
+          List.from(widget.fullSuggestionList);
+
       thanksSuggestionList = List.from(tempThanksSuggestionList);
       // remove the thank yous that are already written today from the suggested thank yous
       for (String suggestion in tempThanksSuggestionList) {
@@ -62,98 +71,45 @@ class _ThanksItemSuggestedState extends State<ThanksItemSuggested> {
           thanksSuggestionList.remove(suggestion);
         }
       }
+      text =
+          thanksSuggestionList[Random().nextInt(thanksSuggestionList.length)];
     });
   }
 
   @override
   void initState() {
     super.initState();
-    loadData().then((_) {
-      setState(() {
-        // set the text of the suggested thank you to a random thank you from the suggested thank yous list
-        text =
-            thanksSuggestionList[Random().nextInt(thanksSuggestionList.length)];
-      });
-    });
   }
 
   // build the thanks item suggested widget
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context);
     // get the appInformation provider
-    final appInfoProvider = Provider.of<AppInformation>(context);
+
+    final userInfoProvider = Provider.of<UserInformation>(context);
+    loadData(context);
     return Container(
       padding: const EdgeInsets.all(10),
       // the row that contains the suggested thank you and the add button
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          // the design of the suggested thank you (a dotted border with the text of the thank you)
-          DottedBorder(
-            borderType: BorderType.RRect,
-            radius: const Radius.circular(20),
-            dashPattern: const [5, 5],
-            color: appGreen, // the color of the border
-            strokeWidth: 2,
-            child: Container(
-              height: 50,
-              decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(20)),
-              child: Padding(
-                padding: const EdgeInsets.all(7.0),
-                child: Row(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerRight,
-                      width: MediaQuery.of(context).size.width > 1000
-                          ? 600
-                          : MediaQuery.of(context).size.width * 0.6 + 36,
-                      height: MediaQuery.of(context).size.height * 0.1,
-                      // the text of the suggested thank you
-                      child: AutoSizeText(
-                        widget.inputText == ''
-                            ? text
-                            : widget
-                                .inputText, // if the input text is empty, show the suggested thank you text
-                        maxLines:
-                            3, // the maximum number of lines of the text, if the text is more than 3 lines,
-                        // it will be ellipsized , adjust as needed
-                        textAlign: TextAlign.right,
-                        minFontSize: 14,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontFamily: "Rubix",
-                          fontSize: 14.sp, // the text size
-                          fontWeight: FontWeight.bold,
-                          color: darkGray,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          // gap between the text and the add button
-          const SizedBox(
-            width: 10,
-          ),
           // the add button
           GestureDetector(
             // when the add button is clicked ,
             // add the thank you to the list of thank yous and update the suggested thank you to a new one
-            onTap: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-
+            onTap: () {
               setState(() {
-                widget.add(widget.inputText == '' ? text : widget.inputText);
-                List<String> thankYous = prefs.getStringList('thankYous') ?? [];
-                List<String> dates = prefs.getStringList('dates') ?? [];
+                widget.add(widget.inputText == '' ? text : widget.inputText,
+                    userInfoProvider);
+                List<String> thankYous =
+                    userInfoProvider.thanks['thanks'] ?? [];
+                List<String> dates = userInfoProvider.thanks['dates'] ?? [];
                 myThanks = todayThankYousFunc(thankYous, dates);
                 myThanks.add(widget.inputText == '' ? text : widget.inputText);
                 List<String> tempThanksSuggestionList =
-                    List.from(appInfoProvider.thanksSuggestionsList);
+                    List.from(widget.fullSuggestionList);
                 thanksSuggestionList = List.from(tempThanksSuggestionList);
                 for (String suggestion in tempThanksSuggestionList) {
                   if (thanksSuggestionList.length > 1 &&
@@ -202,6 +158,60 @@ class _ThanksItemSuggestedState extends State<ThanksItemSuggested> {
               ),
             ),
           ),
+
+          const SizedBox(
+            width: 10,
+          ),
+          // the design of the suggested thank you (a dotted border with the text of the thank you)
+          DottedBorder(
+            borderType: BorderType.RRect,
+            radius: const Radius.circular(20),
+            dashPattern: const [5, 5],
+            color: appGreen, // the color of the border
+            strokeWidth: 2,
+            child: Container(
+              height: 50,
+              decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(20)),
+              child: Padding(
+                padding: const EdgeInsets.all(7.0),
+                child: Row(
+                  children: [
+                    Container(
+                      alignment: appLocale!.textDirection == "rtl"
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      width: MediaQuery.of(context).size.width > 1000
+                          ? 600
+                          : MediaQuery.of(context).size.width * 0.6 + 36,
+                      height: MediaQuery.of(context).size.height * 0.1,
+                      // the text of the suggested thank you
+                      child: AutoSizeText(
+                        widget.inputText == ''
+                            ? text
+                            : widget
+                                .inputText, // if the input text is empty, show the suggested thank you text
+                        maxLines:
+                            3, // the maximum number of lines of the text, if the text is more than 3 lines,
+                        // it will be ellipsized , adjust as needed
+
+                        minFontSize: 14,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontFamily: "Rubix",
+                          fontSize: 14.sp, // the text size
+                          fontWeight: FontWeight.bold,
+                          color: darkGray,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // gap between the text and the add button
         ],
       ),
     );

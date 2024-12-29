@@ -19,22 +19,19 @@ class _PersonalPlanItemState extends State<PersonalPlanItem> {
       constraints:
           BoxConstraints(minHeight: 100, maxHeight: 200, minWidth: 100),
       child: Card(
-        child: Directionality(
-          textDirection: TextDirection.rtl,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: AutoSizeText(
-              widget.text,
-              overflow: TextOverflow.ellipsis,
-              minFontSize: 12,
-              maxFontSize: 30,
-              maxLines: 2,
-              style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black,
-                  fontFamily: 'Rubix'),
-            ),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: AutoSizeText(
+            widget.text,
+            overflow: TextOverflow.ellipsis,
+            minFontSize: 12,
+            maxFontSize: 30,
+            maxLines: 2,
+            style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.normal,
+                color: Colors.black,
+                fontFamily: 'Rubix'),
           ),
         ),
       ),

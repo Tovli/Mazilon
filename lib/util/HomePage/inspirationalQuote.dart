@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 //Display a random Inspirational Quote
 class InspirationalQuote extends StatefulWidget {
@@ -34,6 +35,7 @@ class _InspirationalQuoteState extends State<InspirationalQuote> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context);
     return Visibility(
       visible: showText,
       child: Container(
@@ -49,7 +51,7 @@ class _InspirationalQuoteState extends State<InspirationalQuote> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 GestureDetector(
                   onTap: () {
@@ -66,23 +68,6 @@ class _InspirationalQuoteState extends State<InspirationalQuote> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Expanded(
-                  child: Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: myAutoSizedText(
-                        widget.quotes[number],
-                        TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: appWhite,
-                            fontSize: 26.sp),
-                        TextAlign.right,
-                        26,
-                        2),
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
                 IconButton(
                   icon: Icon(
                     Icons.refresh,
@@ -95,6 +80,22 @@ class _InspirationalQuoteState extends State<InspirationalQuote> {
                       number = Random().nextInt(widget.quotes.length);
                     });
                   },
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: myAutoSizedText(
+                      widget.quotes[number],
+                      TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: appWhite,
+                          fontSize: 26.sp),
+                      appLocale!.textDirection == "rtl"
+                          ? TextAlign.right
+                          : TextAlign.left,
+                      26,
+                      2),
                 ),
               ],
             ),

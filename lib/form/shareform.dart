@@ -13,6 +13,8 @@ import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class ShareForm extends StatefulWidget {
   final Function prev;
   final Function submit;
@@ -47,6 +49,7 @@ class _ShareFormState extends State<ShareForm> {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
     final gender = userInfoProvider.gender;
+    final appLocale = AppLocalizations.of(context);
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -58,38 +61,29 @@ class _ShareFormState extends State<ShareForm> {
                   height: returnSizedBox(context, 100),
                 ),
                 myAutoSizedText(
-                    appInfoProvider.formSharePageTitles['header'],
+                    appLocale!.sharePageHeader(gender),
                     TextStyle(
                         fontSize: 40.sp,
                         fontWeight: FontWeight.bold,
                         color: Colors.black),
                     null,
                     80),
-                Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: myAutoSizedText(
-                      appInfoProvider.formSharePageTitles[
-                          'subTitle${userInfoProvider.gender}'],
-                      TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16.sp,
-                          color: Colors.black),
-                      TextAlign.center,
-                      35),
-                ),
+                myAutoSizedText(
+                    appLocale!.sharePageSubTitle(gender),
+                    TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16.sp,
+                        color: Colors.black),
+                    null,
+                    35),
                 myImage('assets/images/FormSubmit.png', context, 0.8, 0.4),
                 Container(
                   width: MediaQuery.sizeOf(context).width * 0.8,
-                  child: Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: myAutoSizedText(
-                        appInfoProvider.formSharePageTitles[
-                            'midTitle${userInfoProvider.gender}'],
-                        TextStyle(
-                            fontWeight: FontWeight.normal, fontSize: 18.sp),
-                        TextAlign.center,
-                        35),
-                  ),
+                  child: myAutoSizedText(
+                      appLocale!.sharePageMidTitle(gender),
+                      TextStyle(fontWeight: FontWeight.normal, fontSize: 18.sp),
+                      null,
+                      35),
                 ),
                 const SizedBox(
                   height: 30,
@@ -106,30 +100,20 @@ class _ShareFormState extends State<ShareForm> {
                         IconButton(
                           onPressed: () async {
                             await fileService.share(
-                                appInfoProvider.shareMessages['emergency']!,
+                                "",
                                 [
-                                  appInfoProvider.formDifficultEventsTitles[
-                                      'header$gender'],
-                                  appInfoProvider
-                                      .formMakeSaferTitles['header$gender'],
-                                  appInfoProvider
-                                      .formFeelBetterTitles['header$gender'],
-                                  appInfoProvider
-                                      .formDistractionsTitles['header$gender'],
-                                  appInfoProvider
-                                      .formPhonePage['header$gender'],
+                                  appLocale!.difficultEventsHeader(gender),
+                                  appLocale!.makeSaferHeader(gender),
+                                  appLocale!.feelBetterHeader(gender),
+                                  appLocale!.distractionsHeader(gender),
+                                  appLocale!.phonesPageHeader(gender),
                                 ],
                                 [
-                                  appInfoProvider.formDifficultEventsTitles[
-                                      'subTitle$gender'],
-                                  appInfoProvider
-                                      .formMakeSaferTitles['subTitle$gender'],
-                                  appInfoProvider
-                                      .formFeelBetterTitles['subTitle$gender'],
-                                  appInfoProvider.formDistractionsTitles[
-                                      'subTitle$gender'],
-                                  appInfoProvider
-                                      .formPhonePage['subTitle$gender'],
+                                  appLocale!.difficultEventsSubTitle(gender),
+                                  appLocale!.makeSaferSubTitle(gender),
+                                  appLocale!.feelBetterSubTitle(gender),
+                                  appLocale!.distractionsSubTitle(gender),
+                                  appLocale!.phonesPageHeader(gender),
                                 ],
                                 appInfoProvider.sharePDFtexts,
                                 ShareFileType.PDF);
@@ -153,34 +137,29 @@ class _ShareFormState extends State<ShareForm> {
                         IconButton(
                           onPressed: () async {
                             var result = await fileService.download([
-                              appInfoProvider
-                                  .formDifficultEventsTitles['header$gender'],
-                              appInfoProvider
-                                  .formMakeSaferTitles['header$gender'],
-                              appInfoProvider
-                                  .formFeelBetterTitles['header$gender'],
-                              appInfoProvider
-                                  .formDistractionsTitles['header$gender'],
-                              appInfoProvider.formPhonePage['header$gender'],
+                              appLocale!.difficultEventsHeader(gender),
+                              appLocale!.makeSaferHeader(gender),
+                              appLocale!.feelBetterHeader(gender),
+                              appLocale!.distractionsHeader(gender),
+                              appLocale!.phonesPageHeader(gender),
                             ], [
-                              appInfoProvider
-                                  .formDifficultEventsTitles['subTitle$gender'],
-                              appInfoProvider
-                                  .formMakeSaferTitles['subTitle$gender'],
-                              appInfoProvider
-                                  .formFeelBetterTitles['subTitle$gender'],
-                              appInfoProvider
-                                  .formDistractionsTitles['subTitle$gender'],
-                              appInfoProvider.formPhonePage['subTitle$gender'],
+                              appLocale!.difficultEventsSubTitle(gender),
+                              appLocale!.makeSaferSubTitle(gender),
+                              appLocale!.feelBetterSubTitle(gender),
+                              appLocale!.distractionsSubTitle(gender),
+                              appLocale!.phonesPageHeader(gender),
                             ], appInfoProvider.sharePDFtexts,
                                 ShareFileType.PDF);
                             if (result == null) {
                               // Show him a message
-                              showToast(message: 'ההורדה נכשלה');
+                              showToast(
+                                  message: appLocale!.downloadFailed(gender));
                               return;
                             }
                             // Show a toast message to the user
-                            showToast(message: 'הקובץ שלך ירד');
+                            showToast(
+                                message:
+                                    appLocale!.finishedDownloading(gender));
                           },
 
                           style: TextButton.styleFrom(
@@ -206,7 +185,7 @@ class _ShareFormState extends State<ShareForm> {
                 ConfirmationButton(context, () {
                   widget.submit(context);
                 },
-                    appInfoProvider.formSharePageTitles['finishButton'],
+                    appLocale!.sharePageFinishButton(gender),
                     myTextStyle.copyWith(
                         fontWeight: FontWeight.bold, fontSize: 22.sp)),
                 const SizedBox(

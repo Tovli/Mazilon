@@ -7,7 +7,6 @@ import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/PDF/create_pdf.dart';
 import 'package:mazilon/util/logger_service.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -160,7 +159,7 @@ class FileServiceImpl implements FileService {
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureException(
+      await loggerService.captureLog(
         error,
         stackTrace: stackTrace,
       );
@@ -181,7 +180,7 @@ class FileServiceImpl implements FileService {
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureException(
+      await loggerService.captureLog(
         error,
         stackTrace: stackTrace,
       );

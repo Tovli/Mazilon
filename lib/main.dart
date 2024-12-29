@@ -1,10 +1,14 @@
 import 'dart:math';
-
+import 'package:language_code/language_code.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/Locale/locale_service.dart';
 import 'package:mazilon/iFx/service_locator.dart';
+import 'package:mazilon/l10n/l10n.dart';
 import 'package:mazilon/pages/notifications/notification_service.dart';
 import 'package:mazilon/util/logger_service.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +22,7 @@ import '/pages/SignIn_Pages/introduction.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/Firebase/firebase_functions.dart';
-import 'package:mazilon/util/Form/checkbox_model.dart';
+
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/initialForm/form.dart';
 
@@ -50,7 +54,7 @@ void callbackDispatcher() {
       }
       int number = Random().nextInt(inputData["text"].length);
       await NotificationsService.init();
-      await NotificationsService.cancelNotifications(null);
+      await NotificationsService.cancelNotifications(null, cancelWorker: false);
       TimeOfDay calculatedTime = NotificationsService.calculateTime(
           inputData["timeHour"],
           inputData["timeMinute"]); // Calculate the time for the notification
@@ -61,7 +65,7 @@ void callbackDispatcher() {
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureException(error,
+      await loggerService.captureLog(error,
           stackTrace: stackTrace,
           exceptionData: {'name': 'inputData', 'value': inputData});
     }
@@ -82,6 +86,7 @@ Future<void> initializeApp() async {
 
 void main() async {
   await initializeApp();
+
   IncidentLoggerService sentryService = GetIt.instance<IncidentLoggerService>();
   Workmanager().initialize(
     callbackDispatcher,
@@ -92,27 +97,24 @@ void main() async {
       providers: [
         for (int i = 0; i < checkboxCollectionNames.length; i++)
           // Initialize the checkbox models
+
+          // Initialize the phonePageData provider
           ChangeNotifierProvider(
-            create: (context) => CheckboxModel(checkboxCollectionNames[i],
-                checkboxCollectionNames[i], "", "", "", ""),
+            create: (context) => PhonePageData(
+                key: "PhonePage",
+                phoneNames: [],
+                phoneNumbers: [],
+                header: "", // Blank for unknown field
+                subTitle: "", // Blank for unknown field
+                midTitle: "", // Blank for unknown field
+                phoneNameTitle: "", // Blank for unknown field
+                phoneNumberTitle: "", // Blank for unknown field
+                savedPhoneNames: [], // Assuming empty list for unknown
+                savedPhoneNumbers: [], // Assuming empty list for unknown
+                phoneDescription: [] // Assuming empty list for unknown
+                )
+              ..loadItemsFromPrefs(), // Initialize phonePageData
           ),
-        // Initialize the phonePageData provider
-        ChangeNotifierProvider(
-          create: (context) => PhonePageData(
-              key: "PhonePage",
-              phoneNames: [],
-              phoneNumbers: [],
-              header: "", // Blank for unknown field
-              subTitle: "", // Blank for unknown field
-              midTitle: "", // Blank for unknown field
-              phoneNameTitle: "", // Blank for unknown field
-              phoneNumberTitle: "", // Blank for unknown field
-              savedPhoneNames: [], // Assuming empty list for unknown
-              savedPhoneNumbers: [], // Assuming empty list for unknown
-              phoneDescription: [] // Assuming empty list for unknown
-              )
-            ..loadItemsFromPrefs(), // Initialize phonePageData
-        ),
         //REMOVE COMMENT ON FUTURE UPDATES FOR SYNC DEVICE FUNCTIONALITY
         // Initialize the FirebaseAppProvider for dbUsersApp-REALTIME DB
 
@@ -132,13 +134,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Map<String, CheckboxModel> checkboxModels = {};
   bool firsttime = false;
+  String localeName = '';
 
-  List<List<String>> collections = [];
   bool _isInitialized = false;
-  // adding checkboxmodel for the form add here:
-
   List<String> phonePageCollectionNames = [
     'PersonalPlan-PhonesPage',
   ];
@@ -158,6 +157,19 @@ class _MyAppState extends State<MyApp> {
 
     setState(() {
       hasFilled = prefs.getBool('hasFilled') ?? false;
+    });
+  }
+
+  Future<void> setLocale() async {
+    LocaleService localeService = GetIt.instance<LocaleService>();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? prefsLocale = prefs.getString('localeName');
+
+    setState(() {
+      localeService.setLocale(prefsLocale);
+
+      localeName = localeService.getLocale();
     });
   }
 
@@ -190,18 +202,11 @@ class _MyAppState extends State<MyApp> {
     super.didChangeDependencies();
   }
 
-  void confirmDisclaimer(mycontext) {
-    Navigator.pushAndRemoveUntil(
-      mycontext,
-      MaterialPageRoute(
-          builder: (context) => InitialFormProgressIndicator(
-                collections: collections,
-                collectionNames: checkboxCollectionNames,
-                checkboxModels: checkboxModels,
-                phonePageData: phonePageData,
-              )),
-      (Route<dynamic> route) => false,
-    );
+  void changeLocale(String locale) {
+    LocaleService localeService = GetIt.instance<LocaleService>();
+    setState(() {
+      localeService.setLocale(locale);
+    });
   }
 
   ValueNotifier<Widget?> widgetNotifier = ValueNotifier<Widget?>(null);
@@ -209,34 +214,44 @@ class _MyAppState extends State<MyApp> {
   //app start this runs:
   @override
   Widget build(BuildContext context) {
+    LocaleService localeService = GetIt.instance<LocaleService>();
     final appInfoProvider = Provider.of<AppInformation>(context, listen: false);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
-
     if (widgetNotifier.value == null) {
       Future.wait([
         //load from DB or from json:
-        loadAppInformation(appInfoProvider, checkboxCollectionNames,
-            collections, checkboxModels),
-        loadUserInformation(userInfoProvider),
+        loadAppInformation(appInfoProvider),
+        loadUserInformation(userInfoProvider, localeService.getLocale()),
+        setLocale()
       ]).then((_) {
         //initialize which widget will run first:
         widgetNotifier.value = phonePageData != null
             //user filled data:
             ? FirstPage(
-                collections: collections,
-                collectionNames: checkboxCollectionNames,
-                checkboxModels: checkboxModels,
                 firsttime: firsttime,
                 hasFilled: hasFilled,
+                changeLocale: changeLocale,
                 phonePageData: phonePageData)
             //first login:
             : const Center(child: Introduction());
       });
     }
+    if (localeName == '') {
+      return const Center(child: CircularProgressIndicator());
+    }
+    print(localeName);
     return ScreenUtilInit(
       designSize: Size(360, 690),
       builder: (context, child) => MaterialApp(
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: Locale(localeService.getLocale()),
+        localizationsDelegates: [
+          AppLocalizations.localizationsDelegates[0],
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate
+        ],
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           resizeToAvoidBottomInset: false,
