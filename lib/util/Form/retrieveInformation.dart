@@ -125,6 +125,8 @@ List<String> retrieveTraitsList(localization, gender) {
   traitsList.add(localization.traitsListNo16(gender));
   traitsList.add(localization.traitsListNo17(gender));
   traitsList.add(localization.traitsListNo18(gender));
+  traitsList.add(localization.traitsListNo19(gender));
+  traitsList.add(localization.traitsListNo20(gender));
 
   return traitsList;
 }
