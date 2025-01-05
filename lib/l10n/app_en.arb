@@ -721,23 +721,23 @@
    "@thanksListNo11": { 
    "description": ""
     },
-"traitsListNo0":"{gender,select,male{What will help me now, even small steps are progress} female{What will help me now, even small steps are progress} other{What will help me now, even small steps are progress}}",
+"traitsListNo0":"{gender,select,male{I know how to ask for help} female{I know how to ask for help} other{I know how to ask for help}}",
    "@traitsListNo0": { 
    "description": ""
     },
-"traitsListNo1":"{gender,select,male{I have strengths} female{I have strengths} other{I have strengths}}",
+"traitsListNo1":"{gender,select,male{I am friendly} female{I am friendly} other{I am friendly}}",
    "@traitsListNo1": { 
    "description": ""
     },
-"traitsListNo2":"{gender,select,male{I've already faced challenges in the past} female{I've already faced challenges in the past} other{I've already faced challenges in the past}}",
+"traitsListNo2":"{gender,select,male{I am a good friend} female{I am a good friend} other{I am a good friend}}",
    "@traitsListNo2": { 
    "description": ""
     },
-"traitsListNo3":"{gender,select,male{Mood changes like unpredictable weather} female{Mood changes like unpredictable weather} other{Mood changes like unpredictable weather}}",
+"traitsListNo3":"{gender,select,male{I'm ready to invest} female{I'm ready to invest} other{I'm ready to invest}}",
    "@traitsListNo3": { 
    "description": ""
     },
-"traitsListNo4":"{gender,select,male{Emotions are fleeting and changing} female{Emotions are fleeting and changing} other{Emotions are fleeting and changing}}",
+"traitsListNo4":"{gender,select,male{I am creative} female{I am creative} other{I am creative}}",
    "@traitsListNo4": { 
    "description": ""
     },
@@ -745,58 +745,67 @@
    "@traitsListNo5": { 
    "description": ""
     },
-"traitsListNo6":"{gender,select,male{I have strength} female{I have strength} other{I have strength}}",
+"traitsListNo6":"{gender,select,male{I have strengths} female{I have strengths} other{I have strengths}}",
    "@traitsListNo6": { 
    "description": ""
     },
-"traitsListNo7":"{gender,select,male{I'm learning to relax} female{I'm learning to relax} other{I'm learning to relax}}",
+"traitsListNo7":"{gender,select,male{I know how to drive} female{I know how to drive} other{I know how to drive}}",
    "@traitsListNo7": { 
    "description": ""
     },
-"traitsListNo8":"{gender,select,male{After the downs come the ups} female{After the downs come the ups} other{After the downs come the ups}}",
+"traitsListNo8":"{gender,select,male{I'm open to experiences} female{I'm open to experiences} other{I'm open to experiences}}",
    "@traitsListNo8": { 
    "description": ""
     },
-"traitsListNo9":"{gender,select,male{It's okay to cry} female{It's okay to cry} other{It's okay to cry}}",
+"traitsListNo9":"{gender,select,male{I have perseverance and patience} female{I have perseverance and patience} other{I have perseverance and patience}}",
    "@traitsListNo9": { 
    "description": ""
     },
-"traitsListNo10":"{gender,select,male{Thanks for the help} female{Thanks for the help} other{Thanks for the help}}",
+"traitsListNo10":"{gender,select,male{I am patient} female{I am patient} other{I am patient}}",
    "@traitsListNo10": { 
    "description": ""
     },
-"traitsListNo11":"{gender,select,male{Take a moment to smile} female{Take a moment to smile} other{Take a moment to smile}}",
+"traitsListNo11":"{gender,select,male{I am sporty} female{I am sporty} other{I am sporty}}",
    "@traitsListNo11": { 
    "description": ""
     },
-"traitsListNo12":"{gender,select,male{Remember to breathe} female{Remember to breathe} other{Remember to breathe}}",
+"traitsListNo12":"{gender,select,male{I am able} female{I am able} other{I am able}}",
    "@traitsListNo12": { 
    "description": ""
     },
-"traitsListNo13":"{gender,select,male{Routine creates stability} female{Routine creates stability} other{Routine creates stability}}",
+"traitsListNo13":"{gender,select,male{I'm good at organizing} female{I'm good at organizing} other{I'm good at organizing}}",
    "@traitsListNo13": { 
    "description": ""
     },
-"traitsListNo14":"{gender,select,male{Movement releases tension} female{Movement releases tension} other{Movement releases tension}}",
+"traitsListNo14":"{gender,select,male{I know how to play} female{I know how to play} other{I know how to play}}",
    "@traitsListNo14": { 
    "description": ""
     },
-"traitsListNo15":"{gender,select,male{It's okay to ask for help} female{It's okay to ask for help} other{It's okay to ask for help}}",
+"traitsListNo15":"{gender,select,male{I know how to cook} female{I know how to cook} other{I know how to cook}}",
    "@traitsListNo15": { 
    "description": ""
     },
-"traitsListNo16":"{gender,select,male{It's okay not to be okay} female{It's okay not to be okay} other{It's okay not to be okay}}",
+"traitsListNo16":"{gender,select,male{I am a good father} female{I am a good father} other{I am a good father}}",
    "@traitsListNo16": { 
    "description": ""
     },
-"traitsListNo17":"{gender,select,male{Keep the pace that is right for you} female{Keep the pace that is right for you} other{Keep the pace that is right for you}}",
+"traitsListNo17":"{gender,select,male{I am strong} female{I am strong} other{I am strong}}",
    "@traitsListNo17": { 
    "description": ""
     },
-"traitsListNo18":"{gender,select,male{What gives you the strength to continue?} female{What gives you the strength to continue?} other{What gives you the strength to continue?}}",
+"traitsListNo18":"{gender,select,male{I am smart} female{I am smart} other{I am smart}}",
    "@traitsListNo18": { 
    "description": ""
     },
+"traitsListNo19":"{gender,select,male{I am beautiful} female{I am beautiful} other{I am beautiful}}",
+   "@traitsListNo19": { 
+   "description": ""
+    },
+"traitsListNo20":"{gender,select,male{I'm funny} female{I'm funny} other{I'm funny}}",
+   "@traitsListNo20": { 
+   "description": ""
+    },
+
 "difficultEventsListNo0":"{gender,select,male{What will help me now} female{What will help me now} other{What will help me now}}",
    "@difficultEventsListNo0": { 
    "description": ""
