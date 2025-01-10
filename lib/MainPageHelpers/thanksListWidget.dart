@@ -179,7 +179,7 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                       context, 3); // 3 is the index of the journal page
                 },
                 child: myAutoSizedText(
-                    appLocale!.todoListName(gender),
+                    appLocale!.homePageThanksMainTitle(gender),
                     TextStyle(
                       fontSize: 24.sp, // the size of the title
                       fontWeight: FontWeight.bold,
@@ -204,7 +204,7 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                 ),
               ],
               // the sub title of the thank you list
-              subHeader: appLocale!.todoListName(gender),
+              subHeader: appLocale.homePageThanksSecondaryTitle(gender),
             ),
             // gap between the section bar and the list
             const SizedBox(height: 10),
