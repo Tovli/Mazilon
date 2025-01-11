@@ -129,11 +129,11 @@
     "@homePageTraitsSecondaryTitle": { 
     "description": ""
     },
-     "homePageThanksMainTitle": "{gender,select,male{Thanks list} female{Thanks list} other{Thanks list}}",
+     "homePageThanksMainTitle": "{gender,select,male{Gratitude Journal} female{Gratitude Journal} other{Gratitude Journal}}",
     "@homePageThanksMainTitle": { 
     "description": ""
     },
-     "homePageThanksSecondaryTitle": "{gender,select,male{What I'm thankful about today} female{What I'm thankful about today} other{What I'm thankful about today}}",
+     "homePageThanksSecondaryTitle": "{gender,select,male{I'm thankful for} female{I'm thankful for} other{I'm thankful for}}",
     "@homePageThanksSecondaryTitle": { 
     "description": ""
     },
@@ -593,7 +593,7 @@
 
 
 
-     "todoListName": "{gender,select,male{Thanks List} female{Thanks List} other{Thanks List}}",
+     "todoListName": "{gender,select,male{Gratitude Journal} female{Gratitude Journal} other{Gratitude Journal}}",
     "@TodoListName": { 
     "description": ""
     },
