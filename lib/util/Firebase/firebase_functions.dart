@@ -548,9 +548,6 @@ Future<void> loadAppFromFirebase(AppInformation appInfo) async {
             case 'Sync':
             case 'FeelGood':
             case 'WellnessTools':
-            case 'About':
-              EMS[data['fieldName']] = data['general'];
-
             default:
           }
 
@@ -642,7 +639,7 @@ Future<void> loadAppFromFirebase(AppInformation appInfo) async {
   Map<String, String> shareMessages = await updateShareTexts();
   Map<String, List<String>> phonePageTitles = await updatePhonePageTitles();
   Map<String, String> sharePDFtext = await updateSharePDFtexts();
-  Map<String, String> aboutPageText = await updateAboutPageText();
+
   Map<String, String> syncPages = await getSyncPages();
   Map<String, List<String>> wellnessVideos = await getWellnessVideos();
   List<String> disclaimerPageText = await getDisclaimerPageText();
@@ -653,7 +650,7 @@ Future<void> loadAppFromFirebase(AppInformation appInfo) async {
 
   appInfo.updateSyncPages(syncPages);
   appInfo.updateSharePDFtexts(sharePDFtext);
-  appInfo.updateAboutPageText(aboutPageText);
+
   appInfo.updateWarningHomePageTitles(warningHomePageTitles);
   appInfo.updateTraitsHomePageTitles(traitsHomePageTitles);
   appInfo.updateHomePageInspirationalQuotes(homePageInspirationalQuotes);
@@ -915,14 +912,6 @@ Future<String> getJournalTitle() async {
       .get();
   return doc.get('title');
   //return (doc.data() as Map<String, dynamic>)['journalTitle'];
-}
-
-Future<String> getAboutPageText() async {
-  DocumentSnapshot doc = await FirebaseFirestore.instance
-      .collection('AboutPage-Text')
-      .doc('zzzzzzzzzzzzzzzzzzzx')
-      .get();
-  return doc.get('aboutPageText');
 }
 
 Future<List<String>> getDisclaimerPageText() async {
@@ -1329,21 +1318,6 @@ Future<Map<String, String>> updateSharePDFtexts() async {
     value[snapshot.docs[i].get('fieldName')] =
         snapshot.docs[i].get('content') as String;
   }
-
-  return value;
-}
-
-Future<Map<String, String>> updateAboutPageText() async {
-  final snapshot =
-      await FirebaseFirestore.instance.collection('AboutPage-Text').get();
-  Map<String, String> value = {};
-  value['englishText'] = snapshot.docs[0].get('aboutPageText') as String;
-  value['aboutPageTitle1'] =
-      snapshot.docs[1].get('aboutPageTextTitle') as String;
-  value['aboutPageText1'] = snapshot.docs[1].get('aboutPageText') as String;
-  value['aboutPageTitle2'] =
-      snapshot.docs[2].get('aboutPageTextTitle') as String;
-  value['aboutPageText2'] = snapshot.docs[2].get('aboutPageText') as String;
 
   return value;
 }

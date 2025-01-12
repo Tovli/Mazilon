@@ -806,15 +806,15 @@
    "description": ""
     },
 
-"difficultEventsListNo0":"{gender,select,male{What will help me now} female{What will help me now} other{What will help me now}}",
+"difficultEventsListNo0":"{gender,select,male{Watching the news} female{Watching the news} other{Watching the news}}",
    "@difficultEventsListNo0": { 
    "description": ""
     },
-"difficultEventsListNo1":"{gender,select,male{Even small steps are progress} female{Even small steps are progress} other{Even small steps are progress}}",
+"difficultEventsListNo1":"{gender,select,male{Tension with those close to me} female{Tension with those close to me} other{Tension with those close to me}}",
    "@difficultEventsListNo1": { 
    "description": ""
     },
-"difficultEventsListNo2":"{gender,select,male{I have strengths} female{I have strengths} other{I have strengths}}",
+"difficultEventsListNo2":"{gender,select,male{Multiple arguments or disputes} female{Multiple arguments or disputes} other{Multiple arguments or disputes}}",
    "@difficultEventsListNo2": { 
    "description": ""
     },
@@ -822,67 +822,67 @@
    "@difficultEventsListNo3": { 
    "description": ""
     },
-"difficultEventsListNo4":"{gender,select,male{Mood changes like the weather, which is not constant} female{Mood changes like the weather, which is not constant} other{Mood changes like the weather, which is not constant}}",
+"difficultEventsListNo4":"{gender,select,male{Injustice, unfairness and lack of fairness} female{Injustice, unfairness and lack of fairness} other{Injustice, unfairness and lack of fairness}}",
    "@difficultEventsListNo4": { 
    "description": ""
     },
-"difficultEventsListNo5":"{gender,select,male{Emotions pass and change} female{Emotions pass and change} other{Emotions pass and change}}",
+"difficultEventsListNo5":"{gender,select,male{Unemployment} female{Unemployment} other{Unemployment}}",
    "@difficultEventsListNo5": { 
    "description": ""
     },
-"difficultEventsListNo6":"{gender,select,male{I am able} female{I am able} other{I am able}}",
+"difficultEventsListNo6":"{gender,select,male{Loss} female{Loss} other{Loss}}",
    "@difficultEventsListNo6": { 
    "description": ""
     },
-"difficultEventsListNo7":"{gender,select,male{I have strengths} female{I have strengths} other{I have strengths}}",
+"difficultEventsListNo7":"{gender,select,male{Layoffs, unemployment} female{Layoffs, unemployment} other{Layoffs, unemployment}}",
    "@difficultEventsListNo7": { 
    "description": ""
     },
-"difficultEventsListNo8":"{gender,select,male{I'm learning to relax} female{I'm learning to relax} other{I'm learning to relax}}",
+"difficultEventsListNo8":"{gender,select,male{Overload} female{Overload} other{Overload}}",
    "@difficultEventsListNo8": { 
    "description": ""
     },
-"difficultEventsListNo9":"{gender,select,male{After the downs come the ups} female{After the downs come the ups} other{After the downs come the ups}}",
+"difficultEventsListNo9":"{gender,select,male{Feeling of financial scarcity} female{Feeling of financial scarcity} other{Feeling of financial scarcity}}",
    "@difficultEventsListNo9": { 
    "description": ""
     },
-"difficultEventsListNo10":"{gender,select,male{It's okay to cry} female{It's okay to cry} other{It's okay to cry}}",
+"difficultEventsListNo10":"{gender,select,male{Stress, multitasking} female{Stress, multitasking} other{Stress, multitasking}}",
    "@difficultEventsListNo10": { 
    "description": ""
     },
-"difficultEventsListNo11":"{gender,select,male{Thanks for the effort} female{Thanks for the effort} other{Thanks for the effort}}",
+"difficultEventsListNo11":"{gender,select,male{Unfinished things} female{Unfinished things} other{Unfinished things}}",
    "@difficultEventsListNo11": { 
    "description": ""
     },
-"difficultEventsListNo12":"{gender,select,male{Take a moment to smile} female{Take a moment to smile} other{Take a moment to smile}}",
+"difficultEventsListNo12":"{gender,select,male{Irregular diet} female{Irregular diet} other{Irregular diet}}",
    "@difficultEventsListNo12": { 
    "description": ""
     },
-"difficultEventsListNo13":"{gender,select,male{Remember to breathe} female{Remember to breathe} other{Remember to breathe}}",
+"difficultEventsListNo13":"{gender,select,male{War} female{War} other{War}}",
    "@difficultEventsListNo13": { 
    "description": ""
     },
-"difficultEventsListNo14":"{gender,select,male{Routine creates stability} female{Routine creates stability} other{Routine creates stability}}",
+"difficultEventsListNo14":"{gender,select,male{Closed} female{Closed} other{Closed}}",
    "@difficultEventsListNo14": { 
    "description": ""
     },
-"difficultEventsListNo15":"{gender,select,male{Movement releases tension} female{Movement releases tension} other{Movement releases tension}}",
+"difficultEventsListNo15":"{gender,select,male{Sleep deprivation} female{Sleep deprivation} other{Sleep deprivation}}",
    "@difficultEventsListNo15": { 
    "description": ""
     },
-"difficultEventsListNo16":"{gender,select,male{It's okay to ask for help} female{It's okay to ask for help} other{It's okay to ask for help}}",
+"difficultEventsListNo16":"{gender,select,male{Death of loved ones} female{Death of loved ones} other{Death of loved ones}}",
    "@difficultEventsListNo16": { 
    "description": ""
     },
-"difficultEventsListNo17":"{gender,select,male{It's okay not to be okay} female{It's okay not to be okay} other{It's okay not to be okay}}",
+"difficultEventsListNo17":"{gender,select,male{Loss of stability and routine} female{Loss of stability and routine} other{Loss of stability and routine}}",
    "@difficultEventsListNo17": { 
    "description": ""
     },
-"difficultEventsListNo18":"{gender,select,male{Keep the pace that is right for you} female{Keep the pace that is right for you} other{Keep the pace that is right for you}}",
+"difficultEventsListNo18":"{gender,select,male{When I don't have time to release energy and aggression} female{When I don't have time to release energy and aggression} other{When I don't have time to release energy and aggression}}",
    "@difficultEventsListNo18": { 
    "description": ""
     },
-"difficultEventsListNo19":"{gender,select,male{What gives you the strength to continue?} female{What gives you the strength to continue?} other{What gives you the strength to continue?}}",
+"difficultEventsListNo19":"{gender,select,male{Stimulus overload, uncertainty, and transitions} female{Stimulus overload, uncertainty, and transitions} other{Stimulus overload, uncertainty, and transitions}}",
    "@difficultEventsListNo19": { 
    "description": ""
     },
@@ -1173,5 +1173,22 @@
 "distractionsListNo33":"{gender,select,male{Insomnia or light sleep} female{Insomnia or light sleep} other{Insomnia or light sleep}}",
    "@distractionsListNo33": { 
    "description": ""
+    },
+
+    "aboutPage1": "Living Positively is a platform designed to strengthen mental resilience, help cope with suicidal crisis situations, encourage self-management, create a personal support network, and promote better, higher-quality lives. It is developed by the clubhouse organization of the Amit Association.\n\nThis app utilizes tools from the field of positive psychology, illness management and recovery, and suicide prevention research.\n\nThe personal program combines a Relapse Prevention Plan from the IMR (Illness Management and Recovery) course along with the Safety Plan from Stanley and Brown.\n\nThe term \"Gratitude List\" was introduced to us by Dr. Shirley Yuval Yair for the gratitude journal and is published here with her approval.\n\nThe product is being developed in collaboration and mutual enrichment with the social incubator at the Technion, with the help of the development team.",
+    "@aboutPage1": {
+        "description": ""
+    },
+    "aboutPage2": "The app is intended for personal use to improve mental resilience and provide support and assistance when needed in crisis situations.\n\nThe app cannot and is not designed to replace professional mental health providers. It does not replace professional diagnosis or psychotherapy. The purpose of the integrated tools is to help you and your environment improve quality of life and offer support during a crisis.\n\nYou can use the app for self-help purposes and/or integrate it as part of a therapeutic process with a professional. If you require diagnosis or personal treatment, it is important to consult a professional therapist. The use of the app is at your own personal responsibility.\n\nFor your attention: Your personal data in the app is stored only on your device! The app does not collect or transmit personal information, and it will never be used. You have the option to decide what to share from within, such as the personal plan, which is recommended to share with your close social network and/or therapeutic professionals. If you do not agree with the terms of use, please uninstall the app.",
+    "@aboutPage2": {
+        "description": ""
+    },
+    "aboutTitle1": "About and Credits",   
+    "@aboutTitle1": {
+        "description": ""
+    },
+    "aboutTitle2": "Terms of Use and Privacy",   
+    "@aboutTitle2": {
+        "description": ""
     }
 }
