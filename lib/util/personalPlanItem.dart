@@ -19,14 +19,21 @@ class _PersonalPlanItemState extends State<PersonalPlanItem> {
       constraints:
           BoxConstraints(minHeight: 100, maxHeight: 200, minWidth: 100),
       child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: AutoSizeText(
-            widget.text,
+          child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: AutoSizeText(
+          widget.text,
+          minFontSize: 12,
+          maxFontSize: 30,
+          maxLines: 2,
+          style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.normal,
+              color: Colors.black,
+              fontFamily: 'Rubix'),
+          overflowReplacement: AutoSizeText(
+            widget.text.substring(0, 13) + '...',
             overflow: TextOverflow.ellipsis,
-            minFontSize: 12,
-            maxFontSize: 30,
-            maxLines: 2,
             style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.normal,
@@ -34,7 +41,7 @@ class _PersonalPlanItemState extends State<PersonalPlanItem> {
                 fontFamily: 'Rubix'),
           ),
         ),
-      ),
+      )),
     );
   }
 }

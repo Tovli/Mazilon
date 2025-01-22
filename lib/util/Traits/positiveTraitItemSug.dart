@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 import 'package:mazilon/util/styles.dart';
-import 'package:mazilon/util/appInformation.dart';
+
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,8 +22,10 @@ class PositiveTraitItemSug extends StatefulWidget {
   final Function add; // the function to add the trait to the list of traits
   final String inputText; // the input text of the suggested trait
   final List<String> fullSuggestionList;
+  final int stopShowing;
   const PositiveTraitItemSug(
       {super.key,
+      required this.stopShowing,
       required this.add,
       required this.inputText,
       required this.fullSuggestionList});
@@ -35,8 +37,8 @@ class PositiveTraitItemSug extends StatefulWidget {
 class _PositiveTraitItemSugState extends State<PositiveTraitItemSug> {
   String text = ''; // the text of the suggested trait (initially empty)
   List<String> myPositiveTraits = []; // the list of the traits
-  List<String> positiveTraitsSuggestionList =
-      []; // the list of the suggested traits
+  List<String> positiveTraitsSuggestionList = [];
+  bool show = true; // the list of the suggested traits
   void loadData(BuildContext context) {
     // get the shared preferences
     if (widget.inputText != "") {
@@ -58,6 +60,12 @@ class _PositiveTraitItemSugState extends State<PositiveTraitItemSug> {
           positiveTraitsSuggestionList.remove(suggestion);
         }
       }
+      if (widget.stopShowing > 0 &&
+          positiveTraitsSuggestionList.length < widget.stopShowing) {
+        show = false;
+      } else {
+        show = true;
+      }
       text = positiveTraitsSuggestionList[
           Random().nextInt(positiveTraitsSuggestionList.length)];
     });
@@ -74,10 +82,10 @@ class _PositiveTraitItemSugState extends State<PositiveTraitItemSug> {
     final appLocale = AppLocalizations.of(context);
     // get the appInformation and userInformation providers
 
-    final userInfoProvider =
-        Provider.of<UserInformation>(context, listen: false);
-
     loadData(context);
+    if (!show) {
+      return Container();
+    }
     return Container(
       padding: const EdgeInsets.all(10),
       // the row that contains the suggested trait and the add button

@@ -194,9 +194,9 @@ class _PhonePageListState extends State<PhonePageList> {
           child: myText(
               appLocale!.phonesPageManualTitle(gender),
               TextStyle(
-                fontWeight: FontWeight.bold,
-                color: primaryPurple,
-              ),
+                  fontWeight: FontWeight.bold,
+                  color: primaryPurple,
+                  fontSize: 16.sp),
               TextAlign.center),
         ),
       ],

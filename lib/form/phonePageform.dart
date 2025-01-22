@@ -54,20 +54,6 @@ class _PhonePageFormState extends State<PhonePageForm> {
     }
   }
 
-  //add contact to the list manually
-  void addItemManual() {
-    String phoneName = controller1.text;
-    String phoneNumber = controller2.text;
-    if (phoneName.isNotEmpty && phoneNumber.isNotEmpty) {
-      Provider.of<PhonePageData>(context, listen: false)
-          .addItem(phoneName, phoneNumber);
-      controller1.clear();
-      controller2.clear();
-    } else {
-      print("Both fields must be filled");
-    }
-  }
-
   Future<void> pickContact() async {
     PermissionStatus status = await Permission.contacts.status;
 
@@ -110,24 +96,6 @@ class _PhonePageFormState extends State<PhonePageForm> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    loadData(context);
-  }
-
-  void loadData(BuildContext context) {
-    // Get your PhonePageData instance
-    //PhonePageData phonePageData =
-    //    Provider.of<PhonePageData>(context, listen: false);
-    // Then initialize the controllers
-    /*
-    nameControllers = List<TextEditingController>.generate(
-        phonePageData.savedPhoneNames.length,
-        (index) =>
-            TextEditingController(text: phonePageData.savedPhoneNames[index]));
-    numberControllers = List<TextEditingController>.generate(
-        phonePageData.savedPhoneNumbers.length,
-        (index) => TextEditingController(
-            text: phonePageData.savedPhoneNumbers[index]));
-            */
   }
 
   @override
@@ -164,18 +132,31 @@ class _PhonePageFormState extends State<PhonePageForm> {
                 SizedBox(
                   height: 5.h,
                 ),
-                Container(
-                  alignment: Alignment.topCenter,
-                  margin: EdgeInsets.symmetric(horizontal: 15),
-                  child: myAutoSizedText(
-                      appLocale!.phonesPageSubTitle(gender),
-                      TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: darkGray,
-                          fontSize: 14.sp,
-                          height: 1.3),
-                      TextAlign.justify,
-                      25),
+                Consumer<PhonePageData>(
+                  builder: (context, phonePageData, child) {
+                    return Column(
+                      children: [
+                        //add contact from contact list button:
+                        TextButton(
+                          onPressed: pickContact,
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.all(6),
+                          ),
+                          child: myText(
+                              appLocale!.phonesPageContactImportTitle(gender),
+                              TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryPurple,
+                                  fontSize: 16.sp),
+                              TextAlign.center),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ],
             ),
@@ -187,23 +168,6 @@ class _PhonePageFormState extends State<PhonePageForm> {
                   children: [
                     PhonePageList(phonePageData: widget.phonePageData),
                     //add contact from contact list button:
-                    TextButton(
-                      onPressed: pickContact,
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.all(6),
-                      ),
-                      child: myText(
-                          appLocale!.phonesPageContactImportTitle(gender),
-                          TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: primaryPurple,
-                          ),
-                          TextAlign.center),
-                    ),
                   ],
                 );
               },

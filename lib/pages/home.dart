@@ -20,7 +20,6 @@ import 'package:mazilon/util/styles.dart';
 
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/util/HomePage/NameBar.dart';
-import 'package:mazilon/util/appInformation.dart';
 
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';

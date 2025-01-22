@@ -5,10 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 import 'package:mazilon/util/styles.dart';
-import 'package:mazilon/util/appInformation.dart';
+
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -18,14 +17,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 // we use this in 2 ways , if the input text is not empty, it will show the input text in the suggestion
 // if the input text is empty, it will show a random thank you from the suggested thank yous list that is not written today
 class ThanksItemSuggested extends StatefulWidget {
-  final Function
-      add; // the function to add the thank you to the list of thank yous
+  final Function add; // the function to add the thankyou to the list
   final String inputText; // the input text of the thank you
   final List<String> fullSuggestionList;
+  final int stopShowing;
   const ThanksItemSuggested(
       {super.key,
       required this.add,
       required this.inputText,
+      required this.stopShowing,
       required this.fullSuggestionList});
 
   @override
@@ -37,7 +37,7 @@ class _ThanksItemSuggestedState extends State<ThanksItemSuggested> {
   List<String> myThanks = []; // the list of the thank yous
   List<String> thanksSuggestionList =
       []; // the list of the suggested thank yous
-
+  bool show = true;
 // function to get the thank yous written today (the date of the thank you is today)
   List<String> todayThankYousFunc(List<String> thankYous, List<String> dates) {
     List<String> todayThankYous = [];
@@ -71,6 +71,12 @@ class _ThanksItemSuggestedState extends State<ThanksItemSuggested> {
           thanksSuggestionList.remove(suggestion);
         }
       }
+      if (widget.stopShowing > 0 &&
+          thanksSuggestionList.length < widget.stopShowing) {
+        show = false;
+      } else {
+        show = true;
+      }
       text =
           thanksSuggestionList[Random().nextInt(thanksSuggestionList.length)];
     });
@@ -89,6 +95,9 @@ class _ThanksItemSuggestedState extends State<ThanksItemSuggested> {
 
     final userInfoProvider = Provider.of<UserInformation>(context);
     loadData(context);
+    if (!show) {
+      return Container();
+    }
     return Container(
       padding: const EdgeInsets.all(10),
       // the row that contains the suggested thank you and the add button

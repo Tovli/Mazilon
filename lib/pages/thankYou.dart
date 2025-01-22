@@ -130,7 +130,7 @@ class _ThankYouState extends State<ThankYou> {
                     width: 50,
                     child: MaterialButton(
                       onPressed: () {
-                        widget.remove(widget.number - 1, userInfoProvider);
+                        widget.remove(widget.number - 1);
                         setState(() {
                           editable = false;
                         });

@@ -47,57 +47,60 @@ class _InspirationalQuoteState extends State<InspirationalQuote> {
             ? 800
             : MediaQuery.of(context).size.width,
         height: 120,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: Stack(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    setShow();
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.fromLTRB(4, 4, 0, 10),
-                    child: Icon(Icons.close),
-                  ),
-                )
-              ],
+            Positioned(
+              top: 5, // Adjust the position as needed
+              left: appLocale!.textDirection == "rtl" ? 5 : null,
+              right: appLocale!.textDirection == "rtl" ? null : 5,
+
+              child: GestureDetector(
+                onTap: () {
+                  setShow();
+                },
+                child: const Padding(
+                  padding: EdgeInsets.fromLTRB(4, 4, 0, 4),
+                  child: Icon(Icons.close),
+                ),
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.refresh,
-                    size: 35,
-                    color: appWhite,
+            Align(
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.refresh,
+                      size: 35,
+                      color: appWhite,
+                    ),
+                    //"refresh" button to change the quote
+                    onPressed: () {
+                      setState(() {
+                        number = Random().nextInt(widget.quotes.length);
+                      });
+                    },
                   ),
-                  //"refresh" button to change the quote
-                  onPressed: () {
-                    setState(() {
-                      number = Random().nextInt(widget.quotes.length);
-                    });
-                  },
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: myAutoSizedText(
-                      widget.quotes[number],
-                      TextStyle(
-                          fontWeight: FontWeight.normal,
-                          color: appWhite,
-                          fontSize: 26.sp),
-                      appLocale!.textDirection == "rtl"
-                          ? TextAlign.right
-                          : TextAlign.left,
-                      26,
-                      2),
-                ),
-              ],
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: myAutoSizedText(
+                        widget.quotes[number],
+                        TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: appWhite,
+                            fontSize: 26.sp),
+                        appLocale!.textDirection == "rtl"
+                            ? TextAlign.right
+                            : TextAlign.left,
+                        26,
+                        2),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
