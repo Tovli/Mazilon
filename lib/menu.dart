@@ -6,7 +6,7 @@ import 'package:mazilon/pages/FeelGood/feelGood.dart';
 import 'package:mazilon/pages/WellnessTools/wellnessTools.dart';
 import 'package:mazilon/pages/notifications/notification_page.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
-
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mazilon/pages/home.dart';
@@ -128,17 +128,16 @@ class _MenuState extends State<Menu> {
     final userInformation = Provider.of<UserInformation>(context);
     final appInfoProvider = Provider.of<AppInformation>(context);
     final gender = userInformation.gender;
-    print(gender);
-    print("this is the gender: ${gender}");
-    print(userInformation.difficultEvents);
-    print(gender == '');
+
     return PopScope(
       //this is the popscope widget that will handle the back button
       canPop: false,
-      onPopInvoked: (didpop) async {
-        if (didpop) {
+      onPopInvokedWithResult: (bool didPop, Object? result) async {
+        if (didPop) {
           return;
         } else {
+          SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+          if (current == 0) {}
           changeCurrentIndex(context, 0);
           currentScreen = Home(
             phonePageData: widget.phonePageData,
@@ -198,7 +197,7 @@ class _MenuState extends State<Menu> {
                     children: [
                       Container(
                         width: 70,
-                        alignment: appLocale!.textDirection == "rtl"
+                        alignment: appLocale.textDirection == "rtl"
                             ? Alignment.centerLeft
                             : Alignment.centerRight,
                         child: TextButton(
@@ -213,10 +212,10 @@ class _MenuState extends State<Menu> {
                               });
                             },
                             child: bottomNavigationItem(current == 0,
-                                Icons.home, appLocale!.home(gender))),
+                                Icons.home, appLocale.home(gender))),
                       ),
                       Container(
-                        alignment: appLocale!.textDirection == "rtl"
+                        alignment: appLocale.textDirection == "rtl"
                             ? Alignment.centerLeft
                             : Alignment.centerRight,
                         width: 100,
@@ -234,12 +233,33 @@ class _MenuState extends State<Menu> {
                             child: bottomNavigationItem(
                                 current == 1,
                                 Icons.assignment,
-                                appLocale!.personalPlanPageMyPlan(gender))),
+                                appLocale.personalPlanPageMyPlan(gender))),
                       ),
                       Container(
-                        width: 200,
+                        width: 20,
+                      ),
+                      Container(
+                        alignment: appLocale.textDirection == "rtl"
+                            ? Alignment.centerLeft
+                            : Alignment.centerRight,
+                        width: 100,
+                        child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                currentScreen = FeelGood();
+                                current = 8;
+                              });
+                            },
+                            child: bottomNavigationItem(
+                                current == 8,
+                                Icons.emoji_emotions_outlined,
+                                AppLocalizations.of(context)!
+                                    .homePageFeelGood(gender))),
+                      ),
+                      Container(
+                        width: 70,
                         child: Align(
-                          alignment: appLocale!.textDirection == "rtl"
+                          alignment: appLocale.textDirection == "rtl"
                               ? Alignment.centerLeft
                               : Alignment.centerRight,
                           child: TextButton(
@@ -366,29 +386,6 @@ class _MenuState extends State<Menu> {
                                                           setBool:
                                                               setFullScreen);
                                                       current = 7;
-                                                    });
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                                TextButton(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Icon(Icons
-                                                          .emoji_emotions_outlined),
-                                                      SizedBox(width: 20),
-                                                      Text(AppLocalizations.of(
-                                                              context)!
-                                                          .homePageFeelGood(
-                                                              gender)),
-                                                    ],
-                                                  ),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      currentScreen =
-                                                          FeelGood();
-                                                      current = 8;
                                                     });
                                                     Navigator.of(context).pop();
                                                   },

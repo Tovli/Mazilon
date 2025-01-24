@@ -290,16 +290,19 @@ class _JournalState extends State<Journal> {
                   ),
             //the suggested thank you notes
             ThanksItemSuggested(
+                stopShowing: 3,
                 add: addThankYou,
                 inputText: sug1,
                 fullSuggestionList: retrieveThanksList(
                     appLocale, gender == "" ? "other" : gender)),
             ThanksItemSuggested(
+                stopShowing: 2,
                 add: addThankYou,
                 inputText: sug2,
                 fullSuggestionList: retrieveThanksList(
                     appLocale, gender == "" ? "other" : gender)),
             ThanksItemSuggested(
+                stopShowing: 1,
                 add: addThankYou,
                 inputText: sug3,
                 fullSuggestionList: retrieveThanksList(

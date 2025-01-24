@@ -166,58 +166,62 @@ class _MyPlanPageFullState extends State<MyPlanPageFull> {
             ),
             // Display additional text with links, if available
             Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: RichText(
-                      textAlign: TextAlign.justify,
-                      text: TextSpan(children: <TextSpan>[
-                        TextSpan(
-                          text: text1 + " ",
-                          style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black),
-                        ),
-                        TextSpan(
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => _launchURL(Uri.parse(text2Link)),
-                          text: text2 + " ",
-                          style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.normal,
-                              color: Color.fromARGB(255, 6, 25, 231)),
-                        ),
-                        TextSpan(
-                          text: text3 + " ",
-                          style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black),
-                        ),
-                        TextSpan(
-                          text: text4 + " ",
-                          style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black),
-                        ),
-                        TextSpan(
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => _launchURL(Uri.parse(text5Link)),
-                          text: text5 + " ",
-                          style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.normal,
-                              color: Color.fromARGB(255, 6, 25, 231)),
-                        ),
-                        TextSpan(
-                          text: text6 + ".",
-                          style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black),
-                        ),
-                      ]))),
+              appLocale.language != 'עברית'
+                  ? Container()
+                  : Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: RichText(
+                          textAlign: TextAlign.justify,
+                          text: TextSpan(children: <TextSpan>[
+                            TextSpan(
+                              text: text1 + " ",
+                              style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
+                            ),
+                            TextSpan(
+                              recognizer: TapGestureRecognizer()
+                                ..onTap =
+                                    () => _launchURL(Uri.parse(text2Link)),
+                              text: text2 + " ",
+                              style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.normal,
+                                  color: Color.fromARGB(255, 6, 25, 231)),
+                            ),
+                            TextSpan(
+                              text: text3 + " ",
+                              style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
+                            ),
+                            TextSpan(
+                              text: text4 + " ",
+                              style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
+                            ),
+                            TextSpan(
+                              recognizer: TapGestureRecognizer()
+                                ..onTap =
+                                    () => _launchURL(Uri.parse(text5Link)),
+                              text: text5 + " ",
+                              style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.normal,
+                                  color: Color.fromARGB(255, 6, 25, 231)),
+                            ),
+                            TextSpan(
+                              text: text6 + ".",
+                              style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
+                            ),
+                          ]))),
             ]),
             SizedBox(
               height: 30,

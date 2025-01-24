@@ -26,12 +26,18 @@ void main() {
   late UserInformation mockUserInformation;
   late AppInformation mockAppInformation;
   late GetIt locator;
+
   setUp(() {
     mockUserInformation = UserInformation();
     mockUserInformation.gender = "male";
     mockAppInformation = AppInformation();
     final mockFileServiceImpl = MockFileService();
     getIt.registerLazySingleton<FileService>(() => mockFileServiceImpl);
+  });
+  tearDown(() {
+    final locator = GetIt.instance;
+    // Optionally reset GetIt after each test
+    locator.reset();
   });
   // Mock data for the test
 

@@ -57,8 +57,9 @@ class _PositiveState extends State<Positive> {
       positiveSuggestionList = List.from(tempPositiveSuggestionList);
 
       //remove the suggestions that are already in the positive traits list
+      print(positiveTraits);
       for (String suggestion in tempPositiveSuggestionList) {
-        if (positiveSuggestionList.length > 3 &&
+        if (positiveSuggestionList.length > 1 &&
             positiveTraits.contains(suggestion)) {
           positiveSuggestionList.remove(suggestion);
         }
@@ -90,7 +91,7 @@ class _PositiveState extends State<Positive> {
         prefs.getStringList('positiveTraits') ?? [];
 
     positiveTraits_temp.removeAt(removeIndex);
-
+    print("got here");
     setState(() {
       prefs.setStringList('positiveTraits', positiveTraits_temp);
       positiveTraits = positiveTraits_temp;
@@ -265,23 +266,30 @@ class _PositiveState extends State<Positive> {
                   ),
             //suggestions
             PositiveTraitItemSug(
+              stopShowing: 0,
               add: addPositiveTrait,
               inputText: sug1,
               fullSuggestionList: retrieveTraitsList(
                   appLocale, gender == "" ? "other" : gender),
             ),
-            PositiveTraitItemSug(
-              add: addPositiveTrait,
-              inputText: sug2,
-              fullSuggestionList: retrieveTraitsList(
-                  appLocale, gender == "" ? "other" : gender),
-            ),
-            PositiveTraitItemSug(
-              add: addPositiveTrait,
-              inputText: sug3,
-              fullSuggestionList: retrieveTraitsList(
-                  appLocale, gender == "" ? "other" : gender),
-            ),
+            sug1 != sug2
+                ? PositiveTraitItemSug(
+                    stopShowing: 2,
+                    add: addPositiveTrait,
+                    inputText: sug2,
+                    fullSuggestionList: retrieveTraitsList(
+                        appLocale, gender == "" ? "other" : gender),
+                  )
+                : Container(),
+            sug1 != sug3
+                ? PositiveTraitItemSug(
+                    stopShowing: 3,
+                    add: addPositiveTrait,
+                    inputText: sug3,
+                    fullSuggestionList: retrieveTraitsList(
+                        appLocale, gender == "" ? "other" : gender),
+                  )
+                : Container(),
             //refresh button
             TextButton(
               onPressed: () async {

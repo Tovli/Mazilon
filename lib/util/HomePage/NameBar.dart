@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -38,17 +39,29 @@ class NameBarState extends State<NameBar> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    myAutoSizedText(
+                Container(
+                  child: Expanded(
+                    child: AutoSizeText(
+                      appLocale!.greetings(userInfoProvider.name),
+                      overflow: TextOverflow.ellipsis,
+                      minFontSize: 12,
+                      maxFontSize: 30,
+                      maxLines: 1,
+                      style: TextStyle(
+                          fontSize: 30.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontFamily: 'Rubix'),
+                    ),
+                  ),
+                  /* myAutoSizedText(
                         appLocale!.greetings(userInfoProvider.name),
                         TextStyle(
                             fontSize: 30.sp,
                             fontWeight: FontWeight.bold,
                             color: Colors.black),
                         null,
-                        40),
-                  ],
+                        40),*/
                 ),
                 Row(children: widget.icons),
               ],

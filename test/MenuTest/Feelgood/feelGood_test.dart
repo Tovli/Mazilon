@@ -95,9 +95,6 @@ void main() {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
 
-      await tester.tap(find.text('תפריט'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-      expect(find.byType(FractionallySizedBox), findsOneWidget);
       await tester.tap(find.text('להרגיש טוב'));
       await tester.pumpAndSettle(const Duration(seconds: 1));
       expect(find.byType(FeelGood), findsOneWidget);
@@ -122,8 +119,6 @@ void main() {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
 
-      await tester.tap(find.text('תפריט'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
       await tester.tap(find.text('להרגיש טוב'));
       await tester.pumpAndSettle(const Duration(seconds: 1));
       expect(find.byKey(const Key("addImgButtonText")), findsOneWidget);
@@ -140,8 +135,6 @@ void main() {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
 
-      await tester.tap(find.text('תפריט'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
       await tester.tap(find.text('להרגיש טוב'));
       await tester.pumpAndSettle(const Duration(seconds: 1));
       await tester.tap(find.byKey(const Key("addImgButtonText")));
@@ -157,8 +150,6 @@ void main() {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
 
-      await tester.tap(find.text('תפריט'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
       await tester.tap(find.text('להרגיש טוב'));
       await tester.pumpAndSettle(const Duration(seconds: 1));
 

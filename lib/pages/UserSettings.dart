@@ -214,6 +214,9 @@ class _UserSettingsState extends State<UserSettings> {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    ),
                     myAutoSizedText(
                         appLocale!.userSettingsAge(gender),
                         TextStyle(
@@ -247,6 +250,9 @@ class _UserSettingsState extends State<UserSettings> {
                           // Do something with the selected value
                         },
                       ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
                     ),
                     myAutoSizedText(
                         appLocale!.userSettingsGender(gender),
@@ -291,7 +297,7 @@ class _UserSettingsState extends State<UserSettings> {
                       ),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.05,
+                      height: MediaQuery.of(context).size.height * 0.02,
                     ),
                     myAutoSizedText(
                         appLocale!.selectLanguage(gender),
@@ -356,10 +362,82 @@ class _UserSettingsState extends State<UserSettings> {
                 }, appLocale!.confirmButton(gender),
                     myTextStyle.copyWith(fontSize: 20.sp)),
                 const SizedBox(height: 20),
-                CancelButton(context, () {
-                  resetData(userInfoProvider);
+                ResetButton(context, () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          child: Container(
+                            // set the width of the dialog to 800 if the screen width is more than 1000, else set it to the screen width
+                            width: MediaQuery.of(context).size.width > 1000
+                                ? 800
+                                : MediaQuery.of(context).size.width,
+                            child: SingleChildScrollView(
+                              // Wrap Column with SingleChildScrollView
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  // text on the top of the form
+                                  myAutoSizedText(
+                                      "Are you sure?",
+                                      TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20.sp // text size
+                                          ),
+                                      null,
+                                      40),
+
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        // the close button
+                                        TextButton(
+                                          child: myAutoSizedText(
+                                              appLocale!.closeButton(gender),
+                                              TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize:
+                                                      20.sp // button text size
+                                                  ),
+                                              null,
+                                              30),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        // the save button
+                                        TextButton(
+                                          child: myAutoSizedText(
+                                              appLocale!.saveButton(gender),
+                                              TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize:
+                                                      20.sp // button text size
+                                                  ),
+                                              null,
+                                              30),
+                                          onPressed: () {
+                                            resetData(userInfoProvider);
+                                            // Save the item (add or edit) to the list
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      });
                 }, appLocale!.userSettingsReset(gender),
-                    myTextStyle.copyWith(fontSize: 20.sp)),
+                    myTextStyle.copyWith(fontSize: 15.sp)),
                 const SizedBox(height: 20)
               ],
             ),

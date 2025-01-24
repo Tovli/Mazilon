@@ -212,7 +212,7 @@ class FormProgressIndicatorState extends State<FormProgressIndicator> {
                             decoration: BoxDecoration(
                               color: index <= currentStep
                                   ? primaryPurple
-                                  : lightGray,
+                                  : Colors.white,
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                           ),

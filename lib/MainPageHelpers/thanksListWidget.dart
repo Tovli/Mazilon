@@ -208,6 +208,43 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
             ),
             // gap between the section bar and the list
             const SizedBox(height: 10),
+            // a suggested thank you with an add button to add it to the list if the user wants to
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: ThanksItemSuggested(
+                  stopShowing: 1,
+                  add: addThankYou,
+                  inputText: "",
+                  fullSuggestionList: retrieveThanksList(
+                      appLocale, gender == "" ? "other" : gender),
+                ),
+              ),
+            ),
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: ThanksItemSuggested(
+                  stopShowing: 3,
+                  add: addThankYou,
+                  inputText: "",
+                  fullSuggestionList: retrieveThanksList(
+                      appLocale, gender == "" ? "other" : gender),
+                ),
+              ),
+            ),
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: ThanksItemSuggested(
+                  stopShowing: 2,
+                  add: addThankYou,
+                  inputText: "",
+                  fullSuggestionList: retrieveThanksList(
+                      appLocale, gender == "" ? "other" : gender),
+                ),
+              ),
+            ),
             // the list of the thank yous
             ConstrainedBox(
               constraints: const BoxConstraints(maxHeight: 315), //max height
@@ -339,18 +376,7 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                     }).toList()),
               ),
             ),
-            // a suggested thank you with an add button to add it to the list if the user wants to
-            Container(
-              child: Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: ThanksItemSuggested(
-                  add: addThankYou,
-                  inputText: "",
-                  fullSuggestionList: retrieveThanksList(
-                      appLocale, gender == "" ? "other" : gender),
-                ),
-              ),
-            ),
+
             // the "see more" button to go to the journal page
             Row(
               children: [

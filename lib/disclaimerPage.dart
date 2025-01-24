@@ -60,13 +60,15 @@ class _DisclaimerPageState extends State<DisclaimerPage> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
                     child: myAutoSizedText(
-                        appInfoProvider
+                        appLocale!
                             .disclaimerText, //disclaimer text from CMS(Saved in appinfo)
                         TextStyle(
                           fontSize: 16.sp, //text size
                           fontWeight: FontWeight.normal,
                         ),
-                        TextAlign.right,
+                        appLocale.textDirection == 'rtl'
+                            ? TextAlign.right
+                            : TextAlign.left,
                         40),
                   ),
                   // the confirm disclaimer button
@@ -82,6 +84,7 @@ class _DisclaimerPageState extends State<DisclaimerPage> {
                       myTextStyle.copyWith(
                         fontSize: 20.sp,
                       )),
+                  SizedBox(height: 20.0),
                 ],
               ),
             ),

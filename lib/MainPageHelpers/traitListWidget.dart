@@ -7,7 +7,6 @@ import 'package:mazilon/util/Thanks/AddForm.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/Traits/positiveTraitItemSug.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -146,6 +145,43 @@ class _TraitListWidgetState extends State<TraitListWidget> {
                 subHeader: appLocale!.homePageTraitsSecondaryTitle(gender)),
             // gap between the section bar and the trait list
             const SizedBox(height: 10),
+            // a suggested trait with add button
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: PositiveTraitItemSug(
+                  stopShowing: 0,
+                  add: addPositiveTrait,
+                  inputText: "",
+                  fullSuggestionList: retrieveTraitsList(
+                      appLocale, gender == "" ? "other" : gender),
+                ),
+              ),
+            ),
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: PositiveTraitItemSug(
+                  stopShowing: 2,
+                  add: addPositiveTrait,
+                  inputText: "",
+                  fullSuggestionList: retrieveTraitsList(
+                      appLocale, gender == "" ? "other" : gender),
+                ),
+              ),
+            ),
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: PositiveTraitItemSug(
+                  stopShowing: 3,
+                  add: addPositiveTrait,
+                  inputText: "",
+                  fullSuggestionList: retrieveTraitsList(
+                      appLocale, gender == "" ? "other" : gender),
+                ),
+              ),
+            ),
             // the list of the traits
             ConstrainedBox(
               constraints: const BoxConstraints(maxHeight: 315), //max height
@@ -283,18 +319,7 @@ class _TraitListWidgetState extends State<TraitListWidget> {
                     }).toList()),
               ),
             ),
-            // a suggested trait with add button
-            Container(
-              child: Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: PositiveTraitItemSug(
-                  add: addPositiveTrait,
-                  inputText: "",
-                  fullSuggestionList: retrieveTraitsList(
-                      appLocale, gender == "" ? "other" : gender),
-                ),
-              ),
-            ),
+
             // the see all button
             Row(
               children: [

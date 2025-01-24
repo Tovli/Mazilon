@@ -78,6 +78,20 @@ Container CancelButton(context, function, text, buttonTextStyle) {
   );
 }
 
+Container ResetButton(context, function, text, buttonTextStyle) {
+  return Container(
+    width: MediaQuery.of(context).size.width > 1000
+        ? 400
+        : MediaQuery.of(context).size.width * 0.3,
+    child: TextButton(
+        onPressed: () {
+          function();
+        },
+        style: myButtonStyle3,
+        child: myAutoSizedText(text, buttonTextStyle, null, 50)),
+  );
+}
+
 const emptyStyle = TextStyle();
 Text myText(content, style, align) {
   style ??= emptyStyle;
