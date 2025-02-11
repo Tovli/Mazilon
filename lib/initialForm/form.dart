@@ -108,7 +108,7 @@ class InitialFormProgressIndicatorState
     final appLocale = AppLocalizations.of(context);
     final gender = userInfoProvider.gender;
     if (!userInfoProvider.disclaimerSigned) {
-      return const DisclaimerPage();
+      return DisclaimerPage(changeLocale: widget.changeLocale);
     }
     steps = [
       //<<<<<<<<<<<INITIALFORM PAGES START HERE
