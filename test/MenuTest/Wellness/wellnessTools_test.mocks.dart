@@ -270,6 +270,16 @@ class MockImagePickerService extends _i1.Mock
           ),
         ),
       ) as _i2.Widget);
+
+  @override
+  _i6.Future<void> deleteImages() => (super.noSuchMethod(
+        Invocation.method(
+          #deleteImages,
+          [],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 }
 
 /// A class which mocks [SharedPreferences].
@@ -481,6 +491,28 @@ class MockSharedPreferences extends _i1.Mock implements _i12.SharedPreferences {
 /// See the documentation for Mockito's code generation for more information.
 class MockUserInformation extends _i1.Mock implements _i13.UserInformation {
   @override
+  String get localeName => (super.noSuchMethod(
+        Invocation.getter(#localeName),
+        returnValue: _i14.dummyValue<String>(
+          this,
+          Invocation.getter(#localeName),
+        ),
+        returnValueForMissingStub: _i14.dummyValue<String>(
+          this,
+          Invocation.getter(#localeName),
+        ),
+      ) as String);
+
+  @override
+  set localeName(String? _localeName) => super.noSuchMethod(
+        Invocation.setter(
+          #localeName,
+          _localeName,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   String get gender => (super.noSuchMethod(
         Invocation.getter(#gender),
         returnValue: _i14.dummyValue<String>(
@@ -595,6 +627,22 @@ class MockUserInformation extends _i1.Mock implements _i13.UserInformation {
       );
 
   @override
+  List<String> get positiveTraits => (super.noSuchMethod(
+        Invocation.getter(#positiveTraits),
+        returnValue: <String>[],
+        returnValueForMissingStub: <String>[],
+      ) as List<String>);
+
+  @override
+  set positiveTraits(List<String>? _positiveTraits) => super.noSuchMethod(
+        Invocation.setter(
+          #positiveTraits,
+          _positiveTraits,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   List<String> get makeSafer => (super.noSuchMethod(
         Invocation.getter(#makeSafer),
         returnValue: <String>[],
@@ -681,6 +729,54 @@ class MockUserInformation extends _i1.Mock implements _i13.UserInformation {
       );
 
   @override
+  int get notificationMinute => (super.noSuchMethod(
+        Invocation.getter(#notificationMinute),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as int);
+
+  @override
+  set notificationMinute(int? _notificationMinute) => super.noSuchMethod(
+        Invocation.setter(
+          #notificationMinute,
+          _notificationMinute,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  int get notificationHour => (super.noSuchMethod(
+        Invocation.getter(#notificationHour),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as int);
+
+  @override
+  set notificationHour(int? _notificationHour) => super.noSuchMethod(
+        Invocation.setter(
+          #notificationHour,
+          _notificationHour,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  Map<String, List<String>> get thanks => (super.noSuchMethod(
+        Invocation.getter(#thanks),
+        returnValue: <String, List<String>>{},
+        returnValueForMissingStub: <String, List<String>>{},
+      ) as Map<String, List<String>>);
+
+  @override
+  set thanks(Map<String, List<String>>? _thanks) => super.noSuchMethod(
+        Invocation.setter(
+          #thanks,
+          _thanks,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   bool get hasListeners => (super.noSuchMethod(
         Invocation.getter(#hasListeners),
         returnValue: false,
@@ -688,20 +784,10 @@ class MockUserInformation extends _i1.Mock implements _i13.UserInformation {
       ) as bool);
 
   @override
-  Map<String, dynamic> toJson() => (super.noSuchMethod(
-        Invocation.method(
-          #toJson,
-          [],
-        ),
-        returnValue: <String, dynamic>{},
-        returnValueForMissingStub: <String, dynamic>{},
-      ) as Map<String, dynamic>);
-
-  @override
-  void reset() => super.noSuchMethod(
+  void reset(String? locale) => super.noSuchMethod(
         Invocation.method(
           #reset,
-          [],
+          [locale],
         ),
         returnValueForMissingStub: null,
       );
@@ -800,6 +886,51 @@ class MockUserInformation extends _i1.Mock implements _i13.UserInformation {
   void updateUserId(String? value) => super.noSuchMethod(
         Invocation.method(
           #updateUserId,
+          [value],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void updateNotificationHour(int? value) => super.noSuchMethod(
+        Invocation.method(
+          #updateNotificationHour,
+          [value],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void updateNotificationMinute(int? value) => super.noSuchMethod(
+        Invocation.method(
+          #updateNotificationMinute,
+          [value],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void updateLocaleName(String? value) => super.noSuchMethod(
+        Invocation.method(
+          #updateLocaleName,
+          [value],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void updatePositiveTraits(List<String>? value) => super.noSuchMethod(
+        Invocation.method(
+          #updatePositiveTraits,
+          [value],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void updateThanks(Map<String, List<String>>? value) => super.noSuchMethod(
+        Invocation.method(
+          #updateThanks,
           [value],
         ),
         returnValueForMissingStub: null,

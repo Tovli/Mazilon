@@ -6,6 +6,7 @@ import 'package:mazilon/pages/WellnessTools/VideoPlayerInheritedWidget.dart';
 import 'package:mazilon/pages/WellnessTools/VideoPlayerPageFactory.dart';
 import 'package:mazilon/pages/WellnessTools/more_videos_item.dart';
 import 'package:mazilon/util/styles.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WellnessTools extends StatefulWidget {
   final Function setBool;
@@ -60,13 +61,14 @@ class _WellnessToolsState extends State<WellnessTools> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context);
     return VideoPlayerInheritedWidget(
         videoId: selectedVideoId,
         changeVideo: changeVideo,
         child: SafeArea(
           child: Scaffold(
             body: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Visibility(
                   visible: !isFullScreen,
@@ -89,19 +91,18 @@ class _WellnessToolsState extends State<WellnessTools> {
                   visible: !isFullScreen,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(8.0, 10.0, 8, 10),
-                    child: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: myAutoSizedText(
-                          widget.videoData['videoHeadline']![
-                              selectedVideoIdIndex],
-                          TextStyle(
-                            fontSize: 24.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          TextAlign.right,
-                          28,
-                          3),
-                    ),
+                    child: myAutoSizedText(
+                        widget
+                            .videoData['videoHeadline']![selectedVideoIdIndex],
+                        TextStyle(
+                          fontSize: 24.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        appLocale!.textDirection == "rtl"
+                            ? TextAlign.right
+                            : TextAlign.left,
+                        28,
+                        3),
                   ),
                 ),
                 Expanded(
@@ -117,37 +118,35 @@ class _WellnessToolsState extends State<WellnessTools> {
                   visible: !isFullScreen,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 4.0, 4, 20),
-                    child: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: myAutoSizedText(
-                          widget.videoData['videoDescription']![
-                              selectedVideoIdIndex],
-                          TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.normal,
-                          ),
-                          TextAlign.right,
-                          20,
-                          3),
-                    ),
+                    child: myAutoSizedText(
+                        widget.videoData['videoDescription']![
+                            selectedVideoIdIndex],
+                        TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        appLocale!.textDirection == "rtl"
+                            ? TextAlign.right
+                            : TextAlign.left,
+                        20,
+                        3),
                   ),
                 ),
                 Visibility(
                   visible: !isFullScreen,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 4.0, 4, 20),
-                    child: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: myAutoSizedText(
-                          'סרטונים נוספים:',
-                          TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          TextAlign.right,
-                          20,
-                          3),
-                    ),
+                    child: myAutoSizedText(
+                        appLocale!.moreVideos,
+                        TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        appLocale!.textDirection == "rtl"
+                            ? TextAlign.right
+                            : TextAlign.left,
+                        20,
+                        3),
                   ),
                 ),
                 Visibility(

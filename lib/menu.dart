@@ -1,43 +1,40 @@
 //import 'package:mazilon/pages/schedule.dart';
 
 import 'package:flutter/material.dart';
-
 import 'package:mazilon/pages/about.dart';
 import 'package:mazilon/pages/FeelGood/feelGood.dart';
 import 'package:mazilon/pages/WellnessTools/wellnessTools.dart';
 import 'package:mazilon/pages/notifications/notification_page.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-
+import 'package:mazilon/util/Form/retrieveInformation.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mazilon/pages/home.dart';
 import 'package:mazilon/pages/journal.dart';
 import 'package:mazilon/pages/phone.dart';
 import 'package:mazilon/pages/positive.dart';
-import 'package:mazilon/pages/PersonalPlan/schedule2.dart';
+import 'package:mazilon/pages/PersonalPlan/myPlanPageFull.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/styles.dart';
-import 'package:mazilon/util/Form/checkbox_model.dart';
+
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/util/HomePage/bottomNavigationItem.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Menu extends StatefulWidget {
-  final List<List<String>> collections;
-  final List<String> collectionNames;
-  final Map<String, CheckboxModel> checkboxModels;
   final PhonePageData phonePageData;
   final bool hasFilled;
+  final Function changeLocale;
 
   const Menu(
       {super.key,
-      required this.collections,
-      required this.collectionNames,
-      required this.checkboxModels,
       required this.phonePageData,
-      required this.hasFilled});
+      required this.hasFilled,
+      required this.changeLocale});
 
   @override
   State<Menu> createState() => _MenuState();
@@ -46,7 +43,6 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> {
   int current = 0;
   String version = "1.0.0";
-
   bool isFullScreen = false;
   late Widget currentScreen;
   //Function to set that the users has already opened the app before
@@ -64,28 +60,29 @@ class _MenuState extends State<Menu> {
   }
 
 //Function to change the current displayed page in the "home"
-  void changeCurrentIndex(int index) {
+  void changeCurrentIndex(BuildContext context, int index) {
+    final appLocale = AppLocalizations.of(context)!;
     final userInformation =
         Provider.of<UserInformation>(context, listen: false);
+    final gender = userInformation.gender;
     setState(() {
       current = index;
       //adding pages to menu here:
       if (index == 1) {
-        currentScreen = Schedule(
-          collections: widget.collections,
-          collectionNames: widget.collectionNames,
-          checkboxModels: widget.checkboxModels,
+        currentScreen = MyPlanPageFull(
           phonePageData: widget.phonePageData,
           hasFilled: widget.hasFilled,
+          changeLocale: widget.changeLocale,
         );
       } else if (index == 2) {
         currentScreen = Positive();
       } else if (index == 3) {
-        currentScreen = Journal();
+        currentScreen = Journal(
+          fullSuggestionList:
+              retrieveThanksList(appLocale, gender == "" ? "other" : gender),
+        );
       } else if (index == 4) {
-        currentScreen = PhonePage(
-            gender: userInformation.gender,
-            phonePageData: widget.phonePageData);
+        currentScreen = PhonePage(phonePageData: widget.phonePageData);
       } else if (index == 5) {
         //we dont want current screen to change here
       } else if (index == 6) {
@@ -100,8 +97,7 @@ class _MenuState extends State<Menu> {
       } /*else if (index == 9) {
         currentScreen = syncDevicesRealTime(
             collections: widget.collections,
-            checkboxModels: widget.checkboxModels,
-            collectionNames: widget.collectionNames,
+
             gender: userInformation.gender,
             phonePageData: widget.phonePageData);
       }*/
@@ -120,33 +116,33 @@ class _MenuState extends State<Menu> {
     super.initState();
     //this is the initial page
     currentScreen = Home(
-      collections: widget.collections,
-      collectionNames: widget.collectionNames,
-      checkboxModels: widget.checkboxModels,
       phonePageData: widget.phonePageData,
       changeCurrentIndex: changeCurrentIndex,
+      changeLocale: widget.changeLocale,
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context)!;
     final userInformation = Provider.of<UserInformation>(context);
     final appInfoProvider = Provider.of<AppInformation>(context);
+    final gender = userInformation.gender;
 
     return PopScope(
       //this is the popscope widget that will handle the back button
       canPop: false,
-      onPopInvoked: (didpop) async {
-        if (didpop) {
+      onPopInvokedWithResult: (bool didPop, Object? result) async {
+        if (didPop) {
           return;
         } else {
-          changeCurrentIndex(0);
+          SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+          if (current == 0) {}
+          changeCurrentIndex(context, 0);
           currentScreen = Home(
-            collections: widget.collections,
-            collectionNames: widget.collectionNames,
-            checkboxModels: widget.checkboxModels,
             phonePageData: widget.phonePageData,
             changeCurrentIndex: changeCurrentIndex,
+            changeLocale: widget.changeLocale,
           );
         }
       },
@@ -178,9 +174,8 @@ class _MenuState extends State<Menu> {
                 ),
                 onPressed: () {
                   setState(() {
-                    currentScreen = PhonePage(
-                        gender: userInformation.gender,
-                        phonePageData: widget.phonePageData);
+                    currentScreen =
+                        PhonePage(phonePageData: widget.phonePageData);
                     current = 4;
                   });
                 },
@@ -201,9 +196,72 @@ class _MenuState extends State<Menu> {
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        width: 200,
+                        width: 70,
+                        alignment: appLocale.textDirection == "rtl"
+                            ? Alignment.centerLeft
+                            : Alignment.centerRight,
+                        child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                currentScreen = Home(
+                                  phonePageData: widget.phonePageData,
+                                  changeCurrentIndex: changeCurrentIndex,
+                                  changeLocale: widget.changeLocale,
+                                );
+                                current = 0;
+                              });
+                            },
+                            child: bottomNavigationItem(current == 0,
+                                Icons.home, appLocale.home(gender))),
+                      ),
+                      Container(
+                        alignment: appLocale.textDirection == "rtl"
+                            ? Alignment.centerLeft
+                            : Alignment.centerRight,
+                        width: 100,
+                        child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                currentScreen = MyPlanPageFull(
+                                  phonePageData: widget.phonePageData,
+                                  hasFilled: widget.hasFilled,
+                                  changeLocale: widget.changeLocale,
+                                );
+                                current = 1;
+                              });
+                            },
+                            child: bottomNavigationItem(
+                                current == 1,
+                                Icons.assignment,
+                                appLocale.personalPlanPageMyPlan(gender))),
+                      ),
+                      Container(
+                        width: 20,
+                      ),
+                      Container(
+                        alignment: appLocale.textDirection == "rtl"
+                            ? Alignment.centerLeft
+                            : Alignment.centerRight,
+                        width: 100,
+                        child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                currentScreen = FeelGood();
+                                current = 8;
+                              });
+                            },
+                            child: bottomNavigationItem(
+                                current == 8,
+                                Icons.emoji_emotions_outlined,
+                                AppLocalizations.of(context)!
+                                    .homePageFeelGood(gender))),
+                      ),
+                      Container(
+                        width: 70,
                         child: Align(
-                          alignment: Alignment.centerLeft,
+                          alignment: appLocale.textDirection == "rtl"
+                              ? Alignment.centerLeft
+                              : Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {
                               showGeneralDialog(
@@ -220,7 +278,9 @@ class _MenuState extends State<Menu> {
                                   return FractionallySizedBox(
                                     heightFactor: 0.85,
                                     widthFactor: 0.6,
-                                    alignment: Alignment.topLeft,
+                                    alignment: appLocale!.textDirection == "rtl"
+                                        ? Alignment.centerLeft
+                                        : Alignment.centerRight,
                                     child: Align(
                                       alignment: Alignment
                                           .bottomCenter, // Change alignment to bottom center
@@ -242,7 +302,12 @@ class _MenuState extends State<Menu> {
                                               mainAxisSize: MainAxisSize.min,
                                               children: <Widget>[
                                                 Align(
-                                                  alignment: Alignment.topRight,
+                                                  alignment: AppLocalizations
+                                                                  .of(context)!
+                                                              .textDirection ==
+                                                          "rtl"
+                                                      ? Alignment.topRight
+                                                      : Alignment.topLeft,
                                                   child: IconButton(
                                                     icon: Icon(Icons.close),
                                                     onPressed: () {
@@ -254,18 +319,14 @@ class _MenuState extends State<Menu> {
                                                 TextButton(
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment.end,
+                                                        MainAxisAlignment.start,
                                                     children: [
-                                                      Directionality(
-                                                        textDirection:
-                                                            TextDirection.rtl,
-                                                        child: Text(appInfoProvider
-                                                                    .extraMenuStrings[
-                                                                'About'] ??
-                                                            'אודות'),
-                                                      ),
-                                                      SizedBox(width: 20),
                                                       Icon(Icons.people),
+                                                      SizedBox(width: 20),
+                                                      Text(AppLocalizations.of(
+                                                              context)!
+                                                          .homePageAbout(
+                                                              gender)),
                                                     ],
                                                   ),
                                                   onPressed: () {
@@ -280,15 +341,15 @@ class _MenuState extends State<Menu> {
                                                 TextButton(
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment.end,
+                                                        MainAxisAlignment.start,
                                                     children: [
-                                                      Directionality(
-                                                        textDirection:
-                                                            TextDirection.rtl,
-                                                        child: Text('התראות'),
-                                                      ),
+                                                      Icon(Icons
+                                                          .notification_add),
                                                       SizedBox(width: 20),
-                                                      Icon(Icons.people),
+                                                      Text(AppLocalizations.of(
+                                                              context)!
+                                                          .notifications(
+                                                              gender)),
                                                     ],
                                                   ),
                                                   onPressed: () {
@@ -304,18 +365,14 @@ class _MenuState extends State<Menu> {
                                                 TextButton(
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment.end,
+                                                        MainAxisAlignment.start,
                                                     children: [
-                                                      Directionality(
-                                                        textDirection:
-                                                            TextDirection.rtl,
-                                                        child: Text(appInfoProvider
-                                                                    .extraMenuStrings[
-                                                                'WellnessTools'] ??
-                                                            'כלי תמיכה'),
-                                                      ),
-                                                      SizedBox(width: 20),
                                                       Icon(Icons.yard_outlined),
+                                                      SizedBox(width: 20),
+                                                      Text(AppLocalizations.of(
+                                                              context)!
+                                                          .homePageWellnessTools(
+                                                              gender)),
                                                     ],
                                                   ),
                                                   onPressed: () {
@@ -333,33 +390,6 @@ class _MenuState extends State<Menu> {
                                                     Navigator.of(context).pop();
                                                   },
                                                 ),
-                                                TextButton(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      Directionality(
-                                                        textDirection:
-                                                            TextDirection.rtl,
-                                                        child: Text(appInfoProvider
-                                                                    .extraMenuStrings[
-                                                                'feelGood'] ??
-                                                            "להרגיש טוב"),
-                                                      ),
-                                                      SizedBox(width: 20),
-                                                      Icon(Icons
-                                                          .emoji_emotions_outlined),
-                                                    ],
-                                                  ),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      currentScreen =
-                                                          FeelGood();
-                                                      current = 8;
-                                                    });
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
                                               ],
                                             ),
                                           ),
@@ -373,53 +403,11 @@ class _MenuState extends State<Menu> {
                                 current = 5;
                               });
                             },
-                            child: bottomNavigationItem(
-                                current == 5, Icons.menu, 'תפריט'),
+                            child: bottomNavigationItem(current == 5,
+                                Icons.menu, appLocale!.menu(gender)),
                           ),
                         ),
                       ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        width: 100,
-                        child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                currentScreen = Schedule(
-                                  collections: widget.collections,
-                                  collectionNames: widget.collectionNames,
-                                  checkboxModels: widget.checkboxModels,
-                                  phonePageData: widget.phonePageData,
-                                  hasFilled: widget.hasFilled,
-                                );
-                                current = 1;
-                              });
-                            },
-                            child: bottomNavigationItem(
-                                current == 1,
-                                Icons.assignment,
-                                appInfoProvider.personalPlanMainTitle[
-                                    'PersonalPlanMainTitle-' +
-                                        userInformation.gender])),
-                      ),
-                      Container(
-                        width: 50,
-                        alignment: Alignment.centerLeft,
-                        child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                currentScreen = Home(
-                                  collections: widget.collections,
-                                  collectionNames: widget.collectionNames,
-                                  checkboxModels: widget.checkboxModels,
-                                  phonePageData: widget.phonePageData,
-                                  changeCurrentIndex: changeCurrentIndex,
-                                );
-                                current = 0;
-                              });
-                            },
-                            child: bottomNavigationItem(
-                                current == 0, Icons.home, 'בית')),
-                      )
                     ],
                   ),
                 ),

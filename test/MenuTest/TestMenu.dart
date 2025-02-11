@@ -5,6 +5,8 @@ import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Widget getMenuForTests(
     UserInformation mockUserInformation, AppInformation mockAppInformation) {
@@ -14,12 +16,17 @@ Widget getMenuForTests(
       ChangeNotifierProvider<AppInformation>.value(value: mockAppInformation),
     ],
     child: MaterialApp(
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: Locale('he'),
+      localizationsDelegates: [
+        AppLocalizations.localizationsDelegates[0],
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
       home: ScreenUtilInit(
         designSize: const Size(360, 690),
         child: Menu(
-          collections: const [],
-          collectionNames: const [],
-          checkboxModels: const {},
           phonePageData: PhonePageData(
             key: 'phonePageData',
             header: 'header',
@@ -33,6 +40,7 @@ Widget getMenuForTests(
             savedPhoneNumbers: [],
             phoneDescription: [],
           ),
+          changeLocale: (String locale) {},
           hasFilled: false,
         ),
       ),

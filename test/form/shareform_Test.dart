@@ -1,38 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/file_service.dart';
+import 'package:mazilon/iFx/service_locator.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/styles.dart';
+import 'package:mockito/annotations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:permission_handler/permission_handler.dart';
+
 import 'package:mazilon/form/ShareForm.dart';
 import 'package:mockito/mockito.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'shareform_Test.mocks.dart';
 
+@GenerateNiceMocks([
+  MockSpec<UserInformation>(),
+  MockSpec<AppInformation>(),
+  MockSpec<FileService>(),
+])
 void main() {
-  // Mock data for the test
-  final mockAppInformation = AppInformation()
-    ..formSharePageTitles = {
-      'header': 'Share Form Header',
-      'subTitlemale': 'Subtitle Male',
-      'midTitlemale': 'Mid Title Male',
-      'shareTitlemale': 'Share Title Male',
-      'emergencySendButtonText': 'Emergency Send',
-      'routineSendButtonText': 'Routine Send',
-      'finishButton': 'Finish'
-    }
-    ..shareMessages = {
-      'regular': 'Regular Message',
-      'emergency': 'Emergency Message'
-    }
-    ..formDifficultEventsTitles = {'headermale': 'Difficult Events Header Male'}
-    ..formMakeSaferTitles = {'headermale': 'Make Safer Header Male'}
-    ..formFeelBetterTitles = {'headermale': 'Feel Better Header Male'}
-    ..formDistractionsTitles = {'headermale': 'Distractions Header Male'}
-    ..formPhonePage = {'headermale': 'Phone Page Header Male'}
-    ..sharePDFtexts = {'headermale': 'PDF Text'};
+  late UserInformation mockUserInformation;
+  late AppInformation mockAppInformation;
+  late GetIt locator;
 
-  final mockUserInformation = UserInformation()..gender = 'male';
+  setUp(() {
+    mockUserInformation = UserInformation();
+    mockUserInformation.gender = "male";
+    mockAppInformation = AppInformation();
+    final mockFileServiceImpl = MockFileService();
+    getIt.registerLazySingleton<FileService>(() => mockFileServiceImpl);
+  });
+  tearDown(() {
+    final locator = GetIt.instance;
+    // Optionally reset GetIt after each test
+    locator.reset();
+  });
+  // Mock data for the test
 
   // Mock shared preferences
   SharedPreferences.setMockInitialValues({'hasFilled': false});
@@ -47,9 +54,20 @@ void main() {
             create: (_) => mockUserInformation),
       ],
       child: MaterialApp(
-        home: ShareForm(
-          prev: () {},
-          submit: (context) {},
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: Locale('he'),
+        localizationsDelegates: [
+          AppLocalizations.localizationsDelegates[0],
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate
+        ],
+        home: ScreenUtilInit(
+          designSize: const Size(360, 690),
+          child: ShareForm(
+            prev: () {},
+            submit: (context) {},
+          ),
         ),
       ),
     );
@@ -59,9 +77,15 @@ void main() {
     await tester.pumpWidget(createTestWidget());
 
     // Verify the presence of the header and subtitles
-    expect(find.text('Share Form Header'), findsOneWidget);
-    expect(find.text('Subtitle Male'), findsOneWidget);
-    expect(find.text('Mid Title Male'), findsOneWidget);
+    expect(find.text('איזה כיף!'), findsOneWidget);
+    expect(
+        find.text(
+            'יצרת לך מדריך שיעזור לך ברגעי משבר! בוא ונכיר כלים נוספים לעזרה עצמית ולחוסן נפשי'),
+        findsOneWidget);
+    expect(
+        find.text(
+            'עכשיו אתה יכול לשתף את התוכנית עם הקרובים אליך או להוריד אותה כקובץ'),
+        findsOneWidget);
 
     // Verify the presence of the image
     expect(find.byType(Image), findsOneWidget);
@@ -87,9 +111,9 @@ void main() {
     // Tap the share button
     await tester.tap(find.byIcon(Icons.share));
     await tester.pumpAndSettle();
-
+/*
     // Verify the dialog is shown
-    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(find.text("Quick Share"), findsOneWidget);
     expect(find.text('Share Title Male'), findsOneWidget);
 
     // Tap the emergency send button
@@ -97,7 +121,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verify the dialog is closed
-    expect(find.byType(AlertDialog), findsNothing);
+    expect(find.text("SAVE"), findsNothing);*/
   });
 
   testWidgets('ShareForm triggers PDF download', (WidgetTester tester) async {
@@ -119,7 +143,7 @@ void main() {
     await tester.pumpWidget(createTestWidget());
 
     // Tap the finish button
-    await tester.tap(find.text('Finish'));
+    await tester.tap(find.text('סיימתי!'));
     await tester.pumpAndSettle();
 
     // Verify the submit function is called

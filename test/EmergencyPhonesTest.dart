@@ -75,13 +75,11 @@ class EmergencyPhonesRow extends StatelessWidget {
                                   color: Colors.purple,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12),
-                              textAlign: TextAlign.right,
                             ),
                             Text(
                               mockPhonePageTitles['phoneDescription']![i],
-                              style: TextStyle(
-                                  color: Colors.purple, fontSize: 12),
-                              textAlign: TextAlign.right,
+                              style:
+                                  TextStyle(color: Colors.purple, fontSize: 12),
                             ),
                           ],
                         ),

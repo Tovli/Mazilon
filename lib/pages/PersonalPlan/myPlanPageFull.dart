@@ -3,41 +3,37 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'package:mazilon/pages/PersonalPlan/myPlan2.dart';
+import 'package:mazilon/pages/PersonalPlan/myPlan.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/form/form.dart';
 import 'package:mazilon/util/userInformation.dart';
-import 'package:mazilon/util/Form/checkbox_model.dart';
+
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // This widget displays the user's personalized plan with sections for various topics.
 // It allows the user to view their selected answers and navigate to additional forms or options.
-class Schedule extends StatefulWidget {
-  final List<List<String>> collections; // Collection of data for the user
-  final List<String> collectionNames; // Names of the data collections
-  final Map<String, CheckboxModel>
-      checkboxModels; // Models for the checkbox forms
+class MyPlanPageFull extends StatefulWidget {
   final PhonePageData phonePageData; // Data related to phone numbers
   final bool hasFilled; // Whether the user has filled out the required forms
+  final Function changeLocale;
 
-  Schedule(
+  MyPlanPageFull(
       {super.key,
-      required this.collections,
-      required this.collectionNames,
-      required this.checkboxModels,
       required this.phonePageData,
-      required this.hasFilled});
+      required this.hasFilled,
+      required this.changeLocale});
 
   @override
-  State<Schedule> createState() => _ScheduleState();
+  State<MyPlanPageFull> createState() => _MyPlanPageFullState();
 }
 
-class _ScheduleState extends State<Schedule> {
+class _MyPlanPageFullState extends State<MyPlanPageFull> {
   List<List<String>> userAnswers = []; // User's answers for each section
   List<String> phoneInformation = []; // User's phone-related information
 
@@ -101,7 +97,7 @@ class _ScheduleState extends State<Schedule> {
     final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
-
+    final appLocale = AppLocalizations.of(context);
     // Set up phone and answer information based on the user's data
     setPhones(widget.phonePageData.savedPhoneNames,
         widget.phonePageData.savedPhoneNumbers);
@@ -126,15 +122,11 @@ class _ScheduleState extends State<Schedule> {
       appBar: AppBar(
           title: SingleChildScrollView(
             child: Center(
-                child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: myAutoSizedText(
-                  appInfoProvider.returnToPlanStrings['MyPlan'] ??
-                      'התוכנית שלי2',
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
-                  null,
-                  40),
-            )),
+                child: myAutoSizedText(
+                    appLocale!.personalPlanPageMyPlan(gender),
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
+                    null,
+                    40)),
           ),
           backgroundColor: primaryPurple,
           shape: RoundedRectangleBorder(
@@ -150,10 +142,10 @@ class _ScheduleState extends State<Schedule> {
             // Display a list of plan sections with their corresponding answers
             ListView.builder(
               itemBuilder: (context, index) {
-                var info = retrieveInformation(appInfoProvider,
-                    fieldNames[index], userInfoProvider.gender);
+                var info = retrieveInformation(
+                    fieldNames[index], userInfoProvider.gender, appLocale);
 
-                return MyPlan(
+                return MyPlanSection(
                   title: info["header"] ?? '',
                   subTitle: info["subTitle"] ?? '',
                   answers: userAnswers[index],
@@ -164,13 +156,9 @@ class _ScheduleState extends State<Schedule> {
               physics: NeverScrollableScrollPhysics(),
             ),
             // Additional section for phone-related information
-            MyPlan(
-              title: appInfoProvider
-                      .formPhonePage['header${userInfoProvider.gender}'] ??
-                  '',
-              subTitle: appInfoProvider
-                      .formPhonePage['subTitle${userInfoProvider.gender}'] ??
-                  '',
+            MyPlanSection(
+              title: appLocale!.phonesPageHeader(gender),
+              subTitle: appLocale!.phonesPageSubTitle(gender),
               answers: phoneInformation,
             ),
             SizedBox(
@@ -178,59 +166,62 @@ class _ScheduleState extends State<Schedule> {
             ),
             // Display additional text with links, if available
             Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: RichText(
-                      textDirection: TextDirection.rtl,
-                      textAlign: TextAlign.justify,
-                      text: TextSpan(children: <TextSpan>[
-                        TextSpan(
-                          text: text1 + " ",
-                          style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black),
-                        ),
-                        TextSpan(
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => _launchURL(Uri.parse(text2Link)),
-                          text: text2 + " ",
-                          style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.normal,
-                              color: Color.fromARGB(255, 6, 25, 231)),
-                        ),
-                        TextSpan(
-                          text: text3 + " ",
-                          style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black),
-                        ),
-                        TextSpan(
-                          text: text4 + " ",
-                          style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black),
-                        ),
-                        TextSpan(
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => _launchURL(Uri.parse(text5Link)),
-                          text: text5 + " ",
-                          style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.normal,
-                              color: Color.fromARGB(255, 6, 25, 231)),
-                        ),
-                        TextSpan(
-                          text: text6 + ".",
-                          style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black),
-                        ),
-                      ]))),
+              appLocale.language != 'עברית'
+                  ? Container()
+                  : Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: RichText(
+                          textAlign: TextAlign.justify,
+                          text: TextSpan(children: <TextSpan>[
+                            TextSpan(
+                              text: text1 + " ",
+                              style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
+                            ),
+                            TextSpan(
+                              recognizer: TapGestureRecognizer()
+                                ..onTap =
+                                    () => _launchURL(Uri.parse(text2Link)),
+                              text: text2 + " ",
+                              style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.normal,
+                                  color: Color.fromARGB(255, 6, 25, 231)),
+                            ),
+                            TextSpan(
+                              text: text3 + " ",
+                              style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
+                            ),
+                            TextSpan(
+                              text: text4 + " ",
+                              style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
+                            ),
+                            TextSpan(
+                              recognizer: TapGestureRecognizer()
+                                ..onTap =
+                                    () => _launchURL(Uri.parse(text5Link)),
+                              text: text5 + " ",
+                              style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.normal,
+                                  color: Color.fromARGB(255, 6, 25, 231)),
+                            ),
+                            TextSpan(
+                              text: text6 + ".",
+                              style: TextStyle(
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black),
+                            ),
+                          ]))),
             ]),
             SizedBox(
               height: 30,
@@ -243,10 +234,8 @@ class _ScheduleState extends State<Schedule> {
                   PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) =>
                         FormProgressIndicator(
-                      collections: widget.collections,
-                      collectionNames: widget.collectionNames,
-                      checkboxModels: widget.checkboxModels,
                       phonePageData: widget.phonePageData,
+                      changeLocale: widget.changeLocale,
                     ), //place collections here
                     transitionsBuilder:
                         (context, animation, secondaryAnimation, child) {
@@ -277,21 +266,16 @@ class _ScheduleState extends State<Schedule> {
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                 ),
               ),
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: myAutoSizedText(
-                    widget.hasFilled
-                        ? appInfoProvider
-                            .returnToPlanStrings['hasFilled$gender']
-                        : appInfoProvider
-                            .returnToPlanStrings['didNotFill$gender'],
-                    TextStyle(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                    null,
-                    24),
-              ),
+              child: myAutoSizedText(
+                  widget.hasFilled
+                      ? appLocale!.personalPlanPageHasFilled(gender)
+                      : appLocale!.personalPlanPageDidNotFill(gender),
+                  TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                  null,
+                  24),
             ),
             SizedBox(
               height: 45,

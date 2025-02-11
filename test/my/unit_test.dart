@@ -4,12 +4,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'steps_widget.dart'; // Import your widget file
-import 'text_widget.dart';
-import 'phone_widget.dart';
-import 'InspirationalQuotestest.dart';
-import 'list.dart';
-import 'thanksItemSugtest.dart';
+import '../steps_widget.dart'; // Import your widget file
+import '../text_widget.dart';
+import '../phone_widget.dart';
+import '../InspirationalQuotestest.dart';
+import '../list.dart';
+import '../thanksItemSugtest.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -72,27 +72,26 @@ void main() {
     await tester.tap(agedrop);
     await tester.pumpAndSettle();
     expect(find.text("18-30"), findsWidgets);
-    await tester.tap(agedrop);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text("18-"));
+
+    await tester.tap(find.text("18-").last);
     await tester.pumpAndSettle();
     expect(find.text("18-"), findsWidgets);
 
     await tester.tap(agedrop);
     await tester.pumpAndSettle();
-    await tester.tap(find.text("30-40"));
+    await tester.tap(find.text("30-40").last);
     await tester.pumpAndSettle();
     expect(find.text("30-40"), findsWidgets);
 
     await tester.tap(agedrop);
     await tester.pumpAndSettle();
-    await tester.tap(find.text("40-55"));
+    await tester.tap(find.text("40-55").last);
     await tester.pumpAndSettle();
     expect(find.text("40-55"), findsWidgets);
 
     await tester.tap(agedrop);
     await tester.pumpAndSettle();
-    await tester.tap(find.text("55+"));
+    await tester.tap(find.text("55+").last);
     await tester.pumpAndSettle();
     expect(find.text("55+"), findsWidgets);
   });

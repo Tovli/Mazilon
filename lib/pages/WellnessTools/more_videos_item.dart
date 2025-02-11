@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
-import 'package:mazilon/pages/WellnessTools/VideoPlayerInheritedWidget.dart';
-import 'package:mazilon/pages/WellnessTools/VideoPlayerPageFactory.dart';
+
 import 'package:mazilon/util/styles.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MoreVideosItem extends StatelessWidget {
   final Map<String, List<String>> videoData;
@@ -23,6 +23,7 @@ class MoreVideosItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final ImagePickerService imageService =
         GetIt.instance<ImagePickerService>();
+    final appLocale = AppLocalizations.of(context);
     return Container(
       width: 150,
       height: 100,
@@ -41,7 +42,6 @@ class MoreVideosItem extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                textDirection: TextDirection.rtl,
                 children: [
                   myAutoSizedText(
                     videoData['videoHeadline']![index],
@@ -49,7 +49,9 @@ class MoreVideosItem extends StatelessWidget {
                       fontSize: 18.sp,
                       fontWeight: FontWeight.normal,
                     ),
-                    TextAlign.right,
+                    appLocale!.textDirection == "rtl"
+                        ? TextAlign.right
+                        : TextAlign.left,
                     20,
                     2,
                   ),
