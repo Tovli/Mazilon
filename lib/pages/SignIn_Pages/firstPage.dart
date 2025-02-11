@@ -36,7 +36,7 @@ class _FirstPageState extends State<FirstPage> {
 
     // If the user has not signed the disclaimer, show the DisclaimerPage.
     if (!userInfoProvider.disclaimerSigned) {
-      renderedWidget = const DisclaimerPage();
+      renderedWidget = DisclaimerPage(changeLocale: widget.changeLocale);
     } else
 
     // If the user is not logged in, navigate to the LoginPage.
