@@ -75,8 +75,7 @@ class NotificationsService {
     TimeOfDay calculatedTime = calculateTime(hour, minute);
     String id = "${calculatedTime.hour}${calculatedTime.minute}";
     await cancelNotifications(null, cancelWorker: true);
-    print(hour);
-    print(minute);
+
     Workmanager().registerPeriodicTask(
       id,
       "simpleTask",
