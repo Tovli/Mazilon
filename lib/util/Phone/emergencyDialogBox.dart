@@ -12,14 +12,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 // This widget is a dialog box for making emergency phone calls and sending WhatsApp messages.
 class EmergencyDialogBox extends StatelessWidget {
   final String number; // The phone number to dial or message
-  final int
-      index; // Index used to retrieve appropriate text from AppInformation
+  final String
+      link; // Index used to retrieve appropriate text from AppInformation
   final bool hasWhatsApp;
   final bool hasLink;
   const EmergencyDialogBox(
       {super.key,
       required this.number,
-      required this.index,
+      required this.link,
       required this.hasWhatsApp,
       required this.hasLink});
 
@@ -58,8 +58,7 @@ class EmergencyDialogBox extends StatelessWidget {
 
                 if (hasLink)
                   getTextIconWidget(appLocale!.link, () async {
-                    await openSite(appInfoProvider
-                        .phonePageTitles['emergencyDialogWebsite']![index]);
+                    await openSite(link);
                   }, Icons.search),
 
                 // Button to make a phone call

@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/Phone/emergencyDialogBox.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/appInformation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/EmergencyNumbers.dart';
+import 'dart:io';
 
 // Extracts and returns the list of child widgets from a Row widget
 List<Widget> extractChildrenFromRow(Row row) {
@@ -12,15 +15,17 @@ List<Widget> extractChildrenFromRow(Row row) {
 
 // A stateless widget that displays a grid of emergency phone items
 class EmergencyPhonesGrid extends StatelessWidget {
-  final List<Widget> emergencyPhoneItems = [
-    EmergencyPhoneItem(i: 0, icon: Icons.phone),
-    EmergencyPhoneItem(i: 2, icon: Icons.chat),
-    EmergencyPhoneItem(i: 1, icon: Icons.phone), // Item 2 (index 1)
-    EmergencyPhoneItem(i: 3, icon: Icons.phone), // Item 3 (index 3)
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context);
+    final String defaultLocale =
+        Platform.localeName; // Returns locale string in the form 'en_US'
+    String countryCode = defaultLocale.substring(defaultLocale.length - 2);
+
+    print(defaultLocale); // Prints the default locale string
+    final localNumbers = countryCode == "IL" || appLocale!.language == "עברית"
+        ? numbers["israel"]
+        : numbers["usa"];
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GridView.builder(
@@ -30,9 +35,12 @@ class EmergencyPhonesGrid extends StatelessWidget {
           crossAxisSpacing: 10.0, // Horizontal spacing between items
           mainAxisSpacing: 10.0, // Vertical spacing between items
         ),
-        itemCount: emergencyPhoneItems.length, // Number of items in the grid
+        itemCount: localNumbers.length, // Number of items in the grid
         itemBuilder: (BuildContext context, int index) {
-          return emergencyPhoneItems[index];
+          return EmergencyPhoneItem(
+            i: index,
+            number: localNumbers[index],
+          );
         },
       ),
     );
@@ -42,58 +50,24 @@ class EmergencyPhonesGrid extends StatelessWidget {
 // A custom widget representing an emergency phone item in the grid
 class EmergencyPhoneItem extends StatelessWidget {
   final int i; // Index of the emergency phone item
-  final IconData icon; // Icon to display in the item
-  const EmergencyPhoneItem({required this.i, required this.icon, super.key});
+
+  final dynamic number;
+  const EmergencyPhoneItem({required this.i, required this.number, super.key});
 
   @override
   Widget build(BuildContext context) {
-    final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
     return InkWell(
       onTap: () async {
         // Display a dialog when the item is tapped
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            switch (i) {
-              case 0:
-                return EmergencyDialogBox(
-                  number:
-                      appInfoProvider.phonePageTitles['emergencyPhones']![0],
-                  index: 0,
-                  hasWhatsApp: true,
-                  hasLink: false,
-                );
-
-              case 1:
-                return EmergencyDialogBox(
-                  number:
-                      appInfoProvider.phonePageTitles['emergencyPhones']![1],
-                  index: 1,
-                  hasWhatsApp: true,
-                  hasLink: false,
-                );
-
-              case 2:
-                return EmergencyDialogBox(
-                  number:
-                      appInfoProvider.phonePageTitles['emergencyPhones']![2],
-                  index: 2,
-                  hasWhatsApp: false,
-                  hasLink: true,
-                );
-
-              case 3:
-                return EmergencyDialogBox(
-                  number:
-                      appInfoProvider.phonePageTitles['emergencyPhones']![3],
-                  index: 3,
-                  hasWhatsApp: false,
-                  hasLink: false,
-                );
-
-              default:
-                return Container();
-            }
+            return EmergencyDialogBox(
+              number: number["number"],
+              link: number["link"],
+              hasWhatsApp: number["whatsapp"],
+              hasLink: number["link"] != "",
+            );
           },
         );
       },
@@ -114,7 +88,7 @@ class EmergencyPhoneItem extends StatelessWidget {
                 children: [
                   Center(
                     child: myAutoSizedText(
-                        appInfoProvider.phonePageTitles['phoneName']![i],
+                        number["name"],
                         TextStyle(
                             color: primaryPurple,
                             fontWeight: FontWeight.bold,
@@ -124,7 +98,7 @@ class EmergencyPhoneItem extends StatelessWidget {
                   ),
                   Center(
                     child: myAutoSizedText(
-                        appInfoProvider.phonePageTitles['phoneDescription']![i]
+                        number["description"]
                             .replaceAll('/', '\n'), // Replace '/' with newline
                         TextStyle(
                             fontWeight: FontWeight.normal,
@@ -149,7 +123,7 @@ class EmergencyPhoneItem extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    icon,
+                    number['icon'],
                     color: Colors.white,
                     size: 20,
                   ),

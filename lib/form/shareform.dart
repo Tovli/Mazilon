@@ -58,16 +58,19 @@ class _ShareFormState extends State<ShareForm> {
             child: Column(
               children: [
                 SizedBox(
-                  height: returnSizedBox(context, 100),
+                  height: returnSizedBox(context, 25),
                 ),
-                myAutoSizedText(
-                    appLocale!.sharePageHeader(gender),
-                    TextStyle(
-                        fontSize: 40.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                    null,
-                    80),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: myAutoSizedText(
+                      appLocale!.sharePageHeader(gender),
+                      TextStyle(
+                          fontSize: 40.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                      null,
+                      80),
+                ),
                 myAutoSizedText(
                     appLocale!.sharePageSubTitle(gender),
                     TextStyle(
@@ -84,9 +87,6 @@ class _ShareFormState extends State<ShareForm> {
                       TextStyle(fontWeight: FontWeight.normal, fontSize: 18.sp),
                       null,
                       35),
-                ),
-                const SizedBox(
-                  height: 30,
                 ),
                 const SizedBox(
                   height: 30,

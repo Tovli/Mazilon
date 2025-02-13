@@ -25,6 +25,7 @@ import 'package:mazilon/util/Firebase/firebase_functions.dart';
 
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/initialForm/form.dart';
+import 'package:upgrader/upgrader.dart';
 
 //testing:
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -45,6 +46,7 @@ List<String> checkboxCollectionNames = [
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {
+      print("I have done it");
       if (inputData == null ||
           !inputData.containsKey("text") ||
           !inputData.containsKey("timeHour") ||
@@ -61,6 +63,7 @@ void callbackDispatcher() {
 
       NotificationsService.scheduleNotification(
           calculatedTime, inputData["id"], inputData["text"][number]);
+      print("I have done it");
       return Future.value(true);
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
@@ -253,14 +256,16 @@ class _MyAppState extends State<MyApp> {
           GlobalWidgetsLocalizations.delegate
         ],
         debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: ValueListenableBuilder<Widget?>(
-            valueListenable: widgetNotifier,
-            builder: (context, widget, child) {
-              //widget running on success or intro in first login:
-              return widget ?? const Center(child: Introduction());
-            },
+        home: UpgradeAlert(
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: ValueListenableBuilder<Widget?>(
+              valueListenable: widgetNotifier,
+              builder: (context, widget, child) {
+                //widget running on success or intro in first login:
+                return widget ?? const Center(child: Introduction());
+              },
+            ),
           ),
         ),
       ),

@@ -136,8 +136,9 @@ class _MenuState extends State<Menu> {
         if (didPop) {
           return;
         } else {
-          SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-          if (current == 0) {}
+          if (current == 0) {
+            SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+          }
           changeCurrentIndex(context, 0);
           currentScreen = Home(
             phonePageData: widget.phonePageData,
@@ -196,7 +197,9 @@ class _MenuState extends State<Menu> {
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        width: 70,
+                        width: appLocale.language == 'English'
+                            ? MediaQuery.of(context).size.width / 6
+                            : MediaQuery.of(context).size.width / 8,
                         alignment: appLocale.textDirection == "rtl"
                             ? Alignment.centerLeft
                             : Alignment.centerRight,
@@ -218,7 +221,9 @@ class _MenuState extends State<Menu> {
                         alignment: appLocale.textDirection == "rtl"
                             ? Alignment.centerLeft
                             : Alignment.centerRight,
-                        width: 100,
+                        width: appLocale.language == 'English'
+                            ? MediaQuery.of(context).size.width / 5
+                            : MediaQuery.of(context).size.width / 4,
                         child: TextButton(
                             onPressed: () {
                               setState(() {
@@ -236,13 +241,13 @@ class _MenuState extends State<Menu> {
                                 appLocale.personalPlanPageMyPlan(gender))),
                       ),
                       Container(
-                        width: 20,
+                        width: MediaQuery.of(context).size.width / 9,
                       ),
                       Container(
                         alignment: appLocale.textDirection == "rtl"
                             ? Alignment.centerLeft
                             : Alignment.centerRight,
-                        width: 100,
+                        width: MediaQuery.of(context).size.width / 4,
                         child: TextButton(
                             onPressed: () {
                               setState(() {
@@ -257,7 +262,7 @@ class _MenuState extends State<Menu> {
                                     .homePageFeelGood(gender))),
                       ),
                       Container(
-                        width: 70,
+                        width: MediaQuery.of(context).size.width / 5.5,
                         child: Align(
                           alignment: appLocale.textDirection == "rtl"
                               ? Alignment.centerLeft

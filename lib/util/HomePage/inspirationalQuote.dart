@@ -73,7 +73,7 @@ class _InspirationalQuoteState extends State<InspirationalQuote> {
                   IconButton(
                     icon: Icon(
                       Icons.refresh,
-                      size: 35,
+                      size: 35.sp,
                       color: appWhite,
                     ),
                     //"refresh" button to change the quote
@@ -87,17 +87,24 @@ class _InspirationalQuoteState extends State<InspirationalQuote> {
                     width: 10,
                   ),
                   Expanded(
-                    child: myAutoSizedText(
-                        widget.quotes[number],
-                        TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: appWhite,
-                            fontSize: 26.sp),
-                        appLocale!.textDirection == "rtl"
-                            ? TextAlign.right
-                            : TextAlign.left,
-                        26,
-                        2),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(
+                          (appLocale.textDirection == "rtl" ? 30.0 : 0),
+                          0,
+                          (appLocale.textDirection == "rtl" ? 0.0 : 30.0),
+                          0),
+                      child: myAutoSizedText(
+                          widget.quotes[number],
+                          TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: appWhite,
+                              fontSize: 24.sp),
+                          appLocale!.textDirection == "rtl"
+                              ? TextAlign.right
+                              : TextAlign.left,
+                          24,
+                          4),
+                    ),
                   ),
                 ],
               ),

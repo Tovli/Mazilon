@@ -174,7 +174,7 @@
     "@sharePageHeader": { 
     "description": ""
     },
-     "sharePageSubTitle": "{gender,select,male{ou've created a guide that will help you during moments of crisis! Let's explore more tools for self-help and mental resilience} female{ou've created a guide that will help you during moments of crisis! Let's explore more tools for self-help and mental resilience} other{ou've created a guide that will help you during moments of crisis! Let's explore more tools for self-help and mental resilience}}",
+     "sharePageSubTitle": "{gender,select,male{You've created a guide that will help you during moments of crisis! Let's explore more tools for self-help and mental resilience} female{You've created a guide that will help you during moments of crisis! Let's explore more tools for self-help and mental resilience} other{You've created a guide that will help you during moments of crisis! Let's explore more tools for self-help and mental resilience}}",
     "@sharePageSubTitle": { 
     "description": ""
     },

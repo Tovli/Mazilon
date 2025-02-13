@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 
 class LanguageDropDown extends StatefulWidget {
   final List<Map<String, String>> list = [
-    {'locale': 'en', 'image': 'assets/images/united-states.png'}, // Replace with your image paths
-    {'locale': 'he', 'image': 'assets/images/israel.png'},  // Replace with your image paths
+    {
+      'locale': 'en',
+      'image': 'assets/images/united-states.png'
+    }, // Replace with your image paths
+    {
+      'locale': 'he',
+      'image': 'assets/images/israel.png'
+    }, // Replace with your image paths
   ];
 
-   final Function changeLocale;
+  final Function changeLocale;
   LanguageDropDown({required this.changeLocale, super.key});
 
   @override
@@ -38,7 +44,8 @@ class _LanguageDropDownState extends State<LanguageDropDown> {
             });
           }
         },
-        items: widget.list.map<DropdownMenuItem<String>>((Map<String, String> item) {
+        items: widget.list
+            .map<DropdownMenuItem<String>>((Map<String, String> item) {
           return DropdownMenuItem<String>(
             value: item['locale']!,
             child: Row(
@@ -51,7 +58,6 @@ class _LanguageDropDownState extends State<LanguageDropDown> {
                   fit: BoxFit.cover,
                 ),
                 const SizedBox(width: 10),
-                
               ],
             ),
           );
