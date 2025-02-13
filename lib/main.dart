@@ -46,7 +46,7 @@ List<String> checkboxCollectionNames = [
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {
-      print("I have done it");
+
       if (inputData == null ||
           !inputData.containsKey("text") ||
           !inputData.containsKey("timeHour") ||
@@ -63,7 +63,7 @@ void callbackDispatcher() {
 
       NotificationsService.scheduleNotification(
           calculatedTime, inputData["id"], inputData["text"][number]);
-      print("I have done it");
+
       return Future.value(true);
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
@@ -243,7 +243,7 @@ class _MyAppState extends State<MyApp> {
     if (localeName == '') {
       return const Center(child: CircularProgressIndicator());
     }
-    print(localeName);
+
     return ScreenUtilInit(
       designSize: Size(360, 690),
       builder: (context, child) => MaterialApp(
