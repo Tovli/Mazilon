@@ -118,6 +118,8 @@ flutter:
     - assets/fonts/CALIBRI.TTF
     - assets/images/SocialHub-Logo.png
     - assets/images/clubhouse-Logo.png
+    - assets/images/israel.png
+    - assets/images/united-states.png
 
   fonts:
     - family: Rubix

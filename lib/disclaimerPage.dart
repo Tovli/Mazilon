@@ -7,11 +7,16 @@ import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/util/disclaimer_lang.dart';
+
+
 
 // the disclaimer page widget,
 // it shows the disclaimer text and a button to confirm the disclaimer
 class DisclaimerPage extends StatefulWidget {
-  const DisclaimerPage({
+  final Function changeLocale;
+  DisclaimerPage({
+    required this.changeLocale,
     super.key,
   });
   @override
@@ -33,6 +38,7 @@ void updateDisclaimer() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setBool('disclaimerConfirmed', true);
 }
+
 
 class _DisclaimerPageState extends State<DisclaimerPage> {
   // build the disclaimer page widget
@@ -56,7 +62,14 @@ class _DisclaimerPageState extends State<DisclaimerPage> {
                 children: [
                   SizedBox(
                       height:
-                          20.0), //space between the top of the screen and the disclaimer text
+                          20.0),
+                          Container(
+    width: MediaQuery.of(context).size.width > 1000
+        ? 600
+        : MediaQuery.of(context).size.width * 0.6,),
+
+    LanguageDropDown(changeLocale: widget.changeLocale),
+                  SizedBox(height: 20.0), //space between the top of the screen and the disclaimer text
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
                     child: myAutoSizedText(
