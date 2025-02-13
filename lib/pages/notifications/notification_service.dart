@@ -98,7 +98,7 @@ class NotificationsService {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month,
         now.day, timeOfDay.hour, timeOfDay.minute);
-    print("I'm in here from worker");
+
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
