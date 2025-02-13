@@ -22,7 +22,7 @@ class EmergencyPhonesGrid extends StatelessWidget {
         Platform.localeName; // Returns locale string in the form 'en_US'
     String countryCode = defaultLocale.substring(defaultLocale.length - 2);
 
-    print(defaultLocale); // Prints the default locale string
+
     final localNumbers = countryCode == "IL" || appLocale!.language == "עברית"
         ? numbers["israel"]
         : numbers["usa"];
