@@ -59,6 +59,19 @@ class _UserSettingsState extends State<UserSettings> {
     });
   }
 
+  double getSizeOfTextGender(AppLocalizations locale) {
+    switch (locale.language) {
+      case "עברית":
+        return 18.sp;
+
+      case "English":
+        return 14.sp;
+
+      default:
+        return 16.sp;
+    }
+  }
+
   //remove log-in data and reset all data that user has filled in the app:
   Future<void> resetData(UserInformation userInfo) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -151,8 +164,6 @@ class _UserSettingsState extends State<UserSettings> {
 
   @override
   Widget build(BuildContext context) {
-    LocaleService localeService = GetIt.instance<LocaleService>();
-
     final appLocale = AppLocalizations.of(context);
     genders = [
       appLocale!.male,
@@ -257,11 +268,11 @@ class _UserSettingsState extends State<UserSettings> {
                     myAutoSizedText(
                         appLocale!.userSettingsGender(gender),
                         TextStyle(
-                            fontSize: 18.sp,
+                            fontSize: getSizeOfTextGender(appLocale),
                             fontWeight: FontWeight.normal,
                             color: Colors.black),
                         null,
-                        30),
+                        35),
                     //GENDER:
                     Container(
                       width: 300,
@@ -414,7 +425,7 @@ class _UserSettingsState extends State<UserSettings> {
                                         // the save button
                                         TextButton(
                                           child: myAutoSizedText(
-                                              appLocale!.saveButton(gender),
+                                              appLocale!.confirmButton(gender),
                                               TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize:

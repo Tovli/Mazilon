@@ -80,20 +80,14 @@ class _InitialFormPage1State extends State<InitialFormPage1> {
                     TextAlign.center,
                     35),
               ),
-              SizedBox(
-                height: returnSizedBox(context, 20),
-              ),
               Image.asset(
                 'assets/images/initialFormPage1.png',
                 width: MediaQuery.sizeOf(context).width * 0.8 > 1000
-                    ? 500
+                    ? 400
                     : MediaQuery.sizeOf(context).width *
-                        0.8, // Adjust as needed
+                        0.6, // Adjust as needed
                 height:
-                    MediaQuery.sizeOf(context).height * 0.4, // Adjust as needed
-              ),
-              SizedBox(
-                height: returnSizedBox(context, 50),
+                    MediaQuery.sizeOf(context).height * 0.3, // Adjust as needed
               ),
               ConfirmationButton(context, () {
                 widget.next();
