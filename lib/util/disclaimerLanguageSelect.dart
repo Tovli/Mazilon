@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mazilon/util/styles.dart';
 
 class LanguageDropDown extends StatefulWidget {
   final List<Map<String, String>> list = [
@@ -26,7 +27,7 @@ class _LanguageDropDownState extends State<LanguageDropDown> {
   void initState() {
     super.initState();
     // Initialize dropdownValue with null to show "Change Language" initially
-    dropdownValue = null;
+    dropdownValue = widget.list[0]['locale'];
   }
 
   @override
@@ -35,11 +36,19 @@ class _LanguageDropDownState extends State<LanguageDropDown> {
       children: [
         SizedBox(height: 20.0),
         Container(
+          width: MediaQuery.of(context).size.width > 1000
+        ? 600
+        : MediaQuery.of(context).size.width * 0.5,
+          decoration: BoxDecoration(
+          color: primaryPurple,
+          borderRadius: BorderRadius.circular(20), // Rounded edges
+        ),
           child: DropdownButton<String>(
             value: dropdownValue,
-            hint: Text(
-                'Change Language'), // Default text when nothing is selected
-            icon: const Icon(Icons.arrow_downward),
+            icon: SizedBox.shrink(),
+            isExpanded: true,
+            underline: SizedBox.shrink(),
+            
             onChanged: (String? value) {
               if (value != null) {
                 setState(() {
@@ -53,6 +62,7 @@ class _LanguageDropDownState extends State<LanguageDropDown> {
               return DropdownMenuItem<String>(
                 value: item['locale']!,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Displaying the image with the flag
                     Image.asset(
