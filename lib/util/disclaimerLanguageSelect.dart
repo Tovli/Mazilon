@@ -33,13 +33,13 @@ class _LanguageDropDownState extends State<LanguageDropDown> {
     super.initState();
     // Initialize dropdownValue with null to show "Change Language" initially
     final String defaultSystemLocale = Platform.localeName;
-    RegExp eng = RegExp(r'^en(_.*)?$');
-    if (eng.hasMatch(defaultSystemLocale)) {
-      dropdownValue = widget.list[0]['locale'];
-    } else if (defaultSystemLocale == 'he_IL') {
-      dropdownValue = widget.list[1]['locale'];
-    } else {
-      dropdownValue = widget.list[0]['locale'];
+    
+    switch(defaultSystemLocale) {
+      case 'he_IL':
+        dropdownValue = widget.list[1]['locale'];
+        break;
+      default:
+        dropdownValue = widget.list[0]['locale'];
     }
     
     
