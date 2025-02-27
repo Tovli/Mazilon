@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mazilon/util/styles.dart';
+import 'dart:io' show Platform;
+
 
 class LanguageDropDown extends StatefulWidget {
   final List<Map<String, String>> list = [
@@ -12,9 +14,12 @@ class LanguageDropDown extends StatefulWidget {
       'image': 'assets/images/israel.png'
     }, // Replace with your image paths
   ];
+  
 
   final Function changeLocale;
   LanguageDropDown({required this.changeLocale, super.key});
+    
+
 
   @override
   State<LanguageDropDown> createState() => _LanguageDropDownState();
@@ -27,11 +32,22 @@ class _LanguageDropDownState extends State<LanguageDropDown> {
   void initState() {
     super.initState();
     // Initialize dropdownValue with null to show "Change Language" initially
-    dropdownValue = widget.list[0]['locale'];
+    final String defaultSystemLocale = Platform.localeName;
+    RegExp eng = RegExp(r'^en(_.*)?$');
+    if (eng.hasMatch(defaultSystemLocale)) {
+      dropdownValue = widget.list[0]['locale'];
+    } else if (defaultSystemLocale == 'he_IL') {
+      dropdownValue = widget.list[1]['locale'];
+    } else {
+      dropdownValue = widget.list[0]['locale'];
+    }
+    
+    
   }
 
   @override
   Widget build(BuildContext context) {
+    
     return Column(
       children: [
         SizedBox(height: 20.0),
