@@ -198,6 +198,8 @@
 "inspirationalQuotesNo16":"{gender,select,male{זה בסדר לא להיות בסדר} female{זה בסדר לא להיות בסדר} other{זה בסדר לא להיות בסדר}}",
 "inspirationalQuotesNo17":"{gender,select,male{שמור על הקצב שנכון לך} female{שמרי על הקצב שנכון לך} other{שמור/י על הקצב שנכון לך}}",
 "inspirationalQuotesNo18":"{gender,select,male{מה נותן לך כוח להמשיך?} female{מה נותן לך כוח להמשיך?} other{מה נותן לך כוח להמשיך?}}",
+"inspirationalQuotesNo18":"{gender,select,male{מה נותן לך כוח להמשיך?} female{מה נותן לך כוח להמשיך?} other{מה נותן לך כוח להמשיך?}}",
+"inspirationalQuotesNo19":"{gender,select,male{אני יכול להתמודד} female{אני יכולה להתמודד} other{אני יכול/ה להתמודד}}",
 "thanksListNo0":"{gender,select,male{תודה שיש לי רגעים קלים יותר} female{תודה שיש לי רגעים קלים יותר} other{תודה שיש לי רגעים קלים יותר}}",
 "thanksListNo1":"{gender,select,male{תודה על ארוחה טובה} female{תודה על ארוחה טובה} other{תודה על ארוחה טובה}}",
 "thanksListNo2":"{gender,select,male{תודה שהצלחתי להתאמן} female{תודה שהצלחתי להתאמן} other{תודה שהצלחתי להתאמן}}",
