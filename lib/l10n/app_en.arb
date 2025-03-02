@@ -673,6 +673,10 @@
    "@inspirationalQuotesNo18": { 
    "description": ""
     },
+"inspirationalQuotesNo19":"{gender,select,male{I am capable of overcoming my challenges} female{I am capable of overcoming my challenges} other{I am capable of overcoming my challenges}}",
+   "@inspirationalQuotesNo19": { 
+   "description": ""
+    },
 "thanksListNo0":"{gender,select,male{Thanks for having easier moments} female{Thanks for having easier moments} other{Thanks for having easier moments}}",
    "@thanksListNo0": { 
    "description": ""
