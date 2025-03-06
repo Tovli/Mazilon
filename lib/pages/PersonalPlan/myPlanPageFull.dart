@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:mazilon/pages/PersonalPlan/myPlan.dart';
+import 'package:mazilon/pages/PersonalPlan/customCategory.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/appInformation.dart';
@@ -277,6 +278,28 @@ class _MyPlanPageFullState extends State<MyPlanPageFull> {
                   null,
                   24),
             ),
+            SizedBox(
+              height: 30,
+            ),
+            TextButton(onPressed: (){},
+             child: myAutoSizedText(
+                  widget.hasFilled
+                      ? appLocale!.personalPlanPageAddCustomCategory(gender)
+                      : appLocale!.personalPlanPageAddCustomCategory(gender),
+                  TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                  null,
+                  24),
+            style: TextButton.styleFrom(
+                backgroundColor: primaryPurple,
+                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+              ),
+              ),
             SizedBox(
               height: 45,
             ),

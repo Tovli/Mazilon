@@ -113,6 +113,11 @@
     "description": ""
     },
 
+     "personalPlanPageAddCustomCategory": "{gender,select,male{Add a Category} female{Add a Category} other{Add a Category}}",
+    "@personalPlanPageAddCustomCategory": { 
+    "description": ""
+    },
+
      "homePagePersonalPlanMainTitle": "{gender,select,male{My Plan} female{My Plan} other{My Plan}}",
     "@homePagePersonalPlanMainTitle": { 
     "description": ""
@@ -671,6 +676,10 @@
     },
 "inspirationalQuotesNo18":"{gender,select,male{What gives you the strength to continue?} female{What gives you the strength to continue?} other{What gives you the strength to continue?}}",
    "@inspirationalQuotesNo18": { 
+   "description": ""
+    },
+"inspirationalQuotesNo19":"{gender,select,male{I am capable of overcoming my challenges} female{I am capable of overcoming my challenges} other{I am capable of overcoming my challenges}}",
+   "@inspirationalQuotesNo19": { 
    "description": ""
     },
 "thanksListNo0":"{gender,select,male{Thanks for having easier moments} female{Thanks for having easier moments} other{Thanks for having easier moments}}",
