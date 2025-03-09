@@ -281,7 +281,20 @@ class _MyPlanPageFullState extends State<MyPlanPageFull> {
             SizedBox(
               height: 30,
             ),
-            TextButton(onPressed: (){},
+            TextButton(
+              onPressed: () async {
+    // Navigate to the CustomCategoryPage
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => CustomCategoryPage()),
+    );
+
+    // Handle the result from the CustomCategoryPage
+    if (result != null && result is String) {
+      // Do something with the result (the custom category input)
+      print('User entered: $result');
+    }
+  },
              child: myAutoSizedText(
                   widget.hasFilled
                       ? appLocale!.personalPlanPageAddCustomCategory(gender)

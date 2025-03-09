@@ -64,8 +64,7 @@ Map<String, dynamic> retrieveInformation(name, gender, textLocalization) {
 
 List<String> retrieveInspirationalQuotes(localization, gender) {
   List<String> inspirationalQuotes = [];
-  print("dsfhjsdyhfjkhdfsdofsdfjsdkf");
-  print(gender);
+  //print(gender);
   inspirationalQuotes.add(localization.inspirationalQuotesNo0(gender));
   inspirationalQuotes.add(localization.inspirationalQuotesNo1(gender));
   inspirationalQuotes.add(localization.inspirationalQuotesNo2(gender));
@@ -85,6 +84,7 @@ List<String> retrieveInspirationalQuotes(localization, gender) {
   inspirationalQuotes.add(localization.inspirationalQuotesNo16(gender));
   inspirationalQuotes.add(localization.inspirationalQuotesNo17(gender));
   inspirationalQuotes.add(localization.inspirationalQuotesNo18(gender));
+  inspirationalQuotes.add(localization.inspirationalQuotesNo19(gender));
   return inspirationalQuotes;
 }
 
