@@ -187,4 +187,6 @@ jobs:
           flutter build ipa --release \
             --build-name="${BUILD_NAME}" \
             --build-number="${BUILD_NUMBER}" 
+        env:
+          KEYCHAIN_PASSWORD: ${{ secrets.KEY_CHAIN_PASSWORD }}
 
