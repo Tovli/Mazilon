@@ -123,15 +123,6 @@ jobs:
           flutter-version: "3.24.0"
           cache: true
 
-      - name: Install CocoaPods
-        run: |
-          brew install cocoapods
-          cd ios
-          if [ ! -f "Podfile" ]; then
-            pod init
-          fi
-          pod install
-
       - name: Get version from pubspec.yaml
         id: get_version
         run: |
