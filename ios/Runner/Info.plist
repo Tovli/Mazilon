@@ -11,9 +11,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<key>NSContactsUsageDescription</key>
-	<string>This app requires contacts access to function properly.</string>
-	<string>6.0</string>
+    <string>6.0</string>
+    <key>NSContactsUsageDescription</key>
+    <string>This app requires contacts access to function properly.</string>
 	<key>CFBundleName</key>
 	<string>mezilon</string>
 	<key>CFBundlePackageType</key>

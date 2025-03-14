@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  build:
+  build_android:
     runs-on: ubuntu-latest
     env:
       KEYSTORE_PATH: android/app/
@@ -23,7 +23,7 @@ jobs:
         uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
-              
+      
       - name: Create .env file            
         uses: SpicyPizza/create-envfile@v2.0.3
         with:
@@ -64,6 +64,7 @@ jobs:
         run: |
           VERSION_NO_BUILD="${VERSION_STRING%%+*}"
           echo "VERSION_NO_BUILD=$VERSION_NO_BUILD" >> $GITHUB_ENV
+
       - name: Get short commit hash
         run: |
           COMMIT_HASH=$(git rev-parse --short HEAD)
@@ -88,10 +89,121 @@ jobs:
           name: app-release
           path: ${{ env.AAB_PATH }}
 
-      # - name: Build APK
-      #   run: flutter build apk --release
-      # - name: Upload APK
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: app-release-apk
-      #     path: ${{ env.APK_PATH }}
+  build_ios:
+    runs-on: macos-latest
+    env:
+      FIREBASE_OPTIONS_PATH: lib/util/Firebase/firebase_options.dart
+      IOS_OUTPUT_PATH: build/ios/ipa
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Export secrets as env vars
+        uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}
+      - name: Create .env file            
+        uses: SpicyPizza/create-envfile@v2.0.3
+        with:
+            envkey_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+            file_name: .env
+      - name: Write firebase options file
+        run: |
+          echo "$FIREBASE_OPTIONS" | base64 --decode > "${{ env.FIREBASE_OPTIONS_PATH }}"
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: "adopt"
+          java-version: "17.x"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.0"
+          cache: true
+
+      - name: Install CocoaPods
+        working-directory: ios
+        run: |
+          brew install cocoapods
+          if [ ! -f "Podfile" ]; then
+            pod init
+          fi
+          pod install
+      - name: lsla
+        run: ls -la ios/Runner.xcworkspace
+
+      - name: Get version from pubspec.yaml
+        id: get_version
+        run: |
+          VERSION_LINE=$(grep '^version: ' pubspec.yaml)
+          VERSION_STRING=${VERSION_LINE#version: }
+          echo "VERSION_STRING=$VERSION_STRING" >> $GITHUB_ENV
+
+      - name: Parse version components
+        run: |
+          VERSION_NO_BUILD="${VERSION_STRING%%+*}"
+          echo "VERSION_NO_BUILD=$VERSION_NO_BUILD" >> $GITHUB_ENV
+
+      - name: Get short commit hash
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
+
+      - name: Set build name and number
+        run: |
+          BUILD_NAME="${VERSION_NO_BUILD}+${COMMIT_HASH}"
+          BUILD_NUMBER="${GITHUB_RUN_NUMBER}"
+          echo "BUILD_NAME=$BUILD_NAME" >> $GITHUB_ENV
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Create temporary keychain
+        run: |
+          # Create a new keychain with a specified password.
+          security create-keychain -p "$KEYCHAIN_PASSWORD" temp.keychain
+          # Make the temporary keychain the default.
+          security list-keychains -s temp.keychain login.keychain
+          # Set temp.keychain as the default keychain.
+          security default-keychain -s temp.keychain
+          # Unlock the keychain.
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" temp.keychain
+          # (Optional) Set keychain settings to prevent it from locking.
+          security set-keychain-settings -t 3600 -l ~/Library/Keychains/temp.keychain-db
+        env:
+          KEYCHAIN_PASSWORD: ${{ secrets.KEY_CHAIN_PASSWORD }}
+      
+      - name: Run fastlane match (App Store)
+        working-directory: ios
+        run: fastlane match appstore --readonly
+        env:
+          MATCH_PASSWORD: ${{ secrets.FASTLANE_MATCH_PASSWORD }}
+          FASTLANE_USER: ${{ secrets.APPLE_ID }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+          MATCH_REPOSITORY_URL: https://${{ secrets.FASTLANE_MATCH_GIT_PAT }}@github.com/Tovli/fastlane_match.git
+          KEYCHAIN_PASSWORD: ${{ secrets.KEY_CHAIN_PASSWORD }}
+
+      - name: List installed certificates
+        run: security find-identity -v -p codesigning
+      - name: List installed provisioning profiles
+        run: ls ~/Library/MobileDevice/Provisioning\ Profiles/
+      
+      - name: temp step
+        working-directory: ios
+        run: xcodebuild -workspace Runner.xcworkspace -scheme Runner -showBuildSettings | grep CODE_SIGN_IDENTITY 
+      
+      - name: temp step2
+        working-directory: ios
+        run: security find-certificate -a -c "Apple Worldwide Developer Relations Certification Authority" /Library/Keychains/System.keychain
+
+      
+      - name: Build iOS IPA
+        run: |
+          flutter build ipa --release \
+            --build-name="${BUILD_NAME}" \
+            --build-number="${BUILD_NUMBER}" 
+        env:
+          KEYCHAIN_PASSWORD: ${{ secrets.KEY_CHAIN_PASSWORD }}
+
