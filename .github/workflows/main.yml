@@ -150,12 +150,18 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
      
+      - name: Run fastlane match (App Store)
+        working-directory: ios
+        run: fastlane match appstore --readonly
+        env:
+          MATCH_PASSWORD: ${{ secrets.FASTLANE_MATCH_PASSWORD }}
+          FASTLANE_USER: ${{ secrets.APPLE_ID }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+          MATCH_REPOSITORY_URL: https://${{ secrets.FASTLANE_MATCH_GIT_PAT }}@github.com/Tovli/fastlane_match.git
+
       - name: Build iOS IPA
         run: |
           flutter build ipa --release \
             --build-name="${BUILD_NAME}" \
             --build-number="${BUILD_NUMBER}" 
 
-      - name: Deploy to TestFlight via Fastlane
-        working-directory: ios/fastlane
-        run: fastlane beta
