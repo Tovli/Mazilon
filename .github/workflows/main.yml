@@ -159,6 +159,9 @@ jobs:
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           MATCH_REPOSITORY_URL: https://${{ secrets.FASTLANE_MATCH_GIT_PAT }}@github.com/Tovli/fastlane_match.git
 
+      - name: List installed certificates
+        run: security find-identity -v -p codesigning
+        
       - name: Build iOS IPA
         run: |
           flutter build ipa --release \
