@@ -160,7 +160,7 @@ jobs:
           # Unlock the keychain.
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" temp.keychain
           # (Optional) Set keychain settings to prevent it from locking.
-          security set-keychain-settings -t 3600 -l ~/Library/Keychains/temp.keychain
+          security set-keychain-settings -t 3600 -l ~/Library/Keychains/temp.keychain-db
         env:
           KEYCHAIN_PASSWORD: ${{ secrets.KEY_CHAIN_PASSWORD }}
       
