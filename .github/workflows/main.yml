@@ -127,6 +127,9 @@ jobs:
         run: |
           cd ios
           pod install
+      - name: lsla
+        run: ls -la ios/Runner.xcworkspace
+
       - name: Get version from pubspec.yaml
         id: get_version
         run: |
