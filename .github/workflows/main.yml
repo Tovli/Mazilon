@@ -154,8 +154,7 @@ jobs:
         run: |
           flutter build ipa --release \
             --build-name="${BUILD_NAME}" \
-            --build-number="${BUILD_NUMBER}" \
-            --export-options-plist=ios/ExportOptions.plist
+            --build-number="${BUILD_NUMBER}" 
 
       - name: Deploy to TestFlight via Fastlane
         working-directory: ios/fastlane
