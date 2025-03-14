@@ -192,7 +192,11 @@ jobs:
       
       - name: temp step
         working-directory: ios
-        run: xcodebuild -workspace Runner.xcworkspace -scheme Runner -showBuildSettings | grep CODE_SIGN_IDENTITY
+        run: xcodebuild -workspace Runner.xcworkspace -scheme Runner -showBuildSettings | grep CODE_SIGN_IDENTITY 
+      
+      - name: temp step2
+        working-directory: ios
+        run: security find-certificate -a -c "Apple Worldwide Developer Relations Certification Authority" /Library/Keychains/System.keychain
 
       
       - name: Build iOS IPA
