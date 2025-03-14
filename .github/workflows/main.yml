@@ -154,9 +154,13 @@ jobs:
           # Create a new keychain with a specified password.
           security create-keychain -p "$KEYCHAIN_PASSWORD" temp.keychain
           # Make the temporary keychain the default.
-          security list-keychains -s temp.keychain
+          security list-keychains -s temp.keychain login.keychain
+          # Set temp.keychain as the default keychain.
+          security default-keychain -s temp.keychain
           # Unlock the keychain.
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" temp.keychain
+          # (Optional) Set keychain settings to prevent it from locking.
+          security set-keychain-settings -t 3600 -l ~/Library/Keychains/temp.keychain
         env:
           KEYCHAIN_PASSWORD: ${{ secrets.KEY_CHAIN_PASSWORD }}
       
@@ -174,7 +178,10 @@ jobs:
         run: security find-identity -v -p codesigning
       - name: List installed provisioning profiles
         run: ls ~/Library/MobileDevice/Provisioning\ Profiles/
-
+      
+      - name: List installed certificates
+        run: security find-identity -v -p codesigning
+      
       - name: Build iOS IPA
         run: |
           flutter build ipa --release \
