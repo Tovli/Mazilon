@@ -8,7 +8,9 @@ import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FeelGood extends StatefulWidget {
   const FeelGood({super.key});
@@ -37,8 +39,10 @@ class _FeelGoodPageState extends State<FeelGood> {
 
   @override
   Widget build(BuildContext context) {
-    final AppInformation appInfoProvider =
-        Provider.of<AppInformation>(context, listen: true);
+    final userInfoProvider =
+        Provider.of<UserInformation>(context, listen: false);
+    final gender = userInfoProvider.gender;
+    final appLocale = AppLocalizations.of(context);
     return FeelGoodInheritedWidget(
       displayImage: pickerService.displayImage,
       imagePaths: [...imagePaths],
@@ -71,29 +75,20 @@ class _FeelGoodPageState extends State<FeelGood> {
             Container(
               alignment: Alignment.topCenter,
               margin: const EdgeInsets.symmetric(horizontal: 15),
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: myAutoSizedText(
-                    appInfoProvider.feelGoodPageTitles['header'] ?? '',
-                    const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
-                    ),
-                    TextAlign.center,
-                    60),
-              ),
+              child: myAutoSizedText(
+                  appLocale!.feelGoodTitle(gender),
+                  const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                  ),
+                  TextAlign.center,
+                  60),
             ),
             const SizedBox(height: 5),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: myAutoSizedText(
-                    appInfoProvider.feelGoodPageTitles['subHeader'],
-                    TextStyle(fontSize: 18.sp),
-                    null,
-                    18),
-              ),
+              child: myAutoSizedText(appLocale!.feelGoodSubTitle(gender),
+                  TextStyle(fontSize: 18.sp), null, 18),
             ),
             Expanded(
               child: Padding(

@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:mazilon/util/appInformation.dart';
-import 'package:provider/provider.dart';
+
 import 'package:mazilon/util/styles.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 //the about page , it shows the about page text and the logos of the social hub and the clubhouse
 //the text is fetched from the appInformation provider, which fetches the text from the firebase database.
 //the logos are in the assets/images folder
+String englishText =
+    '''This application was developed by Technion Students. As part of the Computer Science Yearly Project Program.
+Instructed by: Dina Alexadrovich. 
+Interdisciplinary Center for Smart Computing,
+CS Faculty,
+Technion.''';
+
 class About extends StatelessWidget {
+  final String version;
+  About({
+    required this.version,
+  });
   @override
   Widget build(BuildContext context) {
-    final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
+    final appLocale = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(150.0),
@@ -29,37 +41,30 @@ class About extends StatelessWidget {
       body: Scrollbar(
         child: SingleChildScrollView(
           child: Column(
-            textDirection: TextDirection.rtl,
             children: [
               Container(
                 alignment: Alignment.topCenter,
                 margin: EdgeInsets.symmetric(horizontal: 15),
-                child: Directionality(
-                  textDirection: TextDirection.rtl,
-                  //the first title of the about page
-                  child: myAutoSizedText(
-                      appInfoProvider.aboutPageText['aboutPageTitle1'] ?? '',
-                      TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                      ),
-                      TextAlign.center,
-                      60),
-                ),
+                child: myAutoSizedText(
+                    appLocale!.aboutTitle1,
+                    TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
+                    TextAlign.center,
+                    60),
               ),
               const SizedBox(height: 5),
               Container(
                 alignment: Alignment.topCenter,
                 margin: EdgeInsets.symmetric(horizontal: 20),
-                child: Directionality(
-                  textDirection: TextDirection.rtl,
-                  //the first text of the about page
-                  child: myAutoSizedText(
-                      appInfoProvider.aboutPageText['aboutPageText1'] ?? '',
-                      TextStyle(fontWeight: FontWeight.normal, fontSize: 20),
-                      TextAlign.justify,
-                      35),
-                ),
+                child: myAutoSizedText(
+                    appLocale!.aboutPage1,
+                    TextStyle(fontWeight: FontWeight.normal, fontSize: 20),
+                    appLocale.textDirection == "rtl"
+                        ? TextAlign.right
+                        : TextAlign.left,
+                    35),
               ),
               const SizedBox(height: 20),
               Container(
@@ -68,9 +73,9 @@ class About extends StatelessWidget {
                 child: Directionality(
                   textDirection: TextDirection.ltr,
                   child: myAutoSizedText(
-                      appInfoProvider.aboutPageText['englishText'] ?? '',
+                      englishText,
                       TextStyle(fontWeight: FontWeight.normal, fontSize: 20),
-                      TextAlign.justify,
+                      TextAlign.left,
                       35),
                 ),
               ),
@@ -78,30 +83,37 @@ class About extends StatelessWidget {
               Container(
                 alignment: Alignment.topCenter,
                 margin: EdgeInsets.symmetric(horizontal: 15),
-                child: Directionality(
-                  textDirection: TextDirection.rtl,
-                  //the second title of the about page
-                  child: myAutoSizedText(
-                      appInfoProvider.aboutPageText['aboutPageTitle2'] ?? '',
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-                      TextAlign.center,
-                      60),
-                ),
+                child: myAutoSizedText(
+                    appLocale.aboutTitle2,
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                    TextAlign.center,
+                    60),
               ),
               const SizedBox(height: 5),
               Container(
                 alignment: Alignment.topCenter,
                 margin: EdgeInsets.symmetric(horizontal: 20),
-                child: Directionality(
-                  textDirection: TextDirection.rtl,
-                  //the second text of the about page
-                  child: myAutoSizedText(
-                      appInfoProvider.aboutPageText['aboutPageText2'] ?? '',
-                      TextStyle(fontWeight: FontWeight.normal, fontSize: 20),
-                      TextAlign.justify,
-                      35),
-                ),
+                child: myAutoSizedText(
+                    appLocale.aboutPage2,
+                    TextStyle(fontWeight: FontWeight.normal, fontSize: 20),
+                    appLocale!.textDirection == "rtl"
+                        ? TextAlign.right
+                        : TextAlign.left,
+                    35),
               ),
+              Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: Text(
+                          "Living Positively App Version : ${version}",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal, fontSize: 20),
+                        )),
+                  )),
               Row(
                 mainAxisAlignment:
                     MainAxisAlignment.spaceEvenly, // Adjust alignment as needed

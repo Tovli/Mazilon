@@ -3,18 +3,29 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 //this it the user's information class, with it we store and display it across the app
 class UserInformation with ChangeNotifier {
+  String localeName;
   String gender;
   String name;
   String age;
   bool binary;
   bool disclaimerSigned;
   List<String> difficultEvents;
+  List<String> positiveTraits;
   List<String> makeSafer;
   List<String> feelBetter;
   List<String> distractions;
   bool loggedIn;
   String userId;
+  int notificationMinute;
+  int notificationHour;
+  Map<String, List<String>> thanks;
+
   UserInformation({
+    this.thanks = const <String, List<String>>{},
+    this.positiveTraits = const [],
+    this.localeName = '',
+    this.notificationHour = 12,
+    this.notificationMinute = 0,
     this.gender = '',
     this.name = '',
     this.age = '',
@@ -27,39 +38,10 @@ class UserInformation with ChangeNotifier {
     this.loggedIn = false,
     this.userId = '',
   });
-  Map<String, dynamic> toJson() {
-    return {
-      'gender': gender,
-      'name': name,
-      'age': age,
-      'binary': binary,
-      'disclaimerSigned': disclaimerSigned,
-      'difficultEvents': difficultEvents,
-      'makeSafer': makeSafer,
-      'feelBetter': feelBetter,
-      'distractions': distractions,
-      'loggedIn': loggedIn,
-      'userId': userId,
-    };
-  }
 
-  factory UserInformation.fromJson(Map<String, dynamic> json) {
-    return UserInformation(
-      gender: json['gender'] as String? ?? '',
-      name: json['name'] as String? ?? '',
-      userId: json['userId'] as String? ?? '',
-      age: json['age'] as String? ?? '',
-      binary: json['binary'] as bool? ?? false,
-      loggedIn: json['loggedIn'] as bool? ?? false,
-      disclaimerSigned: json['disclaimerSigned'] as bool? ?? false,
-      difficultEvents:
-          List<String>.from(json['difficultEvents'] as List? ?? []),
-      makeSafer: List<String>.from(json['makeSafer'] as List? ?? []),
-      feelBetter: List<String>.from(json['feelBetter'] as List? ?? []),
-      distractions: List<String>.from(json['distractions'] as List? ?? []),
-    );
-  }
-  void reset() {
+  void reset(String locale) {
+    notificationHour = 12;
+    notificationMinute = 0;
     gender = '';
     name = '';
     age = '';
@@ -71,27 +53,54 @@ class UserInformation with ChangeNotifier {
     distractions = [];
     loggedIn = false;
     userId = '';
+    thanks = {};
+    positiveTraits = [];
+    localeName = locale;
+
     notifyListeners();
   }
 
   void updateGender(String text) {
+    void saveGender(String value) async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('gender', value);
+    }
+
     gender = text;
+    saveGender(text);
     notifyListeners();
   }
 
   void updateName(String text) {
-    name = text;
+    void saveName(String value) async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('name', value);
+    }
 
+    name = text;
+    saveName(text);
     notifyListeners();
   }
 
   void updateAge(String text) {
+    void saveAge(String value) async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('age', value);
+    }
+
     age = text;
+    saveAge(text);
     notifyListeners();
   }
 
   void updateBinary(bool value) {
+    void saveBinary(bool value) async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setBool('binary', value);
+    }
+
     binary = value;
+    saveBinary(value);
     notifyListeners();
   }
 
@@ -127,6 +136,44 @@ class UserInformation with ChangeNotifier {
 
   void updateUserId(String value) {
     userId = value;
+    notifyListeners();
+  }
+
+  void updateNotificationHour(int value) {
+    notificationHour = value;
+    notifyListeners();
+  }
+
+  void updateNotificationMinute(int value) {
+    notificationMinute = value;
+    notifyListeners();
+  }
+
+  void updateLocaleName(String value) {
+    localeName = value;
+    notifyListeners();
+  }
+
+  void updatePositiveTraits(List<String> value) {
+    Future<void> savePositiveTraits(List<String> value) async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setStringList('positiveTraits', value);
+    }
+
+    positiveTraits = [...value];
+    savePositiveTraits(value);
+    notifyListeners();
+  }
+
+  void updateThanks(Map<String, List<String>> value) {
+    Future<void> saveThanks(List<String> thanks, List<String> dates) async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setStringList('thankYous', thanks);
+      prefs.setStringList('dates', dates);
+    }
+
+    thanks = {"thanks": value["thanks"] ?? [], "dates": value["dates"] ?? []};
+    saveThanks(value["thanks"] ?? [], value["dates"] ?? []);
     notifyListeners();
   }
 }

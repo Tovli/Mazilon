@@ -1,90 +1,156 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mazilon/initialForm/initialFormPage1.dart';
 import 'package:mazilon/initialForm/initialFormPage2.dart';
 import 'package:mazilon/initialForm/toFormPage.dart';
-import 'package:mazilon/menu.dart';
-import 'package:mazilon/util/Form/checkbox_model.dart';
+
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
-import 'package:mazilon/disclaimerPage.dart';
-import 'package:mazilon/util/styles.dart';
 
 import 'package:mazilon/initialForm/form.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../MenuTest/FeelGood/FeelGood_test.mocks.dart';
+
+@GenerateNiceMocks([
+  MockSpec<UserInformation>(),
+  MockSpec<AppInformation>(),
+  MockSpec<SharedPreferences>(),
+])
 void main() {
-  // Mock data for testing
-  List<List<String>> collections = [];
-  List<String> collectionNames = [];
-  Map<String, CheckboxModel> checkboxModels = {};
-  PhonePageData phonePageData = PhonePageData(
-      header: '',
-      phoneNames: [],
-      phoneNumbers: [],
-      subTitle: '',
-      midTitle: '',
-      phoneNameTitle: '',
-      phoneNumberTitle: '',
-      key: '',
-      savedPhoneNames: [],
-      savedPhoneNumbers: [],
-      phoneDescription: []);
+  TestWidgetsFlutterBinding.ensureInitialized();
+  group('FeelGood Widget Tests', () {
+    late MockSharedPreferences mockSharedPreferences;
+    late UserInformation mockUserInformation;
+    late AppInformation mockAppInformation;
+    late PhonePageData phonePageData;
+    setUp(() {
+      mockUserInformation = UserInformation();
+      mockAppInformation = AppInformation();
+      mockUserInformation.gender = "male";
+      mockUserInformation.disclaimerSigned = true;
+      SharedPreferences.setMockInitialValues({'hasFilled': false});
+      phonePageData = PhonePageData(
+          header: '',
+          phoneNames: [],
+          phoneNumbers: [],
+          subTitle: '',
+          midTitle: '',
+          phoneNameTitle: '',
+          phoneNumberTitle: '',
+          key: '',
+          savedPhoneNames: [],
+          savedPhoneNumbers: [],
+          phoneDescription: []);
 
-  // Mock providers
-  final appInformation = AppInformation();
-  final userInformation = UserInformation();
+      mockSharedPreferences = MockSharedPreferences();
+      when(mockSharedPreferences.getStringList('SavedPhoneNames'))
+          .thenReturn([]);
+      when(mockSharedPreferences.getStringList('SavedPhoneNumbers'))
+          .thenReturn([]);
+    });
 
-  // Setup the test environment
-  setUpAll(() async {
-    SharedPreferences.setMockInitialValues(
-        {}); // Initialize empty SharedPreferences for testing
-  });
+    // Setup the test environment
+    // SharedPreferences.setMockInitialValues({'hasFilled': false});
 
-  Widget createTestWidget() {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<AppInformation>.value(value: appInformation),
-        ChangeNotifierProvider<UserInformation>.value(value: userInformation),
-      ],
-      child: MaterialApp(
-        home: InitialFormProgressIndicator(
-          collections: collections,
-          collectionNames: collectionNames,
-          checkboxModels: checkboxModels,
-          phonePageData: phonePageData,
+    Widget createTestWidget() {
+      return MultiProvider(
+        providers: [
+          ChangeNotifierProvider<AppInformation>.value(
+              value: mockAppInformation),
+          ChangeNotifierProvider<UserInformation>.value(
+              value: mockUserInformation),
+        ],
+        child: MaterialApp(
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: Locale('he'),
+          localizationsDelegates: [
+            AppLocalizations.localizationsDelegates[0],
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate
+          ],
+          home: ScreenUtilInit(
+            designSize: const Size(360, 690),
+            child: InitialFormProgressIndicator(
+              phonePageData: phonePageData,
+              changeLocale: (String locale) {},
+            ),
+          ),
         ),
-      ),
-    );
-  }
+      );
+    }
 
-  testWidgets('InitialFormProgressIndicator navigation test',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(createTestWidget());
+    testWidgets('FormPageTemplate widget test', (WidgetTester tester) async {
+      await tester.pumpWidget(MultiProvider(
+        providers: [
+          ChangeNotifierProvider<AppInformation>.value(
+              value: mockAppInformation),
+          ChangeNotifierProvider<UserInformation>.value(
+              value: mockUserInformation),
+        ],
+        child: MaterialApp(
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: Locale('he'),
+          localizationsDelegates: [
+            AppLocalizations.localizationsDelegates[0],
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate
+          ],
+          home: ScreenUtilInit(
+            designSize: const Size(360, 690),
+            child: InitialFormProgressIndicator(
+              phonePageData: phonePageData,
+              changeLocale: (String locale) {},
+            ),
+          ),
+        ),
+      ));
+      await tester.pumpAndSettle();
 
-    // Verify the initial state
-    expect(find.byType(InitialFormPage1), findsOneWidget);
-    expect(find.byType(InitialFormPage2), findsNothing);
-    expect(find.byType(ToFormPage), findsNothing);
+      // Verify the initial state
+      expect(find.byType(InitialFormPage1), findsOneWidget);
+      expect(find.byType(InitialFormPage2), findsNothing);
+      expect(find.byType(ToFormPage), findsNothing);
 
-    // Tap the next button
-    await tester.tap(find.text('דלג/י'));
-    await tester.pumpAndSettle();
+      // Tap the next button
+      await tester.scrollUntilVisible(
+        find.text('המשך'),
+        500.0,
+        scrollable: find.byType(Scrollable),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('המשך'));
+      await tester.pumpAndSettle();
 
-    // Verify the state after tapping next
-    expect(find.byType(InitialFormPage1), findsNothing);
-    expect(find.byType(InitialFormPage2), findsOneWidget);
-    expect(find.byType(ToFormPage), findsNothing);
+      // Verify the state after tapping next
+      expect(find.byType(InitialFormPage1), findsNothing);
+      expect(find.byType(InitialFormPage2), findsOneWidget);
+      expect(find.byType(ToFormPage), findsNothing);
 
-    // Tap the next button again
-    await tester.tap(find.text('דלג/י'));
-    await tester.pumpAndSettle();
+      // Tap the next button again
+      await tester.scrollUntilVisible(
+        find.text('המשך'),
+        500.0,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('המשך'));
+      await tester.pumpAndSettle();
 
-    // Verify the state after tapping next
-    expect(find.byType(InitialFormPage1), findsNothing);
-    expect(find.byType(InitialFormPage2), findsNothing);
-    expect(find.byType(ToFormPage), findsOneWidget);
+      // Verify the state after tapping next
+      expect(find.byType(InitialFormPage1), findsNothing);
+      expect(find.byType(InitialFormPage2), findsNothing);
+      expect(find.byType(ToFormPage), findsOneWidget);
+    });
   });
 }

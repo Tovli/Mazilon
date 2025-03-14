@@ -23,7 +23,7 @@ import 'package:mockito/mockito.dart';
 import '../TestMenu.dart';
 import '../test_data.dart';
 
-import 'FeelGood_test.mocks.dart';
+import 'feelGood_test.mocks.dart';
 
 @GenerateNiceMocks([
   MockSpec<VideoPlayerPageFactory>(),
@@ -85,6 +85,8 @@ void main() {
       mockSharedPreferences = MockSharedPreferences();
       mockUserInformation = UserInformation();
       mockAppInformation = AppInformation();
+      mockUserInformation.gender = "male";
+      mockUserInformation.localeName = "he";
       getData(mockAppInformation);
       when(mockSharedPreferences.getBool('firstTime')).thenReturn(true);
     });
@@ -93,9 +95,6 @@ void main() {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
 
-      await tester.tap(find.text('תפריט'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-      expect(find.byType(FractionallySizedBox), findsOneWidget);
       await tester.tap(find.text('להרגיש טוב'));
       await tester.pumpAndSettle(const Duration(seconds: 1));
       expect(find.byType(FeelGood), findsOneWidget);
@@ -120,8 +119,6 @@ void main() {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
 
-      await tester.tap(find.text('תפריט'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
       await tester.tap(find.text('להרגיש טוב'));
       await tester.pumpAndSettle(const Duration(seconds: 1));
       expect(find.byKey(const Key("addImgButtonText")), findsOneWidget);
@@ -138,8 +135,6 @@ void main() {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
 
-      await tester.tap(find.text('תפריט'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
       await tester.tap(find.text('להרגיש טוב'));
       await tester.pumpAndSettle(const Duration(seconds: 1));
       await tester.tap(find.byKey(const Key("addImgButtonText")));
@@ -155,8 +150,6 @@ void main() {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
 
-      await tester.tap(find.text('תפריט'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
       await tester.tap(find.text('להרגיש טוב'));
       await tester.pumpAndSettle(const Duration(seconds: 1));
 

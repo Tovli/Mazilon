@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
 import 'package:mazilon/iFx/service_locator.dart';
+import 'package:mazilon/file_service.dart';
 
 import 'package:mazilon/pages/WellnessTools/VideoPlayerPageFactory.dart';
 import 'package:mazilon/pages/WellnessTools/more_videos_item.dart';
@@ -22,6 +23,7 @@ import 'FakeVideoPlayerPage.dart';
 import 'wellnessTools_test.mocks.dart';
 
 @GenerateNiceMocks([
+  MockSpec<FileService>(),
   MockSpec<VideoPlayerPageFactory>(),
   MockSpec<ImagePickerService>(),
   MockSpec<SharedPreferences>(),
@@ -42,7 +44,8 @@ void main() {
 
       // Reset getIt before each test
       locator.reset();
-
+      final mockFileServiceImpl = MockFileService();
+      getIt.registerLazySingleton<FileService>(() => mockFileServiceImpl);
       final mockFactory = MockVideoPlayerPageFactory();
       when(mockFactory.create(
         onFullScreenChanged: anyNamed('onFullScreenChanged'),
@@ -70,6 +73,8 @@ void main() {
       mockSharedPreferences = MockSharedPreferences();
       mockUserInformation = UserInformation();
       mockAppInformation = AppInformation();
+      mockUserInformation.gender = "male";
+      mockUserInformation.localeName = "he";
       getData(mockAppInformation);
 
       when(mockSharedPreferences.getBool('firstTime')).thenReturn(true);

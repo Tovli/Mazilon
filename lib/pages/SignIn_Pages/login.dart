@@ -11,7 +11,7 @@ import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Firebase/firebase_functions.dart';
-import 'package:mazilon/util/Form/checkbox_model.dart';
+
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/util/SignIn/form_container.dart';
 import 'package:mazilon/util/SignIn/popup_toast.dart';
@@ -22,20 +22,15 @@ import 'package:firebase_core/firebase_core.dart';
 // LoginPage is a stateful widget that handles the user login process.
 // It supports both email/password login and Google login.
 class LoginPage extends StatefulWidget {
-  final List<List<String>> collections; // Data collections used in the app
-  final List<String> collectionNames; // Names of the data collections
-  final Map<String, CheckboxModel>
-      checkboxModels; // Checkbox models for the form
   PhonePageData phonePageData; // Data related to phone page
   FirebaseApp dbUsersApp; // FirebaseApp instance
+  final Function changeLocale;
 
   LoginPage(
       {super.key,
-      required this.collections,
-      required this.collectionNames,
-      required this.checkboxModels,
       required this.dbUsersApp,
-      required this.phonePageData});
+      required this.phonePageData,
+      required this.changeLocale});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -312,11 +307,9 @@ class _LoginPageState extends State<LoginPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => SignUpPage(
-                              collections: widget.collections,
-                              collectionNames: widget.collectionNames,
-                              checkboxModels: widget.checkboxModels,
                               phonePageData: widget.phonePageData,
                               dbUsersApp: widget.dbUsersApp,
+                              changeLocale: widget.changeLocale,
                             ),
                           ),
                           (route) => false,
@@ -362,11 +355,8 @@ class _LoginPageState extends State<LoginPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => InitialFormProgressIndicator(
-                            collections: widget.collections,
-                            collectionNames: widget.collectionNames,
-                            checkboxModels: widget.checkboxModels,
-                            phonePageData: widget.phonePageData,
-                          ),
+                              phonePageData: widget.phonePageData,
+                              changeLocale: widget.changeLocale),
                         ),
                       );
                     },

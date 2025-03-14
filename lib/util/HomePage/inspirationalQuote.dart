@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 //Display a random Inspirational Quote
 class InspirationalQuote extends StatefulWidget {
@@ -34,6 +35,7 @@ class _InspirationalQuoteState extends State<InspirationalQuote> {
 
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context);
     return Visibility(
       visible: showText,
       child: Container(
@@ -45,58 +47,67 @@ class _InspirationalQuoteState extends State<InspirationalQuote> {
             ? 800
             : MediaQuery.of(context).size.width,
         height: 120,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: Stack(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    setShow();
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.fromLTRB(4, 4, 0, 10),
-                    child: Icon(Icons.close),
-                  ),
-                )
-              ],
+            Positioned(
+              top: 5, // Adjust the position as needed
+              left: appLocale!.textDirection == "rtl" ? 5 : null,
+              right: appLocale!.textDirection == "rtl" ? null : 5,
+
+              child: GestureDetector(
+                onTap: () {
+                  setShow();
+                },
+                child: const Padding(
+                  padding: EdgeInsets.fromLTRB(4, 4, 0, 4),
+                  child: Icon(Icons.close),
+                ),
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: myAutoSizedText(
-                        widget.quotes[number],
-                        TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: appWhite,
-                            fontSize: 26.sp),
-                        TextAlign.right,
-                        26,
-                        2),
+            Align(
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.refresh,
+                      size: 35.sp,
+                      color: appWhite,
+                    ),
+                    //"refresh" button to change the quote
+                    onPressed: () {
+                      setState(() {
+                        number = Random().nextInt(widget.quotes.length);
+                      });
+                    },
                   ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.refresh,
-                    size: 35,
-                    color: appWhite,
+                  const SizedBox(
+                    width: 10,
                   ),
-                  //"refresh" button to change the quote
-                  onPressed: () {
-                    setState(() {
-                      number = Random().nextInt(widget.quotes.length);
-                    });
-                  },
-                ),
-              ],
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(
+                          (appLocale.textDirection == "rtl" ? 30.0 : 0),
+                          0,
+                          (appLocale.textDirection == "rtl" ? 0.0 : 30.0),
+                          0),
+                      child: myAutoSizedText(
+                          widget.quotes[number],
+                          TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: appWhite,
+                              fontSize: 24.sp),
+                          appLocale!.textDirection == "rtl"
+                              ? TextAlign.right
+                              : TextAlign.left,
+                          24,
+                          4),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

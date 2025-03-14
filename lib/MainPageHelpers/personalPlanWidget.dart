@@ -14,11 +14,12 @@ import 'dart:math';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // the personal plan widget, thats related to the personal plan section in home page
 class PersonalPlanWidget extends StatefulWidget {
   final Map<String, dynamic> text; // the text of the personal plan
-  final Function(int)
+  final Function(BuildContext, int)
       changeCurrentIndex; // the function to change the current index
   const PersonalPlanWidget(
       {super.key, required this.text, required this.changeCurrentIndex});
@@ -70,6 +71,7 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
 // the build function of the personal plan widget
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context);
     loadFeelBetter();
     // the providers of the app information and the user information
     final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
@@ -89,47 +91,37 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
             SectionBarHome(
                 textWidget: TextButton(
                     onPressed: () {
-                      widget.changeCurrentIndex(1);
+                      widget.changeCurrentIndex(context, 1);
                     },
                     // the title of the personal plan section in the home page
-                    child: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: myAutoSizedText(
-                          appInfoProvider.personalPlanMainTitle[
-                              'PersonalPlanMainTitle-${userInfoProvider.gender}'],
-                          TextStyle(
-                            fontSize: 24.sp, // the font size of the title
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black, // the color of the title
-                          ),
-                          null,
-                          40),
-                    )),
+                    child: myAutoSizedText(
+                        appLocale!.personalPlanPageMyPlan(gender),
+                        TextStyle(
+                          fontSize: 24.sp, // the font size of the title
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black, // the color of the title
+                        ),
+                        null,
+                        40)),
                 icon: Icons.note_add, // the icon of the personal plan section
                 icons: [
                   // the share and download buttons
                   myTextButton(() async {
                     await fileService.share(
-                        appInfoProvider.shareMessages['emergency']!,
+                        "",
                         [
-                          appInfoProvider
-                              .formDifficultEventsTitles['header$gender'],
-                          appInfoProvider.formMakeSaferTitles['header$gender'],
-                          appInfoProvider.formFeelBetterTitles['header$gender'],
-                          appInfoProvider
-                              .formDistractionsTitles['header$gender'],
-                          appInfoProvider.formPhonePage['header$gender'],
+                          appLocale!.difficultEventsHeader(gender),
+                          appLocale!.makeSaferHeader(gender),
+                          appLocale!.feelBetterHeader(gender),
+                          appLocale!.distractionsHeader(gender),
+                          appLocale!.phonesPageHeader(gender),
                         ],
                         [
-                          appInfoProvider
-                              .formDifficultEventsTitles['subTitle$gender'],
-                          appInfoProvider
-                              .formMakeSaferTitles['subTitle$gender'],
-                          appInfoProvider
-                              .formFeelBetterTitles['subTitle$gender'],
-                          appInfoProvider
-                              .formDistractionsTitles['subTitle$gender'],
-                          appInfoProvider.formPhonePage['subTitle$gender'],
+                          appLocale!.difficultEventsSubTitle(gender),
+                          appLocale!.makeSaferSubTitle(gender),
+                          appLocale!.feelBetterSubTitle(gender),
+                          appLocale!.distractionsSubTitle(gender),
+                          appLocale!.phonesPageHeader(gender),
                         ],
                         appInfoProvider.sharePDFtexts,
                         ShareFileType.PDF);
@@ -137,27 +129,25 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
                   myTextButton(() async {
                     // the function to download the pdf file of the personal plan
                     var result = await fileService.download([
-                      appInfoProvider
-                          .formDifficultEventsTitles['header$gender'],
-                      appInfoProvider.formMakeSaferTitles['header$gender'],
-                      appInfoProvider.formFeelBetterTitles['header$gender'],
-                      appInfoProvider.formDistractionsTitles['header$gender'],
-                      appInfoProvider.formPhonePage['header$gender'],
+                      appLocale!.difficultEventsHeader(gender),
+                      appLocale!.makeSaferHeader(gender),
+                      appLocale!.feelBetterHeader(gender),
+                      appLocale!.distractionsHeader(gender),
+                      appLocale!.phonesPageHeader(gender),
                     ], [
-                      appInfoProvider
-                          .formDifficultEventsTitles['subTitle$gender'],
-                      appInfoProvider.formMakeSaferTitles['subTitle$gender'],
-                      appInfoProvider.formFeelBetterTitles['subTitle$gender'],
-                      appInfoProvider.formDistractionsTitles['subTitle$gender'],
-                      appInfoProvider.formPhonePage['subTitle$gender'],
+                      appLocale!.difficultEventsSubTitle(gender),
+                      appLocale!.makeSaferSubTitle(gender),
+                      appLocale!.feelBetterSubTitle(gender),
+                      appLocale!.distractionsSubTitle(gender),
+                      appLocale!.phonesPageHeader(gender),
                     ], appInfoProvider.sharePDFtexts, ShareFileType.PDF);
                     if (result == null) {
                       // Show him a message
-                      showToast(message: 'ההורדה נכשלה');
+                      showToast(message: appLocale!.downloadFailed(gender));
                       return;
                     }
                     // Show a toast message to the user
-                    showToast(message: 'הקובץ שלך ירד');
+                    showToast(message: appLocale!.finishedDownloading(gender));
                   }, Icons.download, Colors.black) // the download icon
                 ],
                 // the sub title of the personal plan section in the home page
@@ -182,21 +172,20 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
             // the button to take the user to the personal plan page
             GestureDetector(
               onTap: () {
-                widget.changeCurrentIndex(1);
+                widget.changeCurrentIndex(context, 1);
                 // Handle the button tap here
               },
               child: Row(
                 children: [
-                  const Icon(Icons.arrow_left),
                   myAutoSizedText(
-                      appInfoProvider.returnToPlanStrings['AllPlan'] ??
-                          'לכל התוכנית',
+                      appLocale!.personalPlanPageAllPlan(gender),
                       TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 12.sp // the font size of the text
                           ),
                       null,
                       20),
+                  const Icon(Icons.arrow_right),
                 ],
               ),
             )

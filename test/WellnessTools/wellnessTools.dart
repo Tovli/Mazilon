@@ -57,7 +57,8 @@ class _WellnessToolsState extends State<WellnessTools> {
                   children: [
                     Text(
                       'מצילון',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                     ),
                     Container(
                       height: 100,

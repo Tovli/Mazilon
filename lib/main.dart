@@ -1,11 +1,19 @@
+import 'dart:math';
+import 'package:language_code/language_code.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/Locale/locale_service.dart';
 import 'package:mazilon/iFx/service_locator.dart';
+import 'package:mazilon/l10n/l10n.dart';
+import 'package:mazilon/pages/notifications/notification_service.dart';
 import 'package:mazilon/util/logger_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
 import 'util/Firebase/firebase_options.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -14,10 +22,10 @@ import '/pages/SignIn_Pages/introduction.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/Firebase/firebase_functions.dart';
-import 'package:mazilon/util/Form/checkbox_model.dart';
+
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/initialForm/form.dart';
-import 'package:mazilon/util/userSyncFirebaseProvider.dart';
+import 'package:upgrader/upgrader.dart';
 
 //testing:
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -32,7 +40,43 @@ List<String> checkboxCollectionNames = [
   'PersonalPlan-Distractions',
   // Add the new table name
 ];
-Future<FirebaseApp> initializeApp() async {
+
+@pragma(
+    'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    try {
+
+      if (inputData == null ||
+          !inputData.containsKey("text") ||
+          !inputData.containsKey("timeHour") ||
+          !inputData.containsKey("timeMinute") ||
+          !inputData.containsKey("id")) {
+        throw ArgumentError("Invalid input data for notification");
+      }
+      int number = Random().nextInt(inputData["text"].length);
+      await NotificationsService.init();
+      await NotificationsService.cancelNotifications(null, cancelWorker: false);
+      TimeOfDay calculatedTime = NotificationsService.calculateTime(
+          inputData["timeHour"],
+          inputData["timeMinute"]); // Calculate the time for the notification
+
+      NotificationsService.scheduleNotification(
+          calculatedTime, inputData["id"], inputData["text"][number]);
+
+      return Future.value(true);
+    } catch (error, stackTrace) {
+      IncidentLoggerService loggerService =
+          GetIt.instance<IncidentLoggerService>();
+      await loggerService.captureLog(error,
+          stackTrace: stackTrace,
+          exceptionData: {'name': 'inputData', 'value': inputData});
+    }
+    return Future.value(false);
+  });
+}
+
+Future<void> initializeApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -41,48 +85,42 @@ Future<FirebaseApp> initializeApp() async {
   setupLocator();
   //REMOVE COMMENT ON FUTURE UPDATES FOR SYNC DEVICE FUNCTIONALITY
   // Initialize the second Firebase app for dbUsers
-
-  FirebaseApp dbUsersApp = await Firebase.initializeApp(
-    name: 'dbRealTime', // Name this instance to differentiate it
-    options: DefaultFirebaseOptions
-        .currentPlatform, // Use your custom FirebaseOptions
-  );
-  return dbUsersApp;
 }
 
 void main() async {
-  FirebaseApp dbUsersApp = await initializeApp();
+  await initializeApp();
+
   IncidentLoggerService sentryService = GetIt.instance<IncidentLoggerService>();
+  Workmanager().initialize(
+    callbackDispatcher,
+    isInDebugMode: false,
+  );
   await sentryService.initializeSentry(
     MultiProvider(
       providers: [
         for (int i = 0; i < checkboxCollectionNames.length; i++)
           // Initialize the checkbox models
+
+          // Initialize the phonePageData provider
           ChangeNotifierProvider(
-            create: (context) => CheckboxModel(checkboxCollectionNames[i],
-                checkboxCollectionNames[i], "", "", "", ""),
+            create: (context) => PhonePageData(
+                key: "PhonePage",
+                phoneNames: [],
+                phoneNumbers: [],
+                header: "", // Blank for unknown field
+                subTitle: "", // Blank for unknown field
+                midTitle: "", // Blank for unknown field
+                phoneNameTitle: "", // Blank for unknown field
+                phoneNumberTitle: "", // Blank for unknown field
+                savedPhoneNames: [], // Assuming empty list for unknown
+                savedPhoneNumbers: [], // Assuming empty list for unknown
+                phoneDescription: [] // Assuming empty list for unknown
+                )
+              ..loadItemsFromPrefs(), // Initialize phonePageData
           ),
-        // Initialize the phonePageData provider
-        ChangeNotifierProvider(
-          create: (context) => PhonePageData(
-              key: "PhonePage",
-              phoneNames: [],
-              phoneNumbers: [],
-              header: "", // Blank for unknown field
-              subTitle: "", // Blank for unknown field
-              midTitle: "", // Blank for unknown field
-              phoneNameTitle: "", // Blank for unknown field
-              phoneNumberTitle: "", // Blank for unknown field
-              savedPhoneNames: [], // Assuming empty list for unknown
-              savedPhoneNumbers: [], // Assuming empty list for unknown
-              phoneDescription: [] // Assuming empty list for unknown
-              )
-            ..loadItemsFromPrefs(), // Initialize phonePageData
-        ),
         //REMOVE COMMENT ON FUTURE UPDATES FOR SYNC DEVICE FUNCTIONALITY
         // Initialize the FirebaseAppProvider for dbUsersApp-REALTIME DB
-        ChangeNotifierProvider(
-            create: (context) => FirebaseAppProvider(dbUsersApp)),
+
         // Initialize the APP information provider
         ChangeNotifierProvider(create: (context) => AppInformation()),
         // Initialize the User information provider
@@ -99,13 +137,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Map<String, CheckboxModel> checkboxModels = {};
   bool firsttime = false;
+  String localeName = '';
 
-  List<List<String>> collections = [];
   bool _isInitialized = false;
-  // adding checkboxmodel for the form add here:
-
   List<String> phonePageCollectionNames = [
     'PersonalPlan-PhonesPage',
   ];
@@ -125,6 +160,19 @@ class _MyAppState extends State<MyApp> {
 
     setState(() {
       hasFilled = prefs.getBool('hasFilled') ?? false;
+    });
+  }
+
+  Future<void> setLocale() async {
+    LocaleService localeService = GetIt.instance<LocaleService>();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? prefsLocale = prefs.getString('localeName');
+
+    setState(() {
+      localeService.setLocale(prefsLocale);
+
+      localeName = localeService.getLocale();
     });
   }
 
@@ -157,18 +205,11 @@ class _MyAppState extends State<MyApp> {
     super.didChangeDependencies();
   }
 
-  void confirmDisclaimer(mycontext) {
-    Navigator.pushAndRemoveUntil(
-      mycontext,
-      MaterialPageRoute(
-          builder: (context) => InitialFormProgressIndicator(
-                collections: collections,
-                collectionNames: checkboxCollectionNames,
-                checkboxModels: checkboxModels,
-                phonePageData: phonePageData,
-              )),
-      (Route<dynamic> route) => false,
-    );
+  void changeLocale(String locale) {
+    LocaleService localeService = GetIt.instance<LocaleService>();
+    setState(() {
+      localeService.setLocale(locale);
+    });
   }
 
   ValueNotifier<Widget?> widgetNotifier = ValueNotifier<Widget?>(null);
@@ -176,46 +217,55 @@ class _MyAppState extends State<MyApp> {
   //app start this runs:
   @override
   Widget build(BuildContext context) {
+    LocaleService localeService = GetIt.instance<LocaleService>();
     final appInfoProvider = Provider.of<AppInformation>(context, listen: false);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
-    FirebaseApp dbUsersApp =
-        Provider.of<FirebaseAppProvider>(context, listen: false).dbUsersApp;
-
     if (widgetNotifier.value == null) {
       Future.wait([
         //load from DB or from json:
-        loadAppInformation(appInfoProvider, checkboxCollectionNames,
-            collections, checkboxModels),
-        loadUserInformation(userInfoProvider),
+        loadAppInformation(appInfoProvider),
+        loadUserInformation(userInfoProvider, localeService.getLocale()),
+        setLocale()
       ]).then((_) {
         //initialize which widget will run first:
         widgetNotifier.value = phonePageData != null
             //user filled data:
             ? FirstPage(
-                collections: collections,
-                collectionNames: checkboxCollectionNames,
-                checkboxModels: checkboxModels,
                 firsttime: firsttime,
                 hasFilled: hasFilled,
-                dbUsersApp: dbUsersApp,
+                changeLocale: changeLocale,
                 phonePageData: phonePageData)
             //first login:
             : const Center(child: Introduction());
       });
     }
+    if (localeName == '') {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return ScreenUtilInit(
       designSize: Size(360, 690),
       builder: (context, child) => MaterialApp(
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: Locale(localeService.getLocale()),
+        localizationsDelegates: [
+          AppLocalizations.localizationsDelegates[0],
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate
+        ],
         debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: ValueListenableBuilder<Widget?>(
-            valueListenable: widgetNotifier,
-            builder: (context, widget, child) {
-              //widget running on success or intro in first login:
-              return widget ?? const Center(child: Introduction());
-            },
+        home: UpgradeAlert(
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: ValueListenableBuilder<Widget?>(
+              valueListenable: widgetNotifier,
+              builder: (context, widget, child) {
+                //widget running on success or intro in first login:
+                return widget ?? const Center(child: Introduction());
+              },
+            ),
           ),
         ),
       ),
