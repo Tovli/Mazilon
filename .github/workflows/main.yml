@@ -124,6 +124,7 @@ jobs:
           cache: true
 
       - name: Install CocoaPods
+        working-directory: ios
         run: |
           brew install cocoapods
           cd ios
@@ -191,6 +192,7 @@ jobs:
         run: ls ~/Library/MobileDevice/Provisioning\ Profiles/
       
       - name: temp step
+        working-directory: ios
         run: xcodebuild -workspace Runner.xcworkspace -scheme Runner -showBuildSettings | grep CODE_SIGN_IDENTITY
 
       
