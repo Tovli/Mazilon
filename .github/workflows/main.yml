@@ -149,7 +149,17 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
-     
+      - name: Create temporary keychain
+        run: |
+          # Create a new keychain with a specified password.
+          security create-keychain -p "$KEYCHAIN_PASSWORD" temp.keychain
+          # Make the temporary keychain the default.
+          security list-keychains -s temp.keychain
+          # Unlock the keychain.
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" temp.keychain
+        env:
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+      
       - name: Run fastlane match (App Store)
         working-directory: ios
         run: fastlane match appstore --readonly
@@ -163,7 +173,7 @@ jobs:
         run: security find-identity -v -p codesigning
       - name: List installed provisioning profiles
         run: ls ~/Library/MobileDevice/Provisioning\ Profiles/
-         
+
       - name: Build iOS IPA
         run: |
           flutter build ipa --release \
