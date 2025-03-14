@@ -179,8 +179,8 @@ jobs:
       - name: List installed provisioning profiles
         run: ls ~/Library/MobileDevice/Provisioning\ Profiles/
       
-      - name: List installed certificates
-        run: security find-identity -v -p codesigning ~/Library/Keychains/temp.keychain-db
+      - name: temp step
+        run: security list-keychains
       
       - name: Build iOS IPA
         run: |
