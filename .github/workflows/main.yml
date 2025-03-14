@@ -180,7 +180,7 @@ jobs:
         run: ls ~/Library/MobileDevice/Provisioning\ Profiles/
       
       - name: List installed certificates
-        run: security find-identity -v -p codesigning
+        run: security find-identity -v -p codesigning ~/Library/Keychains/temp.keychain-db
       
       - name: Build iOS IPA
         run: |
