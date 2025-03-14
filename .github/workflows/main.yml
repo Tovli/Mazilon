@@ -8,23 +8,6 @@ on:
       - main
 
 jobs:
-  init_signing:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install Fastlane
-        run: sudo gem install fastlane -N
-
-      - name: Initialize Fastlane Match (AppStore)
-        run: fastlane match appstore
-        env:
-          MATCH_PASSWORD: ${{ secrets.FASTLANE_MATCH_PASSWORD }}
-          # Provide the Git URL; optionally, if you want to insert your PAT into the URL, you can do that via Git config as shown below:
-          MATCH_GIT_URL: "https://${{ secrets.FASTLANE_MATCH_GIT_PAT }}@github.com/Tovli/fastlane_match.git"
-          FASTLANE_USER: ${{ secrets.APPLE_ID }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
   build_android:
     runs-on: ubuntu-latest
     env:
