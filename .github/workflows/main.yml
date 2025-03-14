@@ -180,7 +180,8 @@ jobs:
         run: ls ~/Library/MobileDevice/Provisioning\ Profiles/
       
       - name: temp step
-        run: security list-keychains
+        run: xcodebuild -workspace Runner.xcworkspace -scheme Runner -showBuildSettings | grep CODE_SIGN_IDENTITY
+
       
       - name: Build iOS IPA
         run: |
