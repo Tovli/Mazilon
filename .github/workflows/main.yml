@@ -183,7 +183,6 @@ jobs:
         run: security find-identity -v -p codesigning
       
       - name: Build iOS IPA
-        working-directory: ios
         run: |
           flutter build ipa --release \
             --build-name="${BUILD_NAME}" \
