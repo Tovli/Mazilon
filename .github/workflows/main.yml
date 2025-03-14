@@ -168,6 +168,7 @@ jobs:
           FASTLANE_USER: ${{ secrets.APPLE_ID }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           MATCH_REPOSITORY_URL: https://${{ secrets.FASTLANE_MATCH_GIT_PAT }}@github.com/Tovli/fastlane_match.git
+          KEYCHAIN_PASSWORD: ${{ secrets.KEY_CHAIN_PASSWORD }}
 
       - name: List installed certificates
         run: security find-identity -v -p codesigning
