@@ -123,6 +123,10 @@ jobs:
           flutter-version: "3.24.0"
           cache: true
 
+      - name: Install CocoaPods dependencies
+        run: |
+          cd ios
+          pod install
       - name: Get version from pubspec.yaml
         id: get_version
         run: |
