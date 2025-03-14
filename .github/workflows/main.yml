@@ -161,7 +161,9 @@ jobs:
 
       - name: List installed certificates
         run: security find-identity -v -p codesigning
-        
+      - name: List installed provisioning profiles
+        run: ls ~/Library/MobileDevice/Provisioning\ Profiles/
+         
       - name: Build iOS IPA
         run: |
           flutter build ipa --release \
