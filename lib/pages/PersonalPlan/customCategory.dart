@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/styles.dart';
-import 'package:mazilon/util/userInformation.dart';
+// import 'package:mazilon/util/userInformation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -143,6 +143,8 @@ List<String> categoryNames = [];
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Category added successfully')),
                   );
+                  _categoryController.clear();
+                  FocusScope.of(context).unfocus();
                 }
               },
             style: TextButton.styleFrom(
@@ -195,7 +197,10 @@ List<String> categoryNames = [];
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('String added successfully')),
                   );
+                  _stringController.clear();
+                  FocusScope.of(context).unfocus();
                 }
+                
               },
               style: TextButton.styleFrom(
                 backgroundColor: primaryPurple,
@@ -273,17 +278,3 @@ List<String> categoryNames = [];
     );
   }
 }
-
-/*
-                            onPressed: () {
-                String inputText = _controller.text;
-                if (inputText.isNotEmpty) {
-                  // Do something with the input text
-                  Navigator.pop(context, inputText);  // Return the input text back to the previous page
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Please enter a category name')),
-                  );
-                }
-              },
-*/
