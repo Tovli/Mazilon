@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
 import 'package:mazilon/iFx/service_locator.dart';
 import 'package:mazilon/file_service.dart';
@@ -29,6 +30,7 @@ import 'wellnessTools_test.mocks.dart';
   MockSpec<SharedPreferences>(),
   MockSpec<UserInformation>(),
   MockSpec<AppInformation>(),
+  MockSpec<AnalyticsService>(),
 ])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -44,6 +46,8 @@ void main() {
 
       // Reset getIt before each test
       locator.reset();
+      final mockAnalytics = MockAnalyticsService();
+      getIt.registerLazySingleton<AnalyticsService>(() => mockAnalytics);
       final mockFileServiceImpl = MockFileService();
       getIt.registerLazySingleton<FileService>(() => mockFileServiceImpl);
       final mockFactory = MockVideoPlayerPageFactory();

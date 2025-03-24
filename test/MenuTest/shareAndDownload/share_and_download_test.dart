@@ -38,7 +38,7 @@ void dummyshare() {
   MockSpec<SharedPreferences>(),
   MockSpec<VideoPlayerPageFactory>(),
   MockSpec<ImagePickerService>(),
-  MockSpec<AnalyticsService>()
+  MockSpec<AnalyticsService>(),
 ])
 void main() {
   var counterShare = 0;

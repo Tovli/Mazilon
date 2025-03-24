@@ -14,14 +14,12 @@ class MixPanelService implements AnalyticsService {
   @override
   Future<void> init() async {
     await dotenv.load(fileName: ".env");
-    print(dotenv.env);
-    if (dotenv.env['MIXPANEL_PROJECT_TOKEN'] == null) {
-      print("not analytics");
 
+    if (dotenv.env['MIXPANEL_PROJECT_TOKEN'] == null) {
       return;
     }
     key = dotenv.env['MIXPANEL_PROJECT_TOKEN'] as String;
-    print(key);
+
     // Once you've called this method once, you can access `mixpanel` throughout the rest of your application.
     _mixpanel = await Mixpanel.init(key, trackAutomaticEvents: false);
     _isInitialized = true;
@@ -31,36 +29,12 @@ class MixPanelService implements AnalyticsService {
   Future<void> trackEvent(String eventName,
       [Map<String, dynamic>? properties]) async {
     if (key == "") {
-      print("no analytics");
       return;
     }
     while (!_isInitialized) {
       await Future.delayed(Duration(milliseconds: 100));
     }
 
-    await _mixpanel.track(eventName, properties: properties);
-    print("tracked");
-  }
-
-  Mixpanel get mixpanel => _mixpanel;
-}
-
-class MixpanelProvider with ChangeNotifier {
-  late Mixpanel _mixpanel;
-  bool _isInitialized = false;
-  Future<void> initMixpanel() async {
-    // Once you've called this method once, you can access `mixpanel` throughout the rest of your application.
-    _mixpanel = await Mixpanel.init("e38d39b73bc076129d0a5390af41fc24",
-        trackAutomaticEvents: false);
-    _isInitialized = true;
-    notifyListeners();
-  }
-
-  Future<void> trackEvent(String eventName,
-      [Map<String, dynamic>? properties]) async {
-    while (!_isInitialized) {
-      await Future.delayed(Duration(milliseconds: 100));
-    }
     await _mixpanel.track(eventName, properties: properties);
   }
 
