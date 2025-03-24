@@ -10,6 +10,7 @@ import 'dart:ui' as _i10;
 import 'package:flutter/foundation.dart' as _i3;
 import 'package:flutter/material.dart' as _i2;
 import 'package:image_picker/image_picker.dart' as _i16;
+import 'package:mazilon/AnalyticsService.dart' as _i17;
 import 'package:mazilon/file_service.dart' as _i5;
 import 'package:mazilon/global_enums.dart' as _i7;
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart' as _i14;
@@ -2441,6 +2442,38 @@ class MockImagePickerService extends _i1.Mock
         Invocation.method(
           #deleteImages,
           [],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+}
+
+/// A class which mocks [AnalyticsService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockAnalyticsService extends _i1.Mock implements _i17.AnalyticsService {
+  @override
+  _i6.Future<void> init() => (super.noSuchMethod(
+        Invocation.method(
+          #init,
+          [],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+
+  @override
+  _i6.Future<void> trackEvent(
+    String? eventName, [
+    Map<String, dynamic>? properties,
+  ]) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #trackEvent,
+          [
+            eventName,
+            properties,
+          ],
         ),
         returnValue: _i6.Future<void>.value(),
         returnValueForMissingStub: _i6.Future<void>.value(),
