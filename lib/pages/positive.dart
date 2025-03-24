@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
@@ -111,6 +113,10 @@ class _PositiveState extends State<Positive> {
       positiveTraits = positiveTraits_temp;
       focusNodes.add(FocusNode());
     });
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+    mixPanelService.trackEvent(
+      "Item added to Qualities List",
+    );
   }
 
   @override
@@ -154,9 +160,7 @@ class _PositiveState extends State<Positive> {
         context: context,
         builder: (BuildContext context) {
           return AddForm(
-            add: (String text) {
-              addPositiveTrait(text, userInfoProvider);
-            },
+            add: addPositiveTrait,
             index: index,
             edit: editPositiveTrait,
             text: text,

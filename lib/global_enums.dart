@@ -5,3 +5,15 @@ enum ShareFileType {
   HTML,
   //ADD TYPES AS NEEDED, THOSE ARE JUST EXAMPLES
 }
+
+enum PagesCode {
+  Home,
+  FullPlan,
+  GratitudeJournal,
+  QualitiesList,
+  EmergencyPhones,
+  About,
+  NotificationPage,
+  FeelGoodPage,
+  WellnessToolsPage,
+}
