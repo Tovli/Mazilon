@@ -2,73 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/styles.dart';
 // import 'package:mazilon/util/userInformation.dart';
+//import 'package:intl/intl.dart' as intl;
+import 'package:mazilon/util/customCatFunctions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-Future<void> saveCategoryName(String categoryName) async {
-  final prefs = await SharedPreferences.getInstance();
-  // Retrieve the current map of categories and their strings
-  Map<String, List<String>> categoryMap = _getCategoriesMap(prefs);
-
-  // If the category already exists, don't add it again, otherwise add the category
-  if (!categoryMap.containsKey(categoryName)) {
-    categoryMap[categoryName] = [];
-  }
-
-  // Save the updated map back to SharedPreferences
-  await prefs.setStringList('categoryMap', categoryMap.entries
-      .map((entry) => '${entry.key}:${entry.value.join(",")}')
-      .toList());
-}
-
-Map<String, List<String>> _getCategoriesMap(SharedPreferences prefs) {
-  // Retrieve the current list of category maps stored as a string list
-  List<String> storedMap = prefs.getStringList('categoryMap') ?? [];
-  
-  // Convert the list back to a map
-  Map<String, List<String>> categoryMap = {};
-  for (var entry in storedMap) {
-    var parts = entry.split(":");
-    if (parts.length == 2) {
-      categoryMap[parts[0]] = parts[1].split(",");
-    }
-  }
-  return categoryMap;
-}
-
-Future<void> addStringToCategory(String categoryName, String newString) async {
-  final prefs = await SharedPreferences.getInstance();
-  
-  // Get the existing map of categories and their strings
-  Map<String, List<String>> categoryMap = _getCategoriesMap(prefs);
-
-  // If the category exists, add the string to the list
-  if (categoryMap.containsKey(categoryName)) {
-    categoryMap[categoryName]?.add(newString);
-  }
-
-  // Save the updated map back to SharedPreferences
-  await prefs.setStringList('categoryMap', categoryMap.entries
-      .map((entry) => '${entry.key}:${entry.value.join(",")}')
-      .toList());
-}
-
-Future<void> printCategories() async {
-  final prefs = await SharedPreferences.getInstance();
-  
-  // Retrieve and print the current map of categories and their strings
-  Map<String, List<String>> categoryMap = _getCategoriesMap(prefs);
-  
-  // Print the contents of all categories
-  print("Categories and their strings: $categoryMap");
-}
-
-Future<int> clearCustomCategories() async {
-  final prefs = await SharedPreferences.getInstance();
-  // Remove the customCategories key, which deletes all its contents
-  await prefs.remove('categoryMap');
-  return 1;
-}
 
 class CustomCategoryPage extends StatefulWidget {
   //final Function changeLocale;
@@ -96,7 +33,7 @@ List<String> categoryNames = [];
 // Load the category names from SharedPreferences
   Future<void> _loadCategories() async {
     final prefs = await SharedPreferences.getInstance();
-    Map<String, List<String>> categoryMap = _getCategoriesMap(prefs);
+    Map<String, List<String>> categoryMap = getCategoriesMap(prefs);
     
     // Get the category names (keys of the map)
     setState(() {
