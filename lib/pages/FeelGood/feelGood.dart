@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/AnalyticsService.dart';
 
 import 'package:mazilon/pages/FeelGood/FeelGoodInheritedWidget.dart';
 import 'package:mazilon/pages/FeelGood/add_Image_item.dart';
@@ -24,11 +25,12 @@ class _FeelGoodPageState extends State<FeelGood> {
   List<String> imagePaths = [];
   late Future<void> _loadImagesFuture;
   //final picker = ImagePicker();
-
+  AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
   @override
   void initState() {
     super.initState();
     pickerService = GetIt.instance<ImagePickerService>();
+
     _loadImagesFuture = _loadImagePaths();
   }
 

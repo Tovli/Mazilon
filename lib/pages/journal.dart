@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -133,6 +135,10 @@ class _JournalState extends State<Journal> {
         1) {
       showThankYouPopup(userInfoProvider);
     }
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+    mixPanelService.trackEvent(
+      "Item added to Gratitude Journal",
+    );
     //you can show the popup after adding the i-th thank you note (every time you enter the journal page)
     // if(counter == i){
     //   showPopupFunction();

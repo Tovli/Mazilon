@@ -7,6 +7,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:mazilon/global_enums.dart';
 
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,7 +30,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 //allows navigation to all other pages
 class Home extends StatefulWidget {
   PhonePageData phonePageData;
-  final Function(BuildContext, int) changeCurrentIndex;
+  final Function(BuildContext, PagesCode) changeCurrentIndex;
   final Function changeLocale;
 
   Home({

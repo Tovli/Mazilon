@@ -9,6 +9,7 @@ import 'package:mazilon/util/PDF/create_pdf.dart';
 import 'package:mazilon/util/logger_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mazilon/AnalyticsService.dart';
 
 abstract class FileService {
   Future<void> share(
@@ -156,6 +157,8 @@ class FileServiceImpl implements FileService {
       if (file["file"] == null || file["format"] == null) {
         return;
       }
+      AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+      mixPanelService.trackEvent("Plan shared");
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
@@ -176,6 +179,8 @@ class FileServiceImpl implements FileService {
         bytes: data, // PDF data to be saved
       );
       //If the user cancels the download
+      AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+      mixPanelService.trackEvent("Plan downloaded Android");
       return outputFile;
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
@@ -202,6 +207,8 @@ class FileServiceImpl implements FileService {
       // Trigger a click on the anchor element to start the download
       ..click();*/
     //TODO: return a String to show a message to the user
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+    mixPanelService.trackEvent("Plan downloaded Web");
     return null;
   }
 
@@ -219,6 +226,7 @@ class FileServiceImpl implements FileService {
 
         // Save the PDF for download
         data = await file["file"].save();
+
         break;
       default:
         file = {"file": null, "format": null};

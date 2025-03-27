@@ -6,6 +6,7 @@
 import 'dart:async' as _i7;
 import 'dart:ui' as _i4;
 
+import 'package:mazilon/AnalyticsService.dart' as _i9;
 import 'package:mazilon/file_service.dart' as _i6;
 import 'package:mazilon/global_enums.dart' as _i8;
 import 'package:mazilon/util/appInformation.dart' as _i5;
@@ -2033,4 +2034,36 @@ class MockFileService extends _i1.Mock implements _i6.FileService {
         returnValue: _i7.Future<String?>.value(),
         returnValueForMissingStub: _i7.Future<String?>.value(),
       ) as _i7.Future<String?>);
+}
+
+/// A class which mocks [AnalyticsService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockAnalyticsService extends _i1.Mock implements _i9.AnalyticsService {
+  @override
+  _i7.Future<void> init() => (super.noSuchMethod(
+        Invocation.method(
+          #init,
+          [],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
+
+  @override
+  _i7.Future<void> trackEvent(
+    String? eventName, [
+    Map<String, dynamic>? properties,
+  ]) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #trackEvent,
+          [
+            eventName,
+            properties,
+          ],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
 }

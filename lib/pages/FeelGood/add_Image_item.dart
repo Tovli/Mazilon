@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/AnalyticsService.dart';
 
 import 'package:mazilon/pages/FeelGood/FeelGoodInheritedWidget.dart';
 import 'package:mazilon/util/appInformation.dart';
@@ -16,6 +18,40 @@ class ImageAddItem extends StatefulWidget {
 }
 
 class _ImageAddItemState extends State<ImageAddItem> {
+  void _showAddImageDialog(appLocale, gender, pickImage) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          appLocale!.addImageTitle(gender),
+        ),
+        actions: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              TextButton(
+                key: Key('cameraButtonText'),
+                child: Text(
+                  appLocale!.camera,
+                ),
+                onPressed: () {
+                  pickImage("camera");
+                },
+              ),
+              TextButton(
+                key: Key('galleryButtonText'),
+                child: Text(appLocale!.gallery),
+                onPressed: () {
+                  pickImage("gallery");
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     void pickImage(String source) {
@@ -39,37 +75,7 @@ class _ImageAddItemState extends State<ImageAddItem> {
                 fontSize: 24.0), // adjust the font size as needed
           ),
           onPressed: () {
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text(
-                  appLocale!.addImageTitle(gender),
-                ),
-                actions: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      TextButton(
-                        key: Key('cameraButtonText'),
-                        child: Text(
-                          appLocale!.camera,
-                        ),
-                        onPressed: () {
-                          pickImage("camera");
-                        },
-                      ),
-                      TextButton(
-                        key: Key('galleryButtonText'),
-                        child: Text(appLocale!.gallery),
-                        onPressed: () {
-                          pickImage("gallery");
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
+            _showAddImageDialog(appLocale, gender, pickImage);
           },
         ),
       ),
