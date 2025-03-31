@@ -4,7 +4,6 @@ import 'package:mazilon/util/styles.dart';
 // import 'package:mazilon/util/userInformation.dart';
 //import 'package:intl/intl.dart' as intl;
 import 'package:mazilon/util/customCatFunctions.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 class CustomCategoryPage extends StatefulWidget {
@@ -15,6 +14,7 @@ class CustomCategoryPage extends StatefulWidget {
       //required this.changeLocale
       });
       @override
+  // ignore: library_private_types_in_public_api
   _CustomCategoryPageState createState() => _CustomCategoryPageState();
   
 }
@@ -22,18 +22,20 @@ class CustomCategoryPage extends StatefulWidget {
 class _CustomCategoryPageState extends State<CustomCategoryPage> {
   final TextEditingController _categoryController = TextEditingController();
   final TextEditingController _stringController = TextEditingController();
+  late String selectedCategory;
+  late String selectedCatStr;
 List<String> categoryNames = [];
 
   @override
   void initState() {
     super.initState();
-    _loadCategories();
+    loadCategories();
+    _listCategories();
   }
 
 // Load the category names from SharedPreferences
-  Future<void> _loadCategories() async {
-    final prefs = await SharedPreferences.getInstance();
-    Map<String, List<String>> categoryMap = getCategoriesMap(prefs);
+  Future<void> _listCategories() async {
+    Map<String, List<String>> categoryMap = await loadCategories();
     
     // Get the category names (keys of the map)
     setState(() {
@@ -76,7 +78,7 @@ List<String> categoryNames = [];
                 String categoryName = _categoryController.text;
                 if (categoryName.isNotEmpty) {
                   await saveCategoryName(categoryName);
-                  _loadCategories(); // Reload category list
+                  _listCategories(); // Reload category list
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Category added successfully')),
                   );
@@ -107,6 +109,7 @@ List<String> categoryNames = [];
               onChanged: (category) {
                 setState(() {
                   // Update selected category for adding strings
+                  selectedCategory = category!;
                 });
               },
               items: categoryNames.map((category) {
@@ -207,6 +210,103 @@ List<String> categoryNames = [];
                   null,
                   24),
             ),
+            SizedBox(height: 20),
+            DropdownButton<String>(
+              hint: Text('Select Category'),
+              value: categoryNames.isNotEmpty ? categoryNames[0] : null,
+              onChanged: (category) {
+                setState(() {
+                  // Update selected category for adding strings
+                  selectedCategory = category!;
+                });
+              },
+              items: categoryNames.map((category) {
+                return DropdownMenuItem<String>(
+                  value: category,
+                  child: Text(category),
+                );
+              }).toList(),
+            ),
+            
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () async {
+                String newString = _stringController.text;
+                String selectedCategory = categoryNames.isNotEmpty ? categoryNames[0] : '';
+                if (newString.isNotEmpty && selectedCategory.isNotEmpty) {
+                  await addStringToCategory(selectedCategory, newString);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('String added successfully')),
+                  );
+                  _stringController.clear();
+                  FocusScope.of(context).unfocus();
+                }
+                
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: primaryPurple,
+                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+              ),
+              child: myAutoSizedText(
+                "Delete String in Category",
+                TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                  null,
+                  24
+              ),
+            ),
+            // SizedBox(height: 20),
+            // ElevatedButton(
+            //   onPressed: () async {
+            //     await printStringInCategory(selectedCategory); // Print the categories to the console
+            //   },
+            //   style: TextButton.styleFrom(
+            //     backgroundColor: primaryPurple,
+            //     padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+            //     shape: const RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.all(Radius.circular(20)),
+            //     ),
+            //   ),
+            //   child: myAutoSizedText(
+            //     "Print Chosen Category",
+            //     TextStyle(
+            //           fontSize: 20.sp,
+            //           fontWeight: FontWeight.bold,
+            //           color: Colors.white),
+            //       null,
+            //       24
+            //   ),
+            // ),
+            // SizedBox(height: 20),
+            // ElevatedButton(
+            //   onPressed: () async {
+            //     await clearStringsFromCategory(selectedCategory); // Print the categories to the console
+            //     ScaffoldMessenger.of(context).showSnackBar(
+            //         SnackBar(content: Text('Category cleared successfully')),
+            //       );
+            //   },
+            //   style: TextButton.styleFrom(
+            //     backgroundColor: primaryPurple,
+            //     padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+            //     shape: const RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.all(Radius.circular(20)),
+            //     ),
+            //   ),
+            //   child: myAutoSizedText(
+            //     "Clear Chosen Category",
+            //     TextStyle(
+            //           fontSize: 20.sp,
+            //           fontWeight: FontWeight.bold,
+            //           color: Colors.white),
+            //       null,
+            //       24
+            //   ),
+            // ),
           ],
         ),
         

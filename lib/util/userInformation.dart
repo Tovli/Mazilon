@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mazilon/util/customCatFunctions.dart';
 
 //this it the user's information class, with it we store and display it across the app
 class UserInformation with ChangeNotifier {
@@ -40,6 +41,7 @@ class UserInformation with ChangeNotifier {
   });
 
   void reset(String locale) {
+    clearCustomCategories();
     notificationHour = 12;
     notificationMinute = 0;
     gender = '';
@@ -176,4 +178,6 @@ class UserInformation with ChangeNotifier {
     saveThanks(value["thanks"] ?? [], value["dates"] ?? []);
     notifyListeners();
   }
+
+  
 }
