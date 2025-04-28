@@ -7,6 +7,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:mazilon/MainPageHelpers/customCatTextWidget.dart';
 
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -191,6 +192,9 @@ class _HomeState extends State<Home> {
                     const SizedBox(height: 20),
                     //This is the main widget for the thank yous list
                     ThanksListWidget(onTabTapped: widget.changeCurrentIndex),
+                    const SizedBox(height: 20),
+                    //This is the main widget for the thank yous list
+                    customCatWidget(onTabTapped: widget.changeCurrentIndex),
                   ],
                 ),
               ),
