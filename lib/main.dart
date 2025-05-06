@@ -19,6 +19,7 @@ import 'util/Firebase/firebase_options.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import '/pages/SignIn_Pages/introduction.dart';
+import 'package:background_fetch/background_fetch.dart';
 
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
@@ -44,36 +45,43 @@ List<String> checkboxCollectionNames = [
 
 @pragma(
     'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
-void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    try {
-      if (inputData == null ||
-          !inputData.containsKey("text") ||
-          !inputData.containsKey("timeHour") ||
-          !inputData.containsKey("timeMinute") ||
-          !inputData.containsKey("id")) {
-        throw ArgumentError("Invalid input data for notification");
-      }
-      int number = Random().nextInt(inputData["text"].length);
-      await NotificationsService.init();
-      await NotificationsService.cancelNotifications(null, cancelWorker: false);
-      TimeOfDay calculatedTime = NotificationsService.calculateTime(
-          inputData["timeHour"],
-          inputData["timeMinute"]); // Calculate the time for the notification
+void backgroundFetchHeadlessTask(String taskId) async {
+  try {
+    // Simulate fetching input data for the task
+    Map<String, dynamic> inputData = {
+      "text": ["Sample Notification Text 1", "Sample Notification Text 2"],
+      "timeHour": 10,
+      "timeMinute": 30,
+      "id": "sample_notification_id"
+    };
 
-      NotificationsService.scheduleNotification(
-          calculatedTime, inputData["id"], inputData["text"][number]);
-
-      return Future.value(true);
-    } catch (error, stackTrace) {
-      IncidentLoggerService loggerService =
-          GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureLog(error,
-          stackTrace: stackTrace,
-          exceptionData: {'name': 'inputData', 'value': inputData});
+    if (inputData == null ||
+        !inputData.containsKey("text") ||
+        !inputData.containsKey("timeHour") ||
+        !inputData.containsKey("timeMinute") ||
+        !inputData.containsKey("id")) {
+      throw ArgumentError("Invalid input data for notification");
     }
-    return Future.value(false);
-  });
+
+    int number = Random().nextInt(inputData["text"].length);
+    await NotificationsService.init();
+    await NotificationsService.cancelNotifications(null, cancelWorker: false);
+    TimeOfDay calculatedTime = NotificationsService.calculateTime(
+        inputData["timeHour"],
+        inputData["timeMinute"]); // Calculate the time for the notification
+
+    NotificationsService.scheduleNotification(
+        calculatedTime, inputData["id"], inputData["text"][number]);
+
+    BackgroundFetch.finish(taskId);
+  } catch (error, stackTrace) {
+    IncidentLoggerService loggerService =
+        GetIt.instance<IncidentLoggerService>();
+    await loggerService.captureLog(error,
+        stackTrace: stackTrace,
+        exceptionData: {'name': 'inputData', 'value': inputData});
+    BackgroundFetch.finish(taskId);
+  }
 }
 
 Future<void> initializeApp() async {
@@ -85,6 +93,34 @@ Future<void> initializeApp() async {
   setupLocator();
   //REMOVE COMMENT ON FUTURE UPDATES FOR SYNC DEVICE FUNCTIONALITY
   // Initialize the second Firebase app for dbUsers
+
+  // Initialize BackgroundFetch
+  BackgroundFetch.configure(
+    BackgroundFetchConfig(
+      minimumFetchInterval: 15,
+      stopOnTerminate: false,
+      enableHeadless: true,
+      requiresBatteryNotLow: false,
+      requiresCharging: false,
+      requiresStorageNotLow: false,
+      requiresDeviceIdle: false,
+      requiredNetworkType: NetworkType.NONE,
+    ),
+    (String taskId) async {
+      // This is the fetch event callback
+      backgroundFetchHeadlessTask(taskId);
+    },
+    (String taskId) async {
+      // This is the timeout callback
+      BackgroundFetch.finish(taskId);
+    },
+  ).then((int status) {
+    print('[BackgroundFetch] configure success: $status');
+  }).catchError((e) {
+    print('[BackgroundFetch] configure ERROR: $e');
+  });
+
+  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
 
 void main() async {
@@ -92,10 +128,6 @@ void main() async {
 
   IncidentLoggerService sentryService = GetIt.instance<IncidentLoggerService>();
 
-  Workmanager().initialize(
-    callbackDispatcher,
-    isInDebugMode: false,
-  );
   await sentryService.initializeSentry(
     MultiProvider(
       providers: [
