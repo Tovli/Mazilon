@@ -13,7 +13,7 @@ jobs:
     env:
       KEYSTORE_PATH: android/app/
       KEYSTORE_FILE: Maztzilonkey.jks
-      FIREBASE_OPTIONS_PATH: lib/util/Firebase/firebase_options.dart
+      FIREBASE_OPTIONS_PATH: lib/util/Firebase/firebase_options.darthttps://meet.google.com/mmu-jtij-hrm?authuser=0
       AAB_PATH: build/app/outputs/bundle/release/app-release.aab
     steps:
       - name: Checkout repository
@@ -199,12 +199,15 @@ jobs:
         working-directory: ios
         run: security find-certificate -a -c "Apple Worldwide Developer Relations Certification Authority" /Library/Keychains/System.keychain
 
-      
       - name: Build iOS IPA
         run: |
           flutter build ipa --release \
             --build-name="${BUILD_NAME}" \
-            --build-number="${BUILD_NUMBER}" 
+            --build-number="${BUILD_NUMBER}" \
+            --codesign \
+            --export-options-plist=ios/ExportOptions.plist
         env:
+          CODE_SIGN_IDENTITY: Apple Distribution
+          PROVISIONING_PROFILE_SPECIFIER: 43bff788-dc9b-4c28-84d7-9b1024fe65fc
           KEYCHAIN_PASSWORD: ${{ secrets.KEY_CHAIN_PASSWORD }}
 
