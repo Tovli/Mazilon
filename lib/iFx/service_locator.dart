@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/Locale/locale_service.dart';
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
 import 'package:mazilon/pages/WellnessTools/VideoPlayerPageFactory.dart';
@@ -19,4 +20,5 @@ void setupLocator() {
   getIt.registerLazySingleton<FileService>(() => FileServiceImpl());
   getIt.registerLazySingleton<IncidentLoggerService>(() => SentryServiceImpl());
   getIt.registerLazySingleton<LocaleService>(() => LocaleServiceImpl());
+  getIt.registerLazySingleton<AnalyticsService>(() => MixPanelService());
 }

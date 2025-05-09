@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/file_service.dart';
 import 'package:mazilon/iFx/service_locator.dart';
 import 'package:mazilon/util/appInformation.dart';
@@ -21,6 +22,7 @@ import 'shareform_Test.mocks.dart';
   MockSpec<UserInformation>(),
   MockSpec<AppInformation>(),
   MockSpec<FileService>(),
+  MockSpec<AnalyticsService>(),
 ])
 void main() {
   late UserInformation mockUserInformation;
@@ -31,6 +33,8 @@ void main() {
     mockUserInformation = UserInformation();
     mockUserInformation.gender = "male";
     mockAppInformation = AppInformation();
+    final mockAnalytics = MockAnalyticsService();
+    getIt.registerLazySingleton<AnalyticsService>(() => mockAnalytics);
     final mockFileServiceImpl = MockFileService();
     getIt.registerLazySingleton<FileService>(() => mockFileServiceImpl);
   });

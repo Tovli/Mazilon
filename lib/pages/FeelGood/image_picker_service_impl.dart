@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/util/logger_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
@@ -58,8 +59,11 @@ class ImagePickerServiceImpl implements ImagePickerService {
             await File(pickedFile.path).copy('${appDir.path}/$fileName');
         imagePaths.add(savedImage.path);
         saveImagePaths(imagePaths);
+        AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+        mixPanelService.trackEvent("Photo Added", {"Source": source});
       }
     } catch (error, stackTrace) {
+      print("errored");
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
       await loggerService.captureLog(

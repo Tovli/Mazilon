@@ -19,7 +19,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 // the personal plan widget, thats related to the personal plan section in home page
 class PersonalPlanWidget extends StatefulWidget {
   final Map<String, dynamic> text; // the text of the personal plan
-  final Function(BuildContext, int)
+  final Function(BuildContext, PagesCode)
       changeCurrentIndex; // the function to change the current index
   const PersonalPlanWidget(
       {super.key, required this.text, required this.changeCurrentIndex});
@@ -91,7 +91,7 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
             SectionBarHome(
                 textWidget: TextButton(
                     onPressed: () {
-                      widget.changeCurrentIndex(context, 1);
+                      widget.changeCurrentIndex(context, PagesCode.FullPlan);
                     },
                     // the title of the personal plan section in the home page
                     child: myAutoSizedText(
@@ -172,7 +172,7 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
             // the button to take the user to the personal plan page
             GestureDetector(
               onTap: () {
-                widget.changeCurrentIndex(context, 1);
+                widget.changeCurrentIndex(context, PagesCode.FullPlan);
                 // Handle the button tap here
               },
               child: Row(

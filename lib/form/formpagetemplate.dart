@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/AnalyticsService.dart';
 
 import 'package:mazilon/pages/FormAnswer.dart';
 import 'package:mazilon/util/styles.dart';
@@ -176,7 +178,7 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
                               color: darkGray,
                               fontSize: 14.sp,
                               height: 1.3),
-                          TextAlign.justify,
+                          TextAlign.center,
                           25),
                     ),
                   ],
@@ -297,7 +299,7 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
                               color: darkGray,
                               fontSize: 14.sp,
                               height: 1.5),
-                          TextAlign.justify,
+                          TextAlign.center,
                           25),
                     ),
                   ],
@@ -439,6 +441,10 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
                 ),
                 //next button:
                 ConfirmationButton(context, () {
+                  AnalyticsService mixPanelService =
+                      GetIt.instance<AnalyticsService>();
+                  mixPanelService.trackEvent(
+                      "Plan edited", {'page': widget.collectionName});
                   createSelection(userInfoProvider);
                   widget.next();
                 },

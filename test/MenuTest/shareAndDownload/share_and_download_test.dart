@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fluttericon/elusive_icons.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/MainPageHelpers/personalPlanWidget.dart';
 
 import 'package:mazilon/util/HomePage/sectionBarHome.dart';
@@ -37,6 +38,7 @@ void dummyshare() {
   MockSpec<SharedPreferences>(),
   MockSpec<VideoPlayerPageFactory>(),
   MockSpec<ImagePickerService>(),
+  MockSpec<AnalyticsService>(),
 ])
 void main() {
   var counterShare = 0;
@@ -57,6 +59,8 @@ void main() {
       locator.reset();
       final mockFileServiceImpl = MockFileService();
       getIt.registerLazySingleton<FileService>(() => mockFileServiceImpl);
+      final mockAnalytics = MockAnalyticsService();
+      getIt.registerLazySingleton<AnalyticsService>(() => mockAnalytics);
       final mockFactory = MockVideoPlayerPageFactory();
       getIt.registerSingleton<VideoPlayerPageFactory>(mockFactory);
       final imageFactory = MockImagePickerService();

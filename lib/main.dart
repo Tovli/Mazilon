@@ -9,6 +9,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mazilon/Locale/locale_service.dart';
 import 'package:mazilon/iFx/service_locator.dart';
 import 'package:mazilon/l10n/l10n.dart';
+import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/pages/notifications/notification_service.dart';
 import 'package:mazilon/util/logger_service.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 import 'util/Firebase/firebase_options.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import '/pages/SignIn_Pages/introduction.dart';
 
 import 'package:mazilon/util/userInformation.dart';
@@ -46,7 +47,6 @@ List<String> checkboxCollectionNames = [
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {
-
       if (inputData == null ||
           !inputData.containsKey("text") ||
           !inputData.containsKey("timeHour") ||
@@ -91,6 +91,7 @@ void main() async {
   await initializeApp();
 
   IncidentLoggerService sentryService = GetIt.instance<IncidentLoggerService>();
+
   Workmanager().initialize(
     callbackDispatcher,
     isInDebugMode: false,
@@ -136,7 +137,8 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  late Mixpanel mixpanel;
   bool firsttime = false;
   String localeName = '';
 
@@ -155,6 +157,58 @@ class _MyAppState extends State<MyApp> {
   AppInformation appInfo = AppInformation();
 
   bool hasFilled = false;
+  DateTime? _startTime;
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _endSession(); // Ensure session ends when widget is disposed
+    super.dispose();
+  }
+
+  void _startSession() {
+    _startTime = DateTime.now(); // Store session start time
+  }
+
+  void _endSession() {
+    if (_startTime == null) return;
+
+    final endTime = DateTime.now();
+    final duration =
+        endTime.difference(_startTime!).inSeconds; // Calculate session length
+    print("duration: " + duration.toString());
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+    mixPanelService.trackEvent("Session Ended", {
+      "duration_seconds": duration,
+    });
+
+    _startTime = null; // Reset for next session
+  }
+
+  void _pauseSession() {
+    if (_startTime == null) return;
+
+    final endTime = DateTime.now();
+    final duration =
+        endTime.difference(_startTime!).inSeconds; // Calculate session length
+
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+    mixPanelService.trackEvent("Session Paused", {
+      "duration_seconds": duration,
+    });
+
+    _startTime = null; // Reset for next session
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _startSession(); // App is active
+    } else if (state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.detached) {
+      _endSession(); // App is inactive or closed
+    }
+  }
+
   void getHasFilled() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -186,14 +240,25 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+    mixPanelService.init();
     getHasFilled();
     loadFirstTime();
     super.initState();
+    _startSession();
+    //initMixpanel();
     personalPlanPhonesPageData = {
       'phoneName': <String>[],
       'emergencyPhones': <String>[],
       'phoneDescription': <String>[]
     }; // Initialize personalPlanPhonesPageData
+  }
+
+  Future<void> initMixpanel() async {
+    // Once you've called this method once, you can access `mixpanel` throughout the rest of your application.
+    mixpanel = await Mixpanel.init("e38d39b73bc076129d0a5390af41fc24",
+        trackAutomaticEvents: false);
   }
 
   @override
