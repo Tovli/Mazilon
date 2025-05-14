@@ -1,9 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
-
-
 Future<void> addStringToCategory(String categoryName, String newString) async {
   final prefs = await SharedPreferences.getInstance();
   
@@ -54,7 +50,10 @@ Map<String, List<String>> getCategoriesMap(SharedPreferences prefs) {
   for (var entry in storedMap) {
     var parts = entry.split(":");
     if (parts.length == 2) {
-      categoryMap[parts[0]] = parts[1].split(",");
+      categoryMap[parts[0]] = parts[1]
+      .split(",")
+    .where((s) => s.trim().isNotEmpty)
+    .toList();
     }
   }
   return categoryMap;
@@ -131,13 +130,30 @@ Future<void> clearStringsFromCategory(String categoryName) async {
   }
 }
 
-Future<void> printStringInCategory(String categoryName) async {
+
+
+Future<List<String>?> getStringsInCategory(String categoryName) async {
   final prefs = await SharedPreferences.getInstance();
   
   // Retrieve and print the current map of categories and their strings
   Map<String, List<String>> categoryMap = getCategoriesMap(prefs);
+  List<String>? catStrList = [];
   if (categoryMap.containsKey(categoryName)) {
-    List<String>? catStrList = categoryMap[categoryName];
+    catStrList = categoryMap[categoryName];
+  }
+  return catStrList;
+  
+  // Print the contents of all categories
+  
+}
+
+
+
+Future<void> printStringInCategory(String categoryName) async {
+  
+  // Retrieve and print the current map of categories and their strings
+  List<String>? catStrList = await getStringsInCategory(categoryName);
+  if (catStrList!.isNotEmpty) {
     print("Categories and their strings: $catStrList");
   } else {
     print('error');
