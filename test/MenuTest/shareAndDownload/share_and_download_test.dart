@@ -65,11 +65,11 @@ void main() {
       getIt.registerSingleton<VideoPlayerPageFactory>(mockFactory);
       final imageFactory = MockImagePickerService();
       getIt.registerLazySingleton<ImagePickerService>(() => imageFactory);
-      when(mockFileServiceImpl.share(any, any, any, any, any))
+      when(mockFileServiceImpl.share(any, any, any, any, any, any))
           .thenAnswer(((Invocation invocation) async {
         counterShare = counterShare + 1;
       }));
-      when(mockFileServiceImpl.download(any, any, any, any))
+      when(mockFileServiceImpl.download(any, any, any, any, any))
           .thenAnswer(((Invocation invocation) async {
         counterDownload = counterDownload + 1;
       }));
