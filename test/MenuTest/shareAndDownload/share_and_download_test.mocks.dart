@@ -9,8 +9,8 @@ import 'dart:ui' as _i10;
 
 import 'package:flutter/foundation.dart' as _i3;
 import 'package:flutter/material.dart' as _i2;
-import 'package:image_picker/image_picker.dart' as _i15;
-import 'package:mazilon/AnalyticsService.dart' as _i16;
+import 'package:image_picker/image_picker.dart' as _i16;
+import 'package:mazilon/AnalyticsService.dart' as _i17;
 import 'package:mazilon/file_service.dart' as _i5;
 import 'package:mazilon/global_enums.dart' as _i7;
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart' as _i14;
@@ -20,6 +20,7 @@ import 'package:mazilon/util/appInformation.dart' as _i11;
 import 'package:mazilon/util/userInformation.dart' as _i8;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i9;
+import 'package:share_plus/share_plus.dart' as _i15;
 import 'package:shared_preferences/shared_preferences.dart' as _i12;
 
 // ignore_for_file: type=lint
@@ -2326,16 +2327,16 @@ class MockVideoPlayerPageFactory extends _i1.Mock
 class MockImagePickerService extends _i1.Mock
     implements _i14.ImagePickerService {
   @override
-  _i6.Future<dynamic> pickImage({required _i15.ImageSource? source}) =>
+  _i6.Future<_i15.XFile?> pickImage({required _i16.ImageSource? source}) =>
       (super.noSuchMethod(
         Invocation.method(
           #pickImage,
           [],
           {#source: source},
         ),
-        returnValue: _i6.Future<dynamic>.value(),
-        returnValueForMissingStub: _i6.Future<dynamic>.value(),
-      ) as _i6.Future<dynamic>);
+        returnValue: _i6.Future<_i15.XFile?>.value(),
+        returnValueForMissingStub: _i6.Future<_i15.XFile?>.value(),
+      ) as _i6.Future<_i15.XFile?>);
 
   @override
   _i6.Future<_i4.File> saveImagePaths(List<String>? imagePaths) =>
@@ -2454,7 +2455,7 @@ class MockImagePickerService extends _i1.Mock
 /// A class which mocks [AnalyticsService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAnalyticsService extends _i1.Mock implements _i16.AnalyticsService {
+class MockAnalyticsService extends _i1.Mock implements _i17.AnalyticsService {
   @override
   _i6.Future<void> init() => (super.noSuchMethod(
         Invocation.method(
