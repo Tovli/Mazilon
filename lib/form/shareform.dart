@@ -116,7 +116,8 @@ class _ShareFormState extends State<ShareForm> {
                                   appLocale!.phonesPageHeader(gender),
                                 ],
                                 appInfoProvider.sharePDFtexts,
-                                ShareFileType.PDF);
+                                ShareFileType.PDF,
+                                appLocale.textDirection);
                           },
                           style: TextButton.styleFrom(
                             backgroundColor: Colors
@@ -148,8 +149,8 @@ class _ShareFormState extends State<ShareForm> {
                               appLocale!.feelBetterSubTitle(gender),
                               appLocale!.distractionsSubTitle(gender),
                               appLocale!.phonesPageHeader(gender),
-                            ], appInfoProvider.sharePDFtexts,
-                                ShareFileType.PDF);
+                            ], appInfoProvider.sharePDFtexts, ShareFileType.PDF,
+                                appLocale.textDirection);
                             if (result == null) {
                               // Show him a message
                               showToast(

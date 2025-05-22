@@ -49,6 +49,9 @@ class _UserSettingsState extends State<UserSettings> {
   List<String> genders = [];
   List<String> locales =
       AppLocalizations.supportedLocales.map((e) => e.languageCode).toList();
+  List<String> localesNames = AppLocalizations.supportedLocales
+      .map((e) => e.languageCode == "he" ? 'עב' : e.languageCode)
+      .toList();
   Future<void> updateLocale(
       String locale, UserInformation userInfoProvider) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -321,11 +324,11 @@ class _UserSettingsState extends State<UserSettings> {
                     Container(
                       width: 300,
                       child: DropdownMenu<String>(
-                        initialSelection: locales[
+                        initialSelection: localesNames[
                             locales.indexOf(userInfoProvider.localeName)],
                         width: 300,
                         dropdownMenuEntries: [
-                          ...locales
+                          ...localesNames
                               .map((locale) => buildDropdownMenuEntry(
                                     locale,
                                     locale == 'en'
@@ -337,7 +340,9 @@ class _UserSettingsState extends State<UserSettings> {
                         onSelected: (String? newValue) {
                           setState(() {
                             if (newValue != null) {
-                              updateLocale(newValue, userInfoProvider);
+                              final val = newValue == "עב" ? "he" : newValue;
+
+                              updateLocale(val, userInfoProvider);
                             }
                           });
                           // Do something with the selected value
