@@ -85,6 +85,7 @@ dependencies:
   language_code: ^0.5.5
   devicelocale: ^0.8.1
   upgrader: ^11.3.1
+  country_code_picker: ^3.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/Phone/emergencyDialogBox.dart';
+import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -17,15 +18,17 @@ List<Widget> extractChildrenFromRow(Row row) {
 class EmergencyPhonesGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final userInfoProvider = Provider.of<UserInformation>(context);
+
     final appLocale = AppLocalizations.of(context);
     final String defaultLocale =
         Platform.localeName; // Returns locale string in the form 'en_US'
     String countryCode = defaultLocale.substring(defaultLocale.length - 2);
-
-
-    final localNumbers = countryCode == "IL" || appLocale!.language == "עברית"
-        ? numbers["israel"]
-        : numbers["usa"];
+    print(userInfoProvider.location);
+    final localNumbers =
+        userInfoProvider.location == "IL" || appLocale!.language == "עברית"
+            ? numbers["israel"]
+            : numbers["usa"];
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GridView.builder(

@@ -7,6 +7,7 @@ class UserInformation with ChangeNotifier {
   String gender;
   String name;
   String age;
+  String location;
   bool binary;
   bool disclaimerSigned;
   List<String> difficultEvents;
@@ -21,6 +22,7 @@ class UserInformation with ChangeNotifier {
   Map<String, List<String>> thanks;
 
   UserInformation({
+    this.location = '',
     this.thanks = const <String, List<String>>{},
     this.positiveTraits = const [],
     this.localeName = '',
@@ -40,6 +42,7 @@ class UserInformation with ChangeNotifier {
   });
 
   void reset(String locale) {
+    location = '';
     notificationHour = 12;
     notificationMinute = 0;
     gender = '';
@@ -174,6 +177,12 @@ class UserInformation with ChangeNotifier {
 
     thanks = {"thanks": value["thanks"] ?? [], "dates": value["dates"] ?? []};
     saveThanks(value["thanks"] ?? [], value["dates"] ?? []);
+    notifyListeners();
+  }
+
+  void updateLocation(String value) {
+    location = value;
+
     notifyListeners();
   }
 }

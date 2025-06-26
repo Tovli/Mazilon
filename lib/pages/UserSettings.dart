@@ -14,6 +14,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/util/languages_util_functions.dart';
+import 'package:mazilon/initialForm/CountrySelectorWidget.dart';
 
 class UserSettings extends StatefulWidget {
   final String username;
@@ -39,6 +41,7 @@ class UserSettings extends StatefulWidget {
 
 class _UserSettingsState extends State<UserSettings> {
   late ImagePickerService pickerService;
+
   String? dropdownValueAge = '18-30';
   TextEditingController _namecontroller = TextEditingController();
   bool firsttime = true;
@@ -50,7 +53,7 @@ class _UserSettingsState extends State<UserSettings> {
   List<String> locales =
       AppLocalizations.supportedLocales.map((e) => e.languageCode).toList();
   List<String> localesNames = AppLocalizations.supportedLocales
-      .map((e) => e.languageCode == "he" ? 'עב' : e.languageCode)
+      .map((e) => languageName(e.languageCode))
       .toList();
   Future<void> updateLocale(
       String locale, UserInformation userInfoProvider) async {
@@ -340,7 +343,8 @@ class _UserSettingsState extends State<UserSettings> {
                         onSelected: (String? newValue) {
                           setState(() {
                             if (newValue != null) {
-                              final val = newValue == "עב" ? "he" : newValue;
+                              print(newValue);
+                              final val = languageCode(newValue);
 
                               updateLocale(val, userInfoProvider);
                             }
@@ -349,6 +353,10 @@ class _UserSettingsState extends State<UserSettings> {
                         },
                       ),
                     ),
+                    CountrySelectorWidget(
+                      text: appLocale.locationSelect(gender),
+                      disclaimerText: appLocale.locationDisclaimer(gender),
+                    )
                   ],
                 ),
                 SizedBox(
