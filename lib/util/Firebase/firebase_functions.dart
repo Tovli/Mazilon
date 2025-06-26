@@ -100,7 +100,7 @@ Future<void> loadUserInformation(
   userInfo.updateMakeSafer(prefs.getStringList(fieldNames[1]) ?? []);
   userInfo.updateFeelBetter(prefs.getStringList(fieldNames[2]) ?? []);
   userInfo.updateDistractions(prefs.getStringList(fieldNames[3]) ?? []);
-
+  userInfo.updateLocation(prefs.getString('location') ?? "");
   userInfo
       .updateDisclaimerSigned(prefs.getBool('disclaimerConfirmed') ?? false);
   userInfo.updateNotificationMinute(prefs.getInt('notificationMinute') ?? 0);

@@ -74,6 +74,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     loadData();
+    checkLanguage("a");
     super.initState();
   }
 
@@ -122,6 +123,16 @@ class _HomeState extends State<Home> {
           homeTitles = {'SubTitle': '', 'list': []};
         });
     }
+  }
+
+  void checkLanguage(String string) {
+    final regex = RegExp(r'[a-z]');
+    final regexHebrew = RegExp(r'[\u0590-\u05FF]');
+    if (regexHebrew.hasMatch("a"))
+      print("has match");
+    else
+      print("no match");
+    // return regex.hasMatch(input);
   }
 
   @override

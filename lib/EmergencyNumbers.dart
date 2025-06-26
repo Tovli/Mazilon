@@ -16,7 +16,7 @@ dynamic numbers = {
       "link": "",
       "description": "טלפון-1201/מחו\"ל-*2201 | שלוחה 5",
       "icon": Icons.phone,
-      "whatsapp": false,
+      "whatsapp": true,
     },
     {
       "name": "סה\"ר",
@@ -24,7 +24,7 @@ dynamic numbers = {
       "link": "",
       "description": "סיוע והקשבה ברשת",
       "icon": Icons.phone,
-      "whatsapp": false,
+      "whatsapp": true,
     },
     {
       "name": "משטרה",
