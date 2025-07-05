@@ -76,3 +76,12 @@ windows/flutter/generated_plugins.cmake
 
 #firebase credentials
 lib/util/Firebase/firebase_options.dart
+
+#certificates
+*.cer
+*.csr
+*.p12
+*.pem
+*.key
+*.mobileprovision
+*.p8
