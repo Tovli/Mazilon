@@ -78,6 +78,7 @@ dependencies:
   numberpicker: ^2.1.2
   background_fetch: ^1.0.0
   flutter_contacts: ^1.1.9+2
+  workmanager: ^0.8.0
   flutter_localizations:
     sdk: flutter
   language_code: ^0.5.5
