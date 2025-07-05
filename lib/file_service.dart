@@ -10,6 +10,7 @@ import 'package:mazilon/util/logger_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mazilon/AnalyticsService.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 abstract class FileService {
   Future<void> share(
@@ -17,9 +18,14 @@ abstract class FileService {
       List<dynamic> titles,
       List<dynamic> subTitles,
       Map<String, String> texts,
-      ShareFileType saveFormat);
-  Future<String?> download(List<dynamic> titles, List<dynamic> subTitles,
-      Map<String, String> texts, ShareFileType saveFormat);
+      ShareFileType saveFormat,
+      String textDirection);
+  Future<String?> download(
+      List<dynamic> titles,
+      List<dynamic> subTitles,
+      Map<String, String> texts,
+      ShareFileType saveFormat,
+      String textDirection);
 }
 
 class FileServiceImpl implements FileService {
@@ -136,15 +142,21 @@ class FileServiceImpl implements FileService {
       List<dynamic> titles,
       List<dynamic> subTitles,
       Map<String, String> texts,
-      ShareFileType saveFormat) async {
+      ShareFileType saveFormat,
+      String textDirection) async {
     try {
       // Add the generated widgets to the PDF
       final dataForFile = await organizeDataForFile(titles, subTitles, texts);
       Map<String, dynamic> file;
       switch (saveFormat) {
         case ShareFileType.PDF:
-          file = await createPDF(titles, subTitles, dataForFile["texts"]!,
-              dataForFile["mainTitle"]!, dataForFile["realData"]!);
+          file = await createPDF(
+              titles,
+              subTitles,
+              dataForFile["texts"]!,
+              dataForFile["mainTitle"]!,
+              dataForFile["realData"]!,
+              textDirection);
           final tempFile = await saveTempPDF(file["file"], file["format"]);
           XFile tempXFile = XFile(tempFile.path);
           await Share.shareXFiles([tempXFile], text: message);
@@ -213,15 +225,19 @@ class FileServiceImpl implements FileService {
   }
 
   @override
-  Future<String?> download(List<dynamic> titles, List<dynamic> subTitles,
-      Map<String, String> texts, ShareFileType saveFormat) async {
+  Future<String?> download(
+      List<dynamic> titles,
+      List<dynamic> subTitles,
+      Map<String, String> texts,
+      ShareFileType saveFormat,
+      String textDirection) async {
     final dataForFile = await organizeDataForFile(titles, subTitles, texts);
     Map<String, dynamic> file;
     Uint8List data = Uint8List(0);
     switch (saveFormat) {
       case ShareFileType.PDF:
         file = await createPDF(titles, subTitles, dataForFile["texts"]!,
-            dataForFile["mainTitle"]!, dataForFile["realData"]!);
+            dataForFile["mainTitle"]!, dataForFile["realData"]!, textDirection);
         // Save the PDF and share it
 
         // Save the PDF for download

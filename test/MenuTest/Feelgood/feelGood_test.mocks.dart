@@ -113,6 +113,7 @@ class MockFileService extends _i1.Mock implements _i5.FileService {
     List<dynamic>? subTitles,
     Map<String, String>? texts,
     _i7.ShareFileType? saveFormat,
+    String? textDirection,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -123,6 +124,7 @@ class MockFileService extends _i1.Mock implements _i5.FileService {
             subTitles,
             texts,
             saveFormat,
+            textDirection,
           ],
         ),
         returnValue: _i6.Future<void>.value(),
@@ -135,6 +137,7 @@ class MockFileService extends _i1.Mock implements _i5.FileService {
     List<dynamic>? subTitles,
     Map<String, String>? texts,
     _i7.ShareFileType? saveFormat,
+    String? textDirection,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -144,6 +147,7 @@ class MockFileService extends _i1.Mock implements _i5.FileService {
             subTitles,
             texts,
             saveFormat,
+            textDirection,
           ],
         ),
         returnValue: _i6.Future<String?>.value(),

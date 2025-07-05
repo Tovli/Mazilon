@@ -198,6 +198,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   void _startSession() {
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+    mixPanelService.trackEvent("Session started");
     _startTime = DateTime.now(); // Store session start time
   }
 
