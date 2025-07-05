@@ -124,7 +124,8 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
                           appLocale!.phonesPageHeader(gender),
                         ],
                         appInfoProvider.sharePDFtexts,
-                        ShareFileType.PDF);
+                        ShareFileType.PDF,
+                        appLocale.textDirection);
                   }, Elusive.share, Colors.black),
                   myTextButton(() async {
                     // the function to download the pdf file of the personal plan
@@ -140,7 +141,8 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
                       appLocale!.feelBetterSubTitle(gender),
                       appLocale!.distractionsSubTitle(gender),
                       appLocale!.phonesPageHeader(gender),
-                    ], appInfoProvider.sharePDFtexts, ShareFileType.PDF);
+                    ], appInfoProvider.sharePDFtexts, ShareFileType.PDF,
+                        appLocale.textDirection);
                     if (result == null) {
                       // Show him a message
                       showToast(message: appLocale!.downloadFailed(gender));

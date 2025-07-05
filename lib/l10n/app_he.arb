@@ -144,10 +144,10 @@
          "thanks": "תודה",
          "trait": "מעלה",
 
-       "notificationPageHeader": "{gender,select,male{הוסף תזכורת לשימוש ב Living Positively} female{הוספי תזכורת לשימוש ב Living Positively} other{הוספ.י תזכורת לשימוש ב Living Positively}}",
+       "notificationPageHeader": "{gender,select,male{הוסף תזכורת לשימוש ב Living Positively} female{הוספי תזכורת לשימוש ב Living Positively} other{להוספת תזכורת לשימוש ב Living Positively}}",
     
-     "notificationSetTimeText": "{gender,select,male{קבע תזכורת לזמן שנבחר} female{קבעי תזכורת לזמן שנבחר} other{קבע.י תזכורת לזמן שנבחר}}",
-     "notificationShowExampleNotification": "{gender,select,male{הצג תזכורת לדוגמא} female{הצגי תזכורת לדוגמא} other{הצג.י תזכורת לדוגמא}}",
+     "notificationSetTimeText": "{gender,select,male{קבע תזכורת לזמן שנבחר} female{קבעי תזכורת לזמן שנבחר} other{לקביעת תזכורת לזמן שנבחר}}",
+     "notificationShowExampleNotification": "{gender,select,male{הצג תזכורת לדוגמא} female{הצגי תזכורת לדוגמא} other{להצגת תזכורת לדוגמא}}",
 
           "notifyOnscheduledNotification": "התראה נקבעה לשעה {time}",
       
