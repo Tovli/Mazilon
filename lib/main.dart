@@ -1,10 +1,10 @@
 import 'dart:math';
 import 'package:language_code/language_code.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/Locale/locale_service.dart';
 import 'package:mazilon/iFx/service_locator.dart';
@@ -23,7 +23,7 @@ import 'package:workmanager/workmanager.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/Firebase/firebase_functions.dart';
-
+import 'l10n/app_localizations.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/initialForm/form.dart';
 import 'package:upgrader/upgrader.dart';
@@ -347,12 +347,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       builder: (context, child) => MaterialApp(
         supportedLocales: AppLocalizations.supportedLocales,
         locale: Locale(localeService.getLocale()),
-        localizationsDelegates: [
-          AppLocalizations.localizationsDelegates[0],
-          GlobalMaterialLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate
-        ],
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
         debugShowCheckedModeBanner: false,
         home: UpgradeAlert(
           child: Scaffold(

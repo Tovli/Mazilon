@@ -14,8 +14,7 @@ import 'package:mazilon/util/userInformation.dart';
 
 import 'package:mazilon/initialForm/form.dart';
 
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../MenuTest/FeelGood/FeelGood_test.mocks.dart';
@@ -72,12 +71,7 @@ void main() {
         child: MaterialApp(
           supportedLocales: AppLocalizations.supportedLocales,
           locale: Locale('he'),
-          localizationsDelegates: [
-            AppLocalizations.localizationsDelegates[0],
-            GlobalMaterialLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate
-          ],
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
           home: ScreenUtilInit(
             designSize: const Size(360, 690),
             child: InitialFormProgressIndicator(
@@ -100,12 +94,7 @@ void main() {
         child: MaterialApp(
           supportedLocales: AppLocalizations.supportedLocales,
           locale: Locale('he'),
-          localizationsDelegates: [
-            AppLocalizations.localizationsDelegates[0],
-            GlobalMaterialLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate
-          ],
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
           home: ScreenUtilInit(
             designSize: const Size(360, 690),
             child: InitialFormProgressIndicator(

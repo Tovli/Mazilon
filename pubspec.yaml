@@ -81,6 +81,7 @@ dependencies:
   workmanager: ^0.8.0
   flutter_localizations:
     sdk: flutter
+  intl: any
   language_code: ^0.5.5
   devicelocale: ^0.8.1
   upgrader: ^11.3.1

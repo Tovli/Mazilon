@@ -10,7 +10,7 @@ import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 // the thanks item suggested widget, it shows a suggested thank you text and an add button
 //its used in journal/homepage in todo list section to suggest a thank you to the user

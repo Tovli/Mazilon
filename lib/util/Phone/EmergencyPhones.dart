@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/Phone/emergencyDialogBox.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/appInformation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/EmergencyNumbers.dart';
 import 'dart:io';
 
@@ -21,7 +21,6 @@ class EmergencyPhonesGrid extends StatelessWidget {
     final String defaultLocale =
         Platform.localeName; // Returns locale string in the form 'en_US'
     String countryCode = defaultLocale.substring(defaultLocale.length - 2);
-
 
     final localNumbers = countryCode == "IL" || appLocale!.language == "עברית"
         ? numbers["israel"]

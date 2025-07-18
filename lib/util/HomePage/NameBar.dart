@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/styles.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 //Widget for the name of the user in the home page
 class NameBar extends StatefulWidget {

@@ -13,12 +13,12 @@ import 'package:mazilon/util/Thanks/AddForm.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/userInformation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 // positive traits page, where the user can add/edit/remove positive traits
 // the user can also see suggestions for positive traits and refresh them
 // the code here is not related to the "מעלות" section in homepage , its the positive triats page.
 //the code here is similar to journal.dart page code
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 class Positive extends StatefulWidget {
   const Positive({super.key});

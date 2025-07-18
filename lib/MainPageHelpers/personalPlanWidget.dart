@@ -14,7 +14,7 @@ import 'dart:math';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 // the personal plan widget, thats related to the personal plan section in home page
 class PersonalPlanWidget extends StatefulWidget {

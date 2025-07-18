@@ -7,9 +7,7 @@ import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/form/formpagetemplate.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'formpagetemplate_Test.mocks.dart';
 
 @GenerateNiceMocks([
@@ -43,12 +41,7 @@ void main() {
           child: MaterialApp(
             supportedLocales: AppLocalizations.supportedLocales,
             locale: Locale('he'),
-            localizationsDelegates: [
-              AppLocalizations.localizationsDelegates[0],
-              GlobalMaterialLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate
-            ],
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
             home: ScreenUtilInit(
               designSize: const Size(360, 690),
               child: FormPageTemplate(

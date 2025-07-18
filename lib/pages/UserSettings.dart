@@ -6,14 +6,12 @@ import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
-
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Form/myDropdownMenuEntry.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 class UserSettings extends StatefulWidget {
   final String username;

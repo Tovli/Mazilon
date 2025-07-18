@@ -14,8 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mazilon/form/ShareForm.dart';
 import 'package:mockito/mockito.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'shareform_Test.mocks.dart';
 
 @GenerateNiceMocks([
@@ -60,12 +59,7 @@ void main() {
       child: MaterialApp(
         supportedLocales: AppLocalizations.supportedLocales,
         locale: Locale('he'),
-        localizationsDelegates: [
-          AppLocalizations.localizationsDelegates[0],
-          GlobalMaterialLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate
-        ],
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
         home: ScreenUtilInit(
           designSize: const Size(360, 690),
           child: ShareForm(

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:mazilon/pages/notifications/set_notification_widget.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 
