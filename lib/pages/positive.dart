@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
 import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,7 +9,6 @@ import 'package:mazilon/pages/thankYou.dart';
 import 'package:mazilon/util/Traits/positiveTraitItemSug.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Thanks/AddForm.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
@@ -18,7 +16,6 @@ import 'package:mazilon/l10n/app_localizations.dart';
 // the user can also see suggestions for positive traits and refresh them
 // the code here is not related to the "מעלות" section in homepage , its the positive triats page.
 //the code here is similar to journal.dart page code
-import 'package:mazilon/l10n/app_localizations.dart';
 
 class Positive extends StatefulWidget {
   const Positive({super.key});

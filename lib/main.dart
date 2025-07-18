@@ -1,14 +1,10 @@
 import 'dart:math';
-import 'package:language_code/language_code.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/Locale/locale_service.dart';
 import 'package:mazilon/iFx/service_locator.dart';
-import 'package:mazilon/l10n/l10n.dart';
 import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/pages/notifications/notification_service.dart';
 import 'package:mazilon/util/logger_service.dart';
@@ -18,21 +14,15 @@ import 'util/Firebase/firebase_options.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import '/pages/SignIn_Pages/introduction.dart';
-import 'package:background_fetch/background_fetch.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/Firebase/firebase_functions.dart';
-import 'l10n/app_localizations.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
-import 'package:mazilon/initialForm/form.dart';
 import 'package:upgrader/upgrader.dart';
 
 //testing:
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mazilon/disclaimerPage.dart';
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 List<String> checkboxCollectionNames = [
   'PersonalPlan-DifficultEvents',
