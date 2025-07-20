@@ -26,7 +26,7 @@ import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/util/HomePage/bottomNavigationItem.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 class Menu extends StatefulWidget {
   final PhonePageData phonePageData;

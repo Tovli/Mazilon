@@ -14,7 +14,7 @@ import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 // This widget displays the user's personalized plan with sections for various topics.
 // It allows the user to view their selected answers and navigate to additional forms or options.

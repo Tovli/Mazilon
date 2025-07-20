@@ -24,7 +24,7 @@ import 'package:mazilon/util/HomePage/NameBar.dart';
 
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 //the main page of the app
 //allows navigation to all other pages

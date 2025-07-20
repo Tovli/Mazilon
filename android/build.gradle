@@ -1,8 +1,8 @@
 buildscript {
        ext.kotlin_version = '1.9.25'
     ext {
-       compileSdkVersion   = 34                // or higher / as desired
-       targetSdkVersion    = 34                // or higher / as desired
+       compileSdkVersion   = 35                // or higher / as desired
+       targetSdkVersion    = 35                // or higher / as desired
    }
     repositories {
         google()
@@ -11,7 +11,7 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.android.tools.build:gradle:7.3.1'
+        classpath 'com.android.tools.build:gradle:8.1.0'
     }
 }
 
@@ -19,11 +19,13 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        // [required] background_fetch
+        maven { url "${project(':background_fetch').projectDir}/libs" }
     }
 }
 
 subprojects { afterEvaluate { android { 
-     compileSdkVersion 34
+     compileSdkVersion 35
     if (namespace == null) {
         namespace project.group
     } }}}

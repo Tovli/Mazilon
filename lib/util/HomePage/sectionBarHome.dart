@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:mazilon/util/styles.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 //Template for the "title" of sections in the home page
 //i.e "התוכנית שלי", "רשימת מעלות", "תודו ליסט"

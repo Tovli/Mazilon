@@ -13,7 +13,7 @@ import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Thanks/AddForm.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 //Journal page, where the user can write thank you notes (add , edit, remove notes)

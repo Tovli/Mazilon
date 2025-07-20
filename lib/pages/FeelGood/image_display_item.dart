@@ -5,7 +5,7 @@ import 'package:mazilon/pages/FeelGood/FeelGoodInheritedWidget.dart';
 
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 void _focusOnPicture(context, displayImage, imagePath, index,
     deleteImageFunction, appLocale, gender) {

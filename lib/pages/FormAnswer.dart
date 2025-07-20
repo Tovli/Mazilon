@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/FormAnswer/addFormAnswer.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 //the template for the answers in the personal plan questionnaire
 //this is used in the formpagetemplate to display(remove/edit) the selected/inserted user promptss
