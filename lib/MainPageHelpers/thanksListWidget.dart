@@ -15,7 +15,7 @@ import 'package:mazilon/util/Thanks/thanksItemSug.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 // the thank you list widget, it shows the list of the thank yous
 // this code is related to todo list in homepage.

@@ -10,7 +10,7 @@ import 'package:mazilon/util/styles.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 // the positive trait item suggested widget, it shows a suggested positive trait text and an add button
 //its used in positive trait page/homepage in todo list section to suggest a trait to the user
 // we use this in 2 ways , if the input text is not empty, it will show the input text in the suggestion

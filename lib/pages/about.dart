@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:mazilon/util/styles.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 //the about page , it shows the about page text and the logos of the social hub and the clubhouse
 //the text is fetched from the appInformation provider, which fetches the text from the firebase database.

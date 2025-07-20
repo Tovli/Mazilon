@@ -11,7 +11,7 @@ import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 class PhonePageForm extends StatefulWidget {
   final Function next;

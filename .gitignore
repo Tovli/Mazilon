@@ -76,3 +76,4 @@ windows/flutter/generated_plugins.cmake
 
 #firebase credentials
 lib/util/Firebase/firebase_options.dart
+
