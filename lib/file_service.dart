@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/PDF/create_pdf.dart';
 import 'package:mazilon/util/logger_service.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mazilon/AnalyticsService.dart';
@@ -30,8 +31,12 @@ abstract class FileService {
 
 class FileServiceImpl implements FileService {
   static Future<Map<String, dynamic>> getPrefsData() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> userSelectionDifficultEvents =
+    //final SharedPreferences prefs = await SharedPreferences.getInstance();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    // await service.getItem("userSelectionPersonalPlan-DifficultEvents", "StringList");
+    /* List<String> userSelectionDifficultEvents =
         prefs.getStringList('userSelectionPersonalPlan-DifficultEvents') ?? [];
     List<String> userSelectionMakeSafer =
         prefs.getStringList('userSelectionPersonalPlan-MakeSafer') ?? [];
@@ -52,6 +57,26 @@ class FileServiceImpl implements FileService {
       'phoneNames': phoneNames,
       'phoneNumbers': phoneNumbers,
       'username': username
+    };*/
+    final results = await Future.wait([
+      service.getItem(
+          "userSelectionPersonalPlan-DifficultEvents", "StringList"),
+      service.getItem("userSelectionPersonalPlan-MakeSafer", "StringList"),
+      service.getItem("userSelectionPersonalPlan-FeelBetter", "StringList"),
+      service.getItem("userSelectionPersonalPlan-Distractions", "StringList"),
+      service.getItem("PhonePageSavedPhoneNames", "StringList"),
+      service.getItem("PhonePageSavedPhoneNumbers", "StringList"),
+      service.getItem("name", "String"),
+    ]);
+
+    return {
+      'DifficultEvents': results[0] ?? <String>[],
+      'MakeSafer': results[1] ?? <String>[],
+      'FeelBetter': results[2] ?? <String>[],
+      'Distractions': results[3] ?? <String>[],
+      'phoneNames': results[4] ?? <String>[],
+      'phoneNumbers': results[5] ?? <String>[],
+      'username': results[6] ?? ''
     };
   }
 

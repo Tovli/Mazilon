@@ -1,6 +1,8 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PhonePageData extends ChangeNotifier {
@@ -47,6 +49,7 @@ class PhonePageData extends ChangeNotifier {
       'phoneDescription': phoneDescription,
     };
   }
+
   //changes made on phone page CMS must be updated here
   factory PhonePageData.fromJson(Map<String, dynamic> json) {
     return PhonePageData(
@@ -103,9 +106,13 @@ class PhonePageData extends ChangeNotifier {
   }
 
   Future<void> loadItemsFromPrefs() async {
-    final prefs = await SharedPreferences.getInstance();
-    savedPhoneNames = prefs.getStringList('${key}SavedPhoneNames') ?? [];
-    savedPhoneNumbers = prefs.getStringList('${key}SavedPhoneNumbers') ?? [];
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    savedPhoneNames =
+        await service.getItem('${key}SavedPhoneNames', 'StringList') ?? [];
+    savedPhoneNumbers =
+        await service.getItem('${key}SavedPhoneNumbers', 'StringList') ?? [];
     notifyListeners();
   }
 
@@ -133,9 +140,11 @@ class PhonePageData extends ChangeNotifier {
   }
 
   Future<void> saveItemsToPrefs() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    await prefs.setStringList('${key}SavedPhoneNames', savedPhoneNames);
-    await prefs.setStringList('${key}SavedPhoneNumbers', savedPhoneNumbers);
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+    await service.setItem(
+        '${key}SavedPhoneNames', 'StringList', savedPhoneNames);
+    await service.setItem(
+        '${key}SavedPhoneNumbers', 'StringList', savedPhoneNumbers);
   }
 }

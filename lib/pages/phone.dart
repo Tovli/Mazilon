@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/Phone/phoneTextAndIcon.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,7 @@ class PhonePage extends StatefulWidget {
   _PhonePageState createState() => _PhonePageState();
 }
 
-class _PhonePageState extends State<PhonePage> {
+class _PhonePageState extends LPExtendedState<PhonePage> {
   String mainTitle = '';
   String contactsTitle = '';
   String emergencyNumbersTitle = '';
@@ -49,7 +50,7 @@ class _PhonePageState extends State<PhonePage> {
         Provider.of<UserInformation>(context, listen: true);
 
     final gender = userInfoProvider.gender;
-    final appLocale = AppLocalizations.of(context);
+
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.only(

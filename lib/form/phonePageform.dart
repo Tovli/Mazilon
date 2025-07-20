@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mazilon/form/phonePageListItem.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -29,7 +30,7 @@ class PhonePageForm extends StatefulWidget {
   State<PhonePageForm> createState() => _PhonePageFormState();
 }
 
-class _PhonePageFormState extends State<PhonePageForm> {
+class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
   List<TextEditingController> nameControllers = [];
   List<TextEditingController> numberControllers = [];
   TextEditingController controller1 = TextEditingController();
@@ -103,7 +104,6 @@ class _PhonePageFormState extends State<PhonePageForm> {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
 
-    final appLocale = AppLocalizations.of(context)!;
     final gender = userInfoProvider.gender;
     return Scaffold(
       body: SingleChildScrollView(

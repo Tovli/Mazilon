@@ -8,6 +8,7 @@ import 'package:mazilon/iFx/service_locator.dart';
 import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/pages/notifications/notification_service.dart';
 import 'package:mazilon/util/logger_service.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'util/Firebase/firebase_options.dart';
@@ -20,7 +21,7 @@ import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/Firebase/firebase_functions.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:upgrader/upgrader.dart';
-
+import 'package:mazilon/util/LP_extended_state.dart';
 //testing:
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
 
@@ -131,6 +132,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   late Mixpanel mixpanel;
   bool firsttime = false;
   String localeName = '';
+  bool _initializationStarted = false; // Add this flag
 
   bool _isInitialized = false;
   List<String> phonePageCollectionNames = [
@@ -202,32 +204,70 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   void getHasFilled() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      PersistentMemoryService service = GetIt.instance<
+          PersistentMemoryService>(); // Get the persistent memory service instance
 
-    setState(() {
-      hasFilled = prefs.getBool('hasFilled') ?? false;
-    });
+      await service.setItem("disclaimerConfirmed", "bool", true);
+      var hasFilledValue = await service.getItem("hasFilled", "bool") ?? false;
+      setState(() {
+        hasFilled = hasFilledValue;
+      });
+    } catch (e) {
+      print('Error in getHasFilled: $e');
+      // Set default value on error
+      setState(() {
+        hasFilled = false;
+      });
+    }
   }
 
   Future<void> setLocale() async {
-    LocaleService localeService = GetIt.instance<LocaleService>();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print('setLocale() called');
+    try {
+      LocaleService localeService = GetIt.instance<LocaleService>();
 
-    String? prefsLocale = prefs.getString('localeName');
+      PersistentMemoryService service = GetIt.instance<
+          PersistentMemoryService>(); // Get the persistent memory service instance
+      await service.setItem("disclaimerConfirmed", "bool", true);
+      String? prefsLocale = await service.getItem('localeName', 'String');
 
-    setState(() {
-      localeService.setLocale(prefsLocale);
+      print('prefsLocale from service: $prefsLocale');
 
-      localeName = localeService.getLocale();
-    });
+      setState(() {
+        localeService.setLocale(prefsLocale != "" ? prefsLocale! : 'en');
+        localeName = localeService.getLocale();
+        print('localeName set to: $localeName');
+      });
+    } catch (e) {
+      print('Error in setLocale: $e');
+      // Set default locale on error
+      LocaleService localeService = GetIt.instance<LocaleService>();
+      setState(() {
+        localeService.setLocale('en');
+        localeName = 'en';
+        print('localeName set to default: en');
+      });
+    }
   }
 
   void loadFirstTime() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      PersistentMemoryService service = GetIt.instance<
+          PersistentMemoryService>(); // Get the persistent memory service instance
 
-    setState(() {
-      firsttime = prefs.getBool('firstTime') ?? true;
-    });
+      var firstTimeValue = await service.getItem('firstTime', 'bool') ?? true;
+
+      setState(() {
+        firsttime = firstTimeValue;
+      });
+    } catch (e) {
+      print('Error in loadFirstTime: $e');
+      // Set default value on error
+      setState(() {
+        firsttime = true;
+      });
+    }
   }
 
   @override
@@ -278,26 +318,45 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     final appInfoProvider = Provider.of<AppInformation>(context, listen: false);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
-    if (widgetNotifier.value == null) {
+
+    if (widgetNotifier.value == null && !_initializationStarted) {
+      _initializationStarted = true; // Prevent multiple initialization attempts
+      print('Starting app initialization...');
       Future.wait([
         //load from DB or from json:
         loadAppInformation(appInfoProvider),
         loadUserInformation(userInfoProvider, localeService.getLocale()),
         setLocale()
       ]).then((_) {
+        print('App initialization completed successfully');
+        print(
+            'firsttime: $firsttime, hasFilled: $hasFilled, localeName: $localeName');
+
         //initialize which widget will run first:
-        widgetNotifier.value = phonePageData != null
-            //user filled data:
-            ? FirstPage(
-                firsttime: firsttime,
-                hasFilled: hasFilled,
-                changeLocale: changeLocale,
-                phonePageData: phonePageData)
-            //first login:
-            : const Center(child: Introduction());
+        widgetNotifier.value = FirstPage(
+            firsttime: firsttime,
+            hasFilled: hasFilled,
+            changeLocale: changeLocale,
+            phonePageData: phonePageData);
+        print('Widget set to FirstPage');
+      }).catchError((error, stackTrace) {
+        // Handle errors and provide a fallback widget
+        print('Error loading app data: $error');
+        IncidentLoggerService loggerService =
+            GetIt.instance<IncidentLoggerService>();
+        loggerService.captureLog(error, stackTrace: stackTrace);
+
+        // Fallback to Introduction page on error
+        widgetNotifier.value = const Center(child: Introduction());
+        print('Widget set to Introduction due to error');
       });
     }
+
+    print(
+        'Build called - localeName: $localeName, widgetNotifier.value: ${widgetNotifier.value}');
+
     if (localeName == '') {
+      print('Showing loading indicator');
       return const Center(child: CircularProgressIndicator());
     }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/FormAnswer/addFormAnswer.dart';
@@ -26,11 +27,10 @@ class FormAnswer extends StatefulWidget {
   State<FormAnswer> createState() => _FormAnswerState();
 }
 
-class _FormAnswerState extends State<FormAnswer> {
+class _FormAnswerState extends LPExtendedState<FormAnswer> {
   String tempMyAnswer = '';
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
     void editAnswer(String text, int index) {
       showDialog(
           context: context,

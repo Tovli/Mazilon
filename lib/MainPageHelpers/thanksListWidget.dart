@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/Thanks/AddForm.dart';
 
 import 'package:mazilon/util/styles.dart';
@@ -27,7 +28,7 @@ class ThanksListWidget extends StatefulWidget {
   State<ThanksListWidget> createState() => _ThanksListWidgetState();
 }
 
-class _ThanksListWidgetState extends State<ThanksListWidget> {
+class _ThanksListWidgetState extends LPExtendedState<ThanksListWidget> {
   List<String> thankYous = [];
   List<String> todayThankYous = [];
 
@@ -58,11 +59,10 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          final appLocale = AppLocalizations.of(context);
           return AlertDialog(
             title: const Text(''),
             content: Text(
-              appLocale!.homePageThankyouPopup(gender),
+              appLocale.homePageThankyouPopup(gender),
               style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14.sp),
               textAlign: TextAlign.center,
             ),
@@ -157,7 +157,6 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
   @override
   Widget build(BuildContext context) {
     // get the user information provider and the app information provider
-    final appLocale = AppLocalizations.of(context);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
 

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -26,13 +29,16 @@ class ToFormPage extends StatefulWidget {
   State<ToFormPage> createState() => _ToFormPageState();
 }
 
-class _ToFormPageState extends State<ToFormPage> {
+class _ToFormPageState extends LPExtendedState<ToFormPage> {
   bool hasFilled = false;
   void getHasFilled() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    var hasFilledValue = await service.getItem("hasFilled", "bool");
 
     setState(() {
-      hasFilled = prefs.getBool('hasFilled') ?? false;
+      hasFilled = hasFilledValue ?? false;
     });
   }
 
@@ -47,7 +53,7 @@ class _ToFormPageState extends State<ToFormPage> {
   Widget build(BuildContext context) {
     final userInfoProvider = Provider.of<UserInformation>(context);
     var gender = userInfoProvider.gender;
-    final appLocale = AppLocalizations.of(context);
+
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(children: [

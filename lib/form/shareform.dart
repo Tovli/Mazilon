@@ -4,8 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/file_service.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 
 import 'package:mazilon/util/SignIn/popup_toast.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/styles.dart';
 
@@ -29,11 +31,13 @@ class ShareForm extends StatefulWidget {
   State<ShareForm> createState() => _ShareFormState();
 }
 
-class _ShareFormState extends State<ShareForm> {
+class _ShareFormState extends LPExtendedState<ShareForm> {
   late FileService fileService;
   void setHasFilled() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('hasFilled', true);
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    await service.setItem("hasFilled", "bool", true);
   }
 
   @override
@@ -49,7 +53,7 @@ class _ShareFormState extends State<ShareForm> {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
     final gender = userInfoProvider.gender;
-    final appLocale = AppLocalizations.of(context);
+
     return PopScope(
       canPop: false,
       child: Scaffold(

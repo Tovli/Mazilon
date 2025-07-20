@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:mazilon/pages/PersonalPlan/myPlan.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +34,7 @@ class MyPlanPageFull extends StatefulWidget {
   State<MyPlanPageFull> createState() => _MyPlanPageFullState();
 }
 
-class _MyPlanPageFullState extends State<MyPlanPageFull> {
+class _MyPlanPageFullState extends LPExtendedState<MyPlanPageFull> {
   List<List<String>> userAnswers = []; // User's answers for each section
   List<String> phoneInformation = []; // User's phone-related information
 
@@ -97,7 +98,7 @@ class _MyPlanPageFullState extends State<MyPlanPageFull> {
     final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
-    final appLocale = AppLocalizations.of(context);
+
     // Set up phone and answer information based on the user's data
     setPhones(widget.phonePageData.savedPhoneNames,
         widget.phonePageData.savedPhoneNumbers);

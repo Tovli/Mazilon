@@ -7,9 +7,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 
 import 'package:mazilon/util/Form/retrieveInformation.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mazilon/pages/UserSettings.dart';
@@ -44,7 +47,7 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends LPExtendedState<Home> {
   String greetingString = '';
   String fileButtonString = '';
 
@@ -55,19 +58,25 @@ class _HomeState extends State<Home> {
 
 //load information about the user from shared preferences
   void loadData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    var hasFilledValue = await service.getItem("hasFilled", "bool");
 
     setState(() {
-      hasFilled = prefs.getBool('hasFilled') ?? false;
+      hasFilled = hasFilledValue;
     });
   }
 
 //function to update the user information(name,age,gender) in shared preferences
   void updateUserData(newName, newGender, newAge, isNonBinary) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    await service.setItem("disclaimerConfirmed", "bool", true);
 
     if (newGender != '') {
-      prefs.setString('gender', newGender);
+      await service.setItem('gender', "String", newGender);
     }
   }
 
@@ -141,7 +150,6 @@ class _HomeState extends State<Home> {
         Provider.of<UserInformation>(context, listen: true);
     final gender = userInfoProvider.gender;
     final age = userInfoProvider.age;
-    final appLocale = AppLocalizations.of(context);
 
     //add random header and user-selected info from personal plan:
     setRandomPersonalWidgetText(userInfoProvider, appLocale);

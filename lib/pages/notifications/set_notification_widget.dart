@@ -3,10 +3,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mazilon/pages/notifications/notification_service.dart';
 import 'package:mazilon/pages/notifications/time_picker.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/appInformation.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,7 +22,8 @@ class SetNotificationWidget extends StatefulWidget {
   State<SetNotificationWidget> createState() => _SetNotificationWidgetState();
 }
 
-class _SetNotificationWidgetState extends State<SetNotificationWidget> {
+class _SetNotificationWidgetState
+    extends LPExtendedState<SetNotificationWidget> {
   int _currentHour = 12;
   int _currentMinute = 0;
   void setTime(int minute, int hour) {
@@ -31,9 +35,11 @@ class _SetNotificationWidgetState extends State<SetNotificationWidget> {
 
   void saveNotificationTime(
       int hour, int minute, UserInformation userInfo) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('notificationHour', hour);
-    await prefs.setInt('notificationMinute', minute);
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    await service.setItem("notificationHour", "int", hour);
+    await service.setItem("notificationMinute", "int", minute);
     userInfo.updateNotificationHour(hour);
     userInfo.updateNotificationMinute(minute);
 
@@ -68,7 +74,7 @@ class _SetNotificationWidgetState extends State<SetNotificationWidget> {
     final userInfoProvider = Provider.of<UserInformation>(context);
 
     var gender = userInfoProvider.gender;
-    final appLocale = AppLocalizations.of(context);
+
     final quotes = retrieveInspirationalQuotes(appLocale, gender);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,7 +26,7 @@ class Positive extends StatefulWidget {
   State<Positive> createState() => _PositiveState();
 }
 
-class _PositiveState extends State<Positive> {
+class _PositiveState extends LPExtendedState<Positive> {
   List<String> positiveTraits = []; //list of positive traits
   List<FocusNode> focusNodes = []; //list of focus nodes
 
@@ -38,7 +40,6 @@ class _PositiveState extends State<Positive> {
 
   //load the data from the shared preferences
   void loadData(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
     setState(() {
@@ -85,15 +86,17 @@ class _PositiveState extends State<Positive> {
 
   //remove the positive trait at the given index
   void removePositiveTrait(int removeIndex, UserInformation userInfo) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> positiveTraits_temp =
-        prefs.getStringList('positiveTraits') ?? [];
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
 
-    positiveTraits_temp.removeAt(removeIndex);
+    List<String> positiveTraitsTemp =
+        await service.getItem("positiveTraits", "StringList");
+
+    positiveTraitsTemp.removeAt(removeIndex);
     print("got here");
+    await service.setItem("positiveTraits", "StringList", positiveTraitsTemp);
     setState(() {
-      prefs.setStringList('positiveTraits', positiveTraits_temp);
-      positiveTraits = positiveTraits_temp;
+      positiveTraits = positiveTraitsTemp;
       focusNodes.removeAt(removeIndex);
       userInfo.updatePositiveTraits(positiveTraits);
     });

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mazilon/initialForm/CountrySelectorWidget.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,7 +30,7 @@ class InitialFormPage2 extends StatefulWidget {
   State<InitialFormPage2> createState() => _InitialFormPage2State();
 }
 
-class _InitialFormPage2State extends State<InitialFormPage2> {
+class _InitialFormPage2State extends LPExtendedState<InitialFormPage2> {
   String? dropdownValueAge = '18-30';
   String? dropdownValueGender = '';
   String? name = '';
@@ -72,7 +73,6 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
   Widget build(BuildContext context) {
     final userInfoProvider = Provider.of<UserInformation>(context);
 
-    final appLocale = AppLocalizations.of(context);
     genders = [
       appLocale!.male,
       appLocale!.female,

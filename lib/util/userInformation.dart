@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 //this it the user's information class, with it we store and display it across the app
@@ -20,6 +22,7 @@ class UserInformation with ChangeNotifier {
   int notificationMinute;
   int notificationHour;
   Map<String, List<String>> thanks;
+  PersistentMemoryService service; // Get the persistent memory service instance
 
   UserInformation({
     this.location = '',
@@ -39,7 +42,8 @@ class UserInformation with ChangeNotifier {
     this.disclaimerSigned = false,
     this.loggedIn = false,
     this.userId = '',
-  });
+    PersistentMemoryService? service,
+  }) : service = service ?? GetIt.instance<PersistentMemoryService>();
 
   void reset(String locale) {
     location = '';
@@ -65,8 +69,7 @@ class UserInformation with ChangeNotifier {
 
   void updateGender(String text) {
     void saveGender(String value) async {
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString('gender', value);
+      await service.setItem('gender', "String", value);
     }
 
     gender = text;
@@ -76,8 +79,7 @@ class UserInformation with ChangeNotifier {
 
   void updateName(String text) {
     void saveName(String value) async {
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString('name', value);
+      await service.setItem('name', "String", value);
     }
 
     name = text;
@@ -87,8 +89,7 @@ class UserInformation with ChangeNotifier {
 
   void updateAge(String text) {
     void saveAge(String value) async {
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setString('age', value);
+      await service.setItem('age', "String", value);
     }
 
     age = text;
@@ -98,8 +99,7 @@ class UserInformation with ChangeNotifier {
 
   void updateBinary(bool value) {
     void saveBinary(bool value) async {
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setBool('binary', value);
+      await service.setItem('binary', "bool", value);
     }
 
     binary = value;
@@ -159,8 +159,7 @@ class UserInformation with ChangeNotifier {
 
   void updatePositiveTraits(List<String> value) {
     Future<void> savePositiveTraits(List<String> value) async {
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setStringList('positiveTraits', value);
+      await service.setItem('positiveTraits', "StringList", value);
     }
 
     positiveTraits = [...value];
@@ -170,9 +169,8 @@ class UserInformation with ChangeNotifier {
 
   void updateThanks(Map<String, List<String>> value) {
     Future<void> saveThanks(List<String> thanks, List<String> dates) async {
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setStringList('thankYous', thanks);
-      prefs.setStringList('dates', dates);
+      await service.setItem('thankYous', "StringList", value);
+      await service.setItem('dates', "StringList", value);
     }
 
     thanks = {"thanks": value["thanks"] ?? [], "dates": value["dates"] ?? []};

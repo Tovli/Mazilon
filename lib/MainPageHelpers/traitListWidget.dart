@@ -5,6 +5,7 @@ import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:mazilon/util/HomePage/sectionBarHome.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/Thanks/AddForm.dart';
 //import 'package:mazilon/util/Thanks/thanksItem.dart';
 import 'package:mazilon/util/styles.dart';
@@ -24,7 +25,7 @@ class TraitListWidget extends StatefulWidget {
   State<TraitListWidget> createState() => _TraitListWidgetState();
 }
 
-class _TraitListWidgetState extends State<TraitListWidget> {
+class _TraitListWidgetState extends LPExtendedState<TraitListWidget> {
   List<String> threeLatestTraits = [];
   @override
   void initState() {
@@ -98,7 +99,6 @@ class _TraitListWidgetState extends State<TraitListWidget> {
   @override
   Widget build(BuildContext context) {
     // get the app information provider and the user information provider
-    final appLocale = AppLocalizations.of(context);
 
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);

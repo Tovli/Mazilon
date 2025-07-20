@@ -1,6 +1,7 @@
 // ignore_for_file: annotate_overrides, prefer_const_constructors, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -24,7 +25,7 @@ class MyPlanSection extends StatefulWidget {
   State<MyPlanSection> createState() => _MyPlanSectionState();
 }
 
-class _MyPlanSectionState extends State<MyPlanSection> {
+class _MyPlanSectionState extends LPExtendedState<MyPlanSection> {
   @override
   void initState() {
     super.initState();
@@ -32,7 +33,6 @@ class _MyPlanSectionState extends State<MyPlanSection> {
 
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
     return Container(
       padding: EdgeInsets.all(10.0),
       color: Colors

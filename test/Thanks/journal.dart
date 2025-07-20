@@ -263,7 +263,8 @@ class _JournalState extends State<Journal> {
                   children: <Widget>[
                     Text(
                       'הצעות אחרות',
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.green),
                     ),
                     SizedBox(width: 1.0),
                     Icon(

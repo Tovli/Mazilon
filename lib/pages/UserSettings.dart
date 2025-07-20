@@ -6,6 +6,8 @@ import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Form/myDropdownMenuEntry.dart';
 import 'package:mazilon/util/userInformation.dart';
@@ -39,7 +41,7 @@ class UserSettings extends StatefulWidget {
   State<UserSettings> createState() => _UserSettingsState();
 }
 
-class _UserSettingsState extends State<UserSettings> {
+class _UserSettingsState extends LPExtendedState<UserSettings> {
   late ImagePickerService pickerService;
 
   String? dropdownValueAge = '18-30';
@@ -57,8 +59,11 @@ class _UserSettingsState extends State<UserSettings> {
       .toList();
   Future<void> updateLocale(
       String locale, UserInformation userInfoProvider) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('localeName', locale);
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    await service.setItem("localeName", "String", locale);
+
     setState(() {
       widget.changeLocale(locale);
       userInfoProvider.updateLocaleName(locale);
@@ -80,13 +85,18 @@ class _UserSettingsState extends State<UserSettings> {
 
   //remove log-in data and reset all data that user has filled in the app:
   Future<void> resetData(UserInformation userInfo) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
     LocaleService localeService = GetIt.instance<LocaleService>();
-    await prefs.clear();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    await service.reset(); // Reset the persistent memory service
+    var firstTimeValue = await service.getItem("firstTime", "bool");
+    var hasFilledValue = await service.getItem("hasFilled", "bool");
+
     widget.phonePageData.reset();
     setState(() {
-      firsttime = prefs.getBool('firstTime') ?? true;
-      hasFilled = prefs.getBool('hasFilled') ?? false;
+      firsttime = firstTimeValue;
+      hasFilled = hasFilledValue;
     });
 
     userInfo.reset(localeService.getLocale());
@@ -170,9 +180,11 @@ class _UserSettingsState extends State<UserSettings> {
 
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
+    // final appLocale = AppLocalizations.of(context);
+    print(appLocale);
+
     genders = [
-      appLocale!.male,
+      appLocale.male,
       appLocale.female,
       appLocale.nonBinary,
       appLocale.notWillingToSay
