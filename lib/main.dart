@@ -130,7 +130,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   late Mixpanel mixpanel;
-  bool firsttime = false;
+  bool enteredBefore = true;
   String localeName = '';
   bool _initializationStarted = false; // Add this flag
 
@@ -256,16 +256,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       PersistentMemoryService service = GetIt.instance<
           PersistentMemoryService>(); // Get the persistent memory service instance
 
-      var firstTimeValue = await service.getItem('firstTime', 'bool') ?? true;
+      var enteredBeforeValue =
+          await service.getItem('enteredBefore', 'bool') ?? true;
 
       setState(() {
-        firsttime = firstTimeValue;
+        enteredBefore = enteredBeforeValue;
       });
     } catch (e) {
-      print('Error in loadFirstTime: $e');
+      print('Error in load enteredBeforeValue: $e');
       // Set default value on error
       setState(() {
-        firsttime = true;
+        enteredBefore = false;
       });
     }
   }
@@ -330,11 +331,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       ]).then((_) {
         print('App initialization completed successfully');
         print(
-            'firsttime: $firsttime, hasFilled: $hasFilled, localeName: $localeName');
+            'firsttime: $enteredBefore, hasFilled: $hasFilled, localeName: $localeName');
 
         //initialize which widget will run first:
         widgetNotifier.value = FirstPage(
-            firsttime: firsttime,
+            firsttime: !enteredBefore,
             hasFilled: hasFilled,
             changeLocale: changeLocale,
             phonePageData: phonePageData);

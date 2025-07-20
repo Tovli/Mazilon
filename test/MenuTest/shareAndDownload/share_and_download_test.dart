@@ -14,6 +14,7 @@ import 'package:mazilon/pages/WellnessTools/VideoPlayerPageFactory.dart';
 import 'package:mazilon/pages/home.dart';
 
 import 'package:mazilon/file_service.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
@@ -39,6 +40,7 @@ void dummyshare() {
   MockSpec<VideoPlayerPageFactory>(),
   MockSpec<ImagePickerService>(),
   MockSpec<AnalyticsService>(),
+  MockSpec<PersistentMemoryService>(),
 ])
 void main() {
   var counterShare = 0;
@@ -64,6 +66,11 @@ void main() {
       final mockFactory = MockVideoPlayerPageFactory();
       getIt.registerSingleton<VideoPlayerPageFactory>(mockFactory);
       final imageFactory = MockImagePickerService();
+      final mockPersistentMemoryService = MockPersistentMemoryService();
+      getIt.registerLazySingleton<PersistentMemoryService>(
+          () => mockPersistentMemoryService);
+      when(mockPersistentMemoryService.getItem(any, "bool"))
+          .thenAnswer((_) async => true);
       getIt.registerLazySingleton<ImagePickerService>(() => imageFactory);
       when(mockFileServiceImpl.share(any, any, any, any, any, any))
           .thenAnswer(((Invocation invocation) async {
@@ -79,7 +86,7 @@ void main() {
       mockUserInformation.gender = "male";
       mockUserInformation.localeName = "he";
       getData(mockAppInformation);
-      when(mockSharedPreferences.getBool('firstTime')).thenReturn(true);
+      when(mockSharedPreferences.getBool('enteredBefore')).thenReturn(false);
     });
     testWidgets('Display exists', (WidgetTester tester) async {
       await tester

@@ -50,31 +50,35 @@ class _FormAnswerState extends LPExtendedState<FormAnswer> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 20,
-                        child:
-                            Icon(Icons.circle, color: primaryPurple, size: 10),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width > 1000
-                              ? 600
-                              : MediaQuery.of(context).size.width - 150,
-                          child: myAutoSizedText(
-                              widget.text,
-                              //maxLines: 10,
+                Expanded(
+                  child: SizedBox(
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 20,
+                          child: Icon(Icons.circle,
+                              color: primaryPurple, size: 10),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: SizedBox(
+                              width: MediaQuery.of(context).size.width > 1000
+                                  ? 600
+                                  : MediaQuery.of(context).size.width - 150,
+                              child: myAutoSizedText(
+                                  widget.text,
+                                  //maxLines: 10,
 
-                              TextStyle(fontSize: 16.sp),
-                              appLocale!.textDirection == "rtl"
-                                  ? TextAlign.right
-                                  : TextAlign.left,
-                              28)),
-                    ],
+                                  TextStyle(fontSize: 16.sp),
+                                  appLocale!.textDirection == "rtl"
+                                      ? TextAlign.right
+                                      : TextAlign.left,
+                                  28)),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Row(

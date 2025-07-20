@@ -46,7 +46,7 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
 
   String? dropdownValueAge = '18-30';
   TextEditingController _namecontroller = TextEditingController();
-  bool firsttime = true;
+  bool enteredBefore = false;
   bool hasFilled = false;
   String? dropdownValueGender = '';
   String? name = '';
@@ -90,12 +90,13 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
         PersistentMemoryService>(); // Get the persistent memory service instance
 
     await service.reset(); // Reset the persistent memory service
-    var firstTimeValue = await service.getItem("firstTime", "bool");
+    var enteredBeforeValue = await service.getItem("enteredBefore", "bool");
     var hasFilledValue = await service.getItem("hasFilled", "bool");
-
+    print(enteredBeforeValue);
+    print(hasFilledValue);
     widget.phonePageData.reset();
     setState(() {
-      firsttime = firstTimeValue;
+      enteredBefore = enteredBeforeValue;
       hasFilled = hasFilledValue;
     });
 
@@ -107,7 +108,7 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
         MaterialPageRoute(
             builder: (context) => FirstPage(
                 phonePageData: widget.phonePageData,
-                firsttime: firsttime,
+                firsttime: !enteredBefore,
                 changeLocale: widget.changeLocale,
                 hasFilled: hasFilled)),
         (Route<dynamic> route) => false);

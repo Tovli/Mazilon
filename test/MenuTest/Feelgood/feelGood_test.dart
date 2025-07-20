@@ -14,6 +14,7 @@ import 'package:mazilon/pages/WellnessTools/VideoPlayerPageFactory.dart';
 
 import 'package:mazilon/pages/home.dart';
 import 'package:mazilon/file_service.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mockito/annotations.dart';
@@ -34,6 +35,7 @@ import 'feelGood_test.mocks.dart';
   MockSpec<UserInformation>(),
   MockSpec<AppInformation>(),
   MockSpec<AnalyticsService>(),
+  MockSpec<PersistentMemoryService>(),
 ])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -54,6 +56,22 @@ void main() {
       final mockAnalytics = MockAnalyticsService();
       getIt.registerLazySingleton<AnalyticsService>(() => mockAnalytics);
       getIt.registerLazySingleton<FileService>(() => mockFileServiceImpl);
+
+      final mockPersistentMemoryService = MockPersistentMemoryService();
+
+      // Set up mock behaviors for PersistentMemoryService
+      when(mockPersistentMemoryService.getItem(any, any))
+          .thenAnswer((_) async => null);
+      when(mockPersistentMemoryService.getItem(any, "bool"))
+          .thenAnswer((_) async => true);
+      when(mockPersistentMemoryService.setItem(any, any, any))
+          .thenAnswer((_) async {});
+      when(mockPersistentMemoryService.reset()).thenAnswer((_) async {});
+
+      // Register PersistentMemoryService with GetIt
+      getIt.registerLazySingleton<PersistentMemoryService>(
+          () => mockPersistentMemoryService);
+
       final mockFactory = MockVideoPlayerPageFactory();
       getIt.registerSingleton<VideoPlayerPageFactory>(mockFactory);
       final imageFactory = MockImagePickerService();
@@ -92,7 +110,7 @@ void main() {
       mockUserInformation.gender = "male";
       mockUserInformation.localeName = "he";
       getData(mockAppInformation);
-      when(mockSharedPreferences.getBool('firstTime')).thenReturn(true);
+      when(mockSharedPreferences.getBool('enteredBefore')).thenReturn(false);
     });
 
     testWidgets('Navigate to FeelGood screen', (WidgetTester tester) async {

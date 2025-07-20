@@ -56,7 +56,7 @@ class _MenuState extends LPExtendedState<Menu> {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
-    await service.setItem("firstTime", "bool", false);
+    await service.setItem("enteredBefore", "bool", true);
   }
 
   void testingChange() async {
