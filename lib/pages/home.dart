@@ -13,7 +13,6 @@ import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mazilon/pages/UserSettings.dart';
 import 'package:mazilon/MainPageHelpers/personalPlanWidget.dart';
@@ -27,7 +26,6 @@ import 'package:mazilon/util/HomePage/NameBar.dart';
 
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 //the main page of the app
 //allows navigation to all other pages
@@ -61,7 +59,8 @@ class _HomeState extends LPExtendedState<Home> {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
-    var hasFilledValue = await service.getItem("hasFilled", "bool");
+    var hasFilledValue =
+        await service.getItem("hasFilled", PersistentMemoryType.Bool);
 
     setState(() {
       hasFilled = hasFilledValue;
@@ -73,10 +72,11 @@ class _HomeState extends LPExtendedState<Home> {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
-    await service.setItem("disclaimerConfirmed", "bool", true);
+    await service.setItem(
+        "disclaimerConfirmed", PersistentMemoryType.Bool, true);
 
     if (newGender != '') {
-      await service.setItem('gender', "String", newGender);
+      await service.setItem('gender', PersistentMemoryType.String, newGender);
     }
   }
 

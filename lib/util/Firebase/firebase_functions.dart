@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/logger_service.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'dart:math';
@@ -84,43 +85,46 @@ class Warning {
 Future<void> loadUserInformation(
     UserInformation userInfo, String locale) async {
   PersistentMemoryService service = GetIt.instance<PersistentMemoryService>();
+  final futures = <String, Future>{
+    'name': service.getItem("name", PersistentMemoryType.String),
+    'gender': service.getItem("gender", PersistentMemoryType.String),
+    'binary': service.getItem("binary", PersistentMemoryType.Bool),
+    'loggedIn': service.getItem("loggedIn", PersistentMemoryType.Bool),
+    'age': service.getItem("age", PersistentMemoryType.String),
+    'userId': service.getItem("userId", PersistentMemoryType.String),
+    'difficultEvents': service.getItem(
+        "userSelectionPersonalPlan-DifficultEvents",
+        PersistentMemoryType.StringList),
+    'makeSafer': service.getItem(
+        "userSelectionPersonalPlan-MakeSafer", PersistentMemoryType.StringList),
+    'feelBetter': service.getItem("userSelectionPersonalPlan-FeelBetter",
+        PersistentMemoryType.StringList),
+    'distractions': service.getItem("userSelectionPersonalPlan-Distractions",
+        PersistentMemoryType.StringList),
+    'location': service.getItem("location", PersistentMemoryType.String),
+    'disclaimerConfirmed':
+        service.getItem("disclaimerConfirmed", PersistentMemoryType.Bool),
+    'notificationMinute':
+        service.getItem("notificationMinute", PersistentMemoryType.Int),
+    'notificationHour':
+        service.getItem("notificationHour", PersistentMemoryType.Int),
+    'localeName': service.getItem("localeName", PersistentMemoryType.String),
+    'positiveTraits':
+        service.getItem("positiveTraits", PersistentMemoryType.StringList),
+    'thankYous': service.getItem("thankYous", PersistentMemoryType.StringList),
+    'dates': service.getItem("dates", PersistentMemoryType.StringList),
+  };
 
-  /* userInfo.updateName(prefs.getString('name') ?? '');
-  userInfo.updateGender(prefs.getString('gender') ?? '');
-  userInfo.updateBinary(prefs.getBool('binary') ?? false);
-  userInfo.updateLoggedIn(prefs.getBool('loggedIn') ?? false);
-  userInfo.updateAge(prefs.getString('age') ?? '');
-  userInfo.updateUserId(prefs.getString('userId') ?? '');*/
-  // Execute all service calls in parallel
-  final results = await Future.wait([
-    service.getItem("name", "String"),
-    service.getItem("gender", "String"),
-    service.getItem("binary", "bool"),
-    service.getItem("loggedIn", "bool"),
-    service.getItem("age", "String"),
-    service.getItem("userId", "String"),
-    service.getItem("userSelectionPersonalPlan-DifficultEvents", "StringList"),
-    service.getItem("userSelectionPersonalPlan-MakeSafer", "StringList"),
-    service.getItem("userSelectionPersonalPlan-FeelBetter", "StringList"),
-    service.getItem("userSelectionPersonalPlan-Distractions", "StringList"),
-    service.getItem("location", "String"),
-    service.getItem("disclaimerConfirmed", "bool"),
-    service.getItem("notificationMinute", "int"),
-    service.getItem("notificationHour", "int"),
-    service.getItem("localeName", "String"),
-    service.getItem("positiveTraits", "StringList"),
-    service.getItem("thankYous", "StringList"),
-    service.getItem("dates", "StringList"),
-  ]);
-
+  final results = await Future.wait(futures.values);
+  final data = Map.fromIterables(futures.keys, results);
   // SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  userInfo.updateName(results[0] ?? '');
-  userInfo.updateGender(results[1] ?? '');
-  userInfo.updateBinary(results[2] ?? false);
-  userInfo.updateLoggedIn(results[3] ?? false);
-  userInfo.updateAge(results[4] ?? '');
-  userInfo.updateUserId(results[5] ?? '');
+  userInfo.updateName(data['name'] ?? '');
+  userInfo.updateGender(data['gender'] ?? '');
+  userInfo.updateBinary(data['binary'] ?? false);
+  userInfo.updateLoggedIn(data['loggedIn'] ?? false);
+  userInfo.updateAge(data['age'] ?? '');
+  userInfo.updateUserId(data['userId'] ?? '');
   /* List<String> fieldNames = [
     'userSelectionPersonalPlan-DifficultEvents',
     'userSelectionPersonalPlan-MakeSafer',
@@ -128,23 +132,23 @@ Future<void> loadUserInformation(
     'userSelectionPersonalPlan-Distractions'
   ];*/
   userInfo.updateDifficultEvents(
-      (results[6] as List<dynamic>?)?.cast<String>() ?? []);
-  userInfo
-      .updateMakeSafer((results[7] as List<dynamic>?)?.cast<String>() ?? []);
-  userInfo
-      .updateFeelBetter((results[8] as List<dynamic>?)?.cast<String>() ?? []);
-  userInfo
-      .updateDistractions((results[9] as List<dynamic>?)?.cast<String>() ?? []);
-  userInfo.updateLocation(results[10] ?? "");
-  userInfo.updateDisclaimerSigned(results[11] ?? false);
-  userInfo.updateNotificationMinute(results[12] ?? 0);
-  userInfo.updateNotificationHour(results[13] ?? 12);
-  userInfo.updateLocaleName(results[14] ?? "en");
+      (data['difficultEvents'] as List<dynamic>? ?? []).cast<String>());
+  userInfo.updateMakeSafer(
+      (data['makeSafer'] as List<dynamic>? ?? []).cast<String>());
+  userInfo.updateFeelBetter(
+      (data['feelBetter'] as List<dynamic>? ?? []).cast<String>());
+  userInfo.updateDistractions(
+      (data['distractions'] as List<dynamic>? ?? []).cast<String>());
+  userInfo.updateLocation(data['location'] ?? "");
+  userInfo.updateDisclaimerSigned(data['disclaimerConfirmed'] ?? false);
+  userInfo.updateNotificationMinute(data['notificationMinute'] ?? 0);
+  userInfo.updateNotificationHour(data['notificationHour'] ?? 12);
+  userInfo.updateLocaleName(data['localeName'] ?? "en");
   userInfo.updatePositiveTraits(
-      (results[15] as List<dynamic>?)?.cast<String>() ?? []);
+      (data['positiveTraits'] as List<dynamic>? ?? []).cast<String>());
   userInfo.updateThanks({
-    "thanks": (results[16] as List<dynamic>?)?.cast<String>() ?? [],
-    "dates": (results[17] as List<dynamic>?)?.cast<String>() ?? []
+    "thanks": (data['thankYous'] as List<dynamic>? ?? []).cast<String>(),
+    "dates": (data['dates'] as List<dynamic>? ?? []).cast<String>()
   });
   userInfo.updateLocaleName(locale);
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -69,7 +70,7 @@ class UserInformation with ChangeNotifier {
 
   void updateGender(String text) {
     void saveGender(String value) async {
-      await service.setItem('gender', "String", value);
+      await service.setItem('gender', PersistentMemoryType.String, value);
     }
 
     gender = text;
@@ -79,7 +80,7 @@ class UserInformation with ChangeNotifier {
 
   void updateName(String text) {
     void saveName(String value) async {
-      await service.setItem('name', "String", value);
+      await service.setItem('name', PersistentMemoryType.String, value);
     }
 
     name = text;
@@ -89,7 +90,7 @@ class UserInformation with ChangeNotifier {
 
   void updateAge(String text) {
     void saveAge(String value) async {
-      await service.setItem('age', "String", value);
+      await service.setItem('age', PersistentMemoryType.String, value);
     }
 
     age = text;
@@ -99,7 +100,7 @@ class UserInformation with ChangeNotifier {
 
   void updateBinary(bool value) {
     void saveBinary(bool value) async {
-      await service.setItem('binary', "bool", value);
+      await service.setItem('binary', PersistentMemoryType.Bool, value);
     }
 
     binary = value;
@@ -158,8 +159,9 @@ class UserInformation with ChangeNotifier {
   }
 
   void updatePositiveTraits(List<String> value) {
-    Future<void> savePositiveTraits(List<String> value) async {
-      await service.setItem('positiveTraits', "StringList", value);
+    Future<void> savePositiveTraits(List<String> traits) async {
+      await service.setItem(
+          'positiveTraits', PersistentMemoryType.StringList, traits);
     }
 
     positiveTraits = [...value];
@@ -169,8 +171,9 @@ class UserInformation with ChangeNotifier {
 
   void updateThanks(Map<String, List<String>> value) {
     Future<void> saveThanks(List<String> thanks, List<String> dates) async {
-      await service.setItem('thankYous', "StringList", value);
-      await service.setItem('dates', "StringList", value);
+      await service.setItem(
+          'thankYous', PersistentMemoryType.StringList, thanks);
+      await service.setItem('dates', PersistentMemoryType.StringList, dates);
     }
 
     thanks = {"thanks": value["thanks"] ?? [], "dates": value["dates"] ?? []};

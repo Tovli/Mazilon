@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mazilon/global_enums.dart';
 
 import 'package:mazilon/initialForm/form.dart';
 import 'package:mazilon/pages/SignIn_Pages/signup.dart';
@@ -85,10 +86,10 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       userInfo.updateUserId(user.uid);
 
-      await service.setItem('userId', "String", user.uid);
+      await service.setItem('userId', PersistentMemoryType.String, user.uid);
       userInfo.updateLoggedIn(true);
 
-      await service.setItem('loggedIn', "bool", true);
+      await service.setItem('loggedIn', PersistentMemoryType.Bool, true);
       showToast(message: "User is successfully signed in");
       return true;
     } else {
@@ -115,8 +116,8 @@ class _LoginPageState extends State<LoginPage> {
     });
     userInfo.updateUserId(user!.uid);
     userInfo.updateLoggedIn(user != null);
-    await service.setItem('loggedIn', "bool", user != null);
-    await service.setItem('userId', "String", user.uid);
+    await service.setItem('loggedIn', PersistentMemoryType.Bool, user != null);
+    await service.setItem('userId', PersistentMemoryType.String, user.uid);
 
     if (user != null) {
       showToast(message: "User is successfully signed in");
@@ -151,10 +152,12 @@ class _LoginPageState extends State<LoginPage> {
           await FirebaseAuth.instance.signInWithCredential(credential);
       userInfo.updateUserId(userCredential.user!.uid);
       userInfo.updateLoggedIn(userCredential.user != null);
-      await service.setItem('userId', "String", userCredential.user!.uid);
-      await service.setItem('loggedIn', "bool", userCredential.user != null);
       await service.setItem(
-          'googleAccessToken', "String", googleAuth.accessToken!);
+          'userId', PersistentMemoryType.String, userCredential.user!.uid);
+      await service.setItem(
+          'loggedIn', PersistentMemoryType.Bool, userCredential.user != null);
+      await service.setItem('googleAccessToken', PersistentMemoryType.String,
+          googleAuth.accessToken!);
 
       return userCredential.user;
     }

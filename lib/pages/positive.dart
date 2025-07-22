@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/AnalyticsService.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
@@ -89,12 +90,13 @@ class _PositiveState extends LPExtendedState<Positive> {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
-    List<String> positiveTraitsTemp =
-        await service.getItem("positiveTraits", "StringList");
+    List<String> positiveTraitsTemp = await service.getItem(
+        "positiveTraits", PersistentMemoryType.StringList);
 
     positiveTraitsTemp.removeAt(removeIndex);
     print("got here");
-    await service.setItem("positiveTraits", "StringList", positiveTraitsTemp);
+    await service.setItem(
+        "positiveTraits", PersistentMemoryType.StringList, positiveTraitsTemp);
     setState(() {
       positiveTraits = positiveTraitsTemp;
       focusNodes.removeAt(removeIndex);

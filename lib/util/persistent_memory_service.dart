@@ -1,40 +1,42 @@
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class PersistentMemoryService {
-  Future<void> setItem(String key, String type, dynamic value);
+  Future<void> setItem(String key, PersistentMemoryType type, dynamic value);
   Future<dynamic> getItem(
     String key,
-    String type,
+    PersistentMemoryType type,
   );
   Future<void> reset();
 }
 
 class AndroidPersistentMemoryService implements PersistentMemoryService {
   @override
-  Future<void> setItem(String key, String type, dynamic value) async {
+  Future<void> setItem(
+      String key, PersistentMemoryType type, dynamic value) async {
     IncidentLoggerService loggerService =
         GetIt.instance<IncidentLoggerService>();
     if (key == "" || value == null) {
       loggerService.captureLog(
         'Invalid key or value for persistent memory service',
       );
+      return;
     }
 
     try {
       var prefs = await SharedPreferences.getInstance();
       switch (type) {
-        case 'String':
-          print('Setting item: $key with value: $value');
+        case PersistentMemoryType.String:
           prefs.setString(key, value);
-        case 'int':
+        case PersistentMemoryType.Int:
           prefs.setInt(key, value);
-        case 'double':
+        case PersistentMemoryType.Double:
           prefs.setDouble(key, value);
-        case 'bool':
+        case PersistentMemoryType.Bool:
           prefs.setBool(key, value);
-        case 'StringList':
+        case PersistentMemoryType.StringList:
           prefs.setStringList(key, List<String>.from(value));
         default:
           throw Exception(
@@ -50,21 +52,21 @@ class AndroidPersistentMemoryService implements PersistentMemoryService {
   }
 
   @override
-  Future<dynamic> getItem(String key, String type) async {
+  Future<dynamic> getItem(String key, PersistentMemoryType type) async {
     IncidentLoggerService loggerService =
         GetIt.instance<IncidentLoggerService>();
     try {
       var prefs = await SharedPreferences.getInstance();
       switch (type) {
-        case 'String':
+        case PersistentMemoryType.String:
           return prefs.getString(key) ?? "";
-        case 'int':
+        case PersistentMemoryType.Int:
           return prefs.getInt(key) ?? 0;
-        case 'double':
+        case PersistentMemoryType.Double:
           return prefs.getDouble(key) ?? 0.0;
-        case 'bool':
+        case PersistentMemoryType.Bool:
           return prefs.getBool(key) ?? false;
-        case 'StringList':
+        case PersistentMemoryType.StringList:
           return prefs.getStringList(key) ?? [];
         default:
           throw Exception(

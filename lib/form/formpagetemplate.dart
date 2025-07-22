@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/AnalyticsService.dart';
+import 'package:mazilon/global_enums.dart';
 
 import 'package:mazilon/pages/FormAnswer.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
@@ -107,11 +108,12 @@ class _FormPageTemplateState extends LPExtendedState<FormPageTemplate> {
         break;
       default:
     }
-    await service.setItem("disclaimerConfirmed", "bool", true);
-    await service.setItem('userSelection${widget.collectionName}', 'StringList',
-        [...selectedItems]);
-    await service.setItem('addedStrings${widget.collectionName}', 'StringList',
-        [...selectedItems]);
+    await service.setItem(
+        "disclaimerConfirmed", PersistentMemoryType.Bool, true);
+    await service.setItem('userSelection${widget.collectionName}',
+        PersistentMemoryType.StringList, [...selectedItems]);
+    await service.setItem('addedStrings${widget.collectionName}',
+        PersistentMemoryType.StringList, [...selectedItems]);
 /*    prefs.setStringList(
         'userSelection${widget.collectionName}', [...selectedItems]);
     prefs.setStringList(

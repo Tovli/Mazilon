@@ -2557,7 +2557,7 @@ class MockPersistentMemoryService extends _i1.Mock
   @override
   _i7.Future<void> setItem(
     String? key,
-    String? type,
+    _i8.PersistentMemoryType? type,
     dynamic value,
   ) =>
       (super.noSuchMethod(
@@ -2576,7 +2576,7 @@ class MockPersistentMemoryService extends _i1.Mock
   @override
   _i7.Future<dynamic> getItem(
     String? key,
-    String? type,
+    _i8.PersistentMemoryType? type,
   ) =>
       (super.noSuchMethod(
         Invocation.method(

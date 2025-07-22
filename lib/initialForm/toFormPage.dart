@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,7 +36,8 @@ class _ToFormPageState extends LPExtendedState<ToFormPage> {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
-    var hasFilledValue = await service.getItem("hasFilled", "bool");
+    var hasFilledValue =
+        await service.getItem("hasFilled", PersistentMemoryType.Bool);
 
     setState(() {
       hasFilled = hasFilledValue ?? false;

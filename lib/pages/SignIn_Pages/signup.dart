@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
 
 import 'package:mazilon/pages/SignIn_Pages/login.dart';
 import 'package:mazilon/util/appInformation.dart';
@@ -81,11 +82,11 @@ class _SignUpPageState extends State<SignUpPage> {
       if (user != null) {
         showToast(message: "User is successfully created");
         userInfo.updateUserId(user!.uid);
-        await service.setItem('userId', "String", user.uid);
+        await service.setItem('userId', PersistentMemoryType.String, user.uid);
 
         userInfo.updateLoggedIn(true);
 
-        await service.setItem("loggedIn", "bool", true);
+        await service.setItem("loggedIn", PersistentMemoryType.Bool, true);
         return true;
       } else {
         showToast(message: "Some error happened");

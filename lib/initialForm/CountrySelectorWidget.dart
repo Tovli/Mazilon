@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/styles.dart';
@@ -28,7 +29,7 @@ class _CountrySelectorWidgetState
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
-    await service.setItem("location", "String", location);
+    await service.setItem("location", PersistentMemoryType.String, location);
     userInfo.updateLocation(location);
   }
 

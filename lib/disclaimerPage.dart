@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,7 +31,7 @@ void updateDisclaimers(userInfo) async {
   PersistentMemoryService service = GetIt.instance<
       PersistentMemoryService>(); // Get the persistent memory service instance
 
-  await service.setItem("disclaimerConfirmed", "bool", true);
+  await service.setItem("disclaimerConfirmed", PersistentMemoryType.Bool, true);
 
   userInfo.updateDisclaimerSigned(
       true); //update the disclaimer signed in the user information provider

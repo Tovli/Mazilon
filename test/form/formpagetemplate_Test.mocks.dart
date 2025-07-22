@@ -6,6 +6,7 @@
 import 'dart:async' as _i7;
 import 'dart:ui' as _i5;
 
+import 'package:mazilon/global_enums.dart' as _i8;
 import 'package:mazilon/util/appInformation.dart' as _i6;
 import 'package:mazilon/util/persistent_memory_service.dart' as _i2;
 import 'package:mazilon/util/userInformation.dart' as _i3;
@@ -2057,7 +2058,7 @@ class MockPersistentMemoryService extends _i1.Mock
   @override
   _i7.Future<void> setItem(
     String? key,
-    String? type,
+    _i8.PersistentMemoryType? type,
     dynamic value,
   ) =>
       (super.noSuchMethod(
@@ -2076,7 +2077,7 @@ class MockPersistentMemoryService extends _i1.Mock
   @override
   _i7.Future<dynamic> getItem(
     String? key,
-    String? type,
+    _i8.PersistentMemoryType? type,
   ) =>
       (super.noSuchMethod(
         Invocation.method(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/AnalyticsService.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
 import 'package:mazilon/iFx/service_locator.dart';
 import 'package:mazilon/file_service.dart';
@@ -56,7 +57,7 @@ void main() {
       final mockPersistentMemoryService = MockPersistentMemoryService();
       getIt.registerLazySingleton<PersistentMemoryService>(
           () => mockPersistentMemoryService);
-      when(mockPersistentMemoryService.getItem(any, "bool"))
+      when(mockPersistentMemoryService.getItem(any, PersistentMemoryType.Bool))
           .thenAnswer((_) async => true);
       when(mockFactory.create(
         onFullScreenChanged: anyNamed('onFullScreenChanged'),

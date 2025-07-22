@@ -1,6 +1,7 @@
 // ignore_for_file: annotate_overrides
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
@@ -70,7 +71,7 @@ class FormProgressIndicatorState
         PersistentMemoryService>(); // Get the persistent memory service instance
 
     if (name.isNotEmpty) {
-      await service.setItem("name", "String", name);
+      await service.setItem("name", PersistentMemoryType.String, name);
     }
     navigateToMenu(mycontext);
   }

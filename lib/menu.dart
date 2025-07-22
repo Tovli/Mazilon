@@ -12,7 +12,6 @@ import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:flutter/services.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mazilon/pages/home.dart';
 import 'package:mazilon/pages/journal.dart';
@@ -56,15 +55,17 @@ class _MenuState extends LPExtendedState<Menu> {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
-    await service.setItem("enteredBefore", "bool", true);
+    await service.setItem("enteredBefore", PersistentMemoryType.Bool, true);
   }
 
   void testingChange() async {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
-    await service.setItem("disclaimerConfirmed", "bool", true);
-    var location = await service.getItem("location", "String");
+    await service.setItem(
+        "disclaimerConfirmed", PersistentMemoryType.Bool, true);
+    var location =
+        await service.getItem("location", PersistentMemoryType.String);
 
     print(location);
   }

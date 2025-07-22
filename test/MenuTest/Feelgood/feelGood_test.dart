@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/AnalyticsService.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/pages/FeelGood/add_Image_item.dart';
 import 'package:mazilon/pages/FeelGood/feelGood.dart';
 import 'package:mazilon/pages/FeelGood/image_display_item.dart';
@@ -62,7 +63,7 @@ void main() {
       // Set up mock behaviors for PersistentMemoryService
       when(mockPersistentMemoryService.getItem(any, any))
           .thenAnswer((_) async => null);
-      when(mockPersistentMemoryService.getItem(any, "bool"))
+      when(mockPersistentMemoryService.getItem(any, PersistentMemoryType.Bool))
           .thenAnswer((_) async => true);
       when(mockPersistentMemoryService.setItem(any, any, any))
           .thenAnswer((_) async {});

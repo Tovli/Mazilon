@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/Locale/locale_service.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -62,7 +63,7 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
-    await service.setItem("localeName", "String", locale);
+    await service.setItem("localeName", PersistentMemoryType.String, locale);
 
     setState(() {
       widget.changeLocale(locale);
@@ -90,8 +91,10 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
         PersistentMemoryService>(); // Get the persistent memory service instance
 
     await service.reset(); // Reset the persistent memory service
-    var enteredBeforeValue = await service.getItem("enteredBefore", "bool");
-    var hasFilledValue = await service.getItem("hasFilled", "bool");
+    var enteredBeforeValue =
+        await service.getItem("enteredBefore", PersistentMemoryType.Bool);
+    var hasFilledValue =
+        await service.getItem("hasFilled", PersistentMemoryType.Bool);
     print(enteredBeforeValue);
     print(hasFilledValue);
     widget.phonePageData.reset();

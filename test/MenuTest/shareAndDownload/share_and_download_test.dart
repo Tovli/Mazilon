@@ -5,6 +5,7 @@ import 'package:fluttericon/elusive_icons.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/MainPageHelpers/personalPlanWidget.dart';
+import 'package:mazilon/global_enums.dart';
 
 import 'package:mazilon/util/HomePage/sectionBarHome.dart';
 import 'package:mazilon/iFx/service_locator.dart';
@@ -69,7 +70,7 @@ void main() {
       final mockPersistentMemoryService = MockPersistentMemoryService();
       getIt.registerLazySingleton<PersistentMemoryService>(
           () => mockPersistentMemoryService);
-      when(mockPersistentMemoryService.getItem(any, "bool"))
+      when(mockPersistentMemoryService.getItem(any, PersistentMemoryType.Bool))
           .thenAnswer((_) async => true);
       getIt.registerLazySingleton<ImagePickerService>(() => imageFactory);
       when(mockFileServiceImpl.share(any, any, any, any, any, any))

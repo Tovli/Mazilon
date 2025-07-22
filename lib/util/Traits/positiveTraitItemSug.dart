@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 
@@ -104,8 +105,9 @@ class _PositiveTraitItemSugState extends LPExtendedState<PositiveTraitItemSug> {
 
               final userInfoProvider =
                   Provider.of<UserInformation>(context, listen: false);
-              var myPositiveTraitsValue =
-                  await service.getItem('positiveTraits', 'StringList');
+              var myPositiveTraitsValue = await service.getItem(
+                      'positiveTraits', PersistentMemoryType.StringList) ??
+                  [];
               setState(() {
                 widget.add(widget.inputText == '' ? text : widget.inputText,
                     userInfoProvider);

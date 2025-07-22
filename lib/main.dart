@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -208,8 +209,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       PersistentMemoryService service = GetIt.instance<
           PersistentMemoryService>(); // Get the persistent memory service instance
 
-      await service.setItem("disclaimerConfirmed", "bool", true);
-      var hasFilledValue = await service.getItem("hasFilled", "bool") ?? false;
+      await service.setItem(
+          "disclaimerConfirmed", PersistentMemoryType.Bool, true);
+      var hasFilledValue =
+          await service.getItem("hasFilled", PersistentMemoryType.Bool) ??
+              false;
       setState(() {
         hasFilled = hasFilledValue;
       });
@@ -229,8 +233,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
       PersistentMemoryService service = GetIt.instance<
           PersistentMemoryService>(); // Get the persistent memory service instance
-      await service.setItem("disclaimerConfirmed", "bool", true);
-      String? prefsLocale = await service.getItem('localeName', 'String');
+      await service.setItem(
+          "disclaimerConfirmed", PersistentMemoryType.Bool, true);
+      String? prefsLocale =
+          await service.getItem('localeName', PersistentMemoryType.String);
 
       print('prefsLocale from service: $prefsLocale');
 
@@ -257,7 +263,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           PersistentMemoryService>(); // Get the persistent memory service instance
 
       var enteredBeforeValue =
-          await service.getItem('enteredBefore', 'bool') ?? true;
+          await service.getItem('enteredBefore', PersistentMemoryType.Bool) ??
+              true;
 
       setState(() {
         enteredBefore = enteredBeforeValue;

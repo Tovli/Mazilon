@@ -37,7 +37,7 @@ class _ShareFormState extends LPExtendedState<ShareForm> {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
-    await service.setItem("hasFilled", "bool", true);
+    await service.setItem("hasFilled", PersistentMemoryType.Bool, true);
   }
 
   @override

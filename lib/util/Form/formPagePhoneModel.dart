@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -109,10 +110,12 @@ class PhonePageData extends ChangeNotifier {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
-    savedPhoneNames =
-        await service.getItem('${key}SavedPhoneNames', 'StringList') ?? [];
-    savedPhoneNumbers =
-        await service.getItem('${key}SavedPhoneNumbers', 'StringList') ?? [];
+    savedPhoneNames = await service.getItem(
+            '${key}SavedPhoneNames', PersistentMemoryType.StringList) ??
+        [];
+    savedPhoneNumbers = await service.getItem(
+            '${key}SavedPhoneNumbers', PersistentMemoryType.StringList) ??
+        [];
     notifyListeners();
   }
 
@@ -142,9 +145,9 @@ class PhonePageData extends ChangeNotifier {
   Future<void> saveItemsToPrefs() async {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
-    await service.setItem(
-        '${key}SavedPhoneNames', 'StringList', savedPhoneNames);
-    await service.setItem(
-        '${key}SavedPhoneNumbers', 'StringList', savedPhoneNumbers);
+    await service.setItem('${key}SavedPhoneNames',
+        PersistentMemoryType.StringList, savedPhoneNames);
+    await service.setItem('${key}SavedPhoneNumbers',
+        PersistentMemoryType.StringList, savedPhoneNumbers);
   }
 }
