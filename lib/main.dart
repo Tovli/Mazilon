@@ -170,7 +170,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     final endTime = DateTime.now();
     final duration =
         endTime.difference(_startTime!).inSeconds; // Calculate session length
-    print("duration: " + duration.toString());
+
     AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
     mixPanelService.trackEvent("Session Ended", {
       "duration_seconds": duration,
@@ -218,7 +218,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         hasFilled = hasFilledValue;
       });
     } catch (e) {
-      print('Error in getHasFilled: $e');
       // Set default value on error
       setState(() {
         hasFilled = false;
@@ -227,7 +226,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   Future<void> setLocale() async {
-    print('setLocale() called');
     try {
       LocaleService localeService = GetIt.instance<LocaleService>();
 
@@ -238,21 +236,16 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       String? prefsLocale =
           await service.getItem('localeName', PersistentMemoryType.String);
 
-      print('prefsLocale from service: $prefsLocale');
-
       setState(() {
         localeService.setLocale(prefsLocale != "" ? prefsLocale! : 'en');
         localeName = localeService.getLocale();
-        print('localeName set to: $localeName');
       });
     } catch (e) {
-      print('Error in setLocale: $e');
       // Set default locale on error
       LocaleService localeService = GetIt.instance<LocaleService>();
       setState(() {
         localeService.setLocale('en');
         localeName = 'en';
-        print('localeName set to default: en');
       });
     }
   }
@@ -270,7 +263,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         enteredBefore = enteredBeforeValue;
       });
     } catch (e) {
-      print('Error in load enteredBeforeValue: $e');
       // Set default value on error
       setState(() {
         enteredBefore = false;
@@ -329,42 +321,32 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
     if (widgetNotifier.value == null && !_initializationStarted) {
       _initializationStarted = true; // Prevent multiple initialization attempts
-      print('Starting app initialization...');
+
       Future.wait([
         //load from DB or from json:
         loadAppInformation(appInfoProvider),
         loadUserInformation(userInfoProvider, localeService.getLocale()),
         setLocale()
       ]).then((_) {
-        print('App initialization completed successfully');
-        print(
-            'firsttime: $enteredBefore, hasFilled: $hasFilled, localeName: $localeName');
-
         //initialize which widget will run first:
         widgetNotifier.value = FirstPage(
             firsttime: !enteredBefore,
             hasFilled: hasFilled,
             changeLocale: changeLocale,
             phonePageData: phonePageData);
-        print('Widget set to FirstPage');
       }).catchError((error, stackTrace) {
         // Handle errors and provide a fallback widget
-        print('Error loading app data: $error');
+
         IncidentLoggerService loggerService =
             GetIt.instance<IncidentLoggerService>();
         loggerService.captureLog(error, stackTrace: stackTrace);
 
         // Fallback to Introduction page on error
         widgetNotifier.value = const Center(child: Introduction());
-        print('Widget set to Introduction due to error');
       });
     }
 
-    print(
-        'Build called - localeName: $localeName, widgetNotifier.value: ${widgetNotifier.value}');
-
     if (localeName == '') {
-      print('Showing loading indicator');
       return const Center(child: CircularProgressIndicator());
     }
 
