@@ -23,5 +23,5 @@ void setupLocator() {
   getIt.registerLazySingleton<LocaleService>(() => LocaleServiceImpl());
   getIt.registerLazySingleton<AnalyticsService>(() => MixPanelService());
   getIt.registerLazySingleton<PersistentMemoryService>(
-      () => AndroidPersistentMemoryService());
+      () => SharedPreferencesService());
 }

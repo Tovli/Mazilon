@@ -12,7 +12,7 @@ abstract class PersistentMemoryService {
   Future<void> reset();
 }
 
-class AndroidPersistentMemoryService implements PersistentMemoryService {
+class SharedPreferencesService implements PersistentMemoryService {
   @override
   Future<void> setItem(
       String key, PersistentMemoryType type, dynamic value) async {
