@@ -61,7 +61,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
 
   void _logEvent(bool isPlaying, title, String url) {
     AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
-    print("logging");
+    debugPrint("logging");
     if (isPlaying) {
       mixPanelService
           .trackEvent("Video unpaused", {"title": title, "url": url});
@@ -72,13 +72,13 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(controller.metadata.videoId);
+    debugPrint(controller.metadata.videoId);
     return Container(
       child: YoutubePlayer(
         controller: controller,
         showVideoProgressIndicator: true,
         onReady: () {
-          print('Player is ready.');
+          debugPrint('Player is ready.');
         },
       ),
     );

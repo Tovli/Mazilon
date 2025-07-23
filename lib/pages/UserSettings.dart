@@ -95,8 +95,8 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
         await service.getItem("enteredBefore", PersistentMemoryType.Bool);
     var hasFilledValue =
         await service.getItem("hasFilled", PersistentMemoryType.Bool);
-    print(enteredBeforeValue);
-    print(hasFilledValue);
+    debugPrint(enteredBeforeValue);
+    debugPrint(hasFilledValue);
     widget.phonePageData.reset();
     setState(() {
       enteredBefore = enteredBeforeValue;
@@ -185,7 +185,6 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
   @override
   Widget build(BuildContext context) {
     // final appLocale = AppLocalizations.of(context);
-    print(appLocale);
 
     genders = [
       appLocale.male,
@@ -319,9 +318,9 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
                         ],
                         onSelected: (String? newValue) {
                           setState(() {
-                            print("thsi is the selected value");
+                            debugPrint("thsi is the selected value");
                             if (newValue != null) {
-                              print(newValue);
+                              debugPrint(newValue);
                               dropdownValueGender = newValue;
                             }
                           });
@@ -359,7 +358,7 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
                         onSelected: (String? newValue) {
                           setState(() {
                             if (newValue != null) {
-                              print(newValue);
+                              debugPrint(newValue);
                               final val = languageCode(newValue);
 
                               updateLocale(val, userInfoProvider);

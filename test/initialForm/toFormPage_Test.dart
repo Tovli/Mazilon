@@ -31,9 +31,7 @@ void main() {
         savedPhoneNames: [],
         savedPhoneNumbers: [],
         phoneDescription: []);*/
-  } catch (e) {
-    print(e);
-  }
+  } catch (e) {}
 
   group('FeelGood Widget Tests', () {
     testWidgets('ToFormPage renders correctly', (WidgetTester tester) async {

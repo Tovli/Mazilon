@@ -145,7 +145,6 @@ void main() {
     await tester.tap(find.byKey(Key('enterEditingMode')));
     await tester.pump();
     myState = tester.state(find.byType(PhoneWidget));
-    print(myState);
 
     final deletePhoneButton3 = find.byKey(Key('deletePhoneButton'));
     final nameField3 = find.byKey(Key('nameField'));

@@ -26,14 +26,15 @@ class _SimplifiedCheckboxFormState extends State<SimplifiedCheckboxForm> {
             onChanged: (bool? value) {
               setState(() {
                 _isChecked[key] = value ?? false;
-                print("$key is now: ${_isChecked[key]}"); // Direct feedback
+                debugPrint(
+                    "$key is now: ${_isChecked[key]}"); // Direct feedback
               });
             },
           );
         }).toList(),
         TextButton(
             onPressed: () {
-              print("Next button clicked"); // Direct feedback
+              debugPrint("Next button clicked"); // Direct feedback
               // Logic to proceed to the next page or action
             },
             child: Text('Next Page'))

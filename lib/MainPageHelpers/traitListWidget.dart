@@ -62,7 +62,7 @@ class _TraitListWidgetState extends LPExtendedState<TraitListWidget> {
       String positiveTrait, UserInformation userInfoProvider) {
     List<String> positiveTraits_temp = userInfoProvider.positiveTraits;
     positiveTraits_temp.add(positiveTrait);
-    print(positiveTraits_temp);
+
     setState(() {
       userInfoProvider.updatePositiveTraits(positiveTraits_temp);
       threeLatestTraits = threeLatestTraitsFunc(positiveTraits_temp);

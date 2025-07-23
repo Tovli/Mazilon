@@ -130,7 +130,7 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                     runSpacing: 4.0, // gap between lines
                     children: widget.thanks.asMap().entries.map((entry) {
                       int index = entry.key;
-                      print(widget.thanks.length);
+
                       String thank = entry.value;
                       return Container(
                         padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
