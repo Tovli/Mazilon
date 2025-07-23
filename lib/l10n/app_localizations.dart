@@ -461,13 +461,13 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{You\'re invited to create a personal plan for support during overwhelming moments.} female{You\'re invited to create a personal plan for support during overwhelming moments.} other{You\'re invited to create a personal plan for support during overwhelming moments.}}'**
+  /// **'{gender,select,male{You\'re invited to create a personal plan that offers support during overwhelming moments, for both you and those around you.} female{You\'re invited to create a personal plan that offers support during overwhelming moments, for both you and those around you.} other{You\'re invited to create a personal plan that offers support during overwhelming moments, for both you and those around you.}}'**
   String introductionFormLastPageSubTitle1(String gender);
 
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{Take a few minutes now to better navigate future crises} female{Take a few minutes now to better navigate future crises} other{Take a few minutes now to better navigate future crises}}'**
+  /// **'{gender,select,male{Take a few minutes now to better navigate future crises.} female{Take a few minutes now to better navigate future crises.} other{Take a few minutes now to better navigate future crises.}}'**
   String introductionFormLastPageSubTitle2(String gender);
 
   ///
@@ -1783,6 +1783,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The application is designed for personal use to improve mental resilience and provide support in times of crisis.\n\nIt cannot and is not intended to replace professional mental health providers. It does not substitute for a professional diagnosis or psychotherapeutic treatment. The tools integrated into the application aim to assist you and your environment in enhancing quality of life and offering support during challenging times.\n\nYou may use the application for self-help purposes and/or as part of a therapeutic process with a professional provider. If you require diagnosis or personal treatment, it is important to consult a professional therapist. The use of the application is at your own personal responsibility.\n\nPlease note: Your personal data within the application is stored only on your device! The application does not collect or transmit any personal information, and such data will never be used. You have the option to decide what to share, such as your personal plan, which may be shared with close social contacts and/or therapeutic professionals.\n\nIf you do not agree with the terms of use, please remove the application. If you accept these terms, please click the \"Accept\" button.'**
   String get disclaimerText;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get shareButtonText;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Here is the app LP (Living Positively). I use it and recommend it, maybe it will be helpful for you too.'**
+  String get shareAppMessage;
 
   ///
   ///

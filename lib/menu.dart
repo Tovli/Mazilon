@@ -28,6 +28,7 @@ import 'package:mazilon/util/HomePage/bottomNavigationItem.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
+import 'package:share_plus/share_plus.dart';
 
 class Menu extends StatefulWidget {
   final PhonePageData phonePageData;
@@ -427,6 +428,26 @@ class _MenuState extends LPExtendedState<Menu> {
                                                           .WellnessToolsPage;
                                                     });
                                                     Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Icon(Icons.share),
+                                                      SizedBox(width: 20),
+                                                      Text(appLocale
+                                                          .shareButtonText),
+                                                    ],
+                                                  ),
+                                                  onPressed: () async {
+                                                    // Share app text with others
+                                                    await Share.share(
+                                                      '${appLocale.shareAppMessage}\n https://sites.google.com/mishol.org/matzilon/%D7%91%D7%99%D7%AA',
+                                                      subject:
+                                                          'Living Positively App',
+                                                    );
                                                   },
                                                 ),
                                               ],
