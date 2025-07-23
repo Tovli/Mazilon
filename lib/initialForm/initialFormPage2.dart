@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
+import 'package:mazilon/initialForm/CountrySelectorWidget.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +11,7 @@ import 'package:mazilon/util/Form/myDropdownMenuEntry.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 
 //second page of the initial form
 //this is where the user selects their age,name and gender
@@ -27,7 +30,7 @@ class InitialFormPage2 extends StatefulWidget {
   State<InitialFormPage2> createState() => _InitialFormPage2State();
 }
 
-class _InitialFormPage2State extends State<InitialFormPage2> {
+class _InitialFormPage2State extends LPExtendedState<InitialFormPage2> {
   String? dropdownValueAge = '18-30';
   String? dropdownValueGender = '';
   String? name = '';
@@ -70,7 +73,6 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
   Widget build(BuildContext context) {
     final userInfoProvider = Provider.of<UserInformation>(context);
 
-    final appLocale = AppLocalizations.of(context);
     genders = [
       appLocale!.male,
       appLocale!.female,
@@ -235,6 +237,35 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
                         },
                       ),
                     ),
+                    CountrySelectorWidget(
+                      text: appLocale.locationSelect(gender),
+                      disclaimerText: appLocale.locationDisclaimer(gender),
+                    )
+                    /*  myAutoSizedText(
+                        appLocale!.locationSelect(gender),
+                        TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black),
+                        null,
+                        24),
+                    Container(
+                      child: CountryCodePicker(
+                        onChanged: print,
+                        // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
+                        initialSelection: 'IL',
+                        favorite: ['+972', 'IL'],
+                        // optional. Shows only country name and flag
+                        showCountryOnly: true,
+                        // optional. Shows only country name and flag when popup is closed.
+                        showOnlyCountryWhenClosed: true,
+                        // optional. aligns the flag and the Text left
+                        alignLeft: false,
+                        // Add only the countries we want to show in the drop down
+                        countryFilter: ['IL', 'US'],
+                      ),
+                    ),
+                 */
                   ],
                 ),
                 SizedBox(

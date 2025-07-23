@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,12 +18,12 @@ class Introduction extends StatefulWidget {
   State<Introduction> createState() => _IntroductionState();
 }
 
-class _IntroductionState extends State<Introduction> {
+class _IntroductionState extends LPExtendedState<Introduction> {
   @override
   Widget build(BuildContext context) {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
-    final appLocale = AppLocalizations.of(context);
+
     return Scaffold(
       body: Center(
         child: Column(

@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mazilon/AnalyticsService.dart';
 
 import 'package:mazilon/pages/FeelGood/FeelGoodInheritedWidget.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/appInformation.dart';
 
 import 'package:dotted_border/dotted_border.dart';
@@ -17,7 +18,7 @@ class ImageAddItem extends StatefulWidget {
   _ImageAddItemState createState() => _ImageAddItemState();
 }
 
-class _ImageAddItemState extends State<ImageAddItem> {
+class _ImageAddItemState extends LPExtendedState<ImageAddItem> {
   void _showAddImageDialog(appLocale, gender, pickImage) {
     showDialog(
       context: context,
@@ -62,7 +63,6 @@ class _ImageAddItemState extends State<ImageAddItem> {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
     final gender = userInfoProvider.gender;
-    final appLocale = AppLocalizations.of(context);
     return DottedBorder(
       color: Colors.grey,
       strokeWidth: 2,

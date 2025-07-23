@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:provider/provider.dart';
 
 import 'package:mazilon/util/userInformation.dart';
@@ -22,11 +23,11 @@ class NameBar extends StatefulWidget {
   State<NameBar> createState() => NameBarState();
 }
 
-class NameBarState extends State<NameBar> {
+class NameBarState extends LPExtendedState<NameBar> {
   @override
   Widget build(BuildContext context) {
     final userInfoProvider = Provider.of<UserInformation>(context);
-    final appLocale = AppLocalizations.of(context);
+
     return SizedBox(
       width: MediaQuery.of(context).size.width > 1000
           ? 800

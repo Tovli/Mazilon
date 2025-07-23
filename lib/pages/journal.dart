@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
@@ -27,7 +28,7 @@ class Journal extends StatefulWidget {
   State<Journal> createState() => _JournalState();
 }
 
-class _JournalState extends State<Journal> {
+class _JournalState extends LPExtendedState<Journal> {
   List<String> thankYous = []; //list of thank you notes
   List<FocusNode> focusNodes = []; //list of focus nodes for each thank you note
   List<String> dates = []; //list of dates for each thank you note
@@ -152,7 +153,6 @@ class _JournalState extends State<Journal> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          final appLocale = AppLocalizations.of(context);
           return AlertDialog(
             title: const Text(''),
             content: Text(
@@ -200,7 +200,6 @@ class _JournalState extends State<Journal> {
 // build the journal page
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
     // get the app and user information providers
 
     final userInfoProvider =

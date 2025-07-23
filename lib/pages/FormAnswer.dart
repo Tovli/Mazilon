@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/FormAnswer/addFormAnswer.dart';
@@ -26,11 +27,10 @@ class FormAnswer extends StatefulWidget {
   State<FormAnswer> createState() => _FormAnswerState();
 }
 
-class _FormAnswerState extends State<FormAnswer> {
+class _FormAnswerState extends LPExtendedState<FormAnswer> {
   String tempMyAnswer = '';
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
     void editAnswer(String text, int index) {
       showDialog(
           context: context,
@@ -50,31 +50,35 @@ class _FormAnswerState extends State<FormAnswer> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 20,
-                        child:
-                            Icon(Icons.circle, color: primaryPurple, size: 10),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      SizedBox(
-                          width: MediaQuery.of(context).size.width > 1000
-                              ? 600
-                              : MediaQuery.of(context).size.width - 150,
-                          child: myAutoSizedText(
-                              widget.text,
-                              //maxLines: 10,
+                Expanded(
+                  child: SizedBox(
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 20,
+                          child: Icon(Icons.circle,
+                              color: primaryPurple, size: 10),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: SizedBox(
+                              width: MediaQuery.of(context).size.width > 1000
+                                  ? 600
+                                  : MediaQuery.of(context).size.width - 150,
+                              child: myAutoSizedText(
+                                  widget.text,
+                                  //maxLines: 10,
 
-                              TextStyle(fontSize: 16.sp),
-                              appLocale!.textDirection == "rtl"
-                                  ? TextAlign.right
-                                  : TextAlign.left,
-                              28)),
-                    ],
+                                  TextStyle(fontSize: 16.sp),
+                                  appLocale!.textDirection == "rtl"
+                                      ? TextAlign.right
+                                      : TextAlign.left,
+                                  28)),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Row(

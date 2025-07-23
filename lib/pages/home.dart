@@ -7,10 +7,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 
 import 'package:mazilon/util/Form/retrieveInformation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 
 import 'package:mazilon/pages/UserSettings.dart';
 import 'package:mazilon/MainPageHelpers/personalPlanWidget.dart';
@@ -24,7 +26,6 @@ import 'package:mazilon/util/HomePage/NameBar.dart';
 
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 //the main page of the app
 //allows navigation to all other pages
@@ -44,7 +45,7 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends LPExtendedState<Home> {
   String greetingString = '';
   String fileButtonString = '';
 
@@ -55,25 +56,34 @@ class _HomeState extends State<Home> {
 
 //load information about the user from shared preferences
   void loadData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    var hasFilledValue =
+        await service.getItem("hasFilled", PersistentMemoryType.Bool);
 
     setState(() {
-      hasFilled = prefs.getBool('hasFilled') ?? false;
+      hasFilled = hasFilledValue;
     });
   }
 
 //function to update the user information(name,age,gender) in shared preferences
   void updateUserData(newName, newGender, newAge, isNonBinary) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    await service.setItem(
+        "disclaimerConfirmed", PersistentMemoryType.Bool, true);
 
     if (newGender != '') {
-      prefs.setString('gender', newGender);
+      await service.setItem('gender', PersistentMemoryType.String, newGender);
     }
   }
 
   @override
   void initState() {
     loadData();
+    checkLanguage("a");
     super.initState();
   }
 
@@ -124,13 +134,22 @@ class _HomeState extends State<Home> {
     }
   }
 
+  void checkLanguage(String string) {
+    final regex = RegExp(r'[a-z]');
+    final regexHebrew = RegExp(r'[\u0590-\u05FF]');
+    if (regexHebrew.hasMatch("a"))
+      print("has match");
+    else
+      print("no match");
+    // return regex.hasMatch(input);
+  }
+
   @override
   Widget build(BuildContext context) {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
     final gender = userInfoProvider.gender;
     final age = userInfoProvider.age;
-    final appLocale = AppLocalizations.of(context);
 
     //add random header and user-selected info from personal plan:
     setRandomPersonalWidgetText(userInfoProvider, appLocale);

@@ -1,6 +1,9 @@
 // ignore_for_file: annotate_overrides
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/appInformation.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -62,9 +65,11 @@ class FormProgressIndicatorState extends State<FormProgressIndicator> {
   }
 
   void submitForm(mycontext) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
     if (name.isNotEmpty) {
-      prefs.setString('name', name);
+      await service.setItem("name", PersistentMemoryType.String, name);
     }
     navigateToMenu(mycontext);
   }

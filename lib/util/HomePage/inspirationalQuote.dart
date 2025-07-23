@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/AnalyticsService.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'dart:math';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,7 +15,7 @@ class InspirationalQuote extends StatefulWidget {
   _InspirationalQuoteState createState() => _InspirationalQuoteState();
 }
 
-class _InspirationalQuoteState extends State<InspirationalQuote> {
+class _InspirationalQuoteState extends LPExtendedState<InspirationalQuote> {
   bool showText = true;
   String quote = '';
   int number = 0;
@@ -48,7 +49,6 @@ class _InspirationalQuoteState extends State<InspirationalQuote> {
 
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
     return Visibility(
       visible: showText,
       child: Container(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/AnalyticsService.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
 import 'package:mazilon/iFx/service_locator.dart';
 import 'package:mazilon/file_service.dart';
@@ -10,6 +11,7 @@ import 'package:mazilon/pages/WellnessTools/VideoPlayerPageFactory.dart';
 import 'package:mazilon/pages/WellnessTools/more_videos_item.dart';
 import 'package:mazilon/pages/home.dart';
 import 'package:mazilon/pages/WellnessTools/wellnessTools.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
@@ -31,6 +33,7 @@ import 'wellnessTools_test.mocks.dart';
   MockSpec<UserInformation>(),
   MockSpec<AppInformation>(),
   MockSpec<AnalyticsService>(),
+  MockSpec<PersistentMemoryService>(),
 ])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -51,6 +54,11 @@ void main() {
       final mockFileServiceImpl = MockFileService();
       getIt.registerLazySingleton<FileService>(() => mockFileServiceImpl);
       final mockFactory = MockVideoPlayerPageFactory();
+      final mockPersistentMemoryService = MockPersistentMemoryService();
+      getIt.registerLazySingleton<PersistentMemoryService>(
+          () => mockPersistentMemoryService);
+      when(mockPersistentMemoryService.getItem(any, PersistentMemoryType.Bool))
+          .thenAnswer((_) async => true);
       when(mockFactory.create(
         onFullScreenChanged: anyNamed('onFullScreenChanged'),
         videoData: anyNamed('videoData'),
@@ -81,7 +89,7 @@ void main() {
       mockUserInformation.localeName = "he";
       getData(mockAppInformation);
 
-      when(mockSharedPreferences.getBool('firstTime')).thenReturn(true);
+      when(mockSharedPreferences.getBool('enteredBefore')).thenReturn(false);
     });
     testWidgets('Navigate to WellnessTools screen',
         (WidgetTester tester) async {

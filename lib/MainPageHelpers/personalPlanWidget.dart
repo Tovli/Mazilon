@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/file_service.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/SignIn/popup_toast.dart';
 
 import 'package:mazilon/util/personalPlanItem.dart';
@@ -28,7 +29,7 @@ class PersonalPlanWidget extends StatefulWidget {
   State<PersonalPlanWidget> createState() => _PersonalPlanWidgetState();
 }
 
-class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
+class _PersonalPlanWidgetState extends LPExtendedState<PersonalPlanWidget> {
   late FileService fileService;
   late List<String> randomItems = ['1', '2'];
   List<String> feelBetter = [];
@@ -71,7 +72,6 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
 // the build function of the personal plan widget
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
     loadFeelBetter();
     // the providers of the app information and the user information
     final appInfoProvider = Provider.of<AppInformation>(context, listen: true);

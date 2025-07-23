@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:mazilon/pages/notifications/set_notification_widget.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +15,7 @@ class NotificationPage extends StatefulWidget {
   State<NotificationPage> createState() => _NotificationPageState();
 }
 
-class _NotificationPageState extends State<NotificationPage> {
+class _NotificationPageState extends LPExtendedState<NotificationPage> {
   @override
   void initState() {
     super.initState();
@@ -24,7 +25,7 @@ class _NotificationPageState extends State<NotificationPage> {
   Widget build(BuildContext context) {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
-    final appLocale = AppLocalizations.of(context);
+
     final gender = userInfoProvider.gender;
     return Scaffold(
       body: SafeArea(

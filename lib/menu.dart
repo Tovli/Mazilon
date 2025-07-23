@@ -10,7 +10,8 @@ import 'package:mazilon/pages/WellnessTools/wellnessTools.dart';
 import 'package:mazilon/pages/notifications/notification_page.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 
 import 'package:mazilon/pages/home.dart';
 import 'package:mazilon/pages/journal.dart';
@@ -43,7 +44,7 @@ class Menu extends StatefulWidget {
   State<Menu> createState() => _MenuState();
 }
 
-class _MenuState extends State<Menu> {
+class _MenuState extends LPExtendedState<Menu> {
   PagesCode current = PagesCode.Home;
   String version = "1.0.0";
   bool isFullScreen = false;
@@ -51,9 +52,22 @@ class _MenuState extends State<Menu> {
 
   //Function to set that the users has already opened the app before
   void loadFirstTime() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
 
-    prefs.setBool('firstTime', false);
+    await service.setItem("enteredBefore", PersistentMemoryType.Bool, true);
+  }
+
+  void testingChange() async {
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    await service.setItem(
+        "disclaimerConfirmed", PersistentMemoryType.Bool, true);
+    var location =
+        await service.getItem("location", PersistentMemoryType.String);
+
+    print(location);
   }
 
 //Function to check if the user wants to go full screen
@@ -139,10 +153,10 @@ class _MenuState extends State<Menu> {
   @override
   Widget build(BuildContext context) {
     AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
-    final appLocale = AppLocalizations.of(context)!;
     final userInformation = Provider.of<UserInformation>(context);
     final appInfoProvider = Provider.of<AppInformation>(context);
     final gender = userInformation.gender;
+    testingChange();
 
     return PopScope(
       //this is the popscope widget that will handle the back button

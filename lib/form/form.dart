@@ -1,6 +1,10 @@
 // ignore_for_file: annotate_overrides
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/appInformation.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -39,7 +43,8 @@ class FormProgressIndicator extends StatefulWidget {
   FormProgressIndicatorState createState() => FormProgressIndicatorState();
 }
 
-class FormProgressIndicatorState extends State<FormProgressIndicator> {
+class FormProgressIndicatorState
+    extends LPExtendedState<FormProgressIndicator> {
   int currentStep = 0;
   String name = '';
 
@@ -62,9 +67,11 @@ class FormProgressIndicatorState extends State<FormProgressIndicator> {
   }
 
   void submitForm(mycontext) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
     if (name.isNotEmpty) {
-      prefs.setString('name', name);
+      await service.setItem("name", PersistentMemoryType.String, name);
     }
     navigateToMenu(mycontext);
   }
@@ -148,7 +155,6 @@ class FormProgressIndicatorState extends State<FormProgressIndicator> {
         Provider.of<UserInformation>(context, listen: true);
 
     final gender = userInfoProvider.gender;
-    final appLocale = AppLocalizations.of(context);
     return PopScope(
       canPop: false,
       onPopInvoked: (didpop) async {

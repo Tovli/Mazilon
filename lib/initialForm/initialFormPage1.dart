@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
@@ -27,13 +28,13 @@ class InitialFormPage1 extends StatefulWidget {
   State<InitialFormPage1> createState() => _InitialFormPage1State();
 }
 
-class _InitialFormPage1State extends State<InitialFormPage1> {
+class _InitialFormPage1State extends LPExtendedState<InitialFormPage1> {
   @override
   Widget build(BuildContext context) {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
     final gender = userInfoProvider.gender;
-    final appLocale = AppLocalizations.of(context);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(

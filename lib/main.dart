@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,6 +9,7 @@ import 'package:mazilon/iFx/service_locator.dart';
 import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/pages/notifications/notification_service.dart';
 import 'package:mazilon/util/logger_service.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'util/Firebase/firebase_options.dart';
@@ -20,7 +22,7 @@ import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/Firebase/firebase_functions.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:upgrader/upgrader.dart';
-
+import 'package:mazilon/util/LP_extended_state.dart';
 //testing:
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
 
@@ -129,8 +131,9 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   late Mixpanel mixpanel;
-  bool firsttime = false;
+  bool enteredBefore = true;
   String localeName = '';
+  bool _initializationStarted = false; // Add this flag
 
   bool _isInitialized = false;
   List<String> phonePageCollectionNames = [
@@ -167,7 +170,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     final endTime = DateTime.now();
     final duration =
         endTime.difference(_startTime!).inSeconds; // Calculate session length
-    print("duration: " + duration.toString());
+
     AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
     mixPanelService.trackEvent("Session Ended", {
       "duration_seconds": duration,
@@ -202,32 +205,69 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   void getHasFilled() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      PersistentMemoryService service = GetIt.instance<
+          PersistentMemoryService>(); // Get the persistent memory service instance
 
-    setState(() {
-      hasFilled = prefs.getBool('hasFilled') ?? false;
-    });
+      await service.setItem(
+          "disclaimerConfirmed", PersistentMemoryType.Bool, true);
+      var hasFilledValue =
+          await service.getItem("hasFilled", PersistentMemoryType.Bool) ??
+              false;
+      setState(() {
+        hasFilled = hasFilledValue;
+      });
+    } catch (e) {
+      // Set default value on error
+      setState(() {
+        hasFilled = false;
+      });
+    }
   }
 
   Future<void> setLocale() async {
-    LocaleService localeService = GetIt.instance<LocaleService>();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      LocaleService localeService = GetIt.instance<LocaleService>();
 
-    String? prefsLocale = prefs.getString('localeName');
+      PersistentMemoryService service = GetIt.instance<
+          PersistentMemoryService>(); // Get the persistent memory service instance
+      await service.setItem(
+          "disclaimerConfirmed", PersistentMemoryType.Bool, true);
+      String? prefsLocale =
+          await service.getItem('localeName', PersistentMemoryType.String);
 
-    setState(() {
-      localeService.setLocale(prefsLocale);
-
-      localeName = localeService.getLocale();
-    });
+      setState(() {
+        localeService.setLocale(prefsLocale != "" ? prefsLocale! : 'en');
+        localeName = localeService.getLocale();
+      });
+    } catch (e) {
+      // Set default locale on error
+      LocaleService localeService = GetIt.instance<LocaleService>();
+      setState(() {
+        localeService.setLocale('en');
+        localeName = 'en';
+      });
+    }
   }
 
   void loadFirstTime() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      PersistentMemoryService service = GetIt.instance<
+          PersistentMemoryService>(); // Get the persistent memory service instance
 
-    setState(() {
-      firsttime = prefs.getBool('firstTime') ?? true;
-    });
+      var enteredBeforeValue =
+          await service.getItem('enteredBefore', PersistentMemoryType.Bool) ??
+              true;
+
+      setState(() {
+        enteredBefore = enteredBeforeValue;
+      });
+    } catch (e) {
+      // Set default value on error
+      setState(() {
+        enteredBefore = false;
+      });
+    }
   }
 
   @override
@@ -278,7 +318,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     final appInfoProvider = Provider.of<AppInformation>(context, listen: false);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
-    if (widgetNotifier.value == null) {
+
+    if (widgetNotifier.value == null && !_initializationStarted) {
+      _initializationStarted = true; // Prevent multiple initialization attempts
+
       Future.wait([
         //load from DB or from json:
         loadAppInformation(appInfoProvider),
@@ -286,17 +329,23 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         setLocale()
       ]).then((_) {
         //initialize which widget will run first:
-        widgetNotifier.value = phonePageData != null
-            //user filled data:
-            ? FirstPage(
-                firsttime: firsttime,
-                hasFilled: hasFilled,
-                changeLocale: changeLocale,
-                phonePageData: phonePageData)
-            //first login:
-            : const Center(child: Introduction());
+        widgetNotifier.value = FirstPage(
+            firsttime: !enteredBefore,
+            hasFilled: hasFilled,
+            changeLocale: changeLocale,
+            phonePageData: phonePageData);
+      }).catchError((error, stackTrace) {
+        // Handle errors and provide a fallback widget
+
+        IncidentLoggerService loggerService =
+            GetIt.instance<IncidentLoggerService>();
+        loggerService.captureLog(error, stackTrace: stackTrace);
+
+        // Fallback to Introduction page on error
+        widgetNotifier.value = const Center(child: Introduction());
       });
     }
+
     if (localeName == '') {
       return const Center(child: CircularProgressIndicator());
     }

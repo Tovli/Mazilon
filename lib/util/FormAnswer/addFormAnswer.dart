@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/userInformation.dart';
@@ -23,7 +24,7 @@ class AddFormAnswer extends StatefulWidget {
   State<AddFormAnswer> createState() => _AddFormAnswerState();
 }
 
-class _AddFormAnswerState extends State<AddFormAnswer> {
+class _AddFormAnswerState extends LPExtendedState<AddFormAnswer> {
   final _formKey = GlobalKey<FormState>(); // Global key for the form state
   final TextEditingController _controller =
       TextEditingController(); // Controller for the text input
@@ -36,8 +37,6 @@ class _AddFormAnswerState extends State<AddFormAnswer> {
 
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
-
     final userInfoProvider = Provider.of<UserInformation>(context,
         listen: true); // Access the UserInformation provider
     final gender = userInfoProvider.gender;

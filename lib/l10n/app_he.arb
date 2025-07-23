@@ -155,10 +155,12 @@
 
           "newTraitOrThanks": "{item} חדשה",
         "selectLanguage": "{gender,select,male{בחר שפה} female{בחרי שפה} other{בחר.י שפה}}",
+        "locationSelect": "{gender,select,male{אנא בחר את  מיקומך:} female{אנא בחרי את מיקומך:} other{אנא בחר.י את מיקומך:}}",
       "validateEmpty": "השדה אינו יכול להיות ריק",
       "moreVideos": "סרטונים נוספים",
       
-      
+          "locationDisclaimer":"{gender,select,male{האפליקציה משתמשת במיקום שלך אך ורק כדי להתאים את מספרי החירום למיקומך.} female{האפליקציה משתמשת במיקום שלך אך ורק כדי להתאים את מספרי החירום למיקומך.} other{האפליקציה משתמשת במיקום שלך אך ורק כדי להתאים את מספרי החירום למיקומך.}}",
+
       
       
       

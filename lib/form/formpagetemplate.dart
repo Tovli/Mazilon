@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/AnalyticsService.dart';
+import 'package:mazilon/global_enums.dart';
 
 import 'package:mazilon/pages/FormAnswer.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/styles.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,7 +38,7 @@ class FormPageTemplate extends StatefulWidget {
   State<FormPageTemplate> createState() => _FormPageTemplateState();
 }
 
-class _FormPageTemplateState extends State<FormPageTemplate> {
+class _FormPageTemplateState extends LPExtendedState<FormPageTemplate> {
   final TextEditingController _controller = TextEditingController();
   int displayedLength = 3;
   int length = 0;
@@ -85,7 +88,10 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
   }
 
   void createSelection(userInfo) async {
-    final prefs = await SharedPreferences.getInstance();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    // final prefs = await SharedPreferences.getInstance();
     //databaseItems = (prefs.getStringList('databaseItems' + formKey) ?? []);
     switch (widget.collectionName) {
       case 'PersonalPlan-DifficultEvents':
@@ -102,10 +108,16 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
         break;
       default:
     }
-    prefs.setStringList(
+    await service.setItem(
+        "disclaimerConfirmed", PersistentMemoryType.Bool, true);
+    await service.setItem('userSelection${widget.collectionName}',
+        PersistentMemoryType.StringList, [...selectedItems]);
+    await service.setItem('addedStrings${widget.collectionName}',
+        PersistentMemoryType.StringList, [...selectedItems]);
+/*    prefs.setStringList(
         'userSelection${widget.collectionName}', [...selectedItems]);
     prefs.setStringList(
-        'addedStrings${widget.collectionName}', [...selectedItems]);
+        'addedStrings${widget.collectionName}', [...selectedItems]);*/
   }
 
   void loadItems(userInfo) {
@@ -128,8 +140,6 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
 
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context)!;
-
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
     final gender = userInfoProvider.gender;

@@ -2,7 +2,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/logger_service.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -82,34 +84,71 @@ class Warning {
 //use or create functions in userinfo class to update the user information:
 Future<void> loadUserInformation(
     UserInformation userInfo, String locale) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
+  PersistentMemoryService service = GetIt.instance<PersistentMemoryService>();
+  final futures = <String, Future>{
+    'name': service.getItem("name", PersistentMemoryType.String),
+    'gender': service.getItem("gender", PersistentMemoryType.String),
+    'binary': service.getItem("binary", PersistentMemoryType.Bool),
+    'loggedIn': service.getItem("loggedIn", PersistentMemoryType.Bool),
+    'age': service.getItem("age", PersistentMemoryType.String),
+    'userId': service.getItem("userId", PersistentMemoryType.String),
+    'difficultEvents': service.getItem(
+        "userSelectionPersonalPlan-DifficultEvents",
+        PersistentMemoryType.StringList),
+    'makeSafer': service.getItem(
+        "userSelectionPersonalPlan-MakeSafer", PersistentMemoryType.StringList),
+    'feelBetter': service.getItem("userSelectionPersonalPlan-FeelBetter",
+        PersistentMemoryType.StringList),
+    'distractions': service.getItem("userSelectionPersonalPlan-Distractions",
+        PersistentMemoryType.StringList),
+    'location': service.getItem("location", PersistentMemoryType.String),
+    'disclaimerConfirmed':
+        service.getItem("disclaimerConfirmed", PersistentMemoryType.Bool),
+    'notificationMinute':
+        service.getItem("notificationMinute", PersistentMemoryType.Int),
+    'notificationHour':
+        service.getItem("notificationHour", PersistentMemoryType.Int),
+    'localeName': service.getItem("localeName", PersistentMemoryType.String),
+    'positiveTraits':
+        service.getItem("positiveTraits", PersistentMemoryType.StringList),
+    'thankYous': service.getItem("thankYous", PersistentMemoryType.StringList),
+    'dates': service.getItem("dates", PersistentMemoryType.StringList),
+  };
 
-  userInfo.updateName(prefs.getString('name') ?? '');
-  userInfo.updateGender(prefs.getString('gender') ?? '');
-  userInfo.updateBinary(prefs.getBool('binary') ?? false);
-  userInfo.updateLoggedIn(prefs.getBool('loggedIn') ?? false);
-  userInfo.updateAge(prefs.getString('age') ?? '');
-  userInfo.updateUserId(prefs.getString('userId') ?? '');
-  List<String> fieldNames = [
+  final results = await Future.wait(futures.values);
+  final data = Map.fromIterables(futures.keys, results);
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  userInfo.updateName(data['name'] ?? '');
+  userInfo.updateGender(data['gender'] ?? '');
+  userInfo.updateBinary(data['binary'] ?? false);
+  userInfo.updateLoggedIn(data['loggedIn'] ?? false);
+  userInfo.updateAge(data['age'] ?? '');
+  userInfo.updateUserId(data['userId'] ?? '');
+  /* List<String> fieldNames = [
     'userSelectionPersonalPlan-DifficultEvents',
     'userSelectionPersonalPlan-MakeSafer',
     'userSelectionPersonalPlan-FeelBetter',
     'userSelectionPersonalPlan-Distractions'
-  ];
-  userInfo.updateDifficultEvents(prefs.getStringList(fieldNames[0]) ?? []);
-  userInfo.updateMakeSafer(prefs.getStringList(fieldNames[1]) ?? []);
-  userInfo.updateFeelBetter(prefs.getStringList(fieldNames[2]) ?? []);
-  userInfo.updateDistractions(prefs.getStringList(fieldNames[3]) ?? []);
-
-  userInfo
-      .updateDisclaimerSigned(prefs.getBool('disclaimerConfirmed') ?? false);
-  userInfo.updateNotificationMinute(prefs.getInt('notificationMinute') ?? 0);
-  userInfo.updateNotificationHour(prefs.getInt('notificationHour') ?? 12);
-  userInfo.updateLocaleName(prefs.getString('localeName') ?? "en");
-  userInfo.updatePositiveTraits(prefs.getStringList('positiveTraits') ?? []);
+  ];*/
+  userInfo.updateDifficultEvents(
+      (data['difficultEvents'] as List<dynamic>? ?? []).cast<String>());
+  userInfo.updateMakeSafer(
+      (data['makeSafer'] as List<dynamic>? ?? []).cast<String>());
+  userInfo.updateFeelBetter(
+      (data['feelBetter'] as List<dynamic>? ?? []).cast<String>());
+  userInfo.updateDistractions(
+      (data['distractions'] as List<dynamic>? ?? []).cast<String>());
+  userInfo.updateLocation(data['location'] ?? "");
+  userInfo.updateDisclaimerSigned(data['disclaimerConfirmed'] ?? false);
+  userInfo.updateNotificationMinute(data['notificationMinute'] ?? 0);
+  userInfo.updateNotificationHour(data['notificationHour'] ?? 12);
+  userInfo.updateLocaleName(data['localeName'] ?? "en");
+  userInfo.updatePositiveTraits(
+      (data['positiveTraits'] as List<dynamic>? ?? []).cast<String>());
   userInfo.updateThanks({
-    "thanks": prefs.getStringList('thankYous') ?? [],
-    "dates": prefs.getStringList('dates') ?? []
+    "thanks": (data['thankYous'] as List<dynamic>? ?? []).cast<String>(),
+    "dates": (data['dates'] as List<dynamic>? ?? []).cast<String>()
   });
   userInfo.updateLocaleName(locale);
 }
@@ -317,12 +356,13 @@ Future<bool> loadAppInfoFromJson(
 
       return true;
     } catch (error, stackTrace) {
-      IncidentLoggerService loggerService =
+      print('Error loading app info from JSON: $error');
+      /*  IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
       await loggerService.captureLog(
         error,
         stackTrace: stackTrace,
-      );
+      );*/
       return false;
     }
   }

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 
 import 'package:mazilon/util/styles.dart';
 
@@ -32,7 +33,7 @@ class ThanksItemSuggested extends StatefulWidget {
   State<ThanksItemSuggested> createState() => _ThanksItemSuggestedState();
 }
 
-class _ThanksItemSuggestedState extends State<ThanksItemSuggested> {
+class _ThanksItemSuggestedState extends LPExtendedState<ThanksItemSuggested> {
   String text = ''; // the text of the suggested thank you (initially empty)
   List<String> myThanks = []; // the list of the thank yous
   List<String> thanksSuggestionList =
@@ -90,7 +91,6 @@ class _ThanksItemSuggestedState extends State<ThanksItemSuggested> {
   // build the thanks item suggested widget
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
     // get the appInformation provider
 
     final userInfoProvider = Provider.of<UserInformation>(context);

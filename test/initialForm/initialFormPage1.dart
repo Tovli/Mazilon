@@ -92,7 +92,7 @@ class _InitialFormPage1State extends State<InitialFormPage1> {
                 child: Icon(
                   Icons.arrow_back_ios,
                 ),
-              ),  
+              ),
               SizedBox(
                 height: returnSizedBox(context, 20),
               ),
@@ -116,7 +116,7 @@ class _InitialFormPage1State extends State<InitialFormPage1> {
                 child: Icon(
                   Icons.skip_previous,
                 ),
-              ),  
+              ),
             ],
           ),
         ),

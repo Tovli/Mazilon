@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/PDF/create_pdf.dart';
 import 'package:mazilon/util/logger_service.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mazilon/AnalyticsService.dart';
@@ -30,28 +31,37 @@ abstract class FileService {
 
 class FileServiceImpl implements FileService {
   static Future<Map<String, dynamic>> getPrefsData() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> userSelectionDifficultEvents =
-        prefs.getStringList('userSelectionPersonalPlan-DifficultEvents') ?? [];
-    List<String> userSelectionMakeSafer =
-        prefs.getStringList('userSelectionPersonalPlan-MakeSafer') ?? [];
-    List<String> userSelectionFeelBetter =
-        prefs.getStringList('userSelectionPersonalPlan-FeelBetter') ?? [];
-    List<String> userSelectionDistractions =
-        prefs.getStringList('userSelectionPersonalPlan-Distractions') ?? [];
-    List<String> phoneNames =
-        prefs.getStringList('PhonePageSavedPhoneNames') ?? [];
-    List<String> phoneNumbers =
-        prefs.getStringList('PhonePageSavedPhoneNumbers') ?? [];
-    String username = prefs.getString('name') ?? '';
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    final futures = <String, Future>{
+      'difficultEvents': service.getItem(
+          "userSelectionPersonalPlan-DifficultEvents",
+          PersistentMemoryType.StringList),
+      'makeSafer': service.getItem("userSelectionPersonalPlan-MakeSafer",
+          PersistentMemoryType.StringList),
+      'feelBetter': service.getItem("userSelectionPersonalPlan-FeelBetter",
+          PersistentMemoryType.StringList),
+      'distractions': service.getItem("userSelectionPersonalPlan-Distractions",
+          PersistentMemoryType.StringList),
+      'phoneNames': service.getItem(
+          "PhonePageSavedPhoneNames", PersistentMemoryType.StringList),
+      'phoneNumbers': service.getItem(
+          "PhonePageSavedPhoneNumbers", PersistentMemoryType.StringList),
+      'username': service.getItem("name", PersistentMemoryType.String),
+    };
+
+    final results = await Future.wait(futures.values);
+    final data = Map.fromIterables(futures.keys, results);
+
     return {
-      'DifficultEvents': userSelectionDifficultEvents,
-      'MakeSafer': userSelectionMakeSafer,
-      'FeelBetter': userSelectionFeelBetter,
-      'Distractions': userSelectionDistractions,
-      'phoneNames': phoneNames,
-      'phoneNumbers': phoneNumbers,
-      'username': username
+      'DifficultEvents': data['difficultEvents'] ?? <String>[],
+      'MakeSafer': data['makeSafer'] ?? <String>[],
+      'FeelBetter': data['feelBetter'] ?? <String>[],
+      'Distractions': data['distractions'] ?? <String>[],
+      'phoneNames': data['phoneNames'] ?? <String>[],
+      'phoneNumbers': data['phoneNumbers'] ?? <String>[],
+      'username': data['username'] ?? ''
     };
   }
 
@@ -102,8 +112,6 @@ class FileServiceImpl implements FileService {
     // Create the main title for the PDF
     String mainTitle =
         username == '' ? 'התוכנית המשולבת שלי' : 'התוכנית המשולבת של $username';
-
-    // Combine phone names and numbers
 
     // Retrieve text content for the PDF
     String text1 = texts['firstLine'] ?? '';

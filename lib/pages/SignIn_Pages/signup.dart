@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
 
 import 'package:mazilon/pages/SignIn_Pages/login.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/logger_service.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Firebase/firebase_functions.dart';
 
@@ -70,7 +72,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
     try {
       User? user = await _auth.signUpWithEmailAndPassword(email, password);
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+      PersistentMemoryService service = GetIt.instance<
+          PersistentMemoryService>(); // Get the persistent memory service instance
+
       setState(() {
         isSigningUp = false;
       });
@@ -78,9 +82,11 @@ class _SignUpPageState extends State<SignUpPage> {
       if (user != null) {
         showToast(message: "User is successfully created");
         userInfo.updateUserId(user!.uid);
-        prefs.setString('userId', user.uid);
+        await service.setItem('userId', PersistentMemoryType.String, user.uid);
+
         userInfo.updateLoggedIn(true);
-        prefs.setBool('loggedIn', true);
+
+        await service.setItem("loggedIn", PersistentMemoryType.Bool, true);
         return true;
       } else {
         showToast(message: "Some error happened");

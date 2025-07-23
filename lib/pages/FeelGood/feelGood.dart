@@ -6,6 +6,7 @@ import 'package:mazilon/pages/FeelGood/FeelGoodInheritedWidget.dart';
 import 'package:mazilon/pages/FeelGood/add_Image_item.dart';
 import 'package:mazilon/pages/FeelGood/image_display_item.dart';
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,7 +21,7 @@ class FeelGood extends StatefulWidget {
   _FeelGoodPageState createState() => _FeelGoodPageState();
 }
 
-class _FeelGoodPageState extends State<FeelGood> {
+class _FeelGoodPageState extends LPExtendedState<FeelGood> {
   late ImagePickerService pickerService;
   List<String> imagePaths = [];
   late Future<void> _loadImagesFuture;
@@ -44,7 +45,7 @@ class _FeelGoodPageState extends State<FeelGood> {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
     final gender = userInfoProvider.gender;
-    final appLocale = AppLocalizations.of(context);
+
     return FeelGoodInheritedWidget(
       displayImage: pickerService.displayImage,
       imagePaths: [...imagePaths],

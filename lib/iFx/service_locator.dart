@@ -6,6 +6,7 @@ import 'package:mazilon/pages/WellnessTools/VideoPlayerPageFactory.dart';
 import 'package:mazilon/util/logger_service.dart';
 
 import 'package:mazilon/file_service.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 
 // Initialize GetIt instance
 final getIt = GetIt.instance;
@@ -21,4 +22,6 @@ void setupLocator() {
   getIt.registerLazySingleton<IncidentLoggerService>(() => SentryServiceImpl());
   getIt.registerLazySingleton<LocaleService>(() => LocaleServiceImpl());
   getIt.registerLazySingleton<AnalyticsService>(() => MixPanelService());
+  getIt.registerLazySingleton<PersistentMemoryService>(
+      () => SharedPreferencesService());
 }

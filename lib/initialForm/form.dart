@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
@@ -30,7 +34,7 @@ class InitialFormProgressIndicator extends StatefulWidget {
 }
 
 class InitialFormProgressIndicatorState
-    extends State<InitialFormProgressIndicator> {
+    extends LPExtendedState<InitialFormProgressIndicator> {
   int currentStep = 0;
   String name = '';
   bool disclaimerApproved = false;
@@ -38,10 +42,13 @@ class InitialFormProgressIndicatorState
   bool hasFilled = false;
   List<Widget> steps = [];
   void getHasFilled() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
 
+    var hasFilledValue =
+        await service.getItem("hasFilled", PersistentMemoryType.Bool);
     setState(() {
-      hasFilled = prefs.getBool('hasFilled') ?? false;
+      hasFilled = hasFilledValue ?? false;
     });
   }
 
@@ -74,9 +81,11 @@ class InitialFormProgressIndicatorState
   }
 
   void submitForm() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
     if (name.isNotEmpty) {
-      prefs.setString('name', name);
+      await service.setItem("name", PersistentMemoryType.String, name);
     }
     navigateToMenu();
   }
@@ -105,7 +114,7 @@ class InitialFormProgressIndicatorState
   Widget build(BuildContext context) {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
-    final appLocale = AppLocalizations.of(context);
+
     final gender = userInfoProvider.gender;
     if (!userInfoProvider.disclaimerSigned) {
       return DisclaimerPage(changeLocale: widget.changeLocale);

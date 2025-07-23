@@ -110,7 +110,9 @@ class _PhoneWidgetState extends State<PhoneWidget> {
                                 child: isEditing
                                     ? TextField(
                                         key: Key("numberField"),
-                                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 12),
                                         controller: numberControllers[index],
                                       )
                                     : InkWell(
@@ -153,7 +155,9 @@ class _PhoneWidgetState extends State<PhoneWidget> {
                                     textDirection: TextDirection.rtl,
                                     child: TextField(
                                       key: Key("nameField"),
-                                      style: TextStyle(fontWeight: FontWeight.normal, fontSize: 12),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 12),
                                       controller: nameControllers[index],
                                     ),
                                   ),
