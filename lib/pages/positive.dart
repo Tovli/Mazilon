@@ -5,6 +5,7 @@ import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
+import 'package:mazilon/util/type_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -90,8 +91,8 @@ class _PositiveState extends LPExtendedState<Positive> {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
-    List<String> positiveTraitsTemp = await service.getItem(
-        "positiveTraits", PersistentMemoryType.StringList);
+    List<String> positiveTraitsTemp = TypeUtils.castToStringList(await service
+        .getItem("positiveTraits", PersistentMemoryType.StringList));
 
     positiveTraitsTemp.removeAt(removeIndex);
     debugPrint("got here");

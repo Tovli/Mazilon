@@ -8,6 +8,7 @@ import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/PDF/create_pdf.dart';
 import 'package:mazilon/util/logger_service.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
+import 'package:mazilon/util/type_utils.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mazilon/AnalyticsService.dart';
@@ -55,12 +56,12 @@ class FileServiceImpl implements FileService {
     final data = Map.fromIterables(futures.keys, results);
 
     return {
-      'DifficultEvents': data['difficultEvents'] ?? <String>[],
-      'MakeSafer': data['makeSafer'] ?? <String>[],
-      'FeelBetter': data['feelBetter'] ?? <String>[],
-      'Distractions': data['distractions'] ?? <String>[],
-      'phoneNames': data['phoneNames'] ?? <String>[],
-      'phoneNumbers': data['phoneNumbers'] ?? <String>[],
+      'DifficultEvents': TypeUtils.castToStringList(data['difficultEvents']),
+      'MakeSafer': TypeUtils.castToStringList(data['makeSafer']),
+      'FeelBetter': TypeUtils.castToStringList(data['feelBetter']),
+      'Distractions': TypeUtils.castToStringList(data['distractions']),
+      'phoneNames': TypeUtils.castToStringList(data['phoneNames']),
+      'phoneNumbers': TypeUtils.castToStringList(data['phoneNumbers']),
       'username': data['username'] ?? ''
     };
   }

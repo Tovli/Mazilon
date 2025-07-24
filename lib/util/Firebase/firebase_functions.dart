@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/logger_service.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
+import 'package:mazilon/util/type_utils.dart';
 import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -117,7 +118,6 @@ Future<void> loadUserInformation(
 
   final results = await Future.wait(futures.values);
   final data = Map.fromIterables(futures.keys, results);
-  // SharedPreferences prefs = await SharedPreferences.getInstance();
 
   userInfo.updateName(data['name'] ?? '');
   userInfo.updateGender(data['gender'] ?? '');
@@ -125,30 +125,23 @@ Future<void> loadUserInformation(
   userInfo.updateLoggedIn(data['loggedIn'] ?? false);
   userInfo.updateAge(data['age'] ?? '');
   userInfo.updateUserId(data['userId'] ?? '');
-  /* List<String> fieldNames = [
-    'userSelectionPersonalPlan-DifficultEvents',
-    'userSelectionPersonalPlan-MakeSafer',
-    'userSelectionPersonalPlan-FeelBetter',
-    'userSelectionPersonalPlan-Distractions'
-  ];*/
+
   userInfo.updateDifficultEvents(
-      (data['difficultEvents'] as List<dynamic>? ?? []).cast<String>());
-  userInfo.updateMakeSafer(
-      (data['makeSafer'] as List<dynamic>? ?? []).cast<String>());
-  userInfo.updateFeelBetter(
-      (data['feelBetter'] as List<dynamic>? ?? []).cast<String>());
-  userInfo.updateDistractions(
-      (data['distractions'] as List<dynamic>? ?? []).cast<String>());
+      (TypeUtils.castToStringList(data['difficultEvents'])));
+  userInfo.updateMakeSafer((TypeUtils.castToStringList(data['makeSafer'])));
+  userInfo.updateFeelBetter((TypeUtils.castToStringList(data['feelBetter'])));
+  userInfo
+      .updateDistractions((TypeUtils.castToStringList(data['distractions'])));
   userInfo.updateLocation(data['location'] ?? "");
   userInfo.updateDisclaimerSigned(data['disclaimerConfirmed'] ?? false);
   userInfo.updateNotificationMinute(data['notificationMinute'] ?? 0);
   userInfo.updateNotificationHour(data['notificationHour'] ?? 12);
   userInfo.updateLocaleName(data['localeName'] ?? "en");
   userInfo.updatePositiveTraits(
-      (data['positiveTraits'] as List<dynamic>? ?? []).cast<String>());
+      (TypeUtils.castToStringList(data['positiveTraits'])));
   userInfo.updateThanks({
-    "thanks": (data['thankYous'] as List<dynamic>? ?? []).cast<String>(),
-    "dates": (data['dates'] as List<dynamic>? ?? []).cast<String>()
+    "thanks": (TypeUtils.castToStringList(data['thankYous'])),
+    "dates": (TypeUtils.castToStringList(data['dates']))
   });
   userInfo.updateLocaleName(locale);
 }
