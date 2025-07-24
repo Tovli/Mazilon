@@ -50,7 +50,7 @@ Map<String, dynamic> retrieveInformation(name, gender, textLocalization) {
   }
   nextButtonText = textLocalization.nextButton(gender);
   showMoreButtonText = textLocalization.showMoreButton(gender);
-  print(list);
+
   return {
     'header': header,
     'subTitle': subTitle,
@@ -64,7 +64,7 @@ Map<String, dynamic> retrieveInformation(name, gender, textLocalization) {
 
 List<String> retrieveInspirationalQuotes(localization, gender) {
   List<String> inspirationalQuotes = [];
-  //print(gender);
+  //debugPrint(gender);
   inspirationalQuotes.add(localization.inspirationalQuotesNo0(gender));
   inspirationalQuotes.add(localization.inspirationalQuotesNo1(gender));
   inspirationalQuotes.add(localization.inspirationalQuotesNo2(gender));

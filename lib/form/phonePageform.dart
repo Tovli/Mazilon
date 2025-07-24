@@ -40,7 +40,7 @@ class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
 
   //add contact to the list from the contact list in the phone
   void addItem(Contact contact) {
-    //  print(contact.phones);
+    //  debugPrint(contact.phones);
     String? phoneName = contact.displayName;
     String? phoneNumber =
         contact.phones.isNotEmpty == true ? contact.phones[0].number : null;
@@ -51,7 +51,7 @@ class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
       nameControllers.add(TextEditingController(text: phoneName));
       numberControllers.add(TextEditingController(text: phoneNumber));
     } else {
-      print("Both fields must be filled");
+      debugPrint("Both fields must be filled");
     }
   }
 
@@ -62,12 +62,11 @@ class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
       final contact = await FlutterContacts.openExternalPick();
       //Contact? contact = await ContactsService.openDeviceContactPicker();
       if (contact != null) {
-        print(contact);
         addItem(contact);
       }
       setState(() {});
     } else {
-      print("Permission to read contacts was denied");
+      debugPrint("Permission to read contacts was denied");
     }
   }
 

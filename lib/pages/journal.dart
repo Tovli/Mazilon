@@ -56,7 +56,7 @@ class _JournalState extends LPExtendedState<Journal> {
 
   //load the thank you notes and suggestions from the shared preferences
   void loadData(BuildContext context) {
-    print("loading journal");
+    debugPrint("loading journal");
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
 
@@ -205,7 +205,7 @@ class _JournalState extends LPExtendedState<Journal> {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
     final gender = userInfoProvider.gender;
-    print("loading journal");
+    debugPrint("loading journal");
     loadData(context);
     return KeyboardDismisser(
       gestures: const [GestureType.onTap, GestureType.onPanUpdateAnyDirection],

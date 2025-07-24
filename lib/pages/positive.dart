@@ -58,7 +58,7 @@ class _PositiveState extends LPExtendedState<Positive> {
       positiveSuggestionList = List.from(tempPositiveSuggestionList);
 
       //remove the suggestions that are already in the positive traits list
-      print(positiveTraits);
+
       for (String suggestion in tempPositiveSuggestionList) {
         if (positiveSuggestionList.length > 1 &&
             positiveTraits.contains(suggestion)) {
@@ -94,7 +94,7 @@ class _PositiveState extends LPExtendedState<Positive> {
         "positiveTraits", PersistentMemoryType.StringList);
 
     positiveTraitsTemp.removeAt(removeIndex);
-    print("got here");
+    debugPrint("got here");
     await service.setItem(
         "positiveTraits", PersistentMemoryType.StringList, positiveTraitsTemp);
     setState(() {

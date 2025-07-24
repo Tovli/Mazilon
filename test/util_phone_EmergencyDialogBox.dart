@@ -51,7 +51,7 @@ class SimpleEmergencyDialogBox extends StatelessWidget {
               if (await canLaunchUrl(url)) {
                 await launchUrl(url);
               } else {
-                print('Could not launch $url');
+                debugPrint('Could not launch $url');
               }
             },
           ),
@@ -70,7 +70,7 @@ class SimpleEmergencyDialogBox extends StatelessWidget {
               if (await canLaunchUrl(url)) {
                 await launchUrl(url);
               } else {
-                print('Could not launch $url');
+                debugPrint('Could not launch $url');
               }
             },
           ),
@@ -126,7 +126,7 @@ class EmergencyDialogBoxNoWhatsapp extends StatelessWidget {
                     if (await canLaunchUrl(url)) {
                       await launchUrl(url);
                     } else {
-                      print('Could not launch $url');
+                      debugPrint('Could not launch $url');
                     }
                   },
                 ),
@@ -170,7 +170,8 @@ class EmergencyDialogBoxWithLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('בחר/י:', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)),
+      title: Text('בחר/י:',
+          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
@@ -185,7 +186,9 @@ class EmergencyDialogBoxWithLink extends StatelessWidget {
                     child: Icon(Icons.phone, size: 20),
                   ),
                 ),
-                Text('חיוג', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)),
+                Text('חיוג',
+                    style:
+                        TextStyle(fontWeight: FontWeight.normal, fontSize: 20)),
               ],
             ),
             SizedBox(height: 10), // Add some spacing
@@ -201,7 +204,9 @@ class EmergencyDialogBoxWithLink extends StatelessWidget {
                     child: Icon(Icons.search, size: 20),
                   ),
                 ),
-                Text('קישור לאתר', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20)),
+                Text('קישור לאתר',
+                    style:
+                        TextStyle(fontWeight: FontWeight.normal, fontSize: 20)),
               ],
             ),
           ],
@@ -209,7 +214,8 @@ class EmergencyDialogBoxWithLink extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
-          child: Text('חזרה', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+          child: Text('חזרה',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ],

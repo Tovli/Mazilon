@@ -48,7 +48,7 @@ Future<void> openWhatsApp(String number) async {
   if (await canLaunchUrl(Uri.parse(url))) {
     await launchUrl(Uri.parse(url));
   } else {
-    print('Could not launch $url');
+    debugPrint('Could not launch $url');
   }
 }
 
@@ -56,7 +56,7 @@ Future<void> openSite(String url) async {
   if (await canLaunchUrl(Uri.parse(url))) {
     await launchUrl(Uri.parse(url));
   } else {
-    print('Could not launch $url');
+    debugPrint('Could not launch $url');
   }
 }
 

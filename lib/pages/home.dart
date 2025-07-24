@@ -138,9 +138,9 @@ class _HomeState extends LPExtendedState<Home> {
     final regex = RegExp(r'[a-z]');
     final regexHebrew = RegExp(r'[\u0590-\u05FF]');
     if (regexHebrew.hasMatch("a"))
-      print("has match");
+      debugPrint("has match");
     else
-      print("no match");
+      debugPrint("no match");
     // return regex.hasMatch(input);
   }
 

@@ -190,7 +190,6 @@ class FileServiceImpl implements FileService {
   }
 
   static Future<String?> saveAndroid(Uint8List data, String format) async {
-    print(data); // Print the PDF data for debugging purposes
     try {
       // Open a save file dialog to allow the user to select a location to save the PDF
       String? outputFile = await FilePicker.platform.saveFile(

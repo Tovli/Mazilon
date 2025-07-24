@@ -115,8 +115,8 @@ class _TraitListWidgetState extends State<TraitListWidget> {
                                     child: MaterialButton(
                                       key: Key('editButton_$index'),
                                       onPressed: () {
-                                        // print("****************************");
-                                        // print(myController.text);
+                                        // debugPrint("****************************");
+                                        // debugPrint(myController.text);
                                         setState(() {
                                           widget.edit('Edit Text', index);
                                         });

@@ -17,7 +17,7 @@ class SentryServiceImpl implements IncidentLoggerService {
         debugPrint("sentry will not be initialized");
         runApp(MyApp);
       } else {
-        print("sentry will be initialized");
+        debugPrint("sentry will be initialized");
         await SentryFlutter.init(
           (options) {
             options.dsn = dotenv.env['SENTRY_DSN'] ?? '';

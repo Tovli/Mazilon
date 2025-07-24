@@ -43,12 +43,14 @@ class SimplifiedPhonePage extends StatelessWidget {
                     if (await canLaunchUrl(url)) {
                       await launchUrl(url);
                     } else {
-                      print('Could not launch $url');
+                      debugPrint('Could not launch $url');
                     }
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Text('Call $number', style: TextStyle(fontWeight: FontWeight.normal,fontSize: 18)),
+                    child: Text('Call $number',
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal, fontSize: 18)),
                   ),
                 )),
             SizedBox(height: 20),
