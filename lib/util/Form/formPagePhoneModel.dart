@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
+import 'package:mazilon/util/type_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PhonePageData extends ChangeNotifier {
@@ -110,12 +111,10 @@ class PhonePageData extends ChangeNotifier {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
-    savedPhoneNames = await service.getItem(
-            '${key}SavedPhoneNames', PersistentMemoryType.StringList) ??
-        [];
-    savedPhoneNumbers = await service.getItem(
-            '${key}SavedPhoneNumbers', PersistentMemoryType.StringList) ??
-        [];
+    savedPhoneNames = TypeUtils.castToStringList(await service.getItem(
+        '${key}SavedPhoneNames', PersistentMemoryType.StringList));
+    savedPhoneNumbers = TypeUtils.castToStringList(await service.getItem(
+        '${key}SavedPhoneNumbers', PersistentMemoryType.StringList));
     notifyListeners();
   }
 

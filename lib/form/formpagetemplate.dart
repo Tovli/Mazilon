@@ -91,8 +91,6 @@ class _FormPageTemplateState extends LPExtendedState<FormPageTemplate> {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
-    // final prefs = await SharedPreferences.getInstance();
-    //databaseItems = (prefs.getStringList('databaseItems' + formKey) ?? []);
     switch (widget.collectionName) {
       case 'PersonalPlan-DifficultEvents':
         userInfo.updateDifficultEvents([...selectedItems]);
@@ -114,10 +112,6 @@ class _FormPageTemplateState extends LPExtendedState<FormPageTemplate> {
         PersistentMemoryType.StringList, [...selectedItems]);
     await service.setItem('addedStrings${widget.collectionName}',
         PersistentMemoryType.StringList, [...selectedItems]);
-/*    prefs.setStringList(
-        'userSelection${widget.collectionName}', [...selectedItems]);
-    prefs.setStringList(
-        'addedStrings${widget.collectionName}', [...selectedItems]);*/
   }
 
   void loadItems(userInfo) {
