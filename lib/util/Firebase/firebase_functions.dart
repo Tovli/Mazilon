@@ -249,7 +249,6 @@ Future<bool> loadAppInfoFromJson(
         return false;
       }
 
-      print("data is still new, no need to update it");
       appInfo.updateReminderMainTitle(json['reminderMainTitle']);
       appInfo.updateReminderSubTitle(json['reminderSubTitle']);
       appInfo.updateHomeTitleGreeting(json['homeTitleGreeting']);
@@ -356,7 +355,6 @@ Future<bool> loadAppInfoFromJson(
 
       return true;
     } catch (error, stackTrace) {
-      print('Error loading app info from JSON: $error');
       /*  IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
       await loggerService.captureLog(
@@ -379,8 +377,6 @@ Future<bool> loadAppInfoFromJson(
 //4.3. add the new variable to the map that will be used to update the appInfo class
 //4.4. add the new variable to the appInfo.update function
 Future<void> loadAppFromFirebase(AppInformation appInfo) async {
-  print('fetching app info from firebase');
-
   //InitialFormFirstPage
   Map<String, String> IFFP = {};
   //InitialFormSecondPage
@@ -704,7 +700,7 @@ Future<void> loadAppFromFirebase(AppInformation appInfo) async {
   appInfo.updateFormSkipButtonText(formSkipButtonText);
   appInfo.updateFeelGoodPageTitles(feelGoodPageTitles);
   String json = jsonEncode(createJson(appInfo));
-  // print(json);
+  // debugPrint(json);
   if (!kIsWeb) {
     Directory directory2 = await getApplicationDocumentsDirectory();
     File('${directory2.path}/data.json').writeAsString(json);

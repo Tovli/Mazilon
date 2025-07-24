@@ -31,7 +31,7 @@ class ImagePickerServiceImpl implements ImagePickerService {
   Future<void> deleteImages() async {
     List<String> tempPath = [];
     await loadImagePaths(tempPath);
-    print(tempPath);
+
     while (tempPath.isNotEmpty) {
       File(tempPath[0]).deleteSync();
       tempPath.removeAt(0);
@@ -63,7 +63,7 @@ class ImagePickerServiceImpl implements ImagePickerService {
         mixPanelService.trackEvent("Photo Added", {"Source": source});
       }
     } catch (error, stackTrace) {
-      print("errored");
+      debugPrint("errored");
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
       await loggerService.captureLog(

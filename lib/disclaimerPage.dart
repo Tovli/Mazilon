@@ -47,8 +47,8 @@ class _DisclaimerPageState extends LPExtendedState<DisclaimerPage> {
         Provider.of<UserInformation>(context, listen: true);
     final gender = userInfoProvider.gender;
 
-    // show the disclaimer text and a button to confirm the disclaimer
-    print(appInfoProvider.disclaimerText);
+    // show the disclaimer text and a button to confirm the disaclaimer
+    debugPrint(appInfoProvider.disclaimerText);
     return PopScope(
       canPop: false, //can't go back from this page
       child: Scaffold(

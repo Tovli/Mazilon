@@ -57,7 +57,7 @@ class _WellnessToolsState extends LPExtendedState<WellnessTools> {
     setState(() {
       selectedVideoId = newVideoId;
     });
-    print('Video changed to: $newVideoId');
+    debugPrint('Video changed to: $newVideoId');
   }
 
   @override

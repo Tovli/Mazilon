@@ -164,7 +164,7 @@ class InitialFormProgressIndicatorState
                         25),
                     onPressed: () {
                       //## this is the part that skips BOTH forms from the initial screen.##//
-                      print('skipping');
+                      debugPrint('skipping');
                       next();
                     },
                   )

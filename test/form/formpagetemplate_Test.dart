@@ -100,11 +100,11 @@ void main() {
 
       // Debug: Print all text widgets to see what's actually there
       final textWidgets = tester.widgetList(find.byType(Text)).cast<Text>();
-      print('\n=== TEXT WIDGETS FOUND ===');
+      debugPrint('\n=== TEXT WIDGETS FOUND ===');
       for (var text in textWidgets) {
-        print('Text: "${text.data}"');
+        debugPrint('Text: "${text.data}"');
       }
-      print('========================\n');
+      debugPrint('========================\n');
 
       // More readable tree dump
 

@@ -30,7 +30,7 @@ import '../test_data.dart';
 import 'share_and_download_test.mocks.dart';
 
 void dummyshare() {
-  print('share');
+  debugPrint('share');
 }
 
 @GenerateNiceMocks([

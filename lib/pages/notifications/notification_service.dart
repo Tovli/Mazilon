@@ -52,7 +52,7 @@ class NotificationsService {
   }
 
   static Future<void> showNotification(String title, String body) async {
-    print("trying to show notification");
+    debugPrint("trying to show notification");
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails('exampleID', 'ShowExampleChannelTitle',
             channelDescription:
@@ -130,7 +130,7 @@ class NotificationsService {
     } else {
       await _flutterLocalNotificationsPlugin.cancel(id);
     }
-    print('Notification with ID $id cancelled');
+    debugPrint('Notification with ID $id cancelled');
   }
 
   // Cancel all notifications
