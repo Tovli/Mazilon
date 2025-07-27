@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
+import 'package:mazilon/initialForm/CountrySelectorWidget.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/appInformation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/util/Form/myDropdownMenuEntry.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/userInformation.dart';
@@ -27,7 +29,7 @@ class InitialFormPage2 extends StatefulWidget {
   State<InitialFormPage2> createState() => _InitialFormPage2State();
 }
 
-class _InitialFormPage2State extends State<InitialFormPage2> {
+class _InitialFormPage2State extends LPExtendedState<InitialFormPage2> {
   String? dropdownValueAge = '18-30';
   String? dropdownValueGender = '';
   String? name = '';
@@ -70,7 +72,6 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
   Widget build(BuildContext context) {
     final userInfoProvider = Provider.of<UserInformation>(context);
 
-    final appLocale = AppLocalizations.of(context);
     genders = [
       appLocale!.male,
       appLocale!.female,
@@ -235,6 +236,10 @@ class _InitialFormPage2State extends State<InitialFormPage2> {
                         },
                       ),
                     ),
+                    CountrySelectorWidget(
+                      text: appLocale.locationSelect(gender),
+                      disclaimerText: appLocale.locationDisclaimer(gender),
+                    )
                   ],
                 ),
                 SizedBox(

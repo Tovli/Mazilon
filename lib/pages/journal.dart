@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
@@ -11,7 +14,7 @@ import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Thanks/AddForm.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 //Journal page, where the user can write thank you notes (add , edit, remove notes)
@@ -25,7 +28,7 @@ class Journal extends StatefulWidget {
   State<Journal> createState() => _JournalState();
 }
 
-class _JournalState extends State<Journal> {
+class _JournalState extends LPExtendedState<Journal> {
   List<String> thankYous = []; //list of thank you notes
   List<FocusNode> focusNodes = []; //list of focus nodes for each thank you note
   List<String> dates = []; //list of dates for each thank you note
@@ -53,7 +56,7 @@ class _JournalState extends State<Journal> {
 
   //load the thank you notes and suggestions from the shared preferences
   void loadData(BuildContext context) {
-    print("loading journal");
+    debugPrint("loading journal");
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
 
@@ -133,6 +136,10 @@ class _JournalState extends State<Journal> {
         1) {
       showThankYouPopup(userInfoProvider);
     }
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+    mixPanelService.trackEvent(
+      "Item added to Gratitude Journal",
+    );
     //you can show the popup after adding the i-th thank you note (every time you enter the journal page)
     // if(counter == i){
     //   showPopupFunction();
@@ -146,7 +153,6 @@ class _JournalState extends State<Journal> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          final appLocale = AppLocalizations.of(context);
           return AlertDialog(
             title: const Text(''),
             content: Text(
@@ -194,13 +200,12 @@ class _JournalState extends State<Journal> {
 // build the journal page
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
     // get the app and user information providers
 
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
     final gender = userInfoProvider.gender;
-    print("loading journal");
+    debugPrint("loading journal");
     loadData(context);
     return KeyboardDismisser(
       gestures: const [GestureType.onTap, GestureType.onPanUpdateAnyDirection],

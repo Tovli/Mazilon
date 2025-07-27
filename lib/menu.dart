@@ -1,13 +1,17 @@
 //import 'package:mazilon/pages/schedule.dart';
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/AnalyticsService.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/pages/about.dart';
 import 'package:mazilon/pages/FeelGood/feelGood.dart';
 import 'package:mazilon/pages/WellnessTools/wellnessTools.dart';
 import 'package:mazilon/pages/notifications/notification_page.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 
 import 'package:mazilon/pages/home.dart';
 import 'package:mazilon/pages/journal.dart';
@@ -23,7 +27,8 @@ import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/util/HomePage/bottomNavigationItem.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
+import 'package:share_plus/share_plus.dart';
 
 class Menu extends StatefulWidget {
   final PhonePageData phonePageData;
@@ -40,16 +45,30 @@ class Menu extends StatefulWidget {
   State<Menu> createState() => _MenuState();
 }
 
-class _MenuState extends State<Menu> {
-  int current = 0;
+class _MenuState extends LPExtendedState<Menu> {
+  PagesCode current = PagesCode.Home;
   String version = "1.0.0";
   bool isFullScreen = false;
   late Widget currentScreen;
+
   //Function to set that the users has already opened the app before
   void loadFirstTime() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
 
-    prefs.setBool('firstTime', false);
+    await service.setItem("enteredBefore", PersistentMemoryType.Bool, true);
+  }
+
+  void testingChange() async {
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    await service.setItem(
+        "disclaimerConfirmed", PersistentMemoryType.Bool, true);
+    var location =
+        await service.getItem("location", PersistentMemoryType.String);
+
+    debugPrint(location);
   }
 
 //Function to check if the user wants to go full screen
@@ -60,39 +79,49 @@ class _MenuState extends State<Menu> {
   }
 
 //Function to change the current displayed page in the "home"
-  void changeCurrentIndex(BuildContext context, int index) {
+  void changeCurrentIndex(BuildContext context, PagesCode index) {
     final appLocale = AppLocalizations.of(context)!;
     final userInformation =
         Provider.of<UserInformation>(context, listen: false);
     final gender = userInformation.gender;
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+
     setState(() {
       current = index;
       //adding pages to menu here:
-      if (index == 1) {
+
+      if (index == PagesCode.FullPlan) {
+        mixPanelService.trackEvent(
+          "Viewed full Personal Plan",
+        );
         currentScreen = MyPlanPageFull(
           phonePageData: widget.phonePageData,
           hasFilled: widget.hasFilled,
           changeLocale: widget.changeLocale,
         );
-      } else if (index == 2) {
+      } else if (index == PagesCode.QualitiesList) {
+        mixPanelService.trackEvent(
+          "Viewed full Qualities List",
+        );
         currentScreen = Positive();
-      } else if (index == 3) {
+      } else if (index == PagesCode.GratitudeJournal) {
+        mixPanelService.trackEvent(
+          "Viewed full Gratitude Journal",
+        );
         currentScreen = Journal(
           fullSuggestionList:
               retrieveThanksList(appLocale, gender == "" ? "other" : gender),
         );
-      } else if (index == 4) {
+      } else if (index == PagesCode.EmergencyPhones) {
         currentScreen = PhonePage(phonePageData: widget.phonePageData);
-      } else if (index == 5) {
-        //we dont want current screen to change here
-      } else if (index == 6) {
+      } else if (index == PagesCode.About) {
         currentScreen = About(version: version);
-      } else if (index == 9) {
+      } else if (index == PagesCode.NotificationPage) {
         currentScreen = NotificationPage();
       } else if (index == 7) {
         //currentScreen =
         //    WellnessTools( videoData: appInfoProvider.wellnessVideos,setBool: setFullScreen, isFullScreen: isFullScreen);
-      } else if (index == 8) {
+      } else if (index == PagesCode.FeelGoodPage) {
         currentScreen = FeelGood();
       } /*else if (index == 9) {
         currentScreen = syncDevicesRealTime(
@@ -124,10 +153,11 @@ class _MenuState extends State<Menu> {
 
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context)!;
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
     final userInformation = Provider.of<UserInformation>(context);
     final appInfoProvider = Provider.of<AppInformation>(context);
     final gender = userInformation.gender;
+    testingChange();
 
     return PopScope(
       //this is the popscope widget that will handle the back button
@@ -136,10 +166,10 @@ class _MenuState extends State<Menu> {
         if (didPop) {
           return;
         } else {
-          if (current == 0) {
+          if (current == PagesCode.Home) {
             SystemChannels.platform.invokeMethod('SystemNavigator.pop');
           }
-          changeCurrentIndex(context, 0);
+          changeCurrentIndex(context, PagesCode.Home);
           currentScreen = Home(
             phonePageData: widget.phonePageData,
             changeCurrentIndex: changeCurrentIndex,
@@ -177,7 +207,7 @@ class _MenuState extends State<Menu> {
                   setState(() {
                     currentScreen =
                         PhonePage(phonePageData: widget.phonePageData);
-                    current = 4;
+                    current = PagesCode.EmergencyPhones;
                   });
                 },
               ),
@@ -211,7 +241,7 @@ class _MenuState extends State<Menu> {
                                   changeCurrentIndex: changeCurrentIndex,
                                   changeLocale: widget.changeLocale,
                                 );
-                                current = 0;
+                                current = PagesCode.Home;
                               });
                             },
                             child: bottomNavigationItem(current == 0,
@@ -232,11 +262,11 @@ class _MenuState extends State<Menu> {
                                   hasFilled: widget.hasFilled,
                                   changeLocale: widget.changeLocale,
                                 );
-                                current = 1;
+                                current = PagesCode.FullPlan;
                               });
                             },
                             child: bottomNavigationItem(
-                                current == 1,
+                                current == PagesCode.FullPlan,
                                 Icons.assignment,
                                 appLocale.personalPlanPageMyPlan(gender))),
                       ),
@@ -251,12 +281,15 @@ class _MenuState extends State<Menu> {
                         child: TextButton(
                             onPressed: () {
                               setState(() {
+                                mixPanelService.trackEvent(
+                                  "Viewed Feel Good Page",
+                                );
                                 currentScreen = FeelGood();
-                                current = 8;
+                                current = PagesCode.FeelGoodPage;
                               });
                             },
                             child: bottomNavigationItem(
-                                current == 8,
+                                current == PagesCode.FeelGoodPage,
                                 Icons.emoji_emotions_outlined,
                                 AppLocalizations.of(context)!
                                     .homePageFeelGood(gender))),
@@ -338,7 +371,7 @@ class _MenuState extends State<Menu> {
                                                     setState(() {
                                                       currentScreen = About(
                                                           version: version);
-                                                      current = 6;
+                                                      current = PagesCode.About;
                                                     });
                                                     Navigator.of(context).pop();
                                                   },
@@ -362,7 +395,8 @@ class _MenuState extends State<Menu> {
                                                       currentScreen =
                                                           NotificationPage();
 
-                                                      current = 10;
+                                                      current = PagesCode
+                                                          .NotificationPage;
                                                     });
                                                     Navigator.of(context).pop();
                                                   },
@@ -390,9 +424,30 @@ class _MenuState extends State<Menu> {
                                                                   .wellnessVideos,
                                                           setBool:
                                                               setFullScreen);
-                                                      current = 7;
+                                                      current = PagesCode
+                                                          .WellnessToolsPage;
                                                     });
                                                     Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Icon(Icons.share),
+                                                      SizedBox(width: 20),
+                                                      Text(appLocale
+                                                          .shareButtonText),
+                                                    ],
+                                                  ),
+                                                  onPressed: () async {
+                                                    // Share app text with others
+                                                    await Share.share(
+                                                      '${appLocale.shareAppMessage}\n https://sites.google.com/mishol.org/matzilon/%D7%91%D7%99%D7%AA',
+                                                      subject:
+                                                          'Living Positively App',
+                                                    );
                                                   },
                                                 ),
                                               ],
@@ -405,11 +460,15 @@ class _MenuState extends State<Menu> {
                                 },
                               );
                               setState(() {
-                                current = 5;
+                                current = PagesCode.WellnessToolsPage;
                               });
                             },
-                            child: bottomNavigationItem(current == 5,
-                                Icons.menu, appLocale!.menu(gender)),
+                            child: bottomNavigationItem(
+                                current == PagesCode.WellnessToolsPage ||
+                                    current == PagesCode.About ||
+                                    current == PagesCode.NotificationPage,
+                                Icons.menu,
+                                appLocale!.menu(gender)),
                           ),
                         ),
                       ),

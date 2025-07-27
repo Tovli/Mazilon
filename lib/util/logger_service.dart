@@ -14,10 +14,10 @@ class SentryServiceImpl implements IncidentLoggerService {
     try {
       await dotenv.load(fileName: ".env");
       if (dotenv.env['SENTRY_DSN'] == null) {
-        print("sentry will not be initialized");
+        debugPrint("sentry will not be initialized");
         runApp(MyApp);
       } else {
-        print("sentry will be initialized");
+        debugPrint("sentry will be initialized");
         await SentryFlutter.init(
           (options) {
             options.dsn = dotenv.env['SENTRY_DSN'] ?? '';
@@ -26,8 +26,8 @@ class SentryServiceImpl implements IncidentLoggerService {
         );
       }
     } catch (e) {
-      print("sentry will not be initialized,error");
-      print(e);
+      debugPrint("sentry will not be initialized,error");
+      debugPrint(e as String);
       runApp(MyApp);
     }
   }

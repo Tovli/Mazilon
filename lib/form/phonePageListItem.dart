@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -8,7 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 class PhonePageList extends StatefulWidget {
   PhonePageData phonePageData;
@@ -20,7 +21,7 @@ class PhonePageList extends StatefulWidget {
   }) : super(key: key);
 }
 
-class _PhonePageListState extends State<PhonePageList> {
+class _PhonePageListState extends LPExtendedState<PhonePageList> {
   int editingIndex = -1;
   List<TextEditingController> nameControllers = [];
   List<TextEditingController> numberControllers = [];
@@ -40,8 +41,6 @@ class _PhonePageListState extends State<PhonePageList> {
 
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context)!;
-
     final userInfoProvider = Provider.of<UserInformation>(context);
     final phonePageData = Provider.of<PhonePageData>(context);
     final gender = userInfoProvider.gender;

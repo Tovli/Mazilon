@@ -150,7 +150,6 @@ void main() {
     await tester.tap(find.byKey(Key('enterEditingMode')));
     await tester.pump();
     myState = tester.state(find.byType(PhoneWidget));
-    print(myState);
 
     final deletePhoneButton3 = find.byKey(Key('deletePhoneButton'));
     final nameField3 = find.byKey(Key('nameField'));
@@ -195,7 +194,7 @@ void main() {
     edit(text, index) => {thanks[index] = text};
     remove(index) => {thanks.removeAt(index)};
     addSuggested() => thanks.add("Suggested");
-    onTabTapped(index) => print(index);
+    onTabTapped(index) => debugPrint(index);
     await tester.pumpWidget(ThanksListWidget(
       thanks: thanks,
       add: add,
@@ -222,7 +221,7 @@ void main() {
     expect(find.text("Edit Text"), findsNothing);
     final addSuggestedButton = find.byKey(Key('addSuggesstion'));
     expect(addSuggestedButton, findsWidgets);
-    //print(addSuggestedButton[0]);
+    //debugPrint(addSuggestedButton[0]);
     expect(find.byType(ThanksItemSuggested), findsWidgets);
     await tester.tap(find.byKey(Key('addSuggesstion')));
     await tester.pump();

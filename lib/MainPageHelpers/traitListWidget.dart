@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/AnalyticsService.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:mazilon/util/HomePage/sectionBarHome.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/Thanks/AddForm.dart';
 //import 'package:mazilon/util/Thanks/thanksItem.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/Traits/positiveTraitItemSug.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 // the trait list widget, it shows the list of the traits
 // this code is related to "מעלות" section in homepage.
 // this code is similar to thanksListWidget.dart .
 class TraitListWidget extends StatefulWidget {
-  final Function(BuildContext, int)
+  final Function(BuildContext, PagesCode)
       onTabTapped; // the function to navigate to another page
   const TraitListWidget({super.key, required this.onTabTapped});
   @override
   State<TraitListWidget> createState() => _TraitListWidgetState();
 }
 
-class _TraitListWidgetState extends State<TraitListWidget> {
+class _TraitListWidgetState extends LPExtendedState<TraitListWidget> {
   List<String> threeLatestTraits = [];
   @override
   void initState() {
@@ -58,11 +62,15 @@ class _TraitListWidgetState extends State<TraitListWidget> {
       String positiveTrait, UserInformation userInfoProvider) {
     List<String> positiveTraits_temp = userInfoProvider.positiveTraits;
     positiveTraits_temp.add(positiveTrait);
-    print(positiveTraits_temp);
+
     setState(() {
       userInfoProvider.updatePositiveTraits(positiveTraits_temp);
       threeLatestTraits = threeLatestTraitsFunc(positiveTraits_temp);
     });
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+    mixPanelService.trackEvent(
+      "Item added to Qualities List",
+    );
   }
 
 //function to handle a change in a trait
@@ -91,7 +99,6 @@ class _TraitListWidgetState extends State<TraitListWidget> {
   @override
   Widget build(BuildContext context) {
     // get the app information provider and the user information provider
-    final appLocale = AppLocalizations.of(context);
 
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
@@ -114,7 +121,9 @@ class _TraitListWidgetState extends State<TraitListWidget> {
                 textWidget: TextButton(
                     onPressed: () {
                       widget.onTabTapped(
-                          context, 2); // 2 is the index of the trait page
+                          context,
+                          PagesCode
+                              .QualitiesList); // 2 is the index of the trait page
                     },
                     child: myAutoSizedText(
                         appLocale!.homePageTraitsMainTitle(gender),
@@ -325,7 +334,7 @@ class _TraitListWidgetState extends State<TraitListWidget> {
               children: [
                 TextButton(
                   onPressed: () {
-                    widget.onTabTapped(context, 2);
+                    widget.onTabTapped(context, PagesCode.QualitiesList);
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,

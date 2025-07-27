@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/AnalyticsService.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
+import 'package:mazilon/util/type_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,15 +13,13 @@ import 'package:mazilon/pages/thankYou.dart';
 import 'package:mazilon/util/Traits/positiveTraitItemSug.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Thanks/AddForm.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/userInformation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 // positive traits page, where the user can add/edit/remove positive traits
 // the user can also see suggestions for positive traits and refresh them
 // the code here is not related to the "מעלות" section in homepage , its the positive triats page.
 //the code here is similar to journal.dart page code
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Positive extends StatefulWidget {
   const Positive({super.key});
@@ -25,7 +28,7 @@ class Positive extends StatefulWidget {
   State<Positive> createState() => _PositiveState();
 }
 
-class _PositiveState extends State<Positive> {
+class _PositiveState extends LPExtendedState<Positive> {
   List<String> positiveTraits = []; //list of positive traits
   List<FocusNode> focusNodes = []; //list of focus nodes
 
@@ -39,7 +42,6 @@ class _PositiveState extends State<Positive> {
 
   //load the data from the shared preferences
   void loadData(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
     setState(() {
@@ -57,7 +59,7 @@ class _PositiveState extends State<Positive> {
       positiveSuggestionList = List.from(tempPositiveSuggestionList);
 
       //remove the suggestions that are already in the positive traits list
-      print(positiveTraits);
+
       for (String suggestion in tempPositiveSuggestionList) {
         if (positiveSuggestionList.length > 1 &&
             positiveTraits.contains(suggestion)) {
@@ -86,15 +88,18 @@ class _PositiveState extends State<Positive> {
 
   //remove the positive trait at the given index
   void removePositiveTrait(int removeIndex, UserInformation userInfo) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> positiveTraits_temp =
-        prefs.getStringList('positiveTraits') ?? [];
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
 
-    positiveTraits_temp.removeAt(removeIndex);
-    print("got here");
+    List<String> positiveTraitsTemp = TypeUtils.castToStringList(await service
+        .getItem("positiveTraits", PersistentMemoryType.StringList));
+
+    positiveTraitsTemp.removeAt(removeIndex);
+    debugPrint("got here");
+    await service.setItem(
+        "positiveTraits", PersistentMemoryType.StringList, positiveTraitsTemp);
     setState(() {
-      prefs.setStringList('positiveTraits', positiveTraits_temp);
-      positiveTraits = positiveTraits_temp;
+      positiveTraits = positiveTraitsTemp;
       focusNodes.removeAt(removeIndex);
       userInfo.updatePositiveTraits(positiveTraits);
     });
@@ -111,6 +116,10 @@ class _PositiveState extends State<Positive> {
       positiveTraits = positiveTraits_temp;
       focusNodes.add(FocusNode());
     });
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+    mixPanelService.trackEvent(
+      "Item added to Qualities List",
+    );
   }
 
   @override
@@ -154,9 +163,7 @@ class _PositiveState extends State<Positive> {
         context: context,
         builder: (BuildContext context) {
           return AddForm(
-            add: (String text) {
-              addPositiveTrait(text, userInfoProvider);
-            },
+            add: addPositiveTrait,
             index: index,
             edit: editPositiveTrait,
             text: text,

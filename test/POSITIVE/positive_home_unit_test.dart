@@ -14,7 +14,7 @@ void main() {
     edit(text, index) => {positive_traits[index] = text};
     remove(index) => {positive_traits.removeAt(index)};
     addSuggested() => positive_traits.add("Suggested");
-    onTabTapped(index) => print(index);
+    onTabTapped(index) => debugPrint(index);
 
     await tester.pumpWidget(TraitListWidget(
       traits: positive_traits,

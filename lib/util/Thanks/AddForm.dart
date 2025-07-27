@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/userInformation.dart'; //
 import 'package:provider/provider.dart'; //
 import 'package:mazilon/util/appInformation.dart'; //
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 // the add form widget, it shows a form to add or edit an item to the list
 class AddForm extends StatefulWidget {
@@ -25,7 +26,7 @@ class AddForm extends StatefulWidget {
   State<AddForm> createState() => _AddFormState();
 }
 
-class _AddFormState extends State<AddForm> {
+class _AddFormState extends LPExtendedState<AddForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _controller = TextEditingController();
   @override
@@ -48,7 +49,7 @@ class _AddFormState extends State<AddForm> {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true); //
     final gender = userInfoProvider.gender;
-    final appLocale = AppLocalizations.of(context);
+
     return Dialog(
       child: Container(
         // set the width of the dialog to 800 if the screen width is more than 1000, else set it to the screen width

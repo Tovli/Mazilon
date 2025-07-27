@@ -4,13 +4,18 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:dotted_border/dotted_border.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 
 import 'package:mazilon/util/styles.dart';
+import 'package:mazilon/util/type_utils.dart';
 
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 // the positive trait item suggested widget, it shows a suggested positive trait text and an add button
 //its used in positive trait page/homepage in todo list section to suggest a trait to the user
 // we use this in 2 ways , if the input text is not empty, it will show the input text in the suggestion
@@ -34,7 +39,7 @@ class PositiveTraitItemSug extends StatefulWidget {
   State<PositiveTraitItemSug> createState() => _PositiveTraitItemSugState();
 }
 
-class _PositiveTraitItemSugState extends State<PositiveTraitItemSug> {
+class _PositiveTraitItemSugState extends LPExtendedState<PositiveTraitItemSug> {
   String text = ''; // the text of the suggested trait (initially empty)
   List<String> myPositiveTraits = []; // the list of the traits
   List<String> positiveTraitsSuggestionList = [];
@@ -79,7 +84,6 @@ class _PositiveTraitItemSugState extends State<PositiveTraitItemSug> {
 // build the positive trait item suggested widget
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
     // get the appInformation and userInformation providers
 
     loadData(context);
@@ -97,14 +101,18 @@ class _PositiveTraitItemSugState extends State<PositiveTraitItemSug> {
             // when the add button is clicked ,
             // add the trait to the list of traits and show a new suggested trait
             onTap: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
+              PersistentMemoryService service = GetIt.instance<
+                  PersistentMemoryService>(); // Get the persistent memory service instance
+
               final userInfoProvider =
                   Provider.of<UserInformation>(context, listen: false);
-
+              var myPositiveTraitsValue = TypeUtils.castToStringList(
+                  await service.getItem(
+                      "positiveTraits", PersistentMemoryType.StringList));
               setState(() {
                 widget.add(widget.inputText == '' ? text : widget.inputText,
                     userInfoProvider);
-                myPositiveTraits = prefs.getStringList('positiveTraits') ?? [];
+                myPositiveTraits = myPositiveTraitsValue;
                 myPositiveTraits
                     .add(widget.inputText == '' ? text : widget.inputText);
 

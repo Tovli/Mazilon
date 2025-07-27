@@ -5,8 +5,9 @@ import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
 import 'package:mazilon/pages/WellnessTools/VideoPlayerInheritedWidget.dart';
 import 'package:mazilon/pages/WellnessTools/VideoPlayerPageFactory.dart';
 import 'package:mazilon/pages/WellnessTools/more_videos_item.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/styles.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 class WellnessTools extends StatefulWidget {
   final Function setBool;
@@ -23,7 +24,7 @@ class WellnessTools extends StatefulWidget {
   State<WellnessTools> createState() => _WellnessToolsState();
 }
 
-class _WellnessToolsState extends State<WellnessTools> {
+class _WellnessToolsState extends LPExtendedState<WellnessTools> {
   var isFullScreen = false;
   var selectedVideoIdIndex = 0;
   var selectedVideoId = '';
@@ -56,12 +57,11 @@ class _WellnessToolsState extends State<WellnessTools> {
     setState(() {
       selectedVideoId = newVideoId;
     });
-    print('Video changed to: $newVideoId');
+    debugPrint('Video changed to: $newVideoId');
   }
 
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
     return VideoPlayerInheritedWidget(
         videoId: selectedVideoId,
         changeVideo: changeVideo,

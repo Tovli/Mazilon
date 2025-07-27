@@ -2,18 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/Locale/locale_service.dart';
+import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
-
+import 'package:mazilon/util/LP_extended_state.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Form/myDropdownMenuEntry.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/util/languages_util_functions.dart';
+import 'package:mazilon/initialForm/CountrySelectorWidget.dart';
+
+import 'package:mazilon/l10n/app_localizations.dart';
 
 class UserSettings extends StatefulWidget {
   final String username;
@@ -37,11 +42,12 @@ class UserSettings extends StatefulWidget {
   State<UserSettings> createState() => _UserSettingsState();
 }
 
-class _UserSettingsState extends State<UserSettings> {
+class _UserSettingsState extends LPExtendedState<UserSettings> {
   late ImagePickerService pickerService;
+
   String? dropdownValueAge = '18-30';
   TextEditingController _namecontroller = TextEditingController();
-  bool firsttime = true;
+  bool enteredBefore = false;
   bool hasFilled = false;
   String? dropdownValueGender = '';
   String? name = '';
@@ -49,10 +55,16 @@ class _UserSettingsState extends State<UserSettings> {
   List<String> genders = [];
   List<String> locales =
       AppLocalizations.supportedLocales.map((e) => e.languageCode).toList();
+  List<String> localesNames = AppLocalizations.supportedLocales
+      .map((e) => languageName(e.languageCode))
+      .toList();
   Future<void> updateLocale(
       String locale, UserInformation userInfoProvider) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('localeName', locale);
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    await service.setItem("localeName", PersistentMemoryType.String, locale);
+
     setState(() {
       widget.changeLocale(locale);
       userInfoProvider.updateLocaleName(locale);
@@ -74,13 +86,21 @@ class _UserSettingsState extends State<UserSettings> {
 
   //remove log-in data and reset all data that user has filled in the app:
   Future<void> resetData(UserInformation userInfo) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
     LocaleService localeService = GetIt.instance<LocaleService>();
-    await prefs.clear();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    await service.reset(); // Reset the persistent memory service
+    var enteredBeforeValue =
+        await service.getItem("enteredBefore", PersistentMemoryType.Bool);
+    var hasFilledValue =
+        await service.getItem("hasFilled", PersistentMemoryType.Bool);
+    debugPrint(enteredBeforeValue);
+    debugPrint(hasFilledValue);
     widget.phonePageData.reset();
     setState(() {
-      firsttime = prefs.getBool('firstTime') ?? true;
-      hasFilled = prefs.getBool('hasFilled') ?? false;
+      enteredBefore = enteredBeforeValue;
+      hasFilled = hasFilledValue;
     });
 
     userInfo.reset(localeService.getLocale());
@@ -91,7 +111,7 @@ class _UserSettingsState extends State<UserSettings> {
         MaterialPageRoute(
             builder: (context) => FirstPage(
                 phonePageData: widget.phonePageData,
-                firsttime: firsttime,
+                firsttime: !enteredBefore,
                 changeLocale: widget.changeLocale,
                 hasFilled: hasFilled)),
         (Route<dynamic> route) => false);
@@ -164,9 +184,10 @@ class _UserSettingsState extends State<UserSettings> {
 
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
+    // final appLocale = AppLocalizations.of(context);
+
     genders = [
-      appLocale!.male,
+      appLocale.male,
       appLocale.female,
       appLocale.nonBinary,
       appLocale.notWillingToSay
@@ -297,9 +318,9 @@ class _UserSettingsState extends State<UserSettings> {
                         ],
                         onSelected: (String? newValue) {
                           setState(() {
-                            print("thsi is the selected value");
+                            debugPrint("thsi is the selected value");
                             if (newValue != null) {
-                              print(newValue);
+                              debugPrint(newValue);
                               dropdownValueGender = newValue;
                             }
                           });
@@ -321,11 +342,11 @@ class _UserSettingsState extends State<UserSettings> {
                     Container(
                       width: 300,
                       child: DropdownMenu<String>(
-                        initialSelection: locales[
+                        initialSelection: localesNames[
                             locales.indexOf(userInfoProvider.localeName)],
                         width: 300,
                         dropdownMenuEntries: [
-                          ...locales
+                          ...localesNames
                               .map((locale) => buildDropdownMenuEntry(
                                     locale,
                                     locale == 'en'
@@ -337,13 +358,20 @@ class _UserSettingsState extends State<UserSettings> {
                         onSelected: (String? newValue) {
                           setState(() {
                             if (newValue != null) {
-                              updateLocale(newValue, userInfoProvider);
+                              debugPrint(newValue);
+                              final val = languageCode(newValue);
+
+                              updateLocale(val, userInfoProvider);
                             }
                           });
                           // Do something with the selected value
                         },
                       ),
                     ),
+                    CountrySelectorWidget(
+                      text: appLocale.locationSelect(gender),
+                      disclaimerText: appLocale.locationDisclaimer(gender),
+                    )
                   ],
                 ),
                 SizedBox(

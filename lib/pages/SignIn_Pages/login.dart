@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mazilon/global_enums.dart';
 
 import 'package:mazilon/initialForm/form.dart';
 import 'package:mazilon/pages/SignIn_Pages/signup.dart';
 import 'package:mazilon/util/appInformation.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/styles.dart';
@@ -67,7 +70,9 @@ class _LoginPageState extends State<LoginPage> {
   // Handles sign-in with email and password.
   Future<bool> signIn(
       String email, String password, UserInformation userInfo) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
     setState(() {
       _isSigning = true;
     });
@@ -80,9 +85,11 @@ class _LoginPageState extends State<LoginPage> {
 
     if (user != null) {
       userInfo.updateUserId(user.uid);
-      prefs.setString('userId', user.uid);
+
+      await service.setItem('userId', PersistentMemoryType.String, user.uid);
       userInfo.updateLoggedIn(true);
-      prefs.setBool('loggedIn', true);
+
+      await service.setItem('loggedIn', PersistentMemoryType.Bool, true);
       showToast(message: "User is successfully signed in");
       return true;
     } else {
@@ -94,7 +101,9 @@ class _LoginPageState extends State<LoginPage> {
   // Handles both Google sign-in and email/password sign-in.
   Future<bool> signInBoth(bool google, String email, String password,
       UserInformation userInfo) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
     setState(() {
       _isSigning = true;
     });
@@ -107,8 +116,8 @@ class _LoginPageState extends State<LoginPage> {
     });
     userInfo.updateUserId(user!.uid);
     userInfo.updateLoggedIn(user != null);
-    prefs.setBool('loggedIn', user != null);
-    prefs.setString('userId', user!.uid);
+    await service.setItem('loggedIn', PersistentMemoryType.Bool, user != null);
+    await service.setItem('userId', PersistentMemoryType.String, user.uid);
 
     if (user != null) {
       showToast(message: "User is successfully signed in");
@@ -121,7 +130,8 @@ class _LoginPageState extends State<LoginPage> {
 
   // Handles Google sign-in process.
   Future<User?> signInWithGoogle(UserInformation userInfo) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
 
     final GoogleSignIn googleSignIn = GoogleSignIn(
       scopes: [
@@ -142,10 +152,13 @@ class _LoginPageState extends State<LoginPage> {
           await FirebaseAuth.instance.signInWithCredential(credential);
       userInfo.updateUserId(userCredential.user!.uid);
       userInfo.updateLoggedIn(userCredential.user != null);
-      prefs.setBool('loggedIn', userCredential.user != null);
-      prefs.setString('userId', userCredential.user!.uid);
+      await service.setItem(
+          'userId', PersistentMemoryType.String, userCredential.user!.uid);
+      await service.setItem(
+          'loggedIn', PersistentMemoryType.Bool, userCredential.user != null);
+      await service.setItem('googleAccessToken', PersistentMemoryType.String,
+          googleAuth.accessToken!);
 
-      prefs.setString('googleAccessToken', googleAuth.accessToken!);
       return userCredential.user;
     }
     // Save the access token for future use with Google Drive API

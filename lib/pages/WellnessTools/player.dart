@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/pages/WellnessTools/VideoPlayerInheritedWidget.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -15,6 +17,8 @@ class VideoPlayerPage extends StatefulWidget {
 class _VideoPlayerPageState extends State<VideoPlayerPage> {
   late VoidCallback listener;
   late YoutubePlayerController controller;
+  bool? _isPlaying;
+
   @override
   void initState() {
     super.initState();
@@ -26,8 +30,17 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
 
     listener = () {
       widget.onFullScreenChanged(controller.value.isFullScreen);
+      _trackIsPlaying();
     };
     controller.addListener(listener);
+  }
+
+  void _trackIsPlaying() {
+    if (_isPlaying != controller.value.isPlaying) {
+      _isPlaying = controller.value.isPlaying;
+      _logEvent(
+          _isPlaying!, controller.metadata.title, controller.metadata.videoId);
+    }
   }
 
   @override
@@ -46,15 +59,28 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     controller.dispose();
   }
 
+  void _logEvent(bool isPlaying, title, String url) {
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+    debugPrint("logging");
+    if (isPlaying) {
+      mixPanelService
+          .trackEvent("Video unpaused", {"title": title, "url": url});
+    } else {
+      mixPanelService.trackEvent("Video paused", {"title": title, "url": url});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    debugPrint(controller.metadata.videoId);
     return Container(
-        child: YoutubePlayer(
-      controller: controller,
-      showVideoProgressIndicator: true,
-      onReady: () {
-        print('Player is ready.');
-      },
-    ));
+      child: YoutubePlayer(
+        controller: controller,
+        showVideoProgressIndicator: true,
+        onReady: () {
+          debugPrint('Player is ready.');
+        },
+      ),
+    );
   }
 }

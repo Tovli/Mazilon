@@ -1,12 +1,16 @@
 // ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/global_enums.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/util/disclaimerLanguageSelect.dart';
 
 // the disclaimer page widget,
@@ -24,20 +28,16 @@ class DisclaimerPage extends StatefulWidget {
 // a function to update the disclaimer signed in the shared preferences
 void updateDisclaimers(userInfo) async {
   // get the shared preferences
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool('disclaimerConfirmed',
-      true); //update the disclaimer signed in the shared preferences
+  PersistentMemoryService service = GetIt.instance<
+      PersistentMemoryService>(); // Get the persistent memory service instance
+
+  await service.setItem("disclaimerConfirmed", PersistentMemoryType.Bool, true);
+
   userInfo.updateDisclaimerSigned(
       true); //update the disclaimer signed in the user information provider
 }
 
-// update the disclaimer signed in the shared preferences
-void updateDisclaimer() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool('disclaimerConfirmed', true);
-}
-
-class _DisclaimerPageState extends State<DisclaimerPage> {
+class _DisclaimerPageState extends LPExtendedState<DisclaimerPage> {
   // build the disclaimer page widget
   @override
   Widget build(BuildContext context) {
@@ -46,9 +46,9 @@ class _DisclaimerPageState extends State<DisclaimerPage> {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
     final gender = userInfoProvider.gender;
-    final appLocale = AppLocalizations.of(context);
-    // show the disclaimer text and a button to confirm the disclaimer
-    print(appInfoProvider.disclaimerText);
+
+    // show the disclaimer text and a button to confirm the disaclaimer
+    debugPrint(appInfoProvider.disclaimerText);
     return PopScope(
       canPop: false, //can't go back from this page
       child: Scaffold(

@@ -7,8 +7,12 @@ import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/PDF/create_pdf.dart';
 import 'package:mazilon/util/logger_service.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
+import 'package:mazilon/util/type_utils.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mazilon/AnalyticsService.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 abstract class FileService {
   Future<void> share(
@@ -16,35 +20,49 @@ abstract class FileService {
       List<dynamic> titles,
       List<dynamic> subTitles,
       Map<String, String> texts,
-      ShareFileType saveFormat);
-  Future<String?> download(List<dynamic> titles, List<dynamic> subTitles,
-      Map<String, String> texts, ShareFileType saveFormat);
+      ShareFileType saveFormat,
+      String textDirection);
+  Future<String?> download(
+      List<dynamic> titles,
+      List<dynamic> subTitles,
+      Map<String, String> texts,
+      ShareFileType saveFormat,
+      String textDirection);
 }
 
 class FileServiceImpl implements FileService {
   static Future<Map<String, dynamic>> getPrefsData() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> userSelectionDifficultEvents =
-        prefs.getStringList('userSelectionPersonalPlan-DifficultEvents') ?? [];
-    List<String> userSelectionMakeSafer =
-        prefs.getStringList('userSelectionPersonalPlan-MakeSafer') ?? [];
-    List<String> userSelectionFeelBetter =
-        prefs.getStringList('userSelectionPersonalPlan-FeelBetter') ?? [];
-    List<String> userSelectionDistractions =
-        prefs.getStringList('userSelectionPersonalPlan-Distractions') ?? [];
-    List<String> phoneNames =
-        prefs.getStringList('PhonePageSavedPhoneNames') ?? [];
-    List<String> phoneNumbers =
-        prefs.getStringList('PhonePageSavedPhoneNumbers') ?? [];
-    String username = prefs.getString('name') ?? '';
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    final futures = <String, Future>{
+      'difficultEvents': service.getItem(
+          "userSelectionPersonalPlan-DifficultEvents",
+          PersistentMemoryType.StringList),
+      'makeSafer': service.getItem("userSelectionPersonalPlan-MakeSafer",
+          PersistentMemoryType.StringList),
+      'feelBetter': service.getItem("userSelectionPersonalPlan-FeelBetter",
+          PersistentMemoryType.StringList),
+      'distractions': service.getItem("userSelectionPersonalPlan-Distractions",
+          PersistentMemoryType.StringList),
+      'phoneNames': service.getItem(
+          "PhonePageSavedPhoneNames", PersistentMemoryType.StringList),
+      'phoneNumbers': service.getItem(
+          "PhonePageSavedPhoneNumbers", PersistentMemoryType.StringList),
+      'username': service.getItem("name", PersistentMemoryType.String),
+    };
+
+    final results = await Future.wait(futures.values);
+    final data = Map.fromIterables(futures.keys, results);
+
     return {
-      'DifficultEvents': userSelectionDifficultEvents,
-      'MakeSafer': userSelectionMakeSafer,
-      'FeelBetter': userSelectionFeelBetter,
-      'Distractions': userSelectionDistractions,
-      'phoneNames': phoneNames,
-      'phoneNumbers': phoneNumbers,
-      'username': username
+      'DifficultEvents': TypeUtils.castToStringList(data['difficultEvents']),
+      'MakeSafer': TypeUtils.castToStringList(data['makeSafer']),
+      'FeelBetter': TypeUtils.castToStringList(data['feelBetter']),
+      'Distractions': TypeUtils.castToStringList(data['distractions']),
+      'phoneNames': TypeUtils.castToStringList(data['phoneNames']),
+      'phoneNumbers': TypeUtils.castToStringList(data['phoneNumbers']),
+      'username': data['username'] ?? ''
     };
   }
 
@@ -96,8 +114,6 @@ class FileServiceImpl implements FileService {
     String mainTitle =
         username == '' ? 'התוכנית המשולבת שלי' : 'התוכנית המשולבת של $username';
 
-    // Combine phone names and numbers
-
     // Retrieve text content for the PDF
     String text1 = texts['firstLine'] ?? '';
     String text2 = texts['firstLinkText'] ?? '';
@@ -135,15 +151,21 @@ class FileServiceImpl implements FileService {
       List<dynamic> titles,
       List<dynamic> subTitles,
       Map<String, String> texts,
-      ShareFileType saveFormat) async {
+      ShareFileType saveFormat,
+      String textDirection) async {
     try {
       // Add the generated widgets to the PDF
       final dataForFile = await organizeDataForFile(titles, subTitles, texts);
       Map<String, dynamic> file;
       switch (saveFormat) {
         case ShareFileType.PDF:
-          file = await createPDF(titles, subTitles, dataForFile["texts"]!,
-              dataForFile["mainTitle"]!, dataForFile["realData"]!);
+          file = await createPDF(
+              titles,
+              subTitles,
+              dataForFile["texts"]!,
+              dataForFile["mainTitle"]!,
+              dataForFile["realData"]!,
+              textDirection);
           final tempFile = await saveTempPDF(file["file"], file["format"]);
           XFile tempXFile = XFile(tempFile.path);
           await Share.shareXFiles([tempXFile], text: message);
@@ -156,6 +178,8 @@ class FileServiceImpl implements FileService {
       if (file["file"] == null || file["format"] == null) {
         return;
       }
+      AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+      mixPanelService.trackEvent("Plan shared");
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
@@ -167,7 +191,6 @@ class FileServiceImpl implements FileService {
   }
 
   static Future<String?> saveAndroid(Uint8List data, String format) async {
-    print(data); // Print the PDF data for debugging purposes
     try {
       // Open a save file dialog to allow the user to select a location to save the PDF
       String? outputFile = await FilePicker.platform.saveFile(
@@ -176,6 +199,8 @@ class FileServiceImpl implements FileService {
         bytes: data, // PDF data to be saved
       );
       //If the user cancels the download
+      AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+      mixPanelService.trackEvent("Plan downloaded Android");
       return outputFile;
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
@@ -202,23 +227,30 @@ class FileServiceImpl implements FileService {
       // Trigger a click on the anchor element to start the download
       ..click();*/
     //TODO: return a String to show a message to the user
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+    mixPanelService.trackEvent("Plan downloaded Web");
     return null;
   }
 
   @override
-  Future<String?> download(List<dynamic> titles, List<dynamic> subTitles,
-      Map<String, String> texts, ShareFileType saveFormat) async {
+  Future<String?> download(
+      List<dynamic> titles,
+      List<dynamic> subTitles,
+      Map<String, String> texts,
+      ShareFileType saveFormat,
+      String textDirection) async {
     final dataForFile = await organizeDataForFile(titles, subTitles, texts);
     Map<String, dynamic> file;
     Uint8List data = Uint8List(0);
     switch (saveFormat) {
       case ShareFileType.PDF:
         file = await createPDF(titles, subTitles, dataForFile["texts"]!,
-            dataForFile["mainTitle"]!, dataForFile["realData"]!);
+            dataForFile["mainTitle"]!, dataForFile["realData"]!, textDirection);
         // Save the PDF and share it
 
         // Save the PDF for download
         data = await file["file"].save();
+
         break;
       default:
         file = {"file": null, "format": null};

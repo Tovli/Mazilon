@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:mazilon/pages/PersonalPlan/myPlan.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,7 @@ import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 // This widget displays the user's personalized plan with sections for various topics.
 // It allows the user to view their selected answers and navigate to additional forms or options.
@@ -33,7 +34,7 @@ class MyPlanPageFull extends StatefulWidget {
   State<MyPlanPageFull> createState() => _MyPlanPageFullState();
 }
 
-class _MyPlanPageFullState extends State<MyPlanPageFull> {
+class _MyPlanPageFullState extends LPExtendedState<MyPlanPageFull> {
   List<List<String>> userAnswers = []; // User's answers for each section
   List<String> phoneInformation = []; // User's phone-related information
 
@@ -97,7 +98,7 @@ class _MyPlanPageFullState extends State<MyPlanPageFull> {
     final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
-    final appLocale = AppLocalizations.of(context);
+
     // Set up phone and answer information based on the user's data
     setPhones(widget.phonePageData.savedPhoneNames,
         widget.phonePageData.savedPhoneNumbers);

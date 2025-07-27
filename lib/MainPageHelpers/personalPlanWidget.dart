@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/file_service.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/SignIn/popup_toast.dart';
 
 import 'package:mazilon/util/personalPlanItem.dart';
@@ -14,12 +15,12 @@ import 'dart:math';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 // the personal plan widget, thats related to the personal plan section in home page
 class PersonalPlanWidget extends StatefulWidget {
   final Map<String, dynamic> text; // the text of the personal plan
-  final Function(BuildContext, int)
+  final Function(BuildContext, PagesCode)
       changeCurrentIndex; // the function to change the current index
   const PersonalPlanWidget(
       {super.key, required this.text, required this.changeCurrentIndex});
@@ -28,7 +29,7 @@ class PersonalPlanWidget extends StatefulWidget {
   State<PersonalPlanWidget> createState() => _PersonalPlanWidgetState();
 }
 
-class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
+class _PersonalPlanWidgetState extends LPExtendedState<PersonalPlanWidget> {
   late FileService fileService;
   late List<String> randomItems = ['1', '2'];
   List<String> feelBetter = [];
@@ -71,7 +72,6 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
 // the build function of the personal plan widget
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
     loadFeelBetter();
     // the providers of the app information and the user information
     final appInfoProvider = Provider.of<AppInformation>(context, listen: true);
@@ -91,7 +91,7 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
             SectionBarHome(
                 textWidget: TextButton(
                     onPressed: () {
-                      widget.changeCurrentIndex(context, 1);
+                      widget.changeCurrentIndex(context, PagesCode.FullPlan);
                     },
                     // the title of the personal plan section in the home page
                     child: myAutoSizedText(
@@ -124,7 +124,8 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
                           appLocale!.phonesPageHeader(gender),
                         ],
                         appInfoProvider.sharePDFtexts,
-                        ShareFileType.PDF);
+                        ShareFileType.PDF,
+                        appLocale.textDirection);
                   }, Elusive.share, Colors.black),
                   myTextButton(() async {
                     // the function to download the pdf file of the personal plan
@@ -140,7 +141,8 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
                       appLocale!.feelBetterSubTitle(gender),
                       appLocale!.distractionsSubTitle(gender),
                       appLocale!.phonesPageHeader(gender),
-                    ], appInfoProvider.sharePDFtexts, ShareFileType.PDF);
+                    ], appInfoProvider.sharePDFtexts, ShareFileType.PDF,
+                        appLocale.textDirection);
                     if (result == null) {
                       // Show him a message
                       showToast(message: appLocale!.downloadFailed(gender));
@@ -172,7 +174,7 @@ class _PersonalPlanWidgetState extends State<PersonalPlanWidget> {
             // the button to take the user to the personal plan page
             GestureDetector(
               onTap: () {
-                widget.changeCurrentIndex(context, 1);
+                widget.changeCurrentIndex(context, PagesCode.FullPlan);
                 // Handle the button tap here
               },
               child: Row(

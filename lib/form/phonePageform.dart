@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mazilon/form/phonePageListItem.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,7 +12,7 @@ import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 class PhonePageForm extends StatefulWidget {
   final Function next;
@@ -29,7 +30,7 @@ class PhonePageForm extends StatefulWidget {
   State<PhonePageForm> createState() => _PhonePageFormState();
 }
 
-class _PhonePageFormState extends State<PhonePageForm> {
+class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
   List<TextEditingController> nameControllers = [];
   List<TextEditingController> numberControllers = [];
   TextEditingController controller1 = TextEditingController();
@@ -39,7 +40,7 @@ class _PhonePageFormState extends State<PhonePageForm> {
 
   //add contact to the list from the contact list in the phone
   void addItem(Contact contact) {
-    //  print(contact.phones);
+    //  debugPrint(contact.phones);
     String? phoneName = contact.displayName;
     String? phoneNumber =
         contact.phones.isNotEmpty == true ? contact.phones[0].number : null;
@@ -50,7 +51,7 @@ class _PhonePageFormState extends State<PhonePageForm> {
       nameControllers.add(TextEditingController(text: phoneName));
       numberControllers.add(TextEditingController(text: phoneNumber));
     } else {
-      print("Both fields must be filled");
+      debugPrint("Both fields must be filled");
     }
   }
 
@@ -61,12 +62,11 @@ class _PhonePageFormState extends State<PhonePageForm> {
       final contact = await FlutterContacts.openExternalPick();
       //Contact? contact = await ContactsService.openDeviceContactPicker();
       if (contact != null) {
-        print(contact);
         addItem(contact);
       }
       setState(() {});
     } else {
-      print("Permission to read contacts was denied");
+      debugPrint("Permission to read contacts was denied");
     }
   }
 
@@ -103,7 +103,6 @@ class _PhonePageFormState extends State<PhonePageForm> {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
 
-    final appLocale = AppLocalizations.of(context)!;
     final gender = userInfoProvider.gender;
     return Scaffold(
       body: SingleChildScrollView(

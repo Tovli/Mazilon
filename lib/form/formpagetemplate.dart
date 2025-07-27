@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/AnalyticsService.dart';
+import 'package:mazilon/global_enums.dart';
 
 import 'package:mazilon/pages/FormAnswer.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/styles.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,7 +15,7 @@ import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,7 +38,7 @@ class FormPageTemplate extends StatefulWidget {
   State<FormPageTemplate> createState() => _FormPageTemplateState();
 }
 
-class _FormPageTemplateState extends State<FormPageTemplate> {
+class _FormPageTemplateState extends LPExtendedState<FormPageTemplate> {
   final TextEditingController _controller = TextEditingController();
   int displayedLength = 3;
   int length = 0;
@@ -83,8 +88,9 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
   }
 
   void createSelection(userInfo) async {
-    final prefs = await SharedPreferences.getInstance();
-    //databaseItems = (prefs.getStringList('databaseItems' + formKey) ?? []);
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
     switch (widget.collectionName) {
       case 'PersonalPlan-DifficultEvents':
         userInfo.updateDifficultEvents([...selectedItems]);
@@ -100,10 +106,12 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
         break;
       default:
     }
-    prefs.setStringList(
-        'userSelection${widget.collectionName}', [...selectedItems]);
-    prefs.setStringList(
-        'addedStrings${widget.collectionName}', [...selectedItems]);
+    await service.setItem(
+        "disclaimerConfirmed", PersistentMemoryType.Bool, true);
+    await service.setItem('userSelection${widget.collectionName}',
+        PersistentMemoryType.StringList, [...selectedItems]);
+    await service.setItem('addedStrings${widget.collectionName}',
+        PersistentMemoryType.StringList, [...selectedItems]);
   }
 
   void loadItems(userInfo) {
@@ -126,8 +134,6 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
 
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context)!;
-
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
     final gender = userInfoProvider.gender;
@@ -176,7 +182,7 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
                               color: darkGray,
                               fontSize: 14.sp,
                               height: 1.3),
-                          TextAlign.justify,
+                          TextAlign.center,
                           25),
                     ),
                   ],
@@ -297,7 +303,7 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
                               color: darkGray,
                               fontSize: 14.sp,
                               height: 1.5),
-                          TextAlign.justify,
+                          TextAlign.center,
                           25),
                     ),
                   ],
@@ -439,6 +445,10 @@ class _FormPageTemplateState extends State<FormPageTemplate> {
                 ),
                 //next button:
                 ConfirmationButton(context, () {
+                  AnalyticsService mixPanelService =
+                      GetIt.instance<AnalyticsService>();
+                  mixPanelService.trackEvent(
+                      "Plan edited", {'page': widget.collectionName});
                   createSelection(userInfoProvider);
                   widget.next();
                 },

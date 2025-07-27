@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/file_service.dart';
 import 'package:mazilon/iFx/service_locator.dart';
 import 'package:mazilon/util/appInformation.dart';
@@ -13,14 +14,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mazilon/form/ShareForm.dart';
 import 'package:mockito/mockito.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'shareform_Test.mocks.dart';
 
 @GenerateNiceMocks([
   MockSpec<UserInformation>(),
   MockSpec<AppInformation>(),
   MockSpec<FileService>(),
+  MockSpec<AnalyticsService>(),
 ])
 void main() {
   late UserInformation mockUserInformation;
@@ -31,6 +32,8 @@ void main() {
     mockUserInformation = UserInformation();
     mockUserInformation.gender = "male";
     mockAppInformation = AppInformation();
+    final mockAnalytics = MockAnalyticsService();
+    getIt.registerLazySingleton<AnalyticsService>(() => mockAnalytics);
     final mockFileServiceImpl = MockFileService();
     getIt.registerLazySingleton<FileService>(() => mockFileServiceImpl);
   });
@@ -56,12 +59,7 @@ void main() {
       child: MaterialApp(
         supportedLocales: AppLocalizations.supportedLocales,
         locale: Locale('he'),
-        localizationsDelegates: [
-          AppLocalizations.localizationsDelegates[0],
-          GlobalMaterialLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate
-        ],
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
         home: ScreenUtilInit(
           designSize: const Size(360, 690),
           child: ShareForm(

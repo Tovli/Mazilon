@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 // Introduction widget serves as an initial loading screen or introduction page.
 class Introduction extends StatefulWidget {
@@ -17,12 +18,12 @@ class Introduction extends StatefulWidget {
   State<Introduction> createState() => _IntroductionState();
 }
 
-class _IntroductionState extends State<Introduction> {
+class _IntroductionState extends LPExtendedState<Introduction> {
   @override
   Widget build(BuildContext context) {
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: true);
-    final appLocale = AppLocalizations.of(context);
+
     return Scaffold(
       body: Center(
         child: Column(

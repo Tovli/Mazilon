@@ -63,7 +63,7 @@ import 'app_localizations_he.dart';
 /// property.
 abstract class AppLocalizations {
   AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -86,16 +86,16 @@ abstract class AppLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('he'),
+    Locale('he')
   ];
 
   /// The Current Language
@@ -269,7 +269,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{Things that will make me feel well now} female{Things that will make me feel well now} other{Things that will make me feel well now}}'**
+  /// **'{gender,select,male{Things that will make me feel better now} female{Things that will make me feel better now} other{Things that will make me feel better now}}'**
   String homePagePersonalPlanSecondaryTitle(String gender);
 
   ///
@@ -293,19 +293,19 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{I\'m thankful for} female{I\'m thankful for} other{I\'m thankful for}}'**
+  /// **'{gender,select,male{What I\'m thankful for} female{What I\'m thankful for} other{What I\'m thankful for}}'**
   String homePageThanksSecondaryTitle(String gender);
 
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{This is the way to strengthen your positive happiness muscle. The recommendation is to thank for at least 5 things in your life every day. Keep up the good work, and we\'ll meet again tomorrow} female{This is the way to strengthen your positive happiness muscle. The recommendation is to thank for at least 5 things in your life every day. Keep up the good work, and we\'ll meet again tomorrow} other{This is the way to strengthen your positive happiness muscle. The recommendation is to thank for at least 5 things in your life every day. Keep up the good work, and we\'ll meet again tomorrow}}'**
+  /// **'{gender,select,male{This is how to strengthen your positive happiness muscle.\nThe recommendation is to be thankful for at least 5 things every day.\nKeep up the good work, and we’ll meet again tomorrow.} female{This is how to strengthen your positive happiness muscle.\nThe recommendation is to be thankful for at least 5 things every day.\nKeep up the good work, and we’ll meet again tomorrow.} other{This is how to strengthen your positive happiness muscle.\nThe recommendation is to be thankful for at least 5 things every day.\nKeep up the good work, and we’ll meet again tomorrow.}}'**
   String homePageThankyouPopup(String gender);
 
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{The recommendation is to look at your list of virtues every day. And when there\'s something to add, don\'t be shy—add it without judgment and with a full heart.} female{The recommendation is to look at your list of virtues every day. And when there\'s something to add, don\'t be shy—add it without judgment and with a full heart.} other{The recommendation is to look at your list of virtues every day. And when there\'s something to add, don\'t be shy—add it without judgment and with a full heart.}}'**
+  /// **'{gender,select,male{Check out your list of virtues everyday.\nFeel free to add more, don’t be shy - add more with a full heart.} female{Check out your list of virtues everyday.\nFeel free to add more, don’t be shy - add more with a full heart.} other{Check out your list of virtues everyday.\nFeel free to add more, don’t be shy - add more with a full heart.}}'**
   String homePagePositiveTraitPopup(String gender);
 
   ///
@@ -353,7 +353,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{You\'ve created a guide that will help you during moments of crisis! Let\'s explore more tools for self-help and mental resilience} female{You\'ve created a guide that will help you during moments of crisis! Let\'s explore more tools for self-help and mental resilience} other{You\'ve created a guide that will help you during moments of crisis! Let\'s explore more tools for self-help and mental resilience}}'**
+  /// **'{gender,select,male{You\'ve created a guide that will help you during moments of crisis!\nLet\'s explore more tools for self-help and mental resilience} female{You\'ve created a guide that will help you during moments of crisis!\nLet\'s explore more tools for self-help and mental resilience} other{You\'ve created a guide that will help you during moments of crisis!\nLet\'s explore more tools for self-help and mental resilience}}'**
   String sharePageSubTitle(String gender);
 
   ///
@@ -413,7 +413,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{How would you like to be referred to?} female{How would you like to be referred to?} other{How would you like to be referred to?}}'**
+  /// **'{gender,select,male{How would you prefer to be called?} female{How would you prefer to be called?} other{How would you prefer to be called?}}'**
   String userSettingsGender(String gender);
 
   ///
@@ -425,13 +425,13 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{What keeps me safe} female{What keeps me safe} other{What keeps me safe}}'**
+  /// **'{gender,select,male{What keeps me safe?} female{What keeps me safe?} other{What keeps me safe?}}'**
   String introductionFormFirstPageMainTitle(String gender);
 
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{Living Positively - for improving quality of life, increasing resilience, and happiness} female{Living Positively - for improving quality of life, increasing resilience, and happiness} other{Living Positively - for improving quality of life, increasing resilience, and happiness}}'**
+  /// **'{gender,select,male{Living Positively - for happiness, increasing resilience, and improving quality of life} female{Living Positively - for happiness, increasing resilience, and improving quality of life} other{Living Positively - for happiness, increasing resilience, and improving quality of life}}'**
   String introductionFormFirstPageSubTitle1(String gender);
 
   ///
@@ -461,13 +461,13 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{You are invited to create a personal plan that will provide you and your surroundings with support in moments when everything becomes too much} female{You are invited to create a personal plan that will provide you and your surroundings with support in moments when everything becomes too much} other{You are invited to create a personal plan that will provide you and your surroundings with support in moments when everything becomes too much}}'**
+  /// **'{gender,select,male{You\'re invited to create a personal plan that offers support during overwhelming moments, for both you and those around you.} female{You\'re invited to create a personal plan that offers support during overwhelming moments, for both you and those around you.} other{You\'re invited to create a personal plan that offers support during overwhelming moments, for both you and those around you.}}'**
   String introductionFormLastPageSubTitle1(String gender);
 
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{It is recommended to dedicate a few minutes now, to easily navigate future moments of crisis} female{It is recommended to dedicate a few minutes now, to easily navigate future moments of crisis} other{It is recommended to dedicate a few minutes now, to easily navigate future moments of crisis}}'**
+  /// **'{gender,select,male{Take a few minutes now to better navigate future crises.} female{Take a few minutes now to better navigate future crises.} other{Take a few minutes now to better navigate future crises.}}'**
   String introductionFormLastPageSubTitle2(String gender);
 
   ///
@@ -479,7 +479,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{Hi, we\'re happy you\'re here! We\'d love to get to know you a bit so we can know how to address you} female{Hi, we\'re happy you\'re here! We\'d love to get to know you a bit so we can know how to address you} other{Hi, we\'re happy you\'re here! We\'d love to get to know you a bit so we can know how to address you}}'**
+  /// **'{gender,select,male{Hi! So good you’re here!\nWe want to get to know you better so we can support you.} female{Hi! So good you’re here!\nWe want to get to know you better so we can support you.} other{Hi! So good you’re here!\nWe want to get to know you better so we can support you.}}'**
   String introductionFormSecondPageSubTitle(String gender);
 
   ///
@@ -527,7 +527,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{Click to add options that suit you to your personal plan} female{Click to add options that suit you to your personal plan} other{Click to add options that suit you to your personal plan}}'**
+  /// **'{gender,select,male{Click to add options to suit your personal plan} female{Click to add options to suit your personal plan} other{Click to add options to suit your personal plan}}'**
   String distractionsMidSubTitle(String gender);
 
   ///
@@ -539,7 +539,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{What helps me improve my mood, relax, feel a little less stress. Ways I should use and rely on for preventive maintenance, and when needed in emergency situations, even increase dosages} female{What helps me improve my mood, relax, feel a little less stress. Ways I should use and rely on for preventive maintenance, and when needed in emergency situations, even increase dosages} other{What helps me improve my mood, relax, feel a little less stress. Ways I should use and rely on for preventive maintenance, and when needed in emergency situations, even increase dosages}}'**
+  /// **'{gender,select,male{What helps me improve my mood, relax and feel less stressed?\nMethods for preventative maintenance, and even increase dosages - in emergency situations.} female{What helps me improve my mood, relax and feel less stressed?\nMethods for preventative maintenance, and even increase dosages - in emergency situations.} other{What helps me improve my mood, relax and feel less stressed?\nMethods for preventative maintenance, and even increase dosages - in emergency situations.}}'**
   String feelBetterSubTitle(String gender);
 
   ///
@@ -551,19 +551,19 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{Click to add options that suit you to your personal plan} female{Click to add options that suit you to your personal plan} other{Click to add options that suit you to your personal plan}}'**
+  /// **'{gender,select,male{Click to add options to suit your personal plan} female{Click to add options to suit your personal plan} other{Click to add options to suit your personal plan}}'**
   String feelBetterMidSubTitle(String gender);
 
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{Support and help from the environment when I experience early warning signs, how I would like to be helped} female{Support and help from the environment when I experience early warning signs, how I would like to be helped} other{Support and help from the environment when I experience early warning signs, how I would like to be helped}}'**
+  /// **'{gender,select,male{Support from my environment when I notice early warning signs, and how I’d like to be assisted} female{Support from my environment when I notice early warning signs, and how I’d like to be assisted} other{Support from my environment when I notice early warning signs, and how I’d like to be assisted}}'**
   String makeSaferHeader(String gender);
 
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{Ways the environment can help me cope} female{Ways the environment can help me cope} other{Ways the environment can help me cope}}'**
+  /// **'{gender,select,male{Ways my surroundings can help me cope} female{Ways my surroundings can help me cope} other{Ways my surroundings can help me cope}}'**
   String makeSaferSubTitle(String gender);
 
   ///
@@ -575,7 +575,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{Click to add options that suit you to your personal plan} female{Click to add options that suit you to your personal plan} other{Click to add options that suit you to your personal plan}}'**
+  /// **'{gender,select,male{Click to add options to suit your personal plan} female{Click to add options to suit your personal plan} other{Click to add options to suit your personal plan}}'**
   String makeSaferMidSubTitle(String gender);
 
   ///
@@ -593,7 +593,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{Who are the people that support me, whom I can turn to if I am in distress or thinking of harming myself} female{Who are the people that support me, whom I can turn to if I am in distress or thinking of harming myself} other{Who are the people that support me, whom I can turn to if I am in distress or thinking of harming myself}}'**
+  /// **'{gender,select,male{Who are the people that support me, who I can turn to if I am distressed or thinking of harming myself?} female{Who are the people that support me, who I can turn to if I am distressed or thinking of harming myself?} other{Who are the people that support me, who I can turn to if I am distressed or thinking of harming myself?}}'**
   String phonesPageHeader(String gender);
 
   ///
@@ -1775,8 +1775,32 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
+  /// **'{gender,select,male{Please select your location:} female{Please select your location:} other{Please select your location:}}'**
+  String locationSelect(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
   /// **'The application is designed for personal use to improve mental resilience and provide support in times of crisis.\n\nIt cannot and is not intended to replace professional mental health providers. It does not substitute for a professional diagnosis or psychotherapeutic treatment. The tools integrated into the application aim to assist you and your environment in enhancing quality of life and offering support during challenging times.\n\nYou may use the application for self-help purposes and/or as part of a therapeutic process with a professional provider. If you require diagnosis or personal treatment, it is important to consult a professional therapist. The use of the application is at your own personal responsibility.\n\nPlease note: Your personal data within the application is stored only on your device! The application does not collect or transmit any personal information, and such data will never be used. You have the option to decide what to share, such as your personal plan, which may be shared with close social contacts and/or therapeutic professionals.\n\nIf you do not agree with the terms of use, please remove the application. If you accept these terms, please click the \"Accept\" button.'**
   String get disclaimerText;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get shareButtonText;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Here is the app LP (Living Positively). I use it and recommend it, maybe it will be helpful for you too.'**
+  String get shareAppMessage;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{Your location is only used in order to tailor the SOS numbers to your country.} female{Your location is only used in order to tailor the SOS numbers to your country.} other{Your location is only used in order to tailor the SOS numbers to your country.}}'**
+  String locationDisclaimer(String gender);
 }
 
 class _AppLocalizationsDelegate
@@ -1806,9 +1830,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
-  );
+      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

@@ -28,6 +28,7 @@ jobs:
         uses: SpicyPizza/create-envfile@v2.0.3
         with:
             envkey_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+            envkey_MIXPANEL_PROJECT_TOKEN: ${{ secrets.MIXPANEL_PROJECT_TOKEN }}
             file_name: .env
       - name: Write key store file for release signing
         run: |
@@ -46,7 +47,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.24.0"
+          flutter-version: "3.32.7"
           cache: true
       - name: Install dependencies
         run: flutter pub get

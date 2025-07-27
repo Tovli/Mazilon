@@ -1,37 +1,30 @@
 import 'dart:math';
-import 'package:language_code/language_code.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter/foundation.dart';
+import 'package:mazilon/global_enums.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/Locale/locale_service.dart';
 import 'package:mazilon/iFx/service_locator.dart';
-import 'package:mazilon/l10n/l10n.dart';
+import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/pages/notifications/notification_service.dart';
 import 'package:mazilon/util/logger_service.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workmanager/workmanager.dart';
 import 'util/Firebase/firebase_options.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import '/pages/SignIn_Pages/introduction.dart';
-
+import 'package:workmanager/workmanager.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/Firebase/firebase_functions.dart';
-
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
-import 'package:mazilon/initialForm/form.dart';
 import 'package:upgrader/upgrader.dart';
-
+import 'package:mazilon/util/LP_extended_state.dart';
 //testing:
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mazilon/disclaimerPage.dart';
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 List<String> checkboxCollectionNames = [
   'PersonalPlan-DifficultEvents',
@@ -46,7 +39,6 @@ List<String> checkboxCollectionNames = [
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {
-
       if (inputData == null ||
           !inputData.containsKey("text") ||
           !inputData.containsKey("timeHour") ||
@@ -91,6 +83,7 @@ void main() async {
   await initializeApp();
 
   IncidentLoggerService sentryService = GetIt.instance<IncidentLoggerService>();
+
   Workmanager().initialize(
     callbackDispatcher,
     isInDebugMode: false,
@@ -136,9 +129,11 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  bool firsttime = false;
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  late Mixpanel mixpanel;
+  bool enteredBefore = true;
   String localeName = '';
+  bool _initializationStarted = false; // Add this flag
 
   bool _isInitialized = false;
   List<String> phonePageCollectionNames = [
@@ -155,45 +150,147 @@ class _MyAppState extends State<MyApp> {
   AppInformation appInfo = AppInformation();
 
   bool hasFilled = false;
-  void getHasFilled() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  DateTime? _startTime;
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _endSession(); // Ensure session ends when widget is disposed
+    super.dispose();
+  }
 
-    setState(() {
-      hasFilled = prefs.getBool('hasFilled') ?? false;
+  void _startSession() {
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+    mixPanelService.trackEvent("Session started");
+    _startTime = DateTime.now(); // Store session start time
+  }
+
+  void _endSession() {
+    if (_startTime == null) return;
+
+    final endTime = DateTime.now();
+    final duration =
+        endTime.difference(_startTime!).inSeconds; // Calculate session length
+
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+    mixPanelService.trackEvent("Session Ended", {
+      "duration_seconds": duration,
     });
+
+    _startTime = null; // Reset for next session
+  }
+
+  void _pauseSession() {
+    if (_startTime == null) return;
+
+    final endTime = DateTime.now();
+    final duration =
+        endTime.difference(_startTime!).inSeconds; // Calculate session length
+
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+    mixPanelService.trackEvent("Session Paused", {
+      "duration_seconds": duration,
+    });
+
+    _startTime = null; // Reset for next session
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _startSession(); // App is active
+    } else if (state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.detached) {
+      _endSession(); // App is inactive or closed
+    }
+  }
+
+  void getHasFilled() async {
+    try {
+      PersistentMemoryService service = GetIt.instance<
+          PersistentMemoryService>(); // Get the persistent memory service instance
+
+      await service.setItem(
+          "disclaimerConfirmed", PersistentMemoryType.Bool, true);
+      var hasFilledValue =
+          await service.getItem("hasFilled", PersistentMemoryType.Bool) ??
+              false;
+      setState(() {
+        hasFilled = hasFilledValue;
+      });
+    } catch (e) {
+      // Set default value on error
+      setState(() {
+        hasFilled = false;
+      });
+    }
   }
 
   Future<void> setLocale() async {
-    LocaleService localeService = GetIt.instance<LocaleService>();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      LocaleService localeService = GetIt.instance<LocaleService>();
 
-    String? prefsLocale = prefs.getString('localeName');
+      PersistentMemoryService service = GetIt.instance<
+          PersistentMemoryService>(); // Get the persistent memory service instance
+      await service.setItem(
+          "disclaimerConfirmed", PersistentMemoryType.Bool, true);
+      String? prefsLocale =
+          await service.getItem('localeName', PersistentMemoryType.String);
 
-    setState(() {
-      localeService.setLocale(prefsLocale);
-
-      localeName = localeService.getLocale();
-    });
+      setState(() {
+        localeService.setLocale(prefsLocale != "" ? prefsLocale! : 'en');
+        localeName = localeService.getLocale();
+      });
+    } catch (e) {
+      // Set default locale on error
+      LocaleService localeService = GetIt.instance<LocaleService>();
+      setState(() {
+        localeService.setLocale('en');
+        localeName = 'en';
+      });
+    }
   }
 
   void loadFirstTime() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      PersistentMemoryService service = GetIt.instance<
+          PersistentMemoryService>(); // Get the persistent memory service instance
 
-    setState(() {
-      firsttime = prefs.getBool('firstTime') ?? true;
-    });
+      var enteredBeforeValue =
+          await service.getItem('enteredBefore', PersistentMemoryType.Bool) ??
+              true;
+
+      setState(() {
+        enteredBefore = enteredBeforeValue;
+      });
+    } catch (e) {
+      // Set default value on error
+      setState(() {
+        enteredBefore = false;
+      });
+    }
   }
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+    mixPanelService.init();
     getHasFilled();
     loadFirstTime();
     super.initState();
+    _startSession();
+    //initMixpanel();
     personalPlanPhonesPageData = {
       'phoneName': <String>[],
       'emergencyPhones': <String>[],
       'phoneDescription': <String>[]
     }; // Initialize personalPlanPhonesPageData
+  }
+
+  Future<void> initMixpanel() async {
+    // Once you've called this method once, you can access `mixpanel` throughout the rest of your application.
+    mixpanel = await Mixpanel.init("e38d39b73bc076129d0a5390af41fc24",
+        trackAutomaticEvents: false);
   }
 
   @override
@@ -221,7 +318,10 @@ class _MyAppState extends State<MyApp> {
     final appInfoProvider = Provider.of<AppInformation>(context, listen: false);
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
-    if (widgetNotifier.value == null) {
+
+    if (widgetNotifier.value == null && !_initializationStarted) {
+      _initializationStarted = true; // Prevent multiple initialization attempts
+
       Future.wait([
         //load from DB or from json:
         loadAppInformation(appInfoProvider),
@@ -229,17 +329,23 @@ class _MyAppState extends State<MyApp> {
         setLocale()
       ]).then((_) {
         //initialize which widget will run first:
-        widgetNotifier.value = phonePageData != null
-            //user filled data:
-            ? FirstPage(
-                firsttime: firsttime,
-                hasFilled: hasFilled,
-                changeLocale: changeLocale,
-                phonePageData: phonePageData)
-            //first login:
-            : const Center(child: Introduction());
+        widgetNotifier.value = FirstPage(
+            firsttime: !enteredBefore,
+            hasFilled: hasFilled,
+            changeLocale: changeLocale,
+            phonePageData: phonePageData);
+      }).catchError((error, stackTrace) {
+        // Handle errors and provide a fallback widget
+
+        IncidentLoggerService loggerService =
+            GetIt.instance<IncidentLoggerService>();
+        loggerService.captureLog(error, stackTrace: stackTrace);
+
+        // Fallback to Introduction page on error
+        widgetNotifier.value = const Center(child: Introduction());
       });
     }
+
     if (localeName == '') {
       return const Center(child: CircularProgressIndicator());
     }
@@ -249,12 +355,7 @@ class _MyAppState extends State<MyApp> {
       builder: (context, child) => MaterialApp(
         supportedLocales: AppLocalizations.supportedLocales,
         locale: Locale(localeService.getLocale()),
-        localizationsDelegates: [
-          AppLocalizations.localizationsDelegates[0],
-          GlobalMaterialLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate
-        ],
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
         debugShowCheckedModeBanner: false,
         home: UpgradeAlert(
           child: Scaffold(

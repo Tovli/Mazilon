@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/AnalyticsService.dart';
+import 'package:mazilon/util/LP_extended_state.dart';
 import 'dart:math';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 //Display a random Inspirational Quote
 class InspirationalQuote extends StatefulWidget {
@@ -12,10 +15,11 @@ class InspirationalQuote extends StatefulWidget {
   _InspirationalQuoteState createState() => _InspirationalQuoteState();
 }
 
-class _InspirationalQuoteState extends State<InspirationalQuote> {
+class _InspirationalQuoteState extends LPExtendedState<InspirationalQuote> {
   bool showText = true;
   String quote = '';
   int number = 0;
+  AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
   //Let the user close the window
   void setShow() {
     {
@@ -29,13 +33,22 @@ class _InspirationalQuoteState extends State<InspirationalQuote> {
   void initState() {
     super.initState();
     //decide which quote to show
-
     number = Random().nextInt(widget.quotes.length);
+  }
+
+  void _refreshQuote() {
+    setState(() {
+      final prevNumber = number;
+      number = Random().nextInt(widget.quotes.length);
+      mixPanelService.trackEvent("Inspirational Quotes Refreshed", {
+        "Old Quote": widget.quotes[prevNumber],
+        "New Quote": widget.quotes[number],
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
     return Visibility(
       visible: showText,
       child: Container(
@@ -55,9 +68,7 @@ class _InspirationalQuoteState extends State<InspirationalQuote> {
               right: appLocale!.textDirection == "rtl" ? null : 5,
 
               child: GestureDetector(
-                onTap: () {
-                  setShow();
-                },
+                onTap: setShow,
                 child: const Padding(
                   padding: EdgeInsets.fromLTRB(4, 4, 0, 4),
                   child: Icon(Icons.close),
@@ -77,11 +88,7 @@ class _InspirationalQuoteState extends State<InspirationalQuote> {
                       color: appWhite,
                     ),
                     //"refresh" button to change the quote
-                    onPressed: () {
-                      setState(() {
-                        number = Random().nextInt(widget.quotes.length);
-                      });
-                    },
+                    onPressed: _refreshQuote,
                   ),
                   const SizedBox(
                     width: 10,
