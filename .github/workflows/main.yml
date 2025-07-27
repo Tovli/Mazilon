@@ -95,3 +95,70 @@ jobs:
       #   with:
       #     name: app-release-apk
       #     path: ${{ env.APK_PATH }}
+  build_ios:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Export secrets as env vars
+        uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}
+              
+      - name: Create .env file            
+        uses: SpicyPizza/create-envfile@v2.0.3
+        with:
+            envkey_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+            file_name: .env
+      
+      - name: Write firebase options file
+        run: |
+          echo "$FIREBASE_OPTIONS" | base64 --decode > "${{ env.FIREBASE_OPTIONS_PATH }}"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.24.0"
+          cache: true
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Install CocoaPods dependencies
+        run: |
+          cd ios
+          pod install
+      - name: Install Fastlane
+        run: sudo gem install fastlane -N
+
+
+      - name: Run tests
+        run: flutter test --reporter=expanded
+
+      - name: Get version from pubspec.yaml
+        id: get_version
+        run: |
+          VERSION_LINE=$(grep '^version: ' pubspec.yaml)
+          VERSION_STRING=${VERSION_LINE#version: }
+          echo "VERSION_STRING=$VERSION_STRING" >> $GITHUB_ENV
+
+      - name: Parse version components
+        run: |
+          VERSION_NO_BUILD="${VERSION_STRING%%+*}"
+          echo "VERSION_NO_BUILD=$VERSION_NO_BUILD" >> $GITHUB_ENV
+      - name: Get short commit hash
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
+
+      - name: Set build name and number
+        run: |
+          BUILD_NAME="${VERSION_NO_BUILD}+${COMMIT_HASH}"
+          BUILD_NUMBER="${GITHUB_RUN_NUMBER}"
+          echo "BUILD_NAME=$BUILD_NAME" >> $GITHUB_ENV
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
+
+      - name: Build App Bundle
+        run: |
+          flutter build ios --release \
+            --build-name="${BUILD_NAME}" \
+            --build-number="${BUILD_NUMBER}"
