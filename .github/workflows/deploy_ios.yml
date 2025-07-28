@@ -1,0 +1,82 @@
+name: Deploy iOS app to App Store
+
+# This workflow builds and deploys the release version of your Flutter app to
+# Apple's App Store. It runs on a macOS runner, which is required for iOS
+# builds. The workflow uses Fastlane to handle code signing and the upload
+# process. Secrets referenced here must be added to your repository's secrets
+# settings (Repository → Settings → Secrets and variables → Actions → New
+# repository secret).
+#
+# Required secrets:
+#   ASC_KEY_ID:           The App Store Connect API key identifier.
+#   ASC_ISSUER_ID:        The App Store Connect issuer identifier.
+#   ASC_KEY_P8_BASE64:    The contents of your *.p8* API key, base64‑encoded.
+#   MATCH_PASSWORD:       Passphrase used by fastlane match to decrypt
+#                         certificates and provisioning profiles.
+#   MATCH_GIT_BASIC_AUTHORIZATION:
+#                         Base64‑encoded GitHub username and token (e.g.
+#                         `echo -n "username:token" | base64`) that grants
+#                         fastlane match access to the repository storing your
+#                         signing certificates and provisioning profiles.
+#   APP_BUNDLE_ID:        Your app’s bundle identifier (e.g., com.example.app).
+
+on:
+  # Allows manual triggering of the workflow from GitHub’s interface.
+  workflow_dispatch:
+
+  # Automatically deploys whenever changes are pushed to the `main` branch.
+  push:
+    branches:
+      - main
+
+jobs:
+  build_ios:
+    name: Build and deploy iOS
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      # Install a specific Ruby version and cache installed gems. Fastlane
+      # depends on Ruby. Setting the working directory to `ios` ensures
+      # `bundle install` (if present) resolves dependencies defined under
+      # ios/fastlane/Gemfile.
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2.2'
+          bundler-cache: true
+          working-directory: 'ios'
+
+      # Install Flutter on the runner. The action reads the required Flutter
+      # version from `pubspec.yaml` and caches dependencies to speed up
+      # subsequent runs. Adjust the `channel` if you use a different release
+      # channel.
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version-file: 'pubspec.yaml'
+          channel: 'stable'
+          cache: true
+
+      # Fetch Dart and Flutter dependencies. This is separated from the
+      # Fastlane step so that `flutter pub get` runs before the build.
+      - name: Install Flutter dependencies
+        run: flutter pub get
+
+      # Use fastlane to run the `release_app_store` lane defined in
+      # ios/fastlane/Fastfile. This lane should handle code signing via
+      # fastlane match, build the app, and upload it to App Store Connect.
+      - name: Build and upload with Fastlane
+        uses: maierj/fastlane-action@v3.1.0
+        with:
+          lane: 'release_app_store'
+          subdirectory: ios
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          APP_BUNDLE_ID: ${{ secrets.APP_BUNDLE_ID }}
