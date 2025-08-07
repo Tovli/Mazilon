@@ -95,8 +95,7 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
         await service.getItem("enteredBefore", PersistentMemoryType.Bool);
     var hasFilledValue =
         await service.getItem("hasFilled", PersistentMemoryType.Bool);
-    debugPrint(enteredBeforeValue);
-    debugPrint(hasFilledValue);
+
     widget.phonePageData.reset();
     setState(() {
       enteredBefore = enteredBeforeValue;
