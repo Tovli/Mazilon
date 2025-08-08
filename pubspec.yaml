@@ -64,8 +64,8 @@ dependencies:
   url_launcher_platform_interface: ^2.3.2
   uuid: ^4.5.1
   qr_flutter: ^4.1.0
-  mobile_scanner: ^5.2.3
-  firebase_database: ^11.3.5
+  mobile_scanner: ^7.0.1
+  firebase_database: ^11.3.10
   file_picker: 8.3.7
   googleapis: ^13.2.0
   googleapis_auth: ^1.6.0
