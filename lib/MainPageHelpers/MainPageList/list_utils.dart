@@ -5,25 +5,35 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/global_enums.dart';
+import 'package:mazilon/util/logger_service.dart';
 import 'package:mazilon/util/userInformation.dart';
 
 Map<String, dynamic> getLocalizedTextForLists(locale, gender, type) {
-  switch (type) {
-    case PagesCode.GratitudeJournal:
-      return {
-        'mainTitle': locale!.homePageThanksMainTitle(gender),
-        'secondaryTitle': locale!.homePageThanksSecondaryTitle(gender),
-        "icon": FontAwesome5.praying_hands
-      };
+  try {
+    switch (type) {
+      case PagesCode.GratitudeJournal:
+        return {
+          'mainTitle': locale!.homePageThanksMainTitle(gender),
+          'secondaryTitle': locale!.homePageThanksSecondaryTitle(gender),
+          "icon": FontAwesome5.praying_hands
+        };
 
-    case PagesCode.QualitiesList:
-      return {
-        'mainTitle': locale!.homePageTraitsMainTitle(gender),
-        'secondaryTitle': locale!.homePageTraitsSecondaryTitle(gender),
-        "icon": Icons.diamond
-      };
-    default:
-      return {'mainTitle': '', 'SecondaryTitle': '', "icon": Icons.diamond};
+      case PagesCode.QualitiesList:
+        return {
+          'mainTitle': locale!.homePageTraitsMainTitle(gender),
+          'secondaryTitle': locale!.homePageTraitsSecondaryTitle(gender),
+          "icon": Icons.diamond
+        };
+      default:
+        throw Exception(
+            "Invalid type for getLocalizedTextForLists: $type. Expected GratitudeJournal or QualitiesList.");
+    }
+  } catch (error, stackTrace) {
+    IncidentLoggerService loggerService =
+        GetIt.instance<IncidentLoggerService>();
+    loggerService.captureLog(error, stackTrace: stackTrace);
+
+    return {'mainTitle': '', 'secondaryTitle': '', "icon": Icons.diamond};
   }
 }
 
