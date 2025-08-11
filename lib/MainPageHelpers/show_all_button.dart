@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:mazilon/global_enums.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 
-class ShowAllWidget extends StatefulWidget {
+class ShowAllButton extends StatefulWidget {
   final Function(BuildContext, PagesCode) onTabTapped;
   final PagesCode pageCode;
-  const ShowAllWidget({
-    Key? key,
+  const ShowAllButton({
+    super.key,
     required this.onTabTapped,
     required this.pageCode,
-  }) : super(key: key);
+  });
 
   @override
-  State<ShowAllWidget> createState() => _ShowAllWidgetState();
+  State<ShowAllButton> createState() => _ShowAllButtonState();
 }
 
-class _ShowAllWidgetState extends LPExtendedState<ShowAllWidget> {
+class _ShowAllButtonState extends LPExtendedState<ShowAllButton> {
   @override
   Widget build(BuildContext context) {
     final userInfoProvider =

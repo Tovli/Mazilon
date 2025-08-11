@@ -8,7 +8,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mazilon/MainPageHelpers/list_widgets.dart';
+import 'package:mazilon/MainPageHelpers/MainPageList/mainpage_list_widget.dart';
 import 'package:mazilon/global_enums.dart';
 
 import 'package:mazilon/util/Form/retrieveInformation.dart';
