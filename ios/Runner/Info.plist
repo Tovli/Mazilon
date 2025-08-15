@@ -45,5 +45,17 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!-- Contacts -->
+	<key>NSContactsUsageDescription</key>
+	<string>We use your contacts only to enable you to put your desired contact as an SOS call. No data is uploaded without your consent.</string>
+
+	<!-- Photos: read/browse user's library -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library so you can select images to upload to the app so you'll have images that improve your mood when you are down.</string>
+
+	<!-- Photos: save to library (add if you ever write/export images/videos) -->
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We need permission to save images you create to your photo library.</string>
+
 </dict>
 </plist>
