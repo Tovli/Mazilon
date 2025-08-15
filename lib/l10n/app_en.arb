@@ -251,7 +251,7 @@
     "@introductionFormLastPageSubTitle1": { 
     "description": ""
     },
-     "introductionFormLastPageSubTitle2": "{gender,select,male{Take a few minutes now to better navigate future crises.} female{Take a few minutes now to better navigate future crises.} other{Take a few minutes now to better navigate future crises.}}",
+     "introductionFormLastPageSubTitle2": "{gender,select,male{It's recommended to spend a few minutes now to better handle future crises.} female{It's recommended to spend a few minutes now to better handle future crises.} other{It's recommended to spend a few minutes now to better handle future crises.}}",
     "@introductionFormLastPageSubTitle2": { 
     "description": ""
     },
