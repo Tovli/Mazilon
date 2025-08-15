@@ -8,6 +8,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/MainPageHelpers/MainPageList/mainpage_list_widget.dart';
 import 'package:mazilon/global_enums.dart';
 
 import 'package:mazilon/util/Form/retrieveInformation.dart';
@@ -16,8 +17,7 @@ import 'package:mazilon/util/persistent_memory_service.dart';
 
 import 'package:mazilon/pages/UserSettings.dart';
 import 'package:mazilon/MainPageHelpers/personalPlanWidget.dart';
-import 'package:mazilon/MainPageHelpers/traitListWidget.dart';
-import 'package:mazilon/MainPageHelpers/thanksListWidget.dart';
+
 import 'package:mazilon/util/HomePage/inspirationalQuote.dart';
 import 'package:mazilon/util/styles.dart';
 
@@ -205,12 +205,18 @@ class _HomeState extends LPExtendedState<Home> {
 
                     const SizedBox(height: 20),
                     //This is the main widget for the positive traits list
-                    TraitListWidget(
-                      onTabTapped: widget.changeCurrentIndex,
-                    ),
+                    ListWidget(
+                        onTabTapped: widget.changeCurrentIndex,
+                        pageCode: PagesCode.QualitiesList),
+                    //  TraitListWidget(
+                    //   onTabTapped: widget.changeCurrentIndex,
+                    // ),
                     const SizedBox(height: 20),
+                    ListWidget(
+                        onTabTapped: widget.changeCurrentIndex,
+                        pageCode: PagesCode.GratitudeJournal),
                     //This is the main widget for the thank yous list
-                    ThanksListWidget(onTabTapped: widget.changeCurrentIndex),
+                    //  ThanksListWidget(onTabTapped: widget.changeCurrentIndex),
                   ],
                 ),
               ),
