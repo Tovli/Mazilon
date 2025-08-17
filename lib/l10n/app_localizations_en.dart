@@ -799,9 +799,12 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'Take a few minutes now to better navigate future crises.',
-        'female': 'Take a few minutes now to better navigate future crises.',
-        'other': 'Take a few minutes now to better navigate future crises.',
+        'male':
+            'It\'s recommended to spend a few minutes now to better handle future crises.',
+        'female':
+            'It\'s recommended to spend a few minutes now to better handle future crises.',
+        'other':
+            'It\'s recommended to spend a few minutes now to better handle future crises.',
       },
     );
     return '$_temp0';
@@ -1561,6 +1564,26 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get moreVideos => 'More videos';
+
+  @override
+  String get shareRoutineMessage =>
+      'Here is my personal plan that is meant to help keep me safe. I’m sending it to you because, in my view, you also have a part in it. I hope this works for you. I would greatly appreciate your agreement to take part in it if needed. Many thanks in advance, and I look forward to your reply.';
+
+  @override
+  String get shareOptions => 'Share Options';
+
+  @override
+  String get shareFile => 'Share file';
+
+  @override
+  String get shareRoutine => 'Share routine message';
+
+  @override
+  String get shareEmergency => 'Share emergency message';
+
+  @override
+  String get shareEmergencyMessage =>
+      'I’m not doing well and I need help. I would appreciate your support in activating my personal plan. Thank you in advance.';
 
   @override
   String notifyOnscheduledNotification(Object time) {

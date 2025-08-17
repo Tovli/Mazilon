@@ -548,6 +548,33 @@
     "@moreVideos": { 
     "description": ""
     },
+    "shareRoutineMessage": "Here is my personal plan that is meant to help keep me safe. I’m sending it to you because, in my view, you also have a part in it. I hope this works for you. I would greatly appreciate your agreement to take part in it if needed. Many thanks in advance, and I look forward to your reply.",
+    "@shareRoutineMessage": { 
+    "description": ""
+    },
+    "shareOptions": "Share Options",
+    "@shareOptions": { 
+    "description": ""
+    },
+    "shareFile": "Share file",
+    "@shareFile": { 
+    "description": ""
+    },
+    "shareRoutine": "Share routine message",
+    "@shareFile": { 
+    "description": ""
+    },
+  
+    "shareEmergency": "Share emergency message",
+    "@shareFile": { 
+    "description": ""
+    },
+
+"shareEmergencyMessage": "I’m not doing well and I need help. I would appreciate your support in activating my personal plan. Thank you in advance.",
+    
+        "@shareEmergencyMessage": { 
+    "description": ""
+    },
      "notifyOnscheduledNotification": "Notification set for {time}",
      "@notifyOnscheduledNotification": {
         "description": "message",

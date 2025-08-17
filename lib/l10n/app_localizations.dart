@@ -467,7 +467,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{Take a few minutes now to better navigate future crises.} female{Take a few minutes now to better navigate future crises.} other{Take a few minutes now to better navigate future crises.}}'**
+  /// **'{gender,select,male{It\'s recommended to spend a few minutes now to better handle future crises.} female{It\'s recommended to spend a few minutes now to better handle future crises.} other{It\'s recommended to spend a few minutes now to better handle future crises.}}'**
   String introductionFormLastPageSubTitle2(String gender);
 
   ///
@@ -859,6 +859,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More videos'**
   String get moreVideos;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Here is my personal plan that is meant to help keep me safe. I’m sending it to you because, in my view, you also have a part in it. I hope this works for you. I would greatly appreciate your agreement to take part in it if needed. Many thanks in advance, and I look forward to your reply.'**
+  String get shareRoutineMessage;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Share Options'**
+  String get shareOptions;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Share file'**
+  String get shareFile;
+
+  /// No description provided for @shareRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Share routine message'**
+  String get shareRoutine;
+
+  /// No description provided for @shareEmergency.
+  ///
+  /// In en, this message translates to:
+  /// **'Share emergency message'**
+  String get shareEmergency;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'I’m not doing well and I need help. I would appreciate your support in activating my personal plan. Thank you in advance.'**
+  String get shareEmergencyMessage;
 
   /// message
   ///
