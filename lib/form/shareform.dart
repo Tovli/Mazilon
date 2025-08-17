@@ -47,15 +47,6 @@ class _ShareFormState extends LPExtendedState<ShareForm> {
     setHasFilled();
   }
 
-  Future<void> _showShareDialog() {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return LPShareAlertDialog();
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final appInfoProvider = Provider.of<AppInformation>(context, listen: true);

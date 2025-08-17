@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,8 +8,9 @@ import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/file_service.dart';
 import 'package:mazilon/iFx/service_locator.dart';
 import 'package:mazilon/util/appInformation.dart';
+import 'package:mazilon/global_enums.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/userInformation.dart';
-import 'package:mazilon/util/styles.dart';
 import 'package:mockito/annotations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,6 +25,7 @@ import 'shareform_Test.mocks.dart';
   MockSpec<AppInformation>(),
   MockSpec<FileService>(),
   MockSpec<AnalyticsService>(),
+  MockSpec<PersistentMemoryService>(),
 ])
 void main() {
   late UserInformation mockUserInformation;
@@ -29,6 +33,25 @@ void main() {
   late GetIt locator;
 
   setUp(() {
+    locator = GetIt.instance;
+
+    // Reset getIt before each test
+    locator.reset();
+    // Create and register ONLY PersistentMemoryService
+    final mockPersistentMemoryService = MockPersistentMemoryService();
+
+    // Set up mock behaviors for PersistentMemoryService
+    when(mockPersistentMemoryService.getItem(
+            'hasFilled', PersistentMemoryType.Bool))
+        .thenAnswer((_) async => false);
+    when(mockPersistentMemoryService.setItem(any, any, any))
+        .thenAnswer((_) async => {});
+    when(mockPersistentMemoryService.reset()).thenAnswer((_) async => {});
+
+    // Register PersistentMemoryService with GetIt
+    getIt.registerLazySingleton<PersistentMemoryService>(
+        () => mockPersistentMemoryService);
+
     mockUserInformation = UserInformation();
     mockUserInformation.gender = "male";
     mockAppInformation = AppInformation();
@@ -93,13 +116,36 @@ void main() {
     expect(find.byIcon(Icons.download), findsOneWidget);
   });
 
-  testWidgets('ShareForm sets SharedPreferences value on init',
+  testWidgets('ShareForm initializes correctly with persistent memory',
       (WidgetTester tester) async {
-    await tester.pumpWidget(createTestWidget());
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Get the mock service
+    final mockPersistentMemoryService =
+        GetIt.instance<PersistentMemoryService>();
 
-    // Verify the initial value of hasFilled
-    expect(prefs.getBool('hasFilled'), true);
+    // Setup expectations
+    when(mockPersistentMemoryService.getItem(
+            'hasFilled', PersistentMemoryType.Bool))
+        .thenAnswer((_) async => false);
+    final completer = Completer<void>();
+    when(mockPersistentMemoryService.setItem(
+            'hasFilled', PersistentMemoryType.Bool, true))
+        .thenAnswer((_) async {
+      completer.complete();
+      return null;
+    });
+
+    // Pump the widget and let it settle
+    await tester.pumpWidget(createTestWidget());
+    await completer.future;
+    await tester.pumpAndSettle();
+    // Verify the widget is rendered
+    expect(find.byType(ShareForm), findsOneWidget);
+
+    await tester.pump(const Duration(milliseconds: 100));
+    // Verify memory service interactions
+    verify(mockPersistentMemoryService.setItem(
+            'hasFilled', PersistentMemoryType.Bool, true))
+        .called(1);
   });
 
   testWidgets('ShareForm shows share dialog and generates PDF',
