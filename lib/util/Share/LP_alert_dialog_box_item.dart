@@ -8,12 +8,12 @@ class LPAlertDialogBoxItem extends StatelessWidget {
   final IconData icon;
 
   const LPAlertDialogBoxItem({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.buttonText,
     required this.icon,
-  }) : super(key: key);
-  press() async {
+  });
+  void press() async {
     await onPressed();
   }
 

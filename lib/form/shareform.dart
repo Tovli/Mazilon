@@ -6,8 +6,6 @@ import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/file_service.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
-import 'package:mazilon/util/Share/LP_share_alert_dialog.dart';
-
 import 'package:mazilon/util/SignIn/popup_toast.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:provider/provider.dart';

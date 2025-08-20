@@ -878,13 +878,13 @@ abstract class AppLocalizations {
   /// **'Share file'**
   String get shareFile;
 
-  /// No description provided for @shareRoutine.
+  ///
   ///
   /// In en, this message translates to:
   /// **'Share routine message'**
   String get shareRoutine;
 
-  /// No description provided for @shareEmergency.
+  ///
   ///
   /// In en, this message translates to:
   /// **'Share emergency message'**

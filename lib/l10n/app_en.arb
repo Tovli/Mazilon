@@ -561,18 +561,17 @@
     "description": ""
     },
     "shareRoutine": "Share routine message",
-    "@shareFile": { 
+    "@shareRoutine": { 
     "description": ""
     },
   
     "shareEmergency": "Share emergency message",
-    "@shareFile": { 
+    "@shareEmergency": { 
     "description": ""
     },
 
-"shareEmergencyMessage": "I’m not doing well and I need help. I would appreciate your support in activating my personal plan. Thank you in advance.",
-    
-        "@shareEmergencyMessage": { 
+    "shareEmergencyMessage": "I’m not doing well and I need help. I would appreciate your support in activating my personal plan. Thank you in advance.",
+    "@shareEmergencyMessage": { 
     "description": ""
     },
      "notifyOnscheduledNotification": "Notification set for {time}",
