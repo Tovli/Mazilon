@@ -58,6 +58,7 @@ void getData(mockAppInformation) {
   mockAppInformation.updateWellnessVideos({
     "videoId": ["test", "test"],
     "videoHeadline": ["v1", "v2"],
-    "videoDescription": ["v1d", "v2d"]
+    "videoDescription": ["v1d", "v2d"],
+    "videoLocale": ["he", "he"]
   });
 }
