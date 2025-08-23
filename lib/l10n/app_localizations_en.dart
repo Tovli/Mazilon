@@ -799,9 +799,12 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'Take a few minutes now to better navigate future crises.',
-        'female': 'Take a few minutes now to better navigate future crises.',
-        'other': 'Take a few minutes now to better navigate future crises.',
+        'male':
+            'It\'s recommended to spend a few minutes now to better handle future crises.',
+        'female':
+            'It\'s recommended to spend a few minutes now to better handle future crises.',
+        'other':
+            'It\'s recommended to spend a few minutes now to better handle future crises.',
       },
     );
     return '$_temp0';
@@ -1561,6 +1564,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get moreVideos => 'More videos';
+
+  @override
+  String get informationCollectionDisclaimer =>
+      'Information Collected:\n\nThe application only collects anonymous and statistical data for the purpose of analysis and service improvement. This data cannot identify any individual user. Among the data collected:\n• General app usage data (e.g., pages viewed, frequency of use).\n• Technical information about the device and system (Device type, OS version).\n• Anonymous location data – collected solely for analyzing trends and usage patterns, without linking to any identifiable user.\n';
+
+  @override
+  String get addingContactDisclaimer =>
+      'We do not save your contacts, it is for your own use.';
 
   @override
   String notifyOnscheduledNotification(Object time) {
