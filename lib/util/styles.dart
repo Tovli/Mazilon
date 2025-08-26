@@ -137,3 +137,9 @@ Widget myTextButton(Function function, IconData icon, Color color) {
     ),
   );
 }
+
+Icon mainpageListsAddIcon = Icon(
+  Icons.add,
+  color: primaryPurple, // the color of the add icon
+  size: 30, // the size of the add icon
+);

@@ -110,8 +110,9 @@ class _PositiveTraitItemSugState extends LPExtendedState<PositiveTraitItemSug> {
                   await service.getItem(
                       "positiveTraits", PersistentMemoryType.StringList));
               setState(() {
-                widget.add(widget.inputText == '' ? text : widget.inputText,
-                    userInfoProvider);
+                userInfoProvider.updatePositiveTraits(widget.add(
+                    widget.inputText == '' ? text : widget.inputText,
+                    userInfoProvider));
                 myPositiveTraits = myPositiveTraitsValue;
                 myPositiveTraits
                     .add(widget.inputText == '' ? text : widget.inputText);
