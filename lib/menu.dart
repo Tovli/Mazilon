@@ -146,7 +146,7 @@ class _MenuState extends LPExtendedState<Menu> {
       'videoDescription': <String>[],
       'videoLocale': <String>[]
     };
-    print(videos);
+ 
     for (var i = 0; i < videos["videoLocale"]!.length; i++) {
       var video = videos["videoLocale"]![i] ?? "he";
       if (video == Localizations.localeOf(context).languageCode) {
@@ -161,7 +161,7 @@ class _MenuState extends LPExtendedState<Menu> {
         localizedVideos['videoLocal']?.add(videos["videoLocal"]![i]);
       }
     }
-    print(localizedVideos);
+
     return localizedVideos;
   }
 
