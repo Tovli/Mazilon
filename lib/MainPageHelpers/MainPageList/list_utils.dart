@@ -87,7 +87,7 @@ void addPositiveTrait(
     String positiveTrait, UserInformation userInfoProvider, stateFunction) {
   List<String> positiveTraits_temp = userInfoProvider.positiveTraits;
   positiveTraits_temp.add(positiveTrait);
-  stateFunction(positiveTraits_temp);
+  stateFunction(positiveTraits_temp, userInfoProvider);
 
   AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
   mixPanelService.trackEvent(
@@ -98,7 +98,7 @@ void addPositiveTrait(
 void editPositiveTrait(
     String text, int index, UserInformation userInfoProvider, stateFunction) {
   List<String> positiveTraits = userInfoProvider.positiveTraits;
-
+  positiveTraits[index] = text;
   stateFunction(positiveTraits, userInfoProvider);
 }
 
@@ -107,7 +107,11 @@ void editThankYou(
   var thankYous_temp = userinfoProvider.thanks['thanks'] ?? [];
   thankYous_temp[index] = text;
   var thankYouDates = userinfoProvider.thanks['dates'] ?? [];
-  stateFunction(thankYous_temp, userinfoProvider, thankYouDates);
+  stateFunction(
+    thankYous_temp,
+    thankYouDates,
+    userinfoProvider,
+  );
 }
 
 void removeThankYou(
