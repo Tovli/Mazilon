@@ -184,6 +184,20 @@ class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
                 appLocale!.nextButton(gender),
                 myTextStyle.copyWith(
                     fontWeight: FontWeight.bold, fontSize: 20.sp)),
+            Center(
+              child: Container(
+                alignment: Alignment.topCenter,
+                margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                child: myAutoSizedText(
+                    appLocale!.addingContactDisclaimer,
+                    TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12.sp,
+                        height: 1.5),
+                    TextAlign.center,
+                    40),
+              ),
+            ),
           ],
         ),
       ),

@@ -37,6 +37,12 @@ void updateDisclaimers(userInfo) async {
       true); //update the disclaimer signed in the user information provider
 }
 
+String _formatDisclaimerText(AppLocalizations appLocale) {
+  return appLocale.disclaimerText +
+      '\n\n' +
+      appLocale.informationCollectionDisclaimer;
+}
+
 class _DisclaimerPageState extends LPExtendedState<DisclaimerPage> {
   // build the disclaimer page widget
   @override
@@ -61,8 +67,21 @@ class _DisclaimerPageState extends LPExtendedState<DisclaimerPage> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
                     child: myAutoSizedText(
-                        appLocale!
-                            .disclaimerText, //disclaimer text from CMS(Saved in appinfo)
+                        _formatDisclaimerText(appLocale),
+                        TextStyle(
+                          fontSize: 16.sp, //text size
+                          fontWeight: FontWeight.normal,
+                        ),
+                        appLocale.textDirection == 'rtl'
+                            ? TextAlign.right
+                            : TextAlign.left,
+                        40),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                    child: myAutoSizedText(
+                        appLocale
+                            .informationCollectionDisclaimer, //disclaimer text from CMS(Saved in appinfo)
                         TextStyle(
                           fontSize: 16.sp, //text size
                           fontWeight: FontWeight.normal,
