@@ -1566,7 +1566,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get moreVideos => 'More videos';
 
   @override
-
   String get shareRoutineMessage =>
       'Here is my personal plan that is meant to help keep me safe. I’m sending it to you because, in my view, you also have a part in it. I hope this works for you. I would greatly appreciate your agreement to take part in it if needed. Many thanks in advance, and I look forward to your reply.';
 
@@ -1585,14 +1584,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get shareEmergencyMessage =>
       'I’m not doing well and I need help. I would appreciate your support in activating my personal plan. Thank you in advance.';
-=======
+
   String get informationCollectionDisclaimer =>
       'Information Collected:\n\nThe application only collects anonymous and statistical data for the purpose of analysis and service improvement. This data cannot identify any individual user. Among the data collected:\n• General app usage data (e.g., pages viewed, frequency of use).\n• Technical information about the device and system (Device type, OS version).\n• Anonymous location data – collected solely for analyzing trends and usage patterns, without linking to any identifiable user.\n';
 
   @override
   String get addingContactDisclaimer =>
       'We do not save your contacts, it is for your own use.';
-
 
   @override
   String notifyOnscheduledNotification(Object time) {
