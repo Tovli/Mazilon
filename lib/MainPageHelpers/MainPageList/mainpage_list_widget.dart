@@ -64,7 +64,8 @@ class _ListWidgetState extends LPExtendedState<ListWidget> {
     });
   }
 
-  void editThanksState(thankYous_temp, dates_temp, userInfoProvider) {
+  void editThanksState(
+      List<String> thankYous_temp, List<String> dates_temp, userInfoProvider) {
     setState(() {
       userInfoProvider
           .updateThanks({'thanks': thankYous_temp, 'dates': dates_temp});
