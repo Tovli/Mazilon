@@ -56,8 +56,9 @@ void getData(mockAppInformation) {
     'phoneDescription': ['1', '2', '3', '4'],
   });
   mockAppInformation.updateWellnessVideos({
-    "videoId": ["test", "test"],
+    "videoId": ["testtesttes", "testtesttes"],
     "videoHeadline": ["v1", "v2"],
-    "videoDescription": ["v1d", "v2d"]
+    "videoDescription": ["v1d", "v2d"],
+    "videoLocale": ["he", "he"]
   });
 }

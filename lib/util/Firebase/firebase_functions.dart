@@ -670,13 +670,14 @@ Future<void> loadAppFromFirebase(AppInformation appInfo) async {
   Map<String, String> sharePDFtext = await updateSharePDFtexts();
 
   Map<String, String> syncPages = await getSyncPages();
+
   Map<String, List<String>> wellnessVideos = await getWellnessVideos();
+
   List<String> disclaimerPageText = await getDisclaimerPageText();
   Map<String, String> formSkipButtonText =
       await getPersonalPlanSaveButtonText();
   Map<String, String> feelGoodPageTitles = await getFeelGoodPageTitles();
   //or add manually here using await and creating a function fetching a specific database item^
-
   appInfo.updateSyncPages(syncPages);
   appInfo.updateSharePDFtexts(sharePDFtext);
 
@@ -711,6 +712,7 @@ Future<void> loadAppInformation(
           await loadAppInfoFromJson(appInfo, '${directory.path}/data.json');
       if (loaded) return;
     }
+
     await loadAppFromFirebase(appInfo);
     return;
   } catch (error, stackTrace) {
@@ -1358,12 +1360,14 @@ Future<Map<String, List<String>>> getWellnessVideos() async {
     'videoId': [],
     'videoHeadline': [],
     'videoDescription': [],
+    'videoLocale': []
   };
 
   for (var i = 0; i < snapshot.docs.length; i++) {
     data['videoId']?.add(snapshot.docs[i].get('videoId'));
     data['videoHeadline']?.add(snapshot.docs[i].get('videoHeadline'));
     data['videoDescription']?.add(snapshot.docs[i].get('videoDescription'));
+    data['videoLocale']?.add(snapshot.docs[i].get('videoLocal'));
   }
   return data;
 }
