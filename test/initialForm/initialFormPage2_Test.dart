@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mazilon/util/appInformation.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mockito/annotations.dart';
@@ -9,35 +11,63 @@ import 'package:provider/provider.dart';
 import 'package:mazilon/initialForm/initialFormPage2.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-//class MockSharedPreferences extends Mock implements SharedPreferences {}
-import '../MenuTest/FeelGood/FeelGood_test.mocks.dart';
+import 'package:mockito/mockito.dart';
+import 'initialFormPage2_Test.mocks.dart';
 
 @GenerateNiceMocks([
   MockSpec<UserInformation>(),
   MockSpec<AppInformation>(),
   MockSpec<SharedPreferences>(),
+  MockSpec<PersistentMemoryService>(),
 ])
 void main() {
-  // Mock functions
+  TestWidgetsFlutterBinding.ensureInitialized();
+  late MockUserInformation mockUserInformation;
+  late MockAppInformation mockAppInformation;
+  late MockPersistentMemoryService mockPersistentMemoryService;
   bool nextTapped = false;
   void mockNext() {}
   void mockPrev() {}
   void mockUpdateName(String name) {}
-  TestWidgetsFlutterBinding.ensureInitialized();
-  late MockSharedPreferences mockSharedPreferences;
-  late UserInformation mockUserInformation;
-  late AppInformation mockAppInformation;
+  setUp(() async {
+    mockUserInformation = MockUserInformation();
+    mockAppInformation = MockAppInformation();
+    when(mockUserInformation.gender).thenReturn("male");
+    when(mockUserInformation.disclaimerSigned).thenReturn(true);
 
-  setUp(() {
-    mockUserInformation = UserInformation();
-    mockAppInformation = AppInformation();
-    mockUserInformation.gender = "male";
-    mockUserInformation.disclaimerSigned = true;
+    // Setup required AppInformation mocks
+    when(mockAppInformation.disclaimerText).thenReturn("Test Disclaimer");
+    when(mockAppInformation.disclaimerNext).thenReturn("Next");
+    when(mockAppInformation.traitMainTitle).thenReturn({"he": "כותרת ראשית"});
+    when(mockAppInformation.traitSubTitle).thenReturn({"he": "כותרת משנה"});
+    when(mockAppInformation.positiveTraitsPopUpText).thenReturn({"he": "טקסט"});
+    when(mockAppInformation.personalPlanMainTitle)
+        .thenReturn({"he": "תוכנית אישית"});
+    when(mockAppInformation.personalPlanSubTitle)
+        .thenReturn({"he": "כותרת משנה"});
+    when(mockAppInformation.popupBack).thenReturn({"he": "חזור"});
+    when(mockAppInformation.othersuggestions).thenReturn({"he": "הצעות אחרות"});
     SharedPreferences.setMockInitialValues({'hasFilled': false});
+    await GetIt.instance.reset();
+    mockPersistentMemoryService = MockPersistentMemoryService();
 
-    mockSharedPreferences = MockSharedPreferences();
+    // Setup specific mock behavior for hasFilled
+    when(mockPersistentMemoryService.getItem('hasFilled', any))
+        .thenAnswer((_) async => false);
+    when(mockPersistentMemoryService.getItem(any, any))
+        .thenAnswer((_) async => null);
+    when(mockPersistentMemoryService.setItem(any, any, any))
+        .thenAnswer((_) async => null);
+    when(mockPersistentMemoryService.reset()).thenAnswer((_) async => null);
+
+    GetIt.instance.registerSingleton<PersistentMemoryService>(
+        mockPersistentMemoryService);
   });
-  // Create the test widget
+
+  tearDown(() async {
+    await GetIt.instance.reset();
+  });
+
   Widget createTestWidget() {
     void mockNext() {
       nextTapped = true;

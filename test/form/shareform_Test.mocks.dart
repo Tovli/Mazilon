@@ -2103,6 +2103,16 @@ class MockFileService extends _i1.Mock implements _i7.FileService {
         returnValue: _i8.Future<String?>.value(),
         returnValueForMissingStub: _i8.Future<String?>.value(),
       ) as _i8.Future<String?>);
+
+  @override
+  _i8.Future<void> shareTextOnly(String? message) => (super.noSuchMethod(
+        Invocation.method(
+          #shareTextOnly,
+          [message],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
 }
 
 /// A class which mocks [AnalyticsService].
@@ -2131,6 +2141,58 @@ class MockAnalyticsService extends _i1.Mock implements _i10.AnalyticsService {
             eventName,
             properties,
           ],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+}
+
+/// A class which mocks [PersistentMemoryService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockPersistentMemoryService extends _i1.Mock
+    implements _i2.PersistentMemoryService {
+  @override
+  _i8.Future<void> setItem(
+    String? key,
+    _i9.PersistentMemoryType? type,
+    dynamic value,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setItem,
+          [
+            key,
+            type,
+            value,
+          ],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+
+  @override
+  _i8.Future<dynamic> getItem(
+    String? key,
+    _i9.PersistentMemoryType? type,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getItem,
+          [
+            key,
+            type,
+          ],
+        ),
+        returnValue: _i8.Future<dynamic>.value(),
+        returnValueForMissingStub: _i8.Future<dynamic>.value(),
+      ) as _i8.Future<dynamic>);
+
+  @override
+  _i8.Future<void> reset() => (super.noSuchMethod(
+        Invocation.method(
+          #reset,
+          [],
         ),
         returnValue: _i8.Future<void>.value(),
         returnValueForMissingStub: _i8.Future<void>.value(),

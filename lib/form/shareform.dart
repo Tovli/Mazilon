@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get_it/get_it.dart';
+
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/file_service.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
-
 import 'package:mazilon/util/SignIn/popup_toast.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:provider/provider.dart';
@@ -13,9 +13,7 @@ import 'package:mazilon/util/styles.dart';
 
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:mazilon/l10n/app_localizations.dart';
+import 'package:mazilon/util/Share/show_share_dialog.dart';
 
 class ShareForm extends StatefulWidget {
   final Function prev;
@@ -102,26 +100,8 @@ class _ShareFormState extends LPExtendedState<ShareForm> {
                       children: [
                         //share personal plan PDF button:
                         IconButton(
-                          onPressed: () async {
-                            await fileService.share(
-                                "",
-                                [
-                                  appLocale!.difficultEventsHeader(gender),
-                                  appLocale!.makeSaferHeader(gender),
-                                  appLocale!.feelBetterHeader(gender),
-                                  appLocale!.distractionsHeader(gender),
-                                  appLocale!.phonesPageHeader(gender),
-                                ],
-                                [
-                                  appLocale!.difficultEventsSubTitle(gender),
-                                  appLocale!.makeSaferSubTitle(gender),
-                                  appLocale!.feelBetterSubTitle(gender),
-                                  appLocale!.distractionsSubTitle(gender),
-                                  appLocale!.phonesPageHeader(gender),
-                                ],
-                                appInfoProvider.sharePDFtexts,
-                                ShareFileType.PDF,
-                                appLocale.textDirection);
+                          onPressed: () {
+                            showShareDialog(context);
                           },
                           style: TextButton.styleFrom(
                             backgroundColor: Colors
@@ -142,17 +122,17 @@ class _ShareFormState extends LPExtendedState<ShareForm> {
                         IconButton(
                           onPressed: () async {
                             var result = await fileService.download([
-                              appLocale!.difficultEventsHeader(gender),
-                              appLocale!.makeSaferHeader(gender),
-                              appLocale!.feelBetterHeader(gender),
-                              appLocale!.distractionsHeader(gender),
-                              appLocale!.phonesPageHeader(gender),
+                              appLocale.difficultEventsHeader(gender),
+                              appLocale.makeSaferHeader(gender),
+                              appLocale.feelBetterHeader(gender),
+                              appLocale.distractionsHeader(gender),
+                              appLocale.phonesPageHeader(gender),
                             ], [
-                              appLocale!.difficultEventsSubTitle(gender),
-                              appLocale!.makeSaferSubTitle(gender),
-                              appLocale!.feelBetterSubTitle(gender),
-                              appLocale!.distractionsSubTitle(gender),
-                              appLocale!.phonesPageHeader(gender),
+                              appLocale.difficultEventsSubTitle(gender),
+                              appLocale.makeSaferSubTitle(gender),
+                              appLocale.feelBetterSubTitle(gender),
+                              appLocale.distractionsSubTitle(gender),
+                              appLocale.phonesPageHeader(gender),
                             ], appInfoProvider.sharePDFtexts, ShareFileType.PDF,
                                 appLocale.textDirection);
                             if (result == null) {

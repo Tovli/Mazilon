@@ -824,7 +824,7 @@ abstract class AppLocalizations {
   /// **'{gender,select,male{Schedule a notification for the selected time} female{Schedule a notification for the selected time} other{Schedule a notification for the selected time}}'**
   String notificationSetTimeText(String gender);
 
-  /// No description provided for @notificationShowExampleNotification.
+  ///
   ///
   /// In en, this message translates to:
   /// **'{gender,select,male{Show an example notification} female{Show an example notification} other{Show an example notification}}'**
@@ -859,6 +859,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More videos'**
   String get moreVideos;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Here is my personal plan that is meant to help keep me safe. I’m sending it to you because, in my view, you also have a part in it. I hope this works for you. I would greatly appreciate your agreement to take part in it if needed. Many thanks in advance, and I look forward to your reply.'**
+  String get shareRoutineMessage;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Share Options'**
+  String get shareOptions;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Share file'**
+  String get shareFile;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Share routine message'**
+  String get shareRoutine;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Share emergency message'**
+  String get shareEmergency;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'I’m not doing well and I need help. I would appreciate your support in activating my personal plan. Thank you in advance.'**
+  String get shareEmergencyMessage;
 
   ///
   ///

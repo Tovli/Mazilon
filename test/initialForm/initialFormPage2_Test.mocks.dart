@@ -6,6 +6,7 @@
 import 'dart:async' as _i8;
 import 'dart:ui' as _i5;
 
+import 'package:mazilon/global_enums.dart' as _i9;
 import 'package:mazilon/util/appInformation.dart' as _i6;
 import 'package:mazilon/util/persistent_memory_service.dart' as _i2;
 import 'package:mazilon/util/userInformation.dart' as _i3;
@@ -2247,6 +2248,58 @@ class MockSharedPreferences extends _i1.Mock implements _i7.SharedPreferences {
   _i8.Future<void> reload() => (super.noSuchMethod(
         Invocation.method(
           #reload,
+          [],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+}
+
+/// A class which mocks [PersistentMemoryService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockPersistentMemoryService extends _i1.Mock
+    implements _i2.PersistentMemoryService {
+  @override
+  _i8.Future<void> setItem(
+    String? key,
+    _i9.PersistentMemoryType? type,
+    dynamic value,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setItem,
+          [
+            key,
+            type,
+            value,
+          ],
+        ),
+        returnValue: _i8.Future<void>.value(),
+        returnValueForMissingStub: _i8.Future<void>.value(),
+      ) as _i8.Future<void>);
+
+  @override
+  _i8.Future<dynamic> getItem(
+    String? key,
+    _i9.PersistentMemoryType? type,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getItem,
+          [
+            key,
+            type,
+          ],
+        ),
+        returnValue: _i8.Future<dynamic>.value(),
+        returnValueForMissingStub: _i8.Future<dynamic>.value(),
+      ) as _i8.Future<dynamic>);
+
+  @override
+  _i8.Future<void> reset() => (super.noSuchMethod(
+        Invocation.method(
+          #reset,
           [],
         ),
         returnValue: _i8.Future<void>.value(),

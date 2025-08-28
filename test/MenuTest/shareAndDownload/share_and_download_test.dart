@@ -15,6 +15,7 @@ import 'package:mazilon/pages/WellnessTools/VideoPlayerPageFactory.dart';
 import 'package:mazilon/pages/home.dart';
 
 import 'package:mazilon/file_service.dart';
+import 'package:mazilon/util/Share/LP_share_alert_dialog.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 
 import 'package:mazilon/util/userInformation.dart';
@@ -114,6 +115,10 @@ void main() {
 
       expect(counterDownload, 1);
       await tester.tap(find.byIcon(Elusive.share));
+      await tester.pump();
+      expect(find.byType(LPShareAlertDialog), findsWidgets);
+      expect(find.byIcon(Icons.insert_drive_file_outlined), findsWidgets);
+      await tester.tap(find.text("שיתוף קובץ"));
       await tester.pump();
       expect(counterShare, 1);
     });
