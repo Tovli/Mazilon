@@ -824,7 +824,7 @@ abstract class AppLocalizations {
   /// **'{gender,select,male{Schedule a notification for the selected time} female{Schedule a notification for the selected time} other{Schedule a notification for the selected time}}'**
   String notificationSetTimeText(String gender);
 
-  /// No description provided for @notificationShowExampleNotification.
+  ///
   ///
   /// In en, this message translates to:
   /// **'{gender,select,male{Show an example notification} female{Show an example notification} other{Show an example notification}}'**
@@ -863,12 +863,8 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-
   /// **'Here is my personal plan that is meant to help keep me safe. I’m sending it to you because, in my view, you also have a part in it. I hope this works for you. I would greatly appreciate your agreement to take part in it if needed. Many thanks in advance, and I look forward to your reply.'**
   String get shareRoutineMessage;
-
-  /// **'Information Collected:\n\nThe application only collects anonymous and statistical data for the purpose of analysis and service improvement. This data cannot identify any individual user. Among the data collected:\n• General app usage data (e.g., pages viewed, frequency of use).\n• Technical information about the device and system (Device type, OS version).\n• Anonymous location data – collected solely for analyzing trends and usage patterns, without linking to any identifiable user.\n'**
-  String get informationCollectionDisclaimer;
 
   ///
   ///
@@ -900,6 +896,15 @@ abstract class AppLocalizations {
   /// **'I’m not doing well and I need help. I would appreciate your support in activating my personal plan. Thank you in advance.'**
   String get shareEmergencyMessage;
 
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Information Collected:\n\nThe application only collects anonymous and statistical data for the purpose of analysis and service improvement. This data cannot identify any individual user. Among the data collected:\n• General app usage data (e.g., pages viewed, frequency of use).\n• Technical information about the device and system (Device type, OS version).\n• Anonymous location data – collected solely for analyzing trends and usage patterns, without linking to any identifiable user.\n'**
+  String get informationCollectionDisclaimer;
+
+  ///
+  ///
+  /// In en, this message translates to:
   /// **'We do not save your contacts, it is for your own use.'**
   String get addingContactDisclaimer;
 
