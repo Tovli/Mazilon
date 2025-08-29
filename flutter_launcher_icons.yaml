@@ -20,5 +20,5 @@ flutter_launcher_icons:
 
   web:
     generate: true
-    background_color: "#hexcode"
-    theme_color: "#hexcode"
+    background_color: "#0175C2"
+    theme_color: "#0175C2"

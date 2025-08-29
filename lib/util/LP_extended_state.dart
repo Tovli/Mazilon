@@ -10,6 +10,19 @@ abstract class LPExtendedState<T extends StatefulWidget> extends State<T> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Fetch the AppLocalizations for the current BuildContext.
-    appLocale = AppLocalizations.of(context)!;
+    appLocale = LPAppLocalizations.of(context)!;
   }
+}
+
+abstract class LPAppLocalizations extends AppLocalizations {
+  LPAppLocalizations(super.locale);
+
+  // You can override specific getters here if needed, for example:
+  // @override
+  // String get appTitle => 'Mazilon';
+
+  // @override
+  // String get welcomeMessage => 'Welcome to Mazilon!';
+
+  // Add other localized strings as needed or leave as abstract.
 }
