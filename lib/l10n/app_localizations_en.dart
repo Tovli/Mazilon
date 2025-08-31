@@ -1566,6 +1566,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get moreVideos => 'More videos';
 
   @override
+  String get informationCollectionDisclaimer =>
+      'Information Collected:\n\nThe application only collects anonymous and statistical data for the purpose of analysis and service improvement. This data cannot identify any individual user. Among the data collected:\n• General app usage data (e.g., pages viewed, frequency of use).\n• Technical information about the device and system (Device type, OS version).\n• Anonymous location data – collected solely for analyzing trends and usage patterns, without linking to any identifiable user.\n';
+
+  @override
+  String get addingContactDisclaimer =>
+      'We do not save your contacts, it is for your own use.';
+
+  @override
   String notifyOnscheduledNotification(Object time) {
     return 'Notification set for $time';
   }

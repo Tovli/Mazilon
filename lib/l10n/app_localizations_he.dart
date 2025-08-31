@@ -1548,6 +1548,14 @@ class AppLocalizationsHe extends AppLocalizations {
   String get moreVideos => 'סרטונים נוספים';
 
   @override
+  String get informationCollectionDisclaimer =>
+      'מידע שנאסף\n\nהאפליקציה אוספת נתונים אנונימיים בלבד, לצורכי ניתוח סטטיסטי ושיפור השירות. נתונים אלה אינם מאפשרים לזהות משתמש מסוים. בין היתר, אנו עשויים לאסוף:\n•נתוני שימוש כלליים באפליקציה (כגון דפים שנצפו, תדירות שימוש).\n• מידע טכני על סוג המכשיר והמערכת (Device type, OS version).\n• נתוני מיקום אנונימיים – נאספים אך ורק לצורכי ניתוח מגמות ושימושים, ללא שיוך למשתמש מזוהה.';
+
+  @override
+  String get addingContactDisclaimer =>
+      'אנחנו לא שומרים את אנשי הקשר, הם לשימושך האישי.';
+
+  @override
   String notifyOnscheduledNotification(Object time) {
     return 'התראה נקבעה לשעה $time';
   }
