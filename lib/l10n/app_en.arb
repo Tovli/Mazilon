@@ -609,82 +609,170 @@
    "@inspirationalQuotesNo0": { 
    "description": ""
     },
-"inspirationalQuotesNo1":"{gender,select,male{I have strengths} female{I have strengths} other{I have strengths}}",
-   "@inspirationalQuotesNo1": { 
-   "description": ""
-    },
-"inspirationalQuotesNo2":"{gender,select,male{I've already faced challenges in the past} female{I've already faced challenges in the past} other{I've already faced challenges in the past}}",
-   "@inspirationalQuotesNo2": { 
-   "description": ""
-    },
-"inspirationalQuotesNo3":"{gender,select,male{Mood changes like the weather, which is not constant} female{Mood changes like the weather, which is not constant} other{Mood changes like the weather, which is not constant}}",
-   "@inspirationalQuotesNo3": { 
-   "description": ""
-    },
-"inspirationalQuotesNo4":"{gender,select,male{Emotions are fleeting and change} female{Emotions are fleeting and change} other{Emotions are fleeting and change}}",
-   "@inspirationalQuotesNo4": { 
-   "description": ""
-    },
-"inspirationalQuotesNo5":"{gender,select,male{I am able} female{I am able} other{I am able}}",
-   "@inspirationalQuotesNo5": { 
-   "description": ""
-    },
-"inspirationalQuotesNo6":"{gender,select,male{I have strength} female{I have strength} other{I have strength}}",
-   "@inspirationalQuotesNo6": { 
-   "description": ""
-    },
-"inspirationalQuotesNo7":"{gender,select,male{I'm learning to relax} female{I'm learning to relax} other{I'm learning to relax}}",
-   "@inspirationalQuotesNo7": { 
-   "description": ""
-    },
-"inspirationalQuotesNo8":"{gender,select,male{After the declines come the ascents} female{After the declines come the ascents} other{After the declines come the ascents}}",
-   "@inspirationalQuotesNo8": { 
-   "description": ""
-    },
-"inspirationalQuotesNo9":"{gender,select,male{It's okay to cry} female{It's okay to cry} other{It's okay to cry}}",
-   "@inspirationalQuotesNo9": { 
-   "description": ""
-    },
-"inspirationalQuotesNo10":"{gender,select,male{Thanks for the help} female{Thanks for the help} other{Thanks for the help}}",
-   "@inspirationalQuotesNo10": { 
-   "description": ""
-    },
-"inspirationalQuotesNo11":"{gender,select,male{Take a moment to smile} female{Take a moment to smile} other{Take a moment to smile}}",
-   "@inspirationalQuotesNo11": { 
-   "description": ""
-    },
-"inspirationalQuotesNo12":"{gender,select,male{Remember to breathe} female{Remember to breathe} other{Remember to breathe}}",
-   "@inspirationalQuotesNo12": { 
-   "description": ""
-    },
-"inspirationalQuotesNo13":"{gender,select,male{Routine creates stability} female{Routine creates stability} other{Routine creates stability}}",
-   "@inspirationalQuotesNo13": { 
-   "description": ""
-    },
-"inspirationalQuotesNo14":"{gender,select,male{Movement releases tension} female{Movement releases tension} other{Movement releases tension}}",
-   "@inspirationalQuotesNo14": { 
-   "description": ""
-    },
-"inspirationalQuotesNo15":"{gender,select,male{It's okay to ask for help} female{It's okay to ask for help} other{It's okay to ask for help}}",
-   "@inspirationalQuotesNo15": { 
-   "description": ""
-    },
-"inspirationalQuotesNo16":"{gender,select,male{It's okay not to be okay} female{It's okay not to be okay} other{It's okay not to be okay}}",
-   "@inspirationalQuotesNo16": { 
-   "description": ""
-    },
-"inspirationalQuotesNo17":"{gender,select,male{Keep the pace that is right for you} female{Keep the pace that is right for you} other{Keep the pace that is right for you}}",
-   "@inspirationalQuotesNo17": { 
-   "description": ""
-    },
-"inspirationalQuotesNo18":"{gender,select,male{What gives you the strength to continue?} female{What gives you the strength to continue?} other{What gives you the strength to continue?}}",
-   "@inspirationalQuotesNo18": { 
-   "description": ""
-    },
-"inspirationalQuotesNo19":"{gender,select,male{I am capable of overcoming my challenges} female{I am capable of overcoming my challenges} other{I am capable of overcoming my challenges}}",
-   "@inspirationalQuotesNo19": { 
-   "description": ""
-    },
+  "inspirationalQuotesNo0": "{gender,select,male{What will help me now, even small steps are progress} female{What will help me now, even small steps are progress} other{What will help me now, even small steps are progress}}",
+  "@inspirationalQuotesNo0": {
+    "description": ""
+  },
+  "inspirationalQuotesNo1": "{gender,select,male{I have strengths} female{I have strengths} other{I have strengths}}",
+  "@inspirationalQuotesNo1": {
+    "description": ""
+  },
+  "inspirationalQuotesNo2": "{gender,select,male{I've already faced challenges in the past} female{I've already faced challenges in the past} other{I've already faced challenges in the past}}",
+  "@inspirationalQuotesNo2": {
+    "description": ""
+  },
+  "inspirationalQuotesNo3": "{gender,select,male{Mood changes like the weather, which is not constant} female{Mood changes like the weather, which is not constant} other{Mood changes like the weather, which is not constant}}",
+  "@inspirationalQuotesNo3": {
+    "description": ""
+  },
+  "inspirationalQuotesNo4": "{gender,select,male{Emotions are fleeting and change} female{Emotions are fleeting and change} other{Emotions are fleeting and change}}",
+  "@inspirationalQuotesNo4": {
+    "description": ""
+  },
+  "inspirationalQuotesNo5": "{gender,select,male{I am able} female{I am able} other{I am able}}",
+  "@inspirationalQuotesNo5": {
+    "description": ""
+  },
+  "inspirationalQuotesNo6": "{gender,select,male{I have strength} female{I have strength} other{I have strength}}",
+  "@inspirationalQuotesNo6": {
+    "description": ""
+  },
+  "inspirationalQuotesNo7": "{gender,select,male{I'm learning to relax} female{I'm learning to relax} other{I'm learning to relax}}",
+  "@inspirationalQuotesNo7": {
+    "description": ""
+  },
+  "inspirationalQuotesNo8": "{gender,select,male{After the declines come the ascents} female{After the declines come the ascents} other{After the declines come the ascents}}",
+  "@inspirationalQuotesNo8": {
+    "description": ""
+  },
+  "inspirationalQuotesNo9": "{gender,select,male{It's okay to cry} female{It's okay to cry} other{It's okay to cry}}",
+  "@inspirationalQuotesNo9": {
+    "description": ""
+  },
+  "inspirationalQuotesNo10": "{gender,select,male{Thanks for the help} female{Thanks for the help} other{Thanks for the help}}",
+  "@inspirationalQuotesNo10": {
+    "description": ""
+  },
+  "inspirationalQuotesNo11": "{gender,select,male{Take a moment to smile} female{Take a moment to smile} other{Take a moment to smile}}",
+  "@inspirationalQuotesNo11": {
+    "description": ""
+  },
+  "inspirationalQuotesNo12": "{gender,select,male{Remember to breathe} female{Remember to breathe} other{Remember to breathe}}",
+  "@inspirationalQuotesNo12": {
+    "description": ""
+  },
+  "inspirationalQuotesNo13": "{gender,select,male{Routine creates stability} female{Routine creates stability} other{Routine creates stability}}",
+  "@inspirationalQuotesNo13": {
+    "description": ""
+  },
+  "inspirationalQuotesNo14": "{gender,select,male{Movement releases tension} female{Movement releases tension} other{Movement releases tension}}",
+  "@inspirationalQuotesNo14": {
+    "description": ""
+  },
+  "inspirationalQuotesNo15": "{gender,select,male{It's okay to ask for help} female{It's okay to ask for help} other{It's okay to ask for help}}",
+  "@inspirationalQuotesNo15": {
+    "description": ""
+  },
+  "inspirationalQuotesNo16": "{gender,select,male{It's okay not to be okay} female{It's okay not to be okay} other{It's okay not to be okay}}",
+  "@inspirationalQuotesNo16": {
+    "description": ""
+  },
+  "inspirationalQuotesNo17": "{gender,select,male{Keep the pace that is right for you} female{Keep the pace that is right for you} other{Keep the pace that is right for you}}",
+  "@inspirationalQuotesNo17": {
+    "description": ""
+  },
+  "inspirationalQuotesNo18": "{gender,select,male{What gives you the strength to continue?} female{What gives you the strength to continue?} other{What gives you the strength to continue?}}",
+  "@inspirationalQuotesNo18": {
+    "description": ""
+  },
+  "inspirationalQuotesNo19": "{gender,select,male{I am capable of overcoming my challenges} female{I am capable of overcoming my challenges} other{I am capable of overcoming my challenges}}",
+  "@inspirationalQuotesNo19": {
+    "description": ""
+  },
+  "inspirationalQuotesNo20": "{gender,select,male{I am capable of calming down my body and mind} female{I am capable of calming down my body and mind} other{I am capable of calming down my body and mind}}",
+  "@inspirationalQuotesNo20": {
+    "description": ""
+  },
+  "inspirationalQuotesNo21": "{gender,select,male{I have self compassion} female{I have self compassion} other{I have self compassion}}",
+  "@inspirationalQuotesNo21": {
+    "description": ""
+  },
+  "inspirationalQuotesNo22": "{gender,select,male{I am strong and capable} female{I am strong and capable} other{I am strong and capable}}",
+  "@inspirationalQuotesNo22": {
+    "description": ""
+  },
+  "inspirationalQuotesNo23": "{gender,select,male{I'm learning to accept myself} female{I'm learning to accept myself} other{I'm learning to accept myself}}",
+  "@inspirationalQuotesNo23": {
+    "description": ""
+  },
+  "inspirationalQuotesNo24": "{gender,select,male{I accept myself as I am} female{I accept myself as I am} other{I accept myself as I am}}",
+  "@inspirationalQuotesNo24": {
+    "description": ""
+  },
+  "inspirationalQuotesNo25": "{gender,select,male{I'm learning to notice my positive traits} female{I'm learning to notice my positive traits} other{I'm learning to notice my positive traits}}",
+  "@inspirationalQuotesNo25": {
+    "description": ""
+  },
+  "inspirationalQuotesNo26": "{gender,select,male{I recognise my emotions and I allow them to pass} female{I recognise my emotions and I allow them to pass} other{I recognise my emotions and I allow them to pass}}",
+  "@inspirationalQuotesNo26": {
+    "description": ""
+  },
+  "inspirationalQuotesNo27": "{gender,select,male{Emotions can naturally change} female{Emotions can naturally change} other{Emotions can naturally change}}",
+  "@inspirationalQuotesNo27": {
+    "description": ""
+  },
+  "inspirationalQuotesNo28": "{gender,select,male{Positive self talk leads to self esteem} female{Positive self talk leads to self esteem} other{Positive self talk leads to self esteem}}",
+  "@inspirationalQuotesNo28": {
+    "description": ""
+  },
+  "inspirationalQuotesNo29": "{gender,select,male{Daily practice leads to improvement} female{Daily practice leads to improvement} other{Daily practice leads to improvement}}",
+  "@inspirationalQuotesNo29": {
+    "description": ""
+  },
+  "inspirationalQuotesNo30": "{gender,select,male{You are not alone!} female{You are not alone!} other{You are not alone!}}",
+  "@inspirationalQuotesNo30": {
+    "description": ""
+  },
+  "inspirationalQuotesNo31": "{gender,select,male{Daily practice improves my mood, continuing is worth it} female{Daily practice improves my mood, continuing is worth it} other{Daily practice improves my mood, continuing is worth it}}",
+  "@inspirationalQuotesNo31": {
+    "description": ""
+  },
+  "inspirationalQuotesNo32": "{gender,select,male{I am valuable} female{I am valuable} other{I am valuable}}",
+  "@inspirationalQuotesNo32": {
+    "description": ""
+  },
+  "inspirationalQuotesNo33": "{gender,select,male{I believe in my capabilities} female{I believe in my capabilities} other{I believe in my capabilities}}",
+  "@inspirationalQuotesNo33": {
+    "description": ""
+  },
+  "inspirationalQuotesNo34": "{gender,select,male{I am worth it} female{I am worth it} other{I am worth it}}",
+  "@inspirationalQuotesNo34": {
+    "description": ""
+  },
+  "inspirationalQuotesNo35": "{gender,select,male{I'm working on feeling better} female{I'm working on feeling better} other{I'm working on feeling better}}",
+  "@inspirationalQuotesNo35": {
+    "description": ""
+  },
+  "inspirationalQuotesNo36": "{gender,select,male{Life is worth it} female{Life is worth it} other{Life is worth it}}",
+  "@inspirationalQuotesNo36": {
+    "description": ""
+  },
+  "inspirationalQuotesNo37": "{gender,select,male{studies show that our thoughts influence our emotions} female{studies show that our thoughts influence our emotions} other{studies show that our thoughts influence our emotions}}",
+  "@inspirationalQuotesNo37": {
+    "description": ""
+  },
+  "inspirationalQuotesNo38": "{gender,select,male{I deserve to be happy} female{I deserve to be happy} other{I deserve to be happy}}",
+  "@inspirationalQuotesNo38": {
+    "description": ""
+  },
+  "inspirationalQuotesNo39": "{gender,select,male{I can do it and I will succeed} female{I can do it and I will succeed} other{I can do it and I will succeed}}",
+  "@inspirationalQuotesNo39": {
+    "description": ""
+  },
+  "inspirationalQuotesNo40": "{gender,select,male{You are great just the way you are} female{You are great just the way you are} other{You are great just the way you are}}",
+  "@inspirationalQuotesNo40": {
+    "description": ""
+  },
 "thanksListNo0":"{gender,select,male{Thanks for having easier moments} female{Thanks for having easier moments} other{Thanks for having easier moments}}",
    "@thanksListNo0": { 
    "description": ""
