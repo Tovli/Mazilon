@@ -2,20 +2,20 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Mezilon</string>
+	<string>Living Positively</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<key>NSContactsUsageDescription</key>
-	<string>This app requires contacts access to function properly.</string>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>mezilon</string>
+	<string>Living Positively</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -25,6 +25,8 @@
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -43,9 +45,28 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>tel</string>
+		<string>whatsapp</string>
+		<string>https</string>
+		<string>mailto</string>
+		<string>sms</string>
+	</array>
+	<!-- Contacts -->
+	<key>NSContactsUsageDescription</key>
+	<string>We use your contacts only to enable you to put your desired contact as an SOS call. No data is uploaded without your consent.</string>
+
+	<!-- Photos: read/browse user's library -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library so you can select images to upload to the app so you'll have images that improve your mood when you are down.</string>
+	<key>NSCameraUsageDescription</key>
+    <string>This app needs the camera to take photos.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs the microphone to record audio.</string>
+	<!-- Photos: save to library (add if you ever write/export images/videos) -->
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We need permission to save images you create to your photo library.</string>
+
 </dict>
 </plist>

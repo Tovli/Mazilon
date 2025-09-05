@@ -1,32 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mazilon/util/styles.dart';
 import 'package:url_launcher/url_launcher.dart';
+// import your own styles/widgets
+import 'package:mazilon/util/styles.dart';
 
-Widget phoneContact(phone, contact) {
+/// Row with a phone icon and the contact name.
+Widget phoneContact(String phone, String contact) {
   return Row(
     children: <Widget>[
-      InkWell(
-        onTap: () async {
-          await dialPhone(phone);
-        },
-        child: CircleAvatar(
-          radius: 20, // adjust as needed
-          backgroundColor: primaryPurple,
-          foregroundColor: appWhite,
-          child: const Icon(Icons.phone, size: 20), // adjust as needed
+      Semantics(
+        button: true,
+        label: 'Call $contact',
+        child: Tooltip(
+          message: 'Call',
+          child: InkWell(
+            borderRadius: BorderRadius.circular(24),
+            onTap: () => dialPhone(phone),
+            child: CircleAvatar(
+              radius: 20, // ≥ 48px diameter tap target
+              backgroundColor: primaryPurple,
+              foregroundColor: appWhite,
+              child: const Icon(Icons.phone, size: 20),
+            ),
+          ),
         ),
       ),
-      const SizedBox(width: 10.0), // adjust as needed
+      const SizedBox(width: 10),
       Expanded(
         child: Card(
+          elevation: 0.5,
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: myAutoSizedText(
-                contact,
-                TextStyle(fontWeight: FontWeight.normal, fontSize: 20.sp),
-                null,
-                30), // present the contacts from myContacts list
+              contact,
+              TextStyle(fontWeight: FontWeight.normal, fontSize: 20.sp),
+              null,
+              30,
+            ),
           ),
         ),
       ),
@@ -35,58 +45,87 @@ Widget phoneContact(phone, contact) {
 }
 
 Future<void> dialPhone(String number) async {
-  String url = 'tel:$number';
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
+  final sanitized = number.trim();
+  final uri = Uri(scheme: 'tel', path: sanitized);
+  debugPrint('Dialing $uri');
+
+  if (await canLaunchUrl(uri)) {
+    final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!ok) debugPrint('Could not launch $uri');
   } else {
-    throw 'Could not launch $url';
+    debugPrint('Cannot handle $uri');
+    throw 'Could not launch $uri';
   }
 }
 
 Future<void> openWhatsApp(String number) async {
-  String url = 'https://wa.me/$number';
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
+  // WhatsApp expects E.164 without '+', spaces or dashes, e.g. 15551234567
+  final e164NoPlus = number.replaceAll(RegExp(r'[^\d]'), ''); // keep digits only
+  if (e164NoPlus.isEmpty) {
+    debugPrint('Invalid WhatsApp number: "$number"');
+    return;
+  }
+
+  final uri = Uri.parse('https://wa.me/$e164NoPlus');
+  if (await canLaunchUrl(uri)) {
+    final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!ok) debugPrint('Could not launch $uri');
   } else {
-    debugPrint('Could not launch $url');
+    debugPrint('Cannot handle $uri');
   }
 }
 
 Future<void> openSite(String url) async {
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
-  } else {
-    debugPrint('Could not launch $url');
+  final uri = Uri.tryParse(url);
+  if (uri == null || !uri.hasScheme) {
+    debugPrint('Invalid URL: $url');
+    return;
   }
+
+  // Choose one:
+  // - External browser:
+  final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
+  // - Or in-app web view (uncomment instead):
+  // final ok = await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
+
+  if (!ok) debugPrint('Could not launch $uri');
 }
 
+/// Text + circular icon button (typed callback).
 Widget getTextIconWidget(
   String text,
-  Function onClick,
+  VoidCallback onClick,
   IconData icon,
 ) {
-  return SizedBox(
-      child: Row(
+  return Row(
+    mainAxisSize: MainAxisSize.min,
     children: [
       myText(
-          text,
-          TextStyle(
-              fontWeight: FontWeight.normal, fontSize: 18.sp > 35 ? 35 : 20.sp),
-          null),
-      SizedBox(width: 5.0),
-      // Button to make a phone call
-      GestureDetector(
-        child: CircleAvatar(
-          radius: 20, // adjust as needed
-          backgroundColor: primaryPurple,
-          foregroundColor: Colors.white,
-          child: Icon(icon, size: 20), // adjust as needed
+        text,
+        TextStyle(
+          fontWeight: FontWeight.normal,
+          fontSize: (18.sp > 35 ? 35 : 20.sp),
         ),
-        onTap: () async {
-          onClick();
-        },
+        null,
       ),
-      SizedBox(width: 10.0),
+      const SizedBox(width: 5.0),
+      Semantics(
+        button: true,
+        label: text,
+        child: Tooltip(
+          message: text,
+          child: GestureDetector(
+            onTap: onClick,
+            child: CircleAvatar(
+              radius: 20,
+              backgroundColor: primaryPurple,
+              foregroundColor: Colors.white,
+              child: Icon(icon, size: 20),
+            ),
+          ),
+        ),
+      ),
+      const SizedBox(width: 10),
     ],
-  ));
+  );
 }
