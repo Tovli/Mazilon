@@ -45,6 +45,14 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>tel</string>
+		<string>whatsapp</string>
+		<string>https</string>
+		<string>mailto</string>
+		<string>sms</string>
+	</array>
 	<!-- Contacts -->
 	<key>NSContactsUsageDescription</key>
 	<string>We use your contacts only to enable you to put your desired contact as an SOS call. No data is uploaded without your consent.</string>
