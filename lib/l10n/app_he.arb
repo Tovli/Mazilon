@@ -115,7 +115,7 @@
      "saveAndQuitButton": "{gender,select,male{לשמור ולצאת} female{לשמור ולצאת} other{לשמור ולצאת}}",
      "introductionFormLastPageNext": "{gender,select,male{למילוי השאלון} female{למילוי השאלון} other{למילוי השאלון}}",
      "menu": "{gender,select,male{תפריט} female{תפריט} other{תפריט}}",
-     "notifications": "{gender,select,male{התראות} female{התראות} other{התראות}}",
+     "notifications": "{gender,select,male{תזכורות} female{תזכורות} other{תזכורות}}",
      "home": "{gender,select,male{בית} female{בית} other{בית}}",
      "todoListName": "{gender,select,male{תודו ליסט} female{תודו ליסט} other{תודו ליסט}}",
 "confirmButton": "{gender,select,male{אישור} female{אישור} other{אישור}}",
@@ -149,7 +149,7 @@
      "notificationSetTimeText": "{gender,select,male{קבע תזכורת לזמן שנבחר} female{קבעי תזכורת לזמן שנבחר} other{לקביעת תזכורת לזמן שנבחר}}",
      "notificationShowExampleNotification": "{gender,select,male{הצג תזכורת לדוגמא} female{הצגי תזכורת לדוגמא} other{להצגת תזכורת לדוגמא}}",
 
-          "notifyOnscheduledNotification": "התראה נקבעה לשעה {time}",
+          "notifyOnscheduledNotification": "תזכורת נקבעה לשעה {time}",
       
       
 

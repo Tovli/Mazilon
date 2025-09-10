@@ -1250,9 +1250,9 @@ class AppLocalizationsHe extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'התראות',
-        'female': 'התראות',
-        'other': 'התראות',
+        'male': 'תזכורות',
+        'female': 'תזכורות',
+        'other': 'תזכורות',
       },
     );
     return '$_temp0';
@@ -1557,7 +1557,7 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String notifyOnscheduledNotification(Object time) {
-    return 'התראה נקבעה לשעה $time';
+    return 'תזכורת נקבעה לשעה $time';
   }
 
   @override
