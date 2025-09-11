@@ -33,7 +33,8 @@ class _WellnessToolsState extends LPExtendedState<WellnessTools> {
       GetIt.instance<VideoPlayerPageFactory>();
 
   String getThumbnailUrl(String videoId) {
-    return 'https://img.youtube.com/vi/$videoId/0.jpg';
+    var trimmedVideoId = videoId.substring(0, 11);
+    return 'https://img.youtube.com/vi/$trimmedVideoId/0.jpg';
   }
 
   void setIsFullScreen(bool isFullScreen) {
@@ -62,6 +63,14 @@ class _WellnessToolsState extends LPExtendedState<WellnessTools> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.videoData['videoId']!.isEmpty) {
+      return Center(
+        child: Text(
+          "No videos available for your locale, sorry.",
+          style: TextStyle(fontSize: 18.sp),
+        ),
+      );
+    }
     return VideoPlayerInheritedWidget(
         videoId: selectedVideoId,
         changeVideo: changeVideo,
