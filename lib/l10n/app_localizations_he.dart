@@ -1548,6 +1548,26 @@ class AppLocalizationsHe extends AppLocalizations {
   String get moreVideos => 'סרטונים נוספים';
 
   @override
+  String get shareRoutineMessage =>
+      'הנה התוכנית האישית שלי שנועדה לעזור לשמור עלי. שלחתי לך זאת כי מבחינתי גם לך יש חלק בה. מקווה שזה מתאים לך .אעריך מאוד את הסכמתך לקחת בה חלק בעת הצורך. בהרבה תודה מראש ומצפה לתשובתך.';
+
+  @override
+  String get shareOptions => 'אפשרויות שיתוף';
+
+  @override
+  String get shareFile => 'שיתוף קובץ';
+
+  @override
+  String get shareRoutine => 'שיתוף הודעה בשגרה';
+
+  @override
+  String get shareEmergency => 'שיתוף הודעה בחירום';
+
+  @override
+  String get shareEmergencyMessage =>
+      'אני במצב לא טוב ויש לי צורך בעזרה.אשמח לעזרתך בהפעלת התוכנית האישית שלי. בתודה מראש.';
+
+  @override
   String get informationCollectionDisclaimer =>
       'מידע שנאסף\n\nהאפליקציה אוספת נתונים אנונימיים בלבד, לצורכי ניתוח סטטיסטי ושיפור השירות. נתונים אלה אינם מאפשרים לזהות משתמש מסוים. בין היתר, אנו עשויים לאסוף:\n•נתוני שימוש כלליים באפליקציה (כגון דפים שנצפו, תדירות שימוש).\n• מידע טכני על סוג המכשיר והמערכת (Device type, OS version).\n• נתוני מיקום אנונימיים – נאספים אך ורק לצורכי ניתוח מגמות ושימושים, ללא שיוך למשתמש מזוהה.';
 

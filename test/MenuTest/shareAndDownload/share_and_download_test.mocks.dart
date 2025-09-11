@@ -123,6 +123,16 @@ class MockFileService extends _i1.Mock implements _i6.FileService {
         returnValue: _i7.Future<String?>.value(),
         returnValueForMissingStub: _i7.Future<String?>.value(),
       ) as _i7.Future<String?>);
+
+  @override
+  _i7.Future<void> shareTextOnly(String? message) => (super.noSuchMethod(
+        Invocation.method(
+          #shareTextOnly,
+          [message],
+        ),
+        returnValue: _i7.Future<void>.value(),
+        returnValueForMissingStub: _i7.Future<void>.value(),
+      ) as _i7.Future<void>);
 }
 
 /// A class which mocks [UserInformation].

@@ -28,6 +28,7 @@ abstract class FileService {
       Map<String, String> texts,
       ShareFileType saveFormat,
       String textDirection);
+  Future<void> shareTextOnly(String message);
 }
 
 class FileServiceImpl implements FileService {
@@ -265,5 +266,21 @@ class FileServiceImpl implements FileService {
       return await saveWeb(data);
     }
     return null;
+  }
+
+  @override
+  Future<void> shareTextOnly(String message) async {
+    try {
+      await Share.share(message);
+      AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+      mixPanelService.trackEvent("Text shared");
+    } catch (error, stackTrace) {
+      IncidentLoggerService loggerService =
+          GetIt.instance<IncidentLoggerService>();
+      await loggerService.captureLog(
+        error,
+        stackTrace: stackTrace,
+      );
+    }
   }
 }
