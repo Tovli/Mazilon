@@ -16,11 +16,13 @@ class EmergencyDialogBox extends StatelessWidget {
       link; // Index used to retrieve appropriate text from AppInformation
   final bool hasWhatsApp;
   final bool hasLink;
+  final bool canCall;
   const EmergencyDialogBox(
       {super.key,
       required this.number,
       required this.link,
       required this.hasWhatsApp,
+      required this.canCall,
       required this.hasLink});
 
   @override
@@ -44,13 +46,14 @@ class EmergencyDialogBox extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                getTextIconWidget(
-                  appLocale!.dialButton(gender),
-                  () async {
-                    await dialPhone(number);
-                  },
-                  Icons.phone,
-                ),
+                if (canCall)
+                  getTextIconWidget(
+                    appLocale!.dialButton(gender),
+                    () async {
+                      await dialPhone(number);
+                    },
+                    Icons.phone,
+                  ),
                 if (hasWhatsApp)
                   getTextIconWidget(appLocale!.whatsApp, () async {
                     await openWhatsApp(number);
