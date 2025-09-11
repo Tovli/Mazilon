@@ -1859,6 +1859,279 @@ class AppLocalizationsHe extends AppLocalizations {
   }
 
   @override
+  String inspirationalQuotesNo20(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'אני יכול להרגיע את הגוף והנפש שלי',
+        'female': 'אני יכולה להרגיע את הגוף והנפש שלי',
+        'other': 'אני יכול/ה להרגיע את הגוף והנפש שלי',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo21(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'יש לי חמלה עצמית',
+        'female': 'יש לי חמלה עצמית',
+        'other': 'יש לי חמלה עצמית',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo22(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'אני חזק ומסוגל',
+        'female': 'אני חזקה ומסוגלת',
+        'other': 'אני חזק/ה ומסוגל/ת',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo23(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'אני לומד לקבל את עצמי',
+        'female': 'אני לומדת לקבל את עצמי',
+        'other': 'אני לומד/ת לקבל את עצמי',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo24(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'אני מקבל את עצמי כמו שאני',
+        'female': 'אני מקבלת את עצמי כמו שאני',
+        'other': 'אני מקבל/ת את עצמי כמו שאני',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo25(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'אני לומד להבחין באיכויות שלי',
+        'female': 'אני לומדת להבחין באיכויות שלי',
+        'other': 'אני לומד/ת להבחין באיכויות שלי',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo26(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'אני מכיר ברגשותיי ונותן להם לחלוף',
+        'female': 'אני מכירה ברגשותיי ונותנת להם לחלוף',
+        'other': 'אני מכיר/ה ברגשותיי ונותן/ת להם לחלוף',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo27(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'רגשות משתנים באופן טבעי',
+        'female': 'רגשות משתנים באופן טבעי',
+        'other': 'רגשות משתנים באופן טבעי',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo28(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'דיבור עצמי חיובי מוביל לביטחון עצמי',
+        'female': 'דיבור עצמי חיובי מוביל לביטחון עצמי',
+        'other': 'דיבור עצמי חיובי מוביל לביטחון עצמי',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo29(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'תרגול יום יומי מביא לשיפור',
+        'female': 'תרגול יום יומי מביא לשיפור',
+        'other': 'תרגול יום יומי מביא לשיפור',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo30(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'אתה לא לבד',
+        'female': 'את לא לבד',
+        'other': 'את/ה לא לבד',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo31(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'אימון יום יומי משפר את מצב הרוח, שווה להמשיך!',
+        'female': 'אימון יום יומי משפר את מצב הרוח, שווה להמשיך!',
+        'other': 'אימון יום יומי משפר את מצב הרוח, שווה להמשיך!',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo32(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'אני בעל ערך',
+        'female': 'אני בעלת ערך',
+        'other': 'אני בעל/ת ערך',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo33(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'אני מאמין ביכולות שלי',
+        'female': 'אני מאמינה ביכולות שלי',
+        'other': 'אני מאמין/ה ביכולות שלי',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo34(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'אני שווה',
+        'female': 'אני שווה',
+        'other': 'אני שווה',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo35(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'אני עובד על להרגיש טוב יותר',
+        'female': 'אני עובדת על להרגיש טוב יותר',
+        'other': 'אני עובד/ת על להרגיש טוב יותר',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo36(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'החיים שווים את זה',
+        'female': 'החיים שווים את זה',
+        'other': 'החיים שווים את זה',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo37(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'מחקרים מראים שהמחשבות משפיעות על הרגשות',
+        'female': 'מחקרים מראים שהמחשבות משפיעות על הרגשות',
+        'other': 'מחקרים מראים שהמחשבות משפיעות על הרגשות',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo38(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'מגיע לי לשמוח',
+        'female': 'מגיע לי לשמוח',
+        'other': 'מגיע לי לשמוח',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo39(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'אני יכול ואני אצליח',
+        'female': 'אני יכולה ואני אצליח',
+        'other': 'אני יכול/ה ואני אצליח',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inspirationalQuotesNo40(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'אתה נהדר פשוט כמו שאתה',
+        'female': 'את נהדרת פשוט כמו שאת',
+        'other': 'אתה/את נהדר/ה פשוט כמו שאתה/את',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
   String thanksListNo0(String gender) {
     String _temp0 = intl.Intl.selectLogic(
       gender,

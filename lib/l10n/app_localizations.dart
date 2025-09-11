@@ -1049,6 +1049,132 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
+  /// **'{gender,select,male{I am capable of calming down my body and mind} female{I am capable of calming down my body and mind} other{I am capable of calming down my body and mind}}'**
+  String inspirationalQuotesNo20(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{I have self compassion} female{I have self compassion} other{I have self compassion}}'**
+  String inspirationalQuotesNo21(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{I am strong and capable} female{I am strong and capable} other{I am strong and capable}}'**
+  String inspirationalQuotesNo22(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{I\'m learning to accept myself} female{I\'m learning to accept myself} other{I\'m learning to accept myself}}'**
+  String inspirationalQuotesNo23(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{I accept myself as I am} female{I accept myself as I am} other{I accept myself as I am}}'**
+  String inspirationalQuotesNo24(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{I\'m learning to notice my positive traits} female{I\'m learning to notice my positive traits} other{I\'m learning to notice my positive traits}}'**
+  String inspirationalQuotesNo25(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{I recognise my emotions and I allow them to pass} female{I recognise my emotions and I allow them to pass} other{I recognise my emotions and I allow them to pass}}'**
+  String inspirationalQuotesNo26(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{Emotions can naturally change} female{Emotions can naturally change} other{Emotions can naturally change}}'**
+  String inspirationalQuotesNo27(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{Positive self talk leads to self esteem} female{Positive self talk leads to self esteem} other{Positive self talk leads to self esteem}}'**
+  String inspirationalQuotesNo28(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{Daily practice leads to improvement} female{Daily practice leads to improvement} other{Daily practice leads to improvement}}'**
+  String inspirationalQuotesNo29(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{You are not alone!} female{You are not alone!} other{You are not alone!}}'**
+  String inspirationalQuotesNo30(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{Daily practice improves my mood, continuing is worth it} female{Daily practice improves my mood, continuing is worth it} other{Daily practice improves my mood, continuing is worth it}}'**
+  String inspirationalQuotesNo31(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{I am valuable} female{I am valuable} other{I am valuable}}'**
+  String inspirationalQuotesNo32(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{I believe in my capabilities} female{I believe in my capabilities} other{I believe in my capabilities}}'**
+  String inspirationalQuotesNo33(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{I am worth it} female{I am worth it} other{I am worth it}}'**
+  String inspirationalQuotesNo34(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{I\'m working on feeling better} female{I\'m working on feeling better} other{I\'m working on feeling better}}'**
+  String inspirationalQuotesNo35(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{Life is worth it} female{Life is worth it} other{Life is worth it}}'**
+  String inspirationalQuotesNo36(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{studies show that our thoughts influence our emotions} female{studies show that our thoughts influence our emotions} other{studies show that our thoughts influence our emotions}}'**
+  String inspirationalQuotesNo37(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{I deserve to be happy} female{I deserve to be happy} other{I deserve to be happy}}'**
+  String inspirationalQuotesNo38(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{I can do it and I will succeed} female{I can do it and I will succeed} other{I can do it and I will succeed}}'**
+  String inspirationalQuotesNo39(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{You are great just the way you are} female{You are great just the way you are} other{You are great just the way you are}}'**
+  String inspirationalQuotesNo40(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
   /// **'{gender,select,male{Thanks for having easier moments} female{Thanks for having easier moments} other{Thanks for having easier moments}}'**
   String thanksListNo0(String gender);
 
