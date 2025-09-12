@@ -138,6 +138,33 @@ class _MenuState extends LPExtendedState<Menu> {
     version = packageInfo.version;
   }
 
+  Map<String, List<String>> _filterVideoByLocal(
+      Map<String, List<String>> videos) {
+    var localizedVideos = {
+      'videoId': <String>[],
+      'videoHeadline': <String>[],
+      'videoDescription': <String>[],
+      'videoLocale': <String>[]
+    };
+ 
+    for (var i = 0; i < videos["videoLocale"]!.length; i++) {
+      var video = videos["videoLocale"]![i] ?? "he";
+      if (video == Localizations.localeOf(context).languageCode) {
+        /*    'videoId': [],
+    'videoHeadline': [],
+    'videoDescription': [],
+    'videoLocal': []*/
+        localizedVideos['videoId']?.add(videos["videoId"]![i]);
+        localizedVideos['videoHeadline']?.add(videos["videoHeadline"]![i]);
+        localizedVideos['videoDescription']
+            ?.add(videos["videoDescription"]![i]);
+        localizedVideos['videoLocal']?.add(videos["videoLocal"]![i]);
+      }
+    }
+
+    return localizedVideos;
+  }
+
   @override
   void initState() {
     loadFirstTime();
@@ -420,8 +447,9 @@ class _MenuState extends LPExtendedState<Menu> {
                                                           isFullScreen:
                                                               isFullScreen,
                                                           videoData:
-                                                              appInfoProvider
-                                                                  .wellnessVideos,
+                                                              _filterVideoByLocal(
+                                                                  appInfoProvider
+                                                                      .wellnessVideos),
                                                           setBool:
                                                               setFullScreen);
                                                       current = PagesCode
