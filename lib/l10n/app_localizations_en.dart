@@ -1268,9 +1268,9 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'Notifications',
-        'female': 'Notifications',
-        'other': 'Notifications',
+        'male': 'Reminders',
+        'female': 'Reminders',
+        'other': 'Reminders',
       },
     );
     return '$_temp0';
@@ -1499,9 +1499,9 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'Schedule a notification for the selected time',
-        'female': 'Schedule a notification for the selected time',
-        'other': 'Schedule a notification for the selected time',
+        'male': 'Schedule a reminder for the selected time',
+        'female': 'Schedule a reminder for the selected time',
+        'other': 'Schedule a reminder for the selected time',
       },
     );
     return '$_temp0';
@@ -1512,9 +1512,9 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'Show an example notification',
-        'female': 'Show an example notification',
-        'other': 'Show an example notification',
+        'male': 'Show an example reminder',
+        'female': 'Show an example reminder',
+        'other': 'Show an example reminder',
       },
     );
     return '$_temp0';
@@ -1595,7 +1595,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String notifyOnscheduledNotification(Object time) {
-    return 'Notification set for $time';
+    return 'Reminder set for $time';
   }
 
   @override

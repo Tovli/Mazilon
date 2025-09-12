@@ -33,7 +33,7 @@ dependencies:
 
   encrypt: ^5.0.3
   shared_preferences: ^2.5.3
-  url_launcher: ^6.3.1
+  url_launcher: 6.3.1
 
   permission_handler: ^11.4.0
   flutter_local_notifications: ^17.2.4

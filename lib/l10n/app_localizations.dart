@@ -671,7 +671,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{Notifications} female{Notifications} other{Notifications}}'**
+  /// **'{gender,select,male{Reminders} female{Reminders} other{Reminders}}'**
   String notifications(String gender);
 
   ///
@@ -821,13 +821,13 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{Schedule a notification for the selected time} female{Schedule a notification for the selected time} other{Schedule a notification for the selected time}}'**
+  /// **'{gender,select,male{Schedule a reminder for the selected time} female{Schedule a reminder for the selected time} other{Schedule a reminder for the selected time}}'**
   String notificationSetTimeText(String gender);
 
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{Show an example notification} female{Show an example notification} other{Show an example notification}}'**
+  /// **'{gender,select,male{Show an example reminder} female{Show an example reminder} other{Show an example reminder}}'**
   String notificationShowExampleNotification(String gender);
 
   ///
@@ -911,7 +911,7 @@ abstract class AppLocalizations {
   /// message
   ///
   /// In en, this message translates to:
-  /// **'Notification set for {time}'**
+  /// **'Reminder set for {time}'**
   String notifyOnscheduledNotification(Object time);
 
   ///
