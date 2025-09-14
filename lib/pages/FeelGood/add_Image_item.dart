@@ -74,7 +74,7 @@ class _ImageAddItemState extends LPExtendedState<ImageAddItem> {
             ),
             key: Key('addImgButtonText'),
             child: Text(
-              appLocale!.addImageButton(gender),
+              appLocale.addImageButton(gender),
               style: const TextStyle(
                   fontSize: 24.0), // adjust the font size as needed
             ),
