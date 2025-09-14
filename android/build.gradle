@@ -21,12 +21,19 @@ allprojects {
         mavenCentral()
         // [required] background_fetch
         maven { url "${project(':background_fetch').projectDir}/libs" }
-{ 
-     compileSdkVersion 35
-    if (namespace == null) {
-        namespace project.group
-    } }}}
+    }
+}
 
+subprojects { 
+    afterEvaluate { 
+        android { 
+            compileSdkVersion 35
+            if (namespace == null) {
+                namespace project.group
+            }
+        }
+    }
+}
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
