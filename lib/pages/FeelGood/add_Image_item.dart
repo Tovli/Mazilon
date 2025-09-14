@@ -69,7 +69,7 @@ class _ImageAddItemState extends LPExtendedState<ImageAddItem> {
       child: Center(
         child: SizedBox.expand(
           child: TextButton(
-            style:TextButton.styleFrom(
+            style: TextButton.styleFrom(
               padding: EdgeInsets.zero,
             ),
             key: Key('addImgButtonText'),
