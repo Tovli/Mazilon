@@ -11,7 +11,7 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.android.tools.build:gradle:8.1.0'
+        classpath 'com.android.tools.build:gradle:8.6.0'
     }
 }
 
@@ -21,10 +21,7 @@ allprojects {
         mavenCentral()
         // [required] background_fetch
         maven { url "${project(':background_fetch').projectDir}/libs" }
-    }
-}
-
-subprojects { afterEvaluate { android { 
+{ 
      compileSdkVersion 35
     if (namespace == null) {
         namespace project.group
