@@ -67,16 +67,21 @@ class _ImageAddItemState extends LPExtendedState<ImageAddItem> {
       color: Colors.grey,
       strokeWidth: 2,
       child: Center(
-        child: TextButton(
-          key: Key('addImgButtonText'),
-          child: Text(
-            appLocale!.addImageButton(gender),
-            style: const TextStyle(
-                fontSize: 24.0), // adjust the font size as needed
+        child: SizedBox.expand(
+          child: TextButton(
+            style:TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+            ),
+            key: Key('addImgButtonText'),
+            child: Text(
+              appLocale!.addImageButton(gender),
+              style: const TextStyle(
+                  fontSize: 24.0), // adjust the font size as needed
+            ),
+            onPressed: () {
+              _showAddImageDialog(appLocale, gender, pickImage);
+            },
           ),
-          onPressed: () {
-            _showAddImageDialog(appLocale, gender, pickImage);
-          },
         ),
       ),
     );
