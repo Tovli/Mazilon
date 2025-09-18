@@ -101,6 +101,20 @@ class About extends StatelessWidget {
                         : TextAlign.left,
                     35),
               ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                child: myAutoSizedText(
+                    appLocale
+                        .informationCollectionDisclaimer, //disclaimer text from CMS(Saved in appinfo)
+                    TextStyle(
+                      fontSize: 20, //text size
+                      fontWeight: FontWeight.normal,
+                    ),
+                    appLocale.textDirection == 'rtl'
+                        ? TextAlign.right
+                        : TextAlign.left,
+                    40),
+              ),
               Container(
                   margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   child: Align(
