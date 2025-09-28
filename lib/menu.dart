@@ -214,11 +214,7 @@ class _MenuState extends LPExtendedState<Menu> {
     final userInformation = Provider.of<UserInformation>(context);
     final appInfoProvider = Provider.of<AppInformation>(context);
     final gender = userInformation.gender;
-<<<<<<< Updated upstream
     final age = userInformation.age;
-=======
-    final age = userInformation.gender;
->>>>>>> Stashed changes
     testingChange();
 
     return PopScope(
