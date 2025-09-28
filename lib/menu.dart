@@ -12,6 +12,8 @@ import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:flutter/services.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
+import 'package:mazilon/pages/UserSettings.dart';
+
 
 import 'package:mazilon/pages/home.dart';
 import 'package:mazilon/pages/journal.dart';
@@ -71,6 +73,19 @@ class _MenuState extends LPExtendedState<Menu> {
         PersistentMemoryService>(); // Get the persistent memory service instance
 
     await service.setItem("enteredBefore", PersistentMemoryType.Bool, true);
+  }
+
+//function to update the user information(name,age,gender) in shared preferences
+  void updateUserData(newName, newGender, newAge, isNonBinary) async {
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    await service.setItem(
+        "disclaimerConfirmed", PersistentMemoryType.Bool, true);
+
+    if (newGender != '') {
+      await service.setItem('gender', PersistentMemoryType.String, newGender);
+    }
   }
 
   void testingChange() async {
@@ -189,6 +204,7 @@ class _MenuState extends LPExtendedState<Menu> {
       phonePageData: widget.phonePageData,
       changeCurrentIndex: changeCurrentIndex,
       changeLocale: widget.changeLocale,
+      updateUserData: updateUserData,
     );
   }
 
@@ -198,7 +214,11 @@ class _MenuState extends LPExtendedState<Menu> {
     final userInformation = Provider.of<UserInformation>(context);
     final appInfoProvider = Provider.of<AppInformation>(context);
     final gender = userInformation.gender;
+<<<<<<< Updated upstream
     final age = userInformation.age;
+=======
+    final age = userInformation.gender;
+>>>>>>> Stashed changes
     testingChange();
 
     return PopScope(
@@ -216,6 +236,7 @@ class _MenuState extends LPExtendedState<Menu> {
             phonePageData: widget.phonePageData,
             changeCurrentIndex: changeCurrentIndex,
             changeLocale: widget.changeLocale,
+            updateUserData: updateUserData,
           );
         }
       },
@@ -282,6 +303,7 @@ class _MenuState extends LPExtendedState<Menu> {
                                   phonePageData: widget.phonePageData,
                                   changeCurrentIndex: changeCurrentIndex,
                                   changeLocale: widget.changeLocale,
+                                  updateUserData: updateUserData,
                                 );
                                 current = PagesCode.Home;
                               });
@@ -416,6 +438,36 @@ class _MenuState extends LPExtendedState<Menu> {
                                                       current = PagesCode.About;
                                                     });
                                                     Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Icon(Icons.settings),
+                                                      SizedBox(width: 20),
+                                                      Text(AppLocalizations.of(
+                                                              context)!
+                                                          .userSettingsTitle(
+                                                              gender)),
+                                                    ],
+                                                  ),
+                                                  onPressed: () {
+                                                    
+                                                    Navigator.of(context).pop();
+                                                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UserSettings(
+                                  phonePageData: widget.phonePageData,
+                                  username: userInformation.name,
+                                  age: age,
+                                  gender: gender,
+                                  updateData: updateUserData,
+                                  changeLocale: widget.changeLocale,
+                                )),
+                      );
                                                   },
                                                 ),
                                                 TextButton(
