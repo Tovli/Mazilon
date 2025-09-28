@@ -19,6 +19,8 @@ import 'package:mazilon/pages/phone.dart';
 import 'package:mazilon/pages/positive.dart';
 import 'package:mazilon/pages/PersonalPlan/myPlanPageFull.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:mazilon/pages/UserSettings.dart';
+
 
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/styles.dart';
@@ -44,6 +46,18 @@ class Menu extends StatefulWidget {
   @override
   State<Menu> createState() => _MenuState();
 }
+//function to update the user information(name,age,gender) in shared preferences
+  void updateUserData(newName, newGender, newAge, isNonBinary) async {
+    PersistentMemoryService service = GetIt.instance<
+        PersistentMemoryService>(); // Get the persistent memory service instance
+
+    await service.setItem(
+        "disclaimerConfirmed", PersistentMemoryType.Bool, true);
+
+    if (newGender != '') {
+      await service.setItem('gender', PersistentMemoryType.String, newGender);
+    }
+  }
 
 class _MenuState extends LPExtendedState<Menu> {
   PagesCode current = PagesCode.Home;
@@ -184,6 +198,7 @@ class _MenuState extends LPExtendedState<Menu> {
     final userInformation = Provider.of<UserInformation>(context);
     final appInfoProvider = Provider.of<AppInformation>(context);
     final gender = userInformation.gender;
+    final age = userInformation.age;
     testingChange();
 
     return PopScope(
@@ -426,6 +441,35 @@ class _MenuState extends LPExtendedState<Menu> {
                                                           .NotificationPage;
                                                     });
                                                     Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Icon(Icons.settings),
+                                                      SizedBox(width: 20),
+                                                      Text(AppLocalizations.of(
+                                                              context)!
+                                                          .userSettingsHeader(
+                                                              gender)),
+                                                    ],
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UserSettings(
+                                  phonePageData: widget.phonePageData,
+                                  username: userInformation.name,
+                                  age: age,
+                                  gender: gender,
+                                  updateData: updateUserData,
+                                  changeLocale: widget.changeLocale,
+                                )),
+                      );
                                                   },
                                                 ),
                                                 TextButton(
