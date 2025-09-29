@@ -422,6 +422,12 @@ abstract class AppLocalizations {
   /// **'{gender,select,male{What is your age?} female{What is your age?} other{What is your age?}}'**
   String userSettingsAge(String gender);
 
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{Settings} female{Settings} other{Settings}}'**
+  String settings(String gender);
+
   ///
   ///
   /// In en, this message translates to:

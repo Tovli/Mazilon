@@ -64,7 +64,7 @@
      "userSettingsName": "{gender,select,male{מהו השם שלך?(הרגישו בנוח לרשום כינוי)} female{מהו השם שלך?(הרגישו בנוח לרשום כינוי)} other{מהו השם שלך?(הרגישו בנוח לרשום כינוי)}}",
      "userSettingsGender": "{gender,select,male{כיצד היית רוצה שנפנה אליך?} female{כיצד היית רוצה שנפנה אלייך?} other{כיצד היית רוצה שנפנה אלייך?}}",
      "userSettingsAge": "{gender,select,male{מהו הגיל שלך?} female{מהו הגיל שלך?} other{מהו הגיל שלך?}}",
-
+     "settings": "{gender,select,male{הגדרות} female{הגדרות} other{הגדרות}}",
 
 
      "introductionFormFirstPageMainTitle": "{gender,select,male{מה ששומר עלי} female{מה ששומר עלי} other{מה ששומר עלי}}",

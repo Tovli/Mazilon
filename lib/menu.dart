@@ -48,18 +48,6 @@ class Menu extends StatefulWidget {
   @override
   State<Menu> createState() => _MenuState();
 }
-//function to update the user information(name,age,gender) in shared preferences
-  void updateUserData(newName, newGender, newAge, isNonBinary) async {
-    PersistentMemoryService service = GetIt.instance<
-        PersistentMemoryService>(); // Get the persistent memory service instance
-
-    await service.setItem(
-        "disclaimerConfirmed", PersistentMemoryType.Bool, true);
-
-    if (newGender != '') {
-      await service.setItem('gender', PersistentMemoryType.String, newGender);
-    }
-  }
 
 class _MenuState extends LPExtendedState<Menu> {
   PagesCode current = PagesCode.Home;
@@ -436,36 +424,7 @@ class _MenuState extends LPExtendedState<Menu> {
                                                     Navigator.of(context).pop();
                                                   },
                                                 ),
-                                                TextButton(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Icon(Icons.settings),
-                                                      SizedBox(width: 20),
-                                                      Text(AppLocalizations.of(
-                                                              context)!
-                                                          .userSettingsTitle(
-                                                              gender)),
-                                                    ],
-                                                  ),
-                                                  onPressed: () {
-                                                    
-                                                    Navigator.of(context).pop();
-                                                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => UserSettings(
-                                  phonePageData: widget.phonePageData,
-                                  username: userInformation.name,
-                                  age: age,
-                                  gender: gender,
-                                  updateData: updateUserData,
-                                  changeLocale: widget.changeLocale,
-                                )),
-                      );
-                                                  },
-                                                ),
+                                                
                                                 TextButton(
                                                   child: Row(
                                                     mainAxisAlignment:
@@ -500,7 +459,7 @@ class _MenuState extends LPExtendedState<Menu> {
                                                       SizedBox(width: 20),
                                                       Text(AppLocalizations.of(
                                                               context)!
-                                                          .userSettingsHeader(
+                                                          .settings(
                                                               gender)),
                                                     ],
                                                   ),
