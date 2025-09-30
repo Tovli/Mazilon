@@ -68,7 +68,22 @@ class _PhonePageState extends LPExtendedState<PhonePage> {
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 24.sp),
                       TextAlign.center,
                       60),
-                  const SizedBox(height: 50.0),
+                  const SizedBox(height: 10.0),
+                  Center(
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                      child: myAutoSizedText(
+                          appLocale!.addingContactDisclaimer,
+                          TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12.sp,
+                              height: 1.5),
+                          TextAlign.center,
+                          40),
+                    ),
+                  ),
+                  const SizedBox(height: 30.0),
                   Align(
                     alignment: appLocale!.textDirection == "rtl"
                         ? Alignment.centerRight
@@ -84,6 +99,7 @@ class _PhonePageState extends LPExtendedState<PhonePage> {
                           30),
                     ),
                   ),
+
                   const SizedBox(height: 10.0),
                   //list of phones added in form Phone Page:
                   ...List.generate(

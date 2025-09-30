@@ -66,6 +66,7 @@ class EmergencyPhoneItem extends StatelessWidget {
               link: number["link"],
               hasWhatsApp: number["whatsapp"],
               hasLink: number["link"] != "",
+              canCall: number["canCall"],
             );
           },
         );

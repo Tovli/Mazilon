@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/file_service.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
+import 'package:mazilon/util/Share/show_share_dialog.dart';
 import 'package:mazilon/util/SignIn/popup_toast.dart';
 
 import 'package:mazilon/util/personalPlanItem.dart';
@@ -15,7 +16,6 @@ import 'dart:math';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 // the personal plan widget, thats related to the personal plan section in home page
 class PersonalPlanWidget extends StatefulWidget {
@@ -107,40 +107,23 @@ class _PersonalPlanWidgetState extends LPExtendedState<PersonalPlanWidget> {
                 icons: [
                   // the share and download buttons
                   myTextButton(() async {
-                    await fileService.share(
-                        "",
-                        [
-                          appLocale!.difficultEventsHeader(gender),
-                          appLocale!.makeSaferHeader(gender),
-                          appLocale!.feelBetterHeader(gender),
-                          appLocale!.distractionsHeader(gender),
-                          appLocale!.phonesPageHeader(gender),
-                        ],
-                        [
-                          appLocale!.difficultEventsSubTitle(gender),
-                          appLocale!.makeSaferSubTitle(gender),
-                          appLocale!.feelBetterSubTitle(gender),
-                          appLocale!.distractionsSubTitle(gender),
-                          appLocale!.phonesPageHeader(gender),
-                        ],
-                        appInfoProvider.sharePDFtexts,
-                        ShareFileType.PDF,
-                        appLocale.textDirection);
+                    showShareDialog(context);
+                    return;
                   }, Elusive.share, Colors.black),
                   myTextButton(() async {
                     // the function to download the pdf file of the personal plan
                     var result = await fileService.download([
-                      appLocale!.difficultEventsHeader(gender),
-                      appLocale!.makeSaferHeader(gender),
-                      appLocale!.feelBetterHeader(gender),
-                      appLocale!.distractionsHeader(gender),
-                      appLocale!.phonesPageHeader(gender),
+                      appLocale.difficultEventsHeader(gender),
+                      appLocale.makeSaferHeader(gender),
+                      appLocale.feelBetterHeader(gender),
+                      appLocale.distractionsHeader(gender),
+                      appLocale.phonesPageHeader(gender),
                     ], [
-                      appLocale!.difficultEventsSubTitle(gender),
-                      appLocale!.makeSaferSubTitle(gender),
-                      appLocale!.feelBetterSubTitle(gender),
-                      appLocale!.distractionsSubTitle(gender),
-                      appLocale!.phonesPageHeader(gender),
+                      appLocale.difficultEventsSubTitle(gender),
+                      appLocale.makeSaferSubTitle(gender),
+                      appLocale.feelBetterSubTitle(gender),
+                      appLocale.distractionsSubTitle(gender),
+                      appLocale.phonesPageHeader(gender),
                     ], appInfoProvider.sharePDFtexts, ShareFileType.PDF,
                         appLocale.textDirection);
                     if (result == null) {

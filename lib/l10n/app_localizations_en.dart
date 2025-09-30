@@ -1268,9 +1268,9 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'Notifications',
-        'female': 'Notifications',
-        'other': 'Notifications',
+        'male': 'Reminders',
+        'female': 'Reminders',
+        'other': 'Reminders',
       },
     );
     return '$_temp0';
@@ -1499,9 +1499,9 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'Schedule a notification for the selected time',
-        'female': 'Schedule a notification for the selected time',
-        'other': 'Schedule a notification for the selected time',
+        'male': 'Schedule a reminder for the selected time',
+        'female': 'Schedule a reminder for the selected time',
+        'other': 'Schedule a reminder for the selected time',
       },
     );
     return '$_temp0';
@@ -1512,9 +1512,9 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'Show an example notification',
-        'female': 'Show an example notification',
-        'other': 'Show an example notification',
+        'male': 'Show an example reminder',
+        'female': 'Show an example reminder',
+        'other': 'Show an example reminder',
       },
     );
     return '$_temp0';
@@ -1566,6 +1566,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get moreVideos => 'More videos';
 
   @override
+  String get shareRoutineMessage =>
+      'Here is my personal plan that is meant to help keep me safe. I’m sending it to you because, in my view, you also have a part in it. I hope this works for you. I would greatly appreciate your agreement to take part in it if needed. Many thanks in advance, and I look forward to your reply.';
+
+  @override
+  String get shareOptions => 'Share Options';
+
+  @override
+  String get shareFile => 'Share file';
+
+  @override
+  String get shareRoutine => 'Share routine message';
+
+  @override
+  String get shareEmergency => 'Share emergency message';
+
+  @override
+  String get shareEmergencyMessage =>
+      'I’m not doing well and I need help. I would appreciate your support in activating my personal plan. Thank you in advance.';
+
+  @override
   String get informationCollectionDisclaimer =>
       'Information Collected:\n\nThe application only collects anonymous and statistical data for the purpose of analysis and service improvement. This data cannot identify any individual user. Among the data collected:\n• General app usage data (e.g., pages viewed, frequency of use).\n• Technical information about the device and system (Device type, OS version).\n• Anonymous location data – collected solely for analyzing trends and usage patterns, without linking to any identifiable user.\n';
 
@@ -1575,7 +1595,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String notifyOnscheduledNotification(Object time) {
-    return 'Notification set for $time';
+    return 'Reminder set for $time';
   }
 
   @override

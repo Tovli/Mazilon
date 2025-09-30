@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
+import 'package:mazilon/iFx/service_locator.dart';
+import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
@@ -17,26 +20,53 @@ import 'package:mazilon/initialForm/form.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../MenuTest/FeelGood/FeelGood_test.mocks.dart';
+import 'form_Test.mocks.dart';
 
 @GenerateNiceMocks([
   MockSpec<UserInformation>(),
   MockSpec<AppInformation>(),
   MockSpec<SharedPreferences>(),
+  MockSpec<PersistentMemoryService>(),
 ])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
   group('FeelGood Widget Tests', () {
+    late MockPersistentMemoryService mockPersistentMemoryService;
+
     late MockSharedPreferences mockSharedPreferences;
-    late UserInformation mockUserInformation;
-    late AppInformation mockAppInformation;
+    late MockUserInformation mockUserInformation;
+    late MockAppInformation mockAppInformation;
     late PhonePageData phonePageData;
-    setUp(() {
-      mockUserInformation = UserInformation();
-      mockAppInformation = AppInformation();
-      mockUserInformation.gender = "male";
-      mockUserInformation.disclaimerSigned = true;
+
+    setUp(() async {
+      // Setup GetIt before each test
+      await GetIt.instance.reset();
+      mockPersistentMemoryService = MockPersistentMemoryService();
+
+      // Setup specific mock behavior for hasFilled
+      when(mockPersistentMemoryService.getItem('hasFilled', any))
+          .thenAnswer((_) async => false);
+      // Default behavior for other keys
+      when(mockPersistentMemoryService.getItem(
+              argThat(isNot(equals('hasFilled'))), any))
+          .thenAnswer((_) async => null);
+      when(mockPersistentMemoryService.setItem(any, any, any))
+          .thenAnswer((_) async {});
+      when(mockPersistentMemoryService.reset()).thenAnswer((_) async {});
+
+      GetIt.instance.registerSingleton<PersistentMemoryService>(
+          mockPersistentMemoryService);
+
+      // Setup other mocks
+      mockUserInformation = MockUserInformation();
+      when(mockUserInformation.gender).thenReturn("male");
+      when(mockUserInformation.disclaimerSigned).thenReturn(true);
+
+      // Setup mock AppInformation
+      mockAppInformation = MockAppInformation();
       SharedPreferences.setMockInitialValues({'hasFilled': false});
+
       phonePageData = PhonePageData(
           header: '',
           phoneNames: [],
@@ -56,32 +86,11 @@ void main() {
       when(mockSharedPreferences.getStringList('SavedPhoneNumbers'))
           .thenReturn([]);
     });
-
+    tearDown(() {
+      GetIt.I.reset();
+    });
     // Setup the test environment
     // SharedPreferences.setMockInitialValues({'hasFilled': false});
-
-    Widget createTestWidget() {
-      return MultiProvider(
-        providers: [
-          ChangeNotifierProvider<AppInformation>.value(
-              value: mockAppInformation),
-          ChangeNotifierProvider<UserInformation>.value(
-              value: mockUserInformation),
-        ],
-        child: MaterialApp(
-          supportedLocales: AppLocalizations.supportedLocales,
-          locale: Locale('he'),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          home: ScreenUtilInit(
-            designSize: const Size(360, 690),
-            child: InitialFormProgressIndicator(
-              phonePageData: phonePageData,
-              changeLocale: (String locale) {},
-            ),
-          ),
-        ),
-      );
-    }
 
     testWidgets('FormPageTemplate widget test', (WidgetTester tester) async {
       await tester.pumpWidget(MultiProvider(
