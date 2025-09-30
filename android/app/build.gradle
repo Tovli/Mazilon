@@ -59,7 +59,9 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17
+        freeCompilerArgs += ["-Xmetadata-version=2.0"]
     }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
