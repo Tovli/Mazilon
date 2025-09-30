@@ -224,7 +224,7 @@
     "description": ""
   },
   "settings": "{gender,select,male{Settings} female{Settings} other{Settings}}",
-  "@userSettingsAge": {
+  "@settings": {
     "description": ""
   },
   "introductionFormFirstPageMainTitle": "{gender,select,male{What keeps me safe?} female{What keeps me safe?} other{What keeps me safe?}}",
