@@ -739,7 +739,7 @@
   "@inspirationalQuotesNo36": {
     "description": ""
   },
-  "inspirationalQuotesNo37": "{gender,select,male{studies show that our thoughts influence our emotions} female{studies show that our thoughts influence our emotions} other{studies show that our thoughts influence our emotions}}",
+  "inspirationalQuotesNo37": "{gender,select,male{Studies show that thoughts affect emotions} female{Studies show that thoughts affect emotions} other{Studies show that thoughts affect emotions}}",
   "@inspirationalQuotesNo37": {
     "description": ""
   },
@@ -747,7 +747,7 @@
   "@inspirationalQuotesNo38": {
     "description": ""
   },
-  "inspirationalQuotesNo39": "{gender,select,male{I can do it and I will succeed} female{I can do it and I will succeed} other{I can do it and I will succeed}}",
+  "inspirationalQuotesNo39": "{gender,select,male{I can and I will} female{I can and I will} other{I can and I will}}",
   "@inspirationalQuotesNo39": {
     "description": ""
   },

@@ -2115,9 +2115,9 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'studies show that our thoughts influence our emotions',
-        'female': 'studies show that our thoughts influence our emotions',
-        'other': 'studies show that our thoughts influence our emotions',
+        'male': 'Studies show that thoughts affect emotions',
+        'female': 'Studies show that thoughts affect emotions',
+        'other': 'Studies show that thoughts affect emotions',
       },
     );
     return '$_temp0';
@@ -2141,9 +2141,9 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'I can do it and I will succeed',
-        'female': 'I can do it and I will succeed',
-        'other': 'I can do it and I will succeed',
+        'male': 'I can and I will',
+        'female': 'I can and I will',
+        'other': 'I can and I will',
       },
     );
     return '$_temp0';
