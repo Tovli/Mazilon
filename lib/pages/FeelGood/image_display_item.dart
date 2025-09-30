@@ -57,7 +57,7 @@ void _focusOnPicture(context, displayImage, imagePath, index,
                                 appLocale!.deleteButton(gender),
                               ),
                               onPressed: () {
-                                deleteImageFunction(index); // Delete image
+                                deleteImageFunction(pageIndex); // Delete image
                                 Navigator.of(context)
                                     .popUntil((route) => route.isFirst);
                               },
