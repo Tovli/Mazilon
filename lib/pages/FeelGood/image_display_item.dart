@@ -10,6 +10,7 @@ import 'package:mazilon/l10n/app_localizations.dart';
 void _focusOnPicture(context, displayImage, imagePath, index,
     deleteImageFunction, appLocale, gender, imagePaths) {
   AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
+  mixPanelService.trackEvent("Photo looked at");
   final controller = PageController(initialPage: index);
   int lastPageReported = index;
   showDialog(
