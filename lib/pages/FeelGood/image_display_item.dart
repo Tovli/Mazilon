@@ -80,9 +80,9 @@ void _focusOnPicture(context, displayImage, imagePath, index,
 class ImageDisplay extends StatelessWidget {
   final String imagePath;
   final int index;
-  List<String> imagePaths;
+  final List<String> imagePaths;
 
-  ImageDisplay({super.key, required this.imagePath, required this.index, required this.imagePaths});
+  const ImageDisplay({super.key, required this.imagePath, required this.index, required this.imagePaths});
   @override
   Widget build(BuildContext context) {
     final Function(String path, {BoxFit fit}) displayImage =
