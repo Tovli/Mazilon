@@ -8,56 +8,61 @@ import 'package:provider/provider.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
 
 void _focusOnPicture(context, displayImage, imagePath, index,
-    deleteImageFunction, appLocale, gender) {
+  deleteImageFunction, appLocale, gender) {
   AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
   mixPanelService.trackEvent("Photo looked at");
   showDialog(
     context: context,
     builder: (context) => Dialog(
-      child: Column(
-        children: [
-          Expanded(
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: displayImage(imagePath, fit: BoxFit.contain),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              TextButton(
-                key: Key('deleteButtonIcon'),
-                child: const Icon(Icons.delete),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      actions: [
-                        TextButton(
-                          child: Text(
-                            appLocale!.closeButton(gender),
-                          ),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                        TextButton(
-                          key: Key('deleteButtonText'),
-                          child: Text(
-                            appLocale!.deleteButton(gender),
-                          ),
-                          onPressed: () {
-                            deleteImageFunction(index); // Delete image
-                            Navigator.of(context)
-                                .popUntil((route) => route.isFirst);
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                },
+      insetPadding: EdgeInsets.zero,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => Navigator.of(context).pop(),
+        child: Column(
+          children: [
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: displayImage(imagePath, fit: BoxFit.contain),
               ),
-            ],
-          ),
-        ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TextButton(
+                  key: Key('deleteButtonIcon'),
+                  child: const Icon(Icons.delete),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        actions: [
+                          TextButton(
+                            child: Text(
+                              appLocale!.closeButton(gender),
+                            ),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                          TextButton(
+                            key: Key('deleteButtonText'),
+                            child: Text(
+                              appLocale!.deleteButton(gender),
+                            ),
+                            onPressed: () {
+                              deleteImageFunction(index); // Delete image
+                              Navigator.of(context)
+                                  .popUntil((route) => route.isFirst);
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     ),
   );
