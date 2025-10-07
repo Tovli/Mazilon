@@ -13,56 +13,57 @@ void _focusOnPicture(context, displayImage, imagePath, index,
   mixPanelService.trackEvent("Photo looked at");
   showDialog(
     context: context,
-    builder: (context) => Dialog(
-      insetPadding: EdgeInsets.zero,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => Navigator.of(context).pop(),
-        child: Column(
-          children: [
-            Expanded(
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: displayImage(imagePath, fit: BoxFit.contain),
+    barrierDismissible: false,
+    builder: (context) => Dialog.fullscreen(
+      child: Column(
+        children: [
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: displayImage(imagePath, fit: BoxFit.contain),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton(
+                key: Key('deleteButtonIcon'),
+                child: const Icon(Icons.delete),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      actions: [
+                        TextButton(
+                          child: Text(
+                            appLocale!.closeButton(gender),
+                          ),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                        TextButton(
+                          key: Key('deleteButtonText'),
+                          child: Text(
+                            appLocale!.deleteButton(gender),
+                          ),
+                          onPressed: () {
+                            deleteImageFunction(index); // Delete image
+                            Navigator.of(context)
+                                .popUntil((route) => route.isFirst);
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                TextButton(
-                  key: Key('deleteButtonIcon'),
-                  child: const Icon(Icons.delete),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        actions: [
-                          TextButton(
-                            child: Text(
-                              appLocale!.closeButton(gender),
-                            ),
-                            onPressed: () => Navigator.of(context).pop(),
-                          ),
-                          TextButton(
-                            key: Key('deleteButtonText'),
-                            child: Text(
-                              appLocale!.deleteButton(gender),
-                            ),
-                            onPressed: () {
-                              deleteImageFunction(index); // Delete image
-                              Navigator.of(context)
-                                  .popUntil((route) => route.isFirst);
-                            },
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
+              TextButton(
+                key: Key('backButtonIcon'),
+                child: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        ],
       ),
     ),
   );
