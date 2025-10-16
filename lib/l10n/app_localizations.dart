@@ -1151,7 +1151,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{studies show that our thoughts influence our emotions} female{studies show that our thoughts influence our emotions} other{studies show that our thoughts influence our emotions}}'**
+  /// **'{gender,select,male{Studies show that thoughts affect emotions} female{Studies show that thoughts affect emotions} other{Studies show that thoughts affect emotions}}'**
   String inspirationalQuotesNo37(String gender);
 
   ///
@@ -1163,7 +1163,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'{gender,select,male{I can do it and I will succeed} female{I can do it and I will succeed} other{I can do it and I will succeed}}'**
+  /// **'{gender,select,male{I can and I will} female{I can and I will} other{I can and I will}}'**
   String inspirationalQuotesNo39(String gender);
 
   ///
