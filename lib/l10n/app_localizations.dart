@@ -824,7 +824,7 @@ abstract class AppLocalizations {
   /// **'{gender,select,male{Schedule a reminder for the selected time} female{Schedule a reminder for the selected time} other{Schedule a reminder for the selected time}}'**
   String notificationSetTimeText(String gender);
 
-  ///
+  /// No description provided for @notificationShowExampleNotification.
   ///
   /// In en, this message translates to:
   /// **'{gender,select,male{Show an example reminder} female{Show an example reminder} other{Show an example reminder}}'**
