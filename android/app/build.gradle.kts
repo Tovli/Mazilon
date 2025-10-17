@@ -66,11 +66,10 @@ android {
         applicationId = "com.matzilon.mezilon"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdk = 23 // 23 is the minimum for firebase_auth
+        minSdk = flutter.minSdkVersion // 23 is the minimum for firebase_auth
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        isMultiDexEnabled = true
     }
 
     signingConfigs {
