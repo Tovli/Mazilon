@@ -17,7 +17,9 @@ class NotificationsService {
       InitializationSettings(
     android: AndroidInitializationSettings(
         '@mipmap/ic_launcher'), // Replace with your actual icon name
-    iOS: DarwinInitializationSettings(),
+    iOS: DarwinInitializationSettings(requestAlertPermission: true,
+    requestBadgePermission: true,
+    requestSoundPermission: true,),
   );
 
   static Future<void> init() async {
