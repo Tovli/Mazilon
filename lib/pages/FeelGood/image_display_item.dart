@@ -15,7 +15,8 @@ void _focusOnPicture(context, displayImage, imagePath, index,
   int lastPageReported = index;
   showDialog(
     context: context,
-    builder: (context) => Dialog(
+    barrierDismissible: false,
+    builder: (context) => Dialog.fullscreen(
       child: PageView.builder(
         controller: controller, 
         itemCount: imagePaths.length,
@@ -36,8 +37,13 @@ void _focusOnPicture(context, displayImage, imagePath, index,
                 ),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  TextButton(
+                    key: Key('backButtonIcon'),
+                    child: const Icon(Icons.arrow_back),
+                     onPressed: () => Navigator.of(context).pop(),
+                  ),
                   TextButton(
                     key: Key('deleteButtonIcon'),
                     child: const Icon(Icons.delete),
