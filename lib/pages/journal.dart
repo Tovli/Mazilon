@@ -280,7 +280,8 @@ class _JournalState extends LPExtendedState<Journal> {
                           index,
                         );
                       },
-                      remove: removeThankYou,
+                      remove: (int index) =>
+                          removeThankYou(index, userInfoProvider),
                       myFocusNode: focusNodes[index],
                       date: dates[index],
                       color: Colors.black,
