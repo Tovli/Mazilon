@@ -77,12 +77,10 @@ class NotificationsService {
       List<String> quotes, int hour, int minute, Function createText) async {
     final bool? grantedNotificationPermission;
     if (Platform.isAndroid) {
-      final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-          FlutterLocalNotificationsPlugin();
-
       final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
+          _flutterLocalNotificationsPlugin
+              .resolvePlatformSpecificImplementation<
+                  AndroidFlutterLocalNotificationsPlugin>();
 
       grantedNotificationPermission =
           await androidImplementation?.requestNotificationsPermission();
