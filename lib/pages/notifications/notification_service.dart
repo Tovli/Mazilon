@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -53,6 +55,7 @@ class NotificationsService {
 
   static Future<void> showNotification(String title, String body) async {
     debugPrint("trying to show notification");
+
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails('exampleID', 'ShowExampleChannelTitle',
             channelDescription:
@@ -72,6 +75,22 @@ class NotificationsService {
 
   static initializeNotification(
       List<String> quotes, int hour, int minute, Function createText) async {
+    final bool? grantedNotificationPermission;
+    if (Platform.isAndroid) {
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+          _flutterLocalNotificationsPlugin
+              .resolvePlatformSpecificImplementation<
+                  AndroidFlutterLocalNotificationsPlugin>();
+
+      grantedNotificationPermission =
+          await androidImplementation?.requestNotificationsPermission();
+    } else {
+      grantedNotificationPermission = false;
+    }
+    if (grantedNotificationPermission != null &&
+        grantedNotificationPermission == false) {
+      showToast(message: "notifications permission denied");
+    }
     TimeOfDay calculatedTime = calculateTime(hour, minute);
     String id = "${calculatedTime.hour}${calculatedTime.minute}";
     await cancelNotifications(null, cancelWorker: true);
@@ -96,6 +115,7 @@ class NotificationsService {
   static Future<void> scheduleNotification(
       TimeOfDay timeOfDay, String id, String text) async {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month,
         now.day, timeOfDay.hour, timeOfDay.minute);
 
@@ -104,19 +124,18 @@ class NotificationsService {
     }
 
     await _flutterLocalNotificationsPlugin.zonedSchedule(
-        matchDateTimeComponents: DateTimeComponents.time,
-        (int.parse(id)), // Use a different ID for each notification if needed
-        'Living Positively',
-        text,
-        scheduledDate,
-        const NotificationDetails(
-            android: AndroidNotificationDetails(
-                'LPNotificationServiceID', 'LP Notifications',
-                channelDescription:
-                    'LP Notifications allows you to receive daily reminders from the Mazilon app to keep track of your mental health')),
-        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
+      matchDateTimeComponents: DateTimeComponents.time,
+      (int.parse(id)), // Use a different ID for each notification if needed
+      'Living Positively',
+      text,
+      scheduledDate,
+      const NotificationDetails(
+          android: AndroidNotificationDetails(
+              'LPNotificationServiceID', 'LP Notifications',
+              channelDescription:
+                  'LP Notifications allows you to receive daily reminders from the Mazilon app to keep track of your mental health')),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+    );
   }
 
   // Cancel a specific notification
