@@ -33,12 +33,14 @@ class Home extends StatefulWidget {
   PhonePageData phonePageData;
   final Function(BuildContext, PagesCode) changeCurrentIndex;
   final Function changeLocale;
+  final Function updateUserData;
 
   Home({
     super.key,
     required this.phonePageData,
     required this.changeCurrentIndex,
     required this.changeLocale,
+    required this.updateUserData,
   });
 
   @override
@@ -65,19 +67,6 @@ class _HomeState extends LPExtendedState<Home> {
     setState(() {
       hasFilled = hasFilledValue;
     });
-  }
-
-//function to update the user information(name,age,gender) in shared preferences
-  void updateUserData(newName, newGender, newAge, isNonBinary) async {
-    PersistentMemoryService service = GetIt.instance<
-        PersistentMemoryService>(); // Get the persistent memory service instance
-
-    await service.setItem(
-        "disclaimerConfirmed", PersistentMemoryType.Bool, true);
-
-    if (newGender != '') {
-      await service.setItem('gender', PersistentMemoryType.String, newGender);
-    }
   }
 
   @override
@@ -178,7 +167,7 @@ class _HomeState extends LPExtendedState<Home> {
                                   username: userInfoProvider.name,
                                   age: age,
                                   gender: gender,
-                                  updateData: updateUserData,
+                                  updateData: widget.updateUserData,
                                   changeLocale: widget.changeLocale,
                                 )),
                       );

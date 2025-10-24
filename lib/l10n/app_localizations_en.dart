@@ -695,6 +695,19 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String settings(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'Settings',
+        'female': 'Settings',
+        'other': 'Settings',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
   String introductionFormFirstPageMainTitle(String gender) {
     String _temp0 = intl.Intl.selectLogic(
       gender,
