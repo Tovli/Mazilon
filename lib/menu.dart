@@ -63,19 +63,6 @@ class _MenuState extends LPExtendedState<Menu> {
     await service.setItem("enteredBefore", PersistentMemoryType.Bool, true);
   }
 
-//function to update the user information(name,age,gender) in shared preferences
-  void updateUserData(newName, newGender, newAge, isNonBinary) async {
-    PersistentMemoryService service = GetIt.instance<
-        PersistentMemoryService>(); // Get the persistent memory service instance
-
-    await service.setItem(
-        "disclaimerConfirmed", PersistentMemoryType.Bool, true);
-
-    if (newGender != '') {
-      await service.setItem('gender', PersistentMemoryType.String, newGender);
-    }
-  }
-
   void testingChange() async {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
@@ -192,7 +179,6 @@ class _MenuState extends LPExtendedState<Menu> {
       phonePageData: widget.phonePageData,
       changeCurrentIndex: changeCurrentIndex,
       changeLocale: widget.changeLocale,
-      updateUserData: updateUserData,
     );
   }
 
@@ -220,7 +206,6 @@ class _MenuState extends LPExtendedState<Menu> {
             phonePageData: widget.phonePageData,
             changeCurrentIndex: changeCurrentIndex,
             changeLocale: widget.changeLocale,
-            updateUserData: updateUserData,
           );
         }
       },
@@ -287,7 +272,6 @@ class _MenuState extends LPExtendedState<Menu> {
                                   phonePageData: widget.phonePageData,
                                   changeCurrentIndex: changeCurrentIndex,
                                   changeLocale: widget.changeLocale,
-                                  updateUserData: updateUserData,
                                 );
                                 current = PagesCode.Home;
                               });
@@ -473,7 +457,6 @@ class _MenuState extends LPExtendedState<Menu> {
                                   username: userInformation.name,
                                   age: age,
                                   gender: gender,
-                                  updateData: updateUserData,
                                   changeLocale: widget.changeLocale,
                                 )),
                       );

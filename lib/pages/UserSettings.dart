@@ -24,7 +24,6 @@ class UserSettings extends StatefulWidget {
   final String username;
   final String age;
   final String gender;
-  final Function updateData;
 
   final Function changeLocale;
   PhonePageData phonePageData;
@@ -34,7 +33,6 @@ class UserSettings extends StatefulWidget {
     required this.username,
     required this.age,
     required this.gender,
-    required this.updateData,
     required this.phonePageData,
     required this.changeLocale,
   });

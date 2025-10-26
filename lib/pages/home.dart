@@ -33,14 +33,12 @@ class Home extends StatefulWidget {
   PhonePageData phonePageData;
   final Function(BuildContext, PagesCode) changeCurrentIndex;
   final Function changeLocale;
-  final Function updateUserData;
 
   Home({
     super.key,
     required this.phonePageData,
     required this.changeCurrentIndex,
     required this.changeLocale,
-    required this.updateUserData,
   });
 
   @override
@@ -68,6 +66,7 @@ class _HomeState extends LPExtendedState<Home> {
       hasFilled = hasFilledValue;
     });
   }
+
 
   @override
   void initState() {
@@ -166,9 +165,7 @@ class _HomeState extends LPExtendedState<Home> {
                                   phonePageData: widget.phonePageData,
                                   username: userInfoProvider.name,
                                   age: age,
-                                  gender: gender,
-                                  updateData: widget.updateUserData,
-                                  changeLocale: widget.changeLocale,
+                                  gender: gender,                                  changeLocale: widget.changeLocale,
                                 )),
                       );
                     }, Icons.settings_outlined, primaryPurple)
