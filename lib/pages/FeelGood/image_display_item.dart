@@ -8,56 +8,77 @@ import 'package:provider/provider.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
 
 void _focusOnPicture(context, displayImage, imagePath, index,
-    deleteImageFunction, appLocale, gender) {
+    deleteImageFunction, appLocale, gender, imagePaths) {
   AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
   mixPanelService.trackEvent("Photo looked at");
+  final controller = PageController(initialPage: index);
+  int lastPageReported = index;
   showDialog(
     context: context,
-    builder: (context) => Dialog(
-      child: Column(
-        children: [
-          Expanded(
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: displayImage(imagePath, fit: BoxFit.contain),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+    barrierDismissible: false,
+    builder: (context) => Dialog.fullscreen(
+      child: PageView.builder(
+        controller: controller, 
+        itemCount: imagePaths.length,
+        padEnds: false,
+        onPageChanged: (page) {
+          if (page != lastPageReported) {
+            lastPageReported = page;
+            mixPanelService.trackEvent("Photo looked at");
+          }
+        },
+        itemBuilder: (context, pageIndex) {
+          return Column(
             children: [
-              TextButton(
-                key: Key('deleteButtonIcon'),
-                child: const Icon(Icons.delete),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      actions: [
-                        TextButton(
-                          child: Text(
-                            appLocale!.closeButton(gender),
-                          ),
-                          onPressed: () => Navigator.of(context).pop(),
+              Expanded(
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: displayImage(imagePaths[pageIndex], fit: BoxFit.contain),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    key: Key('backButtonIcon'),
+                    child: const Icon(Icons.arrow_back),
+                     onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  TextButton(
+                    key: Key('deleteButtonIcon'),
+                    child: const Icon(Icons.delete),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          actions: [
+                            TextButton(
+                              child: Text(
+                                appLocale!.closeButton(gender),
+                              ),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                            TextButton(
+                              key: Key('deleteButtonText'),
+                              child: Text(
+                                appLocale!.deleteButton(gender),
+                              ),
+                              onPressed: () {
+                                deleteImageFunction(pageIndex); // Delete image
+                                Navigator.of(context)
+                                    .popUntil((route) => route.isFirst);
+                              },
+                            ),
+                          ],
                         ),
-                        TextButton(
-                          key: Key('deleteButtonText'),
-                          child: Text(
-                            appLocale!.deleteButton(gender),
-                          ),
-                          onPressed: () {
-                            deleteImageFunction(index); // Delete image
-                            Navigator.of(context)
-                                .popUntil((route) => route.isFirst);
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
-          ),
-        ],
+          );
+        }
       ),
     ),
   );
@@ -66,8 +87,9 @@ void _focusOnPicture(context, displayImage, imagePath, index,
 class ImageDisplay extends StatelessWidget {
   final String imagePath;
   final int index;
+  final List<String> imagePaths;
 
-  const ImageDisplay({super.key, required this.imagePath, required this.index});
+  const ImageDisplay({super.key, required this.imagePath, required this.index, required this.imagePaths});
   @override
   Widget build(BuildContext context) {
     final Function(String path, {BoxFit fit}) displayImage =
@@ -83,7 +105,7 @@ class ImageDisplay extends StatelessWidget {
     return GestureDetector(
         onTap: () {
           _focusOnPicture(context, displayImage, imagePath, index,
-              deleteImageFunction, appLocale, gender);
+              deleteImageFunction, appLocale, gender, imagePaths);
         },
         //actual image displayed when clicked on image in above grid:
         child: displayImage(

@@ -132,6 +132,7 @@ class _FeelGoodPageState extends LPExtendedState<FeelGood> {
                               return ImageDisplay(
                                 imagePath: imagePaths[index],
                                 index: index,
+                                imagePaths: imagePaths,
                               );
                             },
                           );
