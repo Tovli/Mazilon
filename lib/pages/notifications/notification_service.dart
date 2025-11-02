@@ -31,11 +31,13 @@ class NotificationsService {
     tz_data.initializeTimeZones();
     // Get the device's current time zone
     try {
-      final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+      final TimezoneInfo timeZoneName =
+          await FlutterTimezone.getLocalTimezone();
       //  String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
 
       // Set the local time zone
-      tz.setLocalLocation(tz.getLocation(timeZoneName));
+      tz.setLocalLocation(
+          tz.getLocation(timeZoneName.localizedName?.name ?? "Asia/Jerusalem"));
       await _flutterLocalNotificationsPlugin
           .initialize(_initializationSettings);
       _isInitialized = true;

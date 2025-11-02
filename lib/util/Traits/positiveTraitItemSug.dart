@@ -140,12 +140,12 @@ class _PositiveTraitItemSugState extends LPExtendedState<PositiveTraitItemSug> {
 
             // the design of the add button
             child: DottedBorder(
-              borderType: BorderType.RRect,
-              radius: const Radius.circular(20),
-              dashPattern: const [5, 5],
-              color: const Color.fromARGB(
-                  255, 12, 207, 19), // the color of the border
-              strokeWidth: 2,
+              options: RoundedRectDottedBorderOptions(
+                radius: const Radius.circular(20),
+                dashPattern: const [5, 5],
+                color: const Color.fromARGB(255, 12, 207, 19),
+                strokeWidth: 2,
+              ),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 decoration: const BoxDecoration(
@@ -181,11 +181,12 @@ class _PositiveTraitItemSugState extends LPExtendedState<PositiveTraitItemSug> {
 
           // the design of the suggested trait (a dotted border with the trait text)
           DottedBorder(
-            borderType: BorderType.RRect,
-            radius: const Radius.circular(20),
-            dashPattern: const [5, 5],
-            color: appGreen,
-            strokeWidth: 2,
+            options: RoundedRectDottedBorderOptions(
+              radius: const Radius.circular(20),
+              dashPattern: const [5, 5],
+              color: appGreen,
+              strokeWidth: 2,
+            ),
             child: Container(
               height: 50,
               decoration: BoxDecoration(

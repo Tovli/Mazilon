@@ -102,7 +102,7 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
 
     userInfo.reset(localeService.getLocale());
     await pickerService.deleteImages();
-    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final GoogleSignIn googleSignIn = GoogleSignIn.instance;
     await googleSignIn.signOut();
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
