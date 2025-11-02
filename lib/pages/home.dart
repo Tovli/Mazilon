@@ -67,18 +67,6 @@ class _HomeState extends LPExtendedState<Home> {
     });
   }
 
-//function to update the user information(name,age,gender) in shared preferences
-  void updateUserData(newName, newGender, newAge, isNonBinary) async {
-    PersistentMemoryService service = GetIt.instance<
-        PersistentMemoryService>(); // Get the persistent memory service instance
-
-    await service.setItem(
-        "disclaimerConfirmed", PersistentMemoryType.Bool, true);
-
-    if (newGender != '') {
-      await service.setItem('gender', PersistentMemoryType.String, newGender);
-    }
-  }
 
   @override
   void initState() {
@@ -177,9 +165,7 @@ class _HomeState extends LPExtendedState<Home> {
                                   phonePageData: widget.phonePageData,
                                   username: userInfoProvider.name,
                                   age: age,
-                                  gender: gender,
-                                  updateData: updateUserData,
-                                  changeLocale: widget.changeLocale,
+                                  gender: gender,                                  changeLocale: widget.changeLocale,
                                 )),
                       );
                     }, Icons.settings_outlined, primaryPurple)

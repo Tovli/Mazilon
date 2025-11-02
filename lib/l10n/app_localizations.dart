@@ -425,6 +425,12 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
+  /// **'{gender,select,male{Settings} female{Settings} other{Settings}}'**
+  String settings(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
   /// **'{gender,select,male{What keeps me safe?} female{What keeps me safe?} other{What keeps me safe?}}'**
   String introductionFormFirstPageMainTitle(String gender);
 
