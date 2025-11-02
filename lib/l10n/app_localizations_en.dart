@@ -799,9 +799,12 @@ class AppLocalizationsEn extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'Take a few minutes now to better navigate future crises.',
-        'female': 'Take a few minutes now to better navigate future crises.',
-        'other': 'Take a few minutes now to better navigate future crises.',
+        'male':
+            'It\'s recommended to spend a few minutes now to better handle future crises.',
+        'female':
+            'It\'s recommended to spend a few minutes now to better handle future crises.',
+        'other':
+            'It\'s recommended to spend a few minutes now to better handle future crises.',
       },
     );
     return '$_temp0';
