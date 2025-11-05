@@ -84,16 +84,16 @@ dynamic numbers = {
       "link": "http://samaritans.org/how-we-can-help/contact-samaritan/",
       "email": "jo@samaritans.org",
       "description":
-          "Samaritans is the charity that prevents suicide through the power of human connection.",
+          "Samaritans is the charity that prevents suicide.",
       "whatsapp": false,
       "canCall": true,
       "icon": Icons.chat
     },
     {
-      "name": "CALM (Campaign Against Living Miserably)",
+      "name": "CALM",
       "number": "0800585858",
       "link": "https://www.thecalmzone.net/",
-      "description": "CALM is a leading movement against male suicide.",
+      "description": "A leading movement against male suicide.",
       "whatsapp": false,
       "canCall": true,
       "icon": Icons.chat
@@ -134,7 +134,7 @@ dynamic numbers = {
       "name": "Lifeline",
       "number": "131114",
       "link": "https://www.lifeline.org.au/",
-      "description": "24/7 crisis support and suicide prevention services.",
+      "description": "24 hour crisis support and suicide prevention.",
       "canCall": false,
       "icon": Icons.chat
     },
@@ -143,7 +143,7 @@ dynamic numbers = {
       "number": "1300224636",
       "link": "https://www.beyondblue.org.au/get-support/urgent-help",
       "description":
-          "For more than 20 years, people in Australia have placed their trust in Beyond Blue as a reliable source of mental health information, support, and hope.",
+          "A reliable source of mental health information.",
       "canCall": false,
       "icon": Icons.chat
     },
@@ -152,7 +152,7 @@ dynamic numbers = {
       "number": "1800551800",
       "link": "https://kidshelpline.com.au/",
       "description":
-          "Kids Helpline is a free, private and confidential 24/7 phone and online counseling service for young people aged 5 to 25.",
+          "24 hour counseling for young people aged 5 to 25.",
       "canCall": true,
       "icon": Icons.chat
     },
@@ -161,7 +161,7 @@ dynamic numbers = {
       "number": "1300789978",
       "link": "https://mensline.org.au/",
       "description":
-          "Men's Line Australia is a telephone and online counseling service for men.",
+          "A telephone and online counseling service for men.",
       "canCall": true,
       "icon": Icons.chat
     }
