@@ -25,8 +25,10 @@ class EmergencyPhonesGrid extends StatelessWidget {
 
     if (selectedCountry == "us") {
       localNumbers = numbers["usa"];
-    } else if (selectedCountry == "eu") {
-      localNumbers = numbers["eu"];
+    } else if (selectedCountry == "gb") {
+      localNumbers = numbers["uk"];
+    } else if (selectedCountry == "au") {
+      localNumbers = numbers["australia"];
     } else {
       localNumbers = numbers["israel"];
     }
