@@ -144,11 +144,11 @@ void main() {
     // Tap on the gender dropdown menu and select an option
     await tester.tap(find.byType(TextField).last);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('נקבה').last);
+    await tester.tap(find.text('את').last);
     await tester.pumpAndSettle();
 
     // Verify the selected gender
-    expect(find.text('נקבה'), findsWidgets);
+    expect(find.text('את'), findsWidgets);
   });
 
   testWidgets('InitialFormPage2 button tap', (WidgetTester tester) async {
