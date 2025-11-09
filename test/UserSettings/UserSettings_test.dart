@@ -122,12 +122,12 @@ void main() {
       await tester.tap(genderdrop);
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text("נקבה").last);
+      await tester.tap(find.text("את").last);
       await tester.pumpAndSettle();
 
       final Finder editableTextFinder2 = find.byWidgetPredicate(
         (Widget widget) =>
-            widget is EditableText && widget.controller.text == "נקבה",
+            widget is EditableText && widget.controller.text == "את",
       );
       expect(editableTextFinder2, findsWidgets);
 
@@ -155,11 +155,11 @@ void main() {
 
       await tester.tap(genderdrop);
       await tester.pumpAndSettle();
-      await tester.tap(find.text("לא בינארי").last);
+      await tester.tap(find.text("לשון מעורבת").last);
       await tester.pumpAndSettle();
       final Finder editableTextFinder5 = find.byWidgetPredicate(
         (Widget widget) =>
-            widget is EditableText && widget.controller.text == "לא בינארי",
+            widget is EditableText && widget.controller.text == "לשון מעורבת",
       );
       expect(editableTextFinder5, findsWidgets);
     });

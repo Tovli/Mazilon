@@ -108,9 +108,9 @@ void main() {
         findsOneWidget);
 
     // Verify the presence of the form labels
-    expect(find.text('כיצד היית רוצה שנפנה אליך?'), findsOneWidget);
-    expect(find.text('מהו הגיל שלך?'), findsOneWidget);
-    expect(find.text('כיצד היית רוצה שנפנה אליך?'), findsOneWidget);
+    expect(find.text('כיצד הייתי רוצה שיפנו אלי?'), findsOneWidget);
+    expect(find.text('מהו גילי?'), findsOneWidget);
+    expect(find.text('כיצד הייתי רוצה שיפנו אלי?'), findsOneWidget);
 
     // Verify the presence of the text field and dropdown menus
     expect(find.byType(TextField), findsWidgets);

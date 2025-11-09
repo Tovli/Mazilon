@@ -136,7 +136,7 @@ class _UserSettingsState extends State<UserSettings> {
                     child: Directionality(
                       textDirection: TextDirection.rtl,
                       child: DropdownMenu<String>(
-                        initialSelection: 'לא בינארי'
+                        initialSelection: 'לשון מעורבת'
 
                         //userInfoProvider.gender == 'nonbinary'
                         // ? 'לא בינארי'
