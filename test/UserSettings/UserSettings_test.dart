@@ -111,7 +111,7 @@ void main() {
             home: UserSettings(
           username: "test",
           age: "18-30",
-          gender: "זכר",
+          gender: "אתה",
           titles: {"name": "test1", "age": "test2", "gender": "name"},
           updateData: updateData,
         )),
@@ -133,12 +133,12 @@ void main() {
 
       await tester.tap(genderdrop);
       await tester.pumpAndSettle();
-      await tester.tap(find.text("זכר").last);
+      await tester.tap(find.text("אתה").last);
       await tester.pumpAndSettle();
 
       final Finder editableTextFinder3 = find.byWidgetPredicate(
         (Widget widget) =>
-            widget is EditableText && widget.controller.text == "זכר",
+            widget is EditableText && widget.controller.text == "אתה",
       );
       expect(editableTextFinder3, findsWidgets);
 
