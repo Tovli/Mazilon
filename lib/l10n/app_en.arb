@@ -537,16 +537,16 @@
   "@shareOptions": {
     "description": ""
   },
-  "shareFile": "Share file",
+  "shareFile": "Share file of personal plan",
   "@shareFile": {
     "description": ""
   },
-  "shareRoutine": "Share routine message",
+  "shareRoutine": "Share text to involve supporters",
   "@shareRoutine": {
     "description": ""
   },
 
-  "shareEmergency": "Share emergency message",
+  "shareEmergency": "Share text in case of crises",
   "@shareEmergency": {
     "description": ""
   },
