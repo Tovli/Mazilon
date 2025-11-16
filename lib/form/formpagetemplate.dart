@@ -328,11 +328,12 @@ class _FormPageTemplateState extends LPExtendedState<FormPageTemplate> {
                         visualDensity: VisualDensity.compact,
                         title: isAlreadySelected(item)
                             ? DottedBorder(
-                                borderType: BorderType.RRect,
-                                radius: const Radius.circular(20),
-                                dashPattern: const [5, 5],
-                                color: appGreen,
-                                strokeWidth: 2,
+                                options: RoundedRectDottedBorderOptions(
+                                  radius: const Radius.circular(20),
+                                  dashPattern: const [5, 5],
+                                  color: appGreen,
+                                  strokeWidth: 2,
+                                ),
                                 child: Container(
                                   alignment: appLocale!.textDirection == "rtl"
                                       ? Alignment.centerRight
@@ -355,11 +356,12 @@ class _FormPageTemplateState extends LPExtendedState<FormPageTemplate> {
                                 ),
                               )
                             : DottedBorder(
-                                borderType: BorderType.RRect,
-                                radius: const Radius.circular(20),
-                                dashPattern: const [5, 5],
-                                color: Colors.transparent,
-                                strokeWidth: 2,
+                                options: RoundedRectDottedBorderOptions(
+                                  radius: const Radius.circular(20),
+                                  dashPattern: const [5, 5],
+                                  color: appGreen,
+                                  strokeWidth: 2,
+                                ),
                                 child: Container(
                                   alignment: appLocale!.textDirection == "rtl"
                                       ? Alignment.centerRight

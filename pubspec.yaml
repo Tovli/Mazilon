@@ -45,7 +45,7 @@ dependencies:
   mixpanel_flutter: ^2.3.4
   getwidget: ^7.0.0
   fluttericon: ^2.0.0
-  dotted_border: ^2.1.0
+  dotted_border: ^3.1.0
   keyboard_dismisser: ^3.0.0
   provider: ^6.1.4
   cloud_firestore: ^6.0.3
@@ -54,7 +54,7 @@ dependencies:
   cloud_firestore_platform_interface: ^7.0.3
   fluttertoast: ^9.0.0
   firebase_auth: ^6.1.1
-  google_sign_in: ^6.3.0
+  google_sign_in: ^7.2.0
   font_awesome_flutter: ^10.10.0
   share_plus: ^12.0.0
   flutter_screenutil: ^5.9.3
@@ -74,7 +74,7 @@ dependencies:
   sentry_flutter: ^9.7.0
   device_preview: ^1.2.0
   flutter_dotenv: ^6.0.0
-  flutter_timezone: ^3.0.1
+  flutter_timezone: ^5.0.1
   numberpicker: ^2.1.2
   flutter_contacts: ^1.1.9+2
   workmanager: ^0.9.0

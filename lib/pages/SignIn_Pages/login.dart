@@ -19,7 +19,6 @@ import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/util/SignIn/form_container.dart';
 import 'package:mazilon/util/SignIn/popup_toast.dart';
 import 'package:mazilon/util/SignIn/sign_callback.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 // LoginPage is a stateful widget that handles the user login process.
@@ -132,20 +131,33 @@ class _LoginPageState extends State<LoginPage> {
   Future<User?> signInWithGoogle(UserInformation userInfo) async {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
+    const scopes = <String>[
+      'email',
+      'https://www.googleapis.com/auth/drive.file', // Add Google Drive scope
+    ];
+    final _googleSignIn = GoogleSignIn.instance;
+    await _googleSignIn.initialize();
 
-    final GoogleSignIn googleSignIn = GoogleSignIn(
-      scopes: [
+    final GoogleSignInAccount? googleUser = await _googleSignIn.authenticate(
+      scopeHint: scopes,
+    );
+    /* final GoogleSignIn googleSignIn = GoogleSignIn(
+        /*  scopes: [
         'email',
         'https://www.googleapis.com/auth/drive.file', // Add Google Drive scope
-      ],
-    );
-    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      ],*/
+        );*/
+    // final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
     if (googleUser != null) {
+      final idToken = googleUser.authentication.idToken;
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
+      GoogleSignInClientAuthorization? authorization = await googleUser
+          .authorizationClient
+          .authorizationForScopes(['email', "profile"]);
       final OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
+        accessToken: authorization?.accessToken,
         idToken: googleAuth.idToken,
       );
       final UserCredential userCredential =
@@ -156,8 +168,11 @@ class _LoginPageState extends State<LoginPage> {
           'userId', PersistentMemoryType.String, userCredential.user!.uid);
       await service.setItem(
           'loggedIn', PersistentMemoryType.Bool, userCredential.user != null);
-      await service.setItem('googleAccessToken', PersistentMemoryType.String,
-          googleAuth.accessToken!);
+      await service.setItem(
+        'googleAccessToken',
+        PersistentMemoryType.String,
+        authorization?.accessToken,
+      );
 
       return userCredential.user;
     }
