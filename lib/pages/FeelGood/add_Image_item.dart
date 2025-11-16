@@ -64,8 +64,11 @@ class _ImageAddItemState extends LPExtendedState<ImageAddItem> {
         Provider.of<UserInformation>(context, listen: false);
     final gender = userInfoProvider.gender;
     return DottedBorder(
-      color: Colors.grey,
-      strokeWidth: 2,
+      options: RoundedRectDottedBorderOptions(
+        radius: const Radius.circular(20),
+        color: Colors.grey,
+        strokeWidth: 2,
+      ),
       child: Center(
         child: SizedBox.expand(
           child: TextButton(

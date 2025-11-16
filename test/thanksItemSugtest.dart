@@ -30,10 +30,11 @@ class _ThanksItemSuggestedState extends State<ThanksItemSuggested> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           DottedBorder(
-            borderType: BorderType.RRect,
-            radius: Radius.circular(20),
-            dashPattern: const [5, 5],
-            strokeWidth: 2,
+            options: RoundedRectDottedBorderOptions(
+              radius: const Radius.circular(20),
+              dashPattern: const [5, 5],
+              strokeWidth: 2,
+            ),
             child: Container(
               height: 50,
               decoration: BoxDecoration(
@@ -68,11 +69,12 @@ class _ThanksItemSuggestedState extends State<ThanksItemSuggested> {
               })
             },
             child: DottedBorder(
-              borderType: BorderType.RRect,
-              radius: Radius.circular(20),
-              dashPattern: const [5, 5],
-              color: const Color.fromARGB(255, 12, 207, 19),
-              strokeWidth: 2,
+              options: RoundedRectDottedBorderOptions(
+                radius: const Radius.circular(20),
+                dashPattern: const [5, 5],
+                color: const Color.fromARGB(255, 12, 207, 19),
+                strokeWidth: 2,
+              ),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 decoration: BoxDecoration(
