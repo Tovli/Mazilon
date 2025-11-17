@@ -1568,13 +1568,13 @@ class AppLocalizationsHe extends AppLocalizations {
   String get shareOptions => 'אפשרויות שיתוף';
 
   @override
-  String get shareFile => 'שיתוף קובץ';
+  String get shareFile => 'שיתוף קובץ של התוכנית האישית';
 
   @override
-  String get shareRoutine => 'שיתוף הודעה בשגרה';
+  String get shareRoutine => 'שיתוף הודעה כדי לערב תומכים';
 
   @override
-  String get shareEmergency => 'שיתוף הודעה בחירום';
+  String get shareEmergency => 'שיתוף הודעה במקרה של משבר';
 
   @override
   String get shareEmergencyMessage =>

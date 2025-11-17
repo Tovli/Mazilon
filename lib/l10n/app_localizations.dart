@@ -881,19 +881,19 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'Share file'**
+  /// **'Share file of personal plan'**
   String get shareFile;
 
   ///
   ///
   /// In en, this message translates to:
-  /// **'Share routine message'**
+  /// **'Share text to involve supporters'**
   String get shareRoutine;
 
   ///
   ///
   /// In en, this message translates to:
-  /// **'Share emergency message'**
+  /// **'Share text in case of crises'**
   String get shareEmergency;
 
   ///

@@ -1586,13 +1586,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareOptions => 'Share Options';
 
   @override
-  String get shareFile => 'Share file';
+  String get shareFile => 'Share file of personal plan';
 
   @override
-  String get shareRoutine => 'Share routine message';
+  String get shareRoutine => 'Share text to involve supporters';
 
   @override
-  String get shareEmergency => 'Share emergency message';
+  String get shareEmergency => 'Share text in case of crises';
 
   @override
   String get shareEmergencyMessage =>
