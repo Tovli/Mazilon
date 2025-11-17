@@ -35,7 +35,7 @@ class LPAlertDialogBoxItem extends StatelessWidget {
             onPressed: press,
             child: Text(
               buttonText,
-              style: TextStyle(color: Colors.black, fontSize: 15.sp),
+              style: TextStyle(color: Colors.black, fontSize: 13.sp),
             ),
           ),
         ],

@@ -118,7 +118,7 @@ void main() {
       await tester.pump();
       expect(find.byType(LPShareAlertDialog), findsWidgets);
       expect(find.byIcon(Icons.insert_drive_file_outlined), findsWidgets);
-      await tester.tap(find.text("שיתוף קובץ"));
+      await tester.tap(find.text("שיתוף קובץ של התוכנית האישית"));
       await tester.pump();
       expect(counterShare, 1);
     });
