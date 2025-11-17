@@ -17,7 +17,7 @@ class _TextWidgetState extends State<TextWidget> {
   String? dropdownValueGender = '';
   String? name = '';
   List<String> ages = ['18-', '18-30', '30-40', '40-55', '55+'];
-  List<String> genders = ['זכר', 'נקבה', 'לא בינארי', 'לא מעוניין להגיד'];
+  List<String> genders = ['אתה', 'את', 'לשון מעורבת', 'לא מעוניין להגיד'];
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +77,7 @@ class _TextWidgetState extends State<TextWidget> {
                   child: DropdownMenu<String>(
                     key: Key('dropdownGender'),
                     width: 300,
-                    initialSelection: 'זכר',
+                    initialSelection: 'אתה',
                     dropdownMenuEntries: [
                       ...genders
                           .map((gender) =>

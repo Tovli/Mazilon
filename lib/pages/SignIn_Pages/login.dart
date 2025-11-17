@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/global_enums.dart';
 
@@ -107,9 +107,7 @@ class _LoginPageState extends State<LoginPage> {
       _isSigning = true;
     });
 
-    User? user = google
-        ? await signInWithGoogle(userInfo)
-        : await _auth.signInWithEmailAndPassword(email, password);
+    User? user = await _auth.signInWithEmailAndPassword(email, password);
     setState(() {
       _isSigning = false;
     });
@@ -125,60 +123,6 @@ class _LoginPageState extends State<LoginPage> {
       showToast(message: "Some error occurred");
       return false;
     }
-  }
-
-  // Handles Google sign-in process.
-  Future<User?> signInWithGoogle(UserInformation userInfo) async {
-    PersistentMemoryService service = GetIt.instance<
-        PersistentMemoryService>(); // Get the persistent memory service instance
-    const scopes = <String>[
-      'email',
-      'https://www.googleapis.com/auth/drive.file', // Add Google Drive scope
-    ];
-    final _googleSignIn = GoogleSignIn.instance;
-    await _googleSignIn.initialize();
-
-    final GoogleSignInAccount? googleUser = await _googleSignIn.authenticate(
-      scopeHint: scopes,
-    );
-    /* final GoogleSignIn googleSignIn = GoogleSignIn(
-        /*  scopes: [
-        'email',
-        'https://www.googleapis.com/auth/drive.file', // Add Google Drive scope
-      ],*/
-        );*/
-    // final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-
-    if (googleUser != null) {
-      final idToken = googleUser.authentication.idToken;
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      GoogleSignInClientAuthorization? authorization = await googleUser
-          .authorizationClient
-          .authorizationForScopes(['email', "profile"]);
-      final OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: authorization?.accessToken,
-        idToken: googleAuth.idToken,
-      );
-      final UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-      userInfo.updateUserId(userCredential.user!.uid);
-      userInfo.updateLoggedIn(userCredential.user != null);
-      await service.setItem(
-          'userId', PersistentMemoryType.String, userCredential.user!.uid);
-      await service.setItem(
-          'loggedIn', PersistentMemoryType.Bool, userCredential.user != null);
-      await service.setItem(
-        'googleAccessToken',
-        PersistentMemoryType.String,
-        authorization?.accessToken,
-      );
-
-      return userCredential.user;
-    }
-    // Save the access token for future use with Google Drive API
-
-    return null; // User cancelled the Google sign-in process
   }
 
   @override

@@ -660,9 +660,9 @@ class AppLocalizationsHe extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'מהו השם שלך?(הרגישו בנוח לרשום כינוי)',
-        'female': 'מהו השם שלך?(הרגישו בנוח לרשום כינוי)',
-        'other': 'מהו השם שלך?(הרגישו בנוח לרשום כינוי)',
+        'male': 'מהו שמי?(אפשר גם לרשום כינוי)',
+        'female': 'מהו שמי?(אפשר גם לרשום כינוי)',
+        'other': 'מהו שמי?(אפשר גם לרשום כינוי)',
       },
     );
     return '$_temp0';
@@ -673,9 +673,9 @@ class AppLocalizationsHe extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'כיצד היית רוצה שנפנה אליך?',
-        'female': 'כיצד היית רוצה שנפנה אלייך?',
-        'other': 'כיצד היית רוצה שנפנה אלייך?',
+        'male': 'כיצד הייתי רוצה שיפנו אלי?',
+        'female': 'כיצד הייתי רוצה שיפנו אלי?',
+        'other': 'כיצד הייתי רוצה שיפנו אלי?',
       },
     );
     return '$_temp0';
@@ -686,9 +686,9 @@ class AppLocalizationsHe extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'מהו הגיל שלך?',
-        'female': 'מהו הגיל שלך?',
-        'other': 'מהו הגיל שלך?',
+        'male': 'מהו גילי?',
+        'female': 'מהו גילי?',
+        'other': 'מהו גילי?',
       },
     );
     return '$_temp0';
@@ -1452,16 +1452,16 @@ class AppLocalizationsHe extends AppLocalizations {
   }
 
   @override
-  String get male => 'זכר';
+  String get male => 'אתה';
 
   @override
   String get notWillingToSay => 'אחר';
 
   @override
-  String get female => 'נקבה';
+  String get female => 'את';
 
   @override
-  String get nonBinary => 'א בינארי';
+  String get nonBinary => 'לשון מעורבת';
 
   @override
   String showAll(String gender) {

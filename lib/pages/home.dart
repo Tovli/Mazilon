@@ -67,7 +67,6 @@ class _HomeState extends LPExtendedState<Home> {
     });
   }
 
-
   @override
   void initState() {
     loadData();
@@ -165,7 +164,8 @@ class _HomeState extends LPExtendedState<Home> {
                                   phonePageData: widget.phonePageData,
                                   username: userInfoProvider.name,
                                   age: age,
-                                  gender: gender,                                  changeLocale: widget.changeLocale,
+                                  gender: gender,
+                                  changeLocale: widget.changeLocale,
                                 )),
                       );
                     }, Icons.settings_outlined, primaryPurple)

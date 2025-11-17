@@ -61,9 +61,10 @@
      "userSettingsTitle": "{gender,select,male{עדכון פרטים אישיים} female{עדכון פרטים אישיים} other{עדכון פרטים אישיים}}",
      "userSettingsHeader": "{gender,select,male{הגדרות משתמש} female{הגדרות משתמש} other{הגדרות משתמש}}",
      "userSettingsReset": "{gender,select,male{איפוס חשבון} female{איפוס חשבון} other{איפוס חשבון}}",
-     "userSettingsName": "{gender,select,male{מהו השם שלך?(הרגישו בנוח לרשום כינוי)} female{מהו השם שלך?(הרגישו בנוח לרשום כינוי)} other{מהו השם שלך?(הרגישו בנוח לרשום כינוי)}}",
-     "userSettingsGender": "{gender,select,male{כיצד היית רוצה שנפנה אליך?} female{כיצד היית רוצה שנפנה אלייך?} other{כיצד היית רוצה שנפנה אלייך?}}",
-     "userSettingsAge": "{gender,select,male{מהו הגיל שלך?} female{מהו הגיל שלך?} other{מהו הגיל שלך?}}",
+     "userSettingsName": "{gender,select,male{מהו שמי?(אפשר גם לרשום כינוי)} female{מהו שמי?(אפשר גם לרשום כינוי)} other{מהו שמי?(אפשר גם לרשום כינוי)}}",
+     "userSettingsGender": "{gender,select,male{כיצד הייתי רוצה שיפנו אלי?} female{כיצד הייתי רוצה שיפנו אלי?} other{כיצד הייתי רוצה שיפנו אלי?}}",
+     "userSettingsAge": "{gender,select,male{מהו גילי?} female{מהו גילי?} other{מהו גילי?}}",
+
      "settings": "{gender,select,male{הגדרות} female{הגדרות} other{הגדרות}}",
 
 
@@ -137,9 +138,9 @@
          "showAll": "{gender,select,male{ראה הכל} female{ראי הכל} other{ראה.י הכל}}",
      "finishedDownloading": "{gender,select,male{הקובץ שלך ירד} female{הקובץ שלך ירד} other{הקובץ שלך ירד}}",  
      "downloadFailed": "{gender,select,male{ההורדה נכשלה} female{ההורדה נכשלה} other{ההורדה נכשלה}}",  
-    "male": "זכר",
-    "female": "נקבה",
-    "nonBinary": "א בינארי",
+    "male": "אתה",
+    "female": "את",
+    "nonBinary": "לשון מעורבת",
     "notWillingToSay": "אחר",
          "thanks": "תודה",
          "trait": "מעלה",
