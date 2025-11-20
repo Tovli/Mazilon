@@ -116,7 +116,7 @@ dynamic numbers = {
           "Need help? 112 is your life-saving number!",
       "whatsapp": false,
       "canCall": true,
-      "icon": Icons.chat
+      "icon": Icons.phone
     },
     {
       "name": "Mental Health",
