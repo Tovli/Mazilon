@@ -126,7 +126,7 @@ dynamic numbers = {
       "whatsapp": false,
       "number": "",
       "canCall": false,
-      "icon": Icons.chat
+      "icon": Icons.link
     }
   ],
   "australia": [
