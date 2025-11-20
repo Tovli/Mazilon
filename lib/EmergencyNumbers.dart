@@ -110,19 +110,19 @@ dynamic numbers = {
   ],
   "eu": [
     {
-      "name": "European Emergency Number",
+      "name": "Emergency",
       "number": "112",
       "description":
-          "Need help? 112 is your life-saving number! 112 is the European emergency phone number, available everywhere in the EU, free of charge.",
+          "Need help? 112 is your life-saving number!",
       "whatsapp": false,
       "canCall": true,
       "icon": Icons.chat
     },
     {
-      "name": "Mental Health Europe",
+      "name": "Mental Health",
       "link": "https://mhe-sme.org/",
       "description":
-          "Mental Health Europe is the leading European NGO advocating for mental health and well-being.",
+          "The leading NGO for mental health and well-being.",
       "whatsapp": false,
       "number": "",
       "canCall": false,

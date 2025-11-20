@@ -108,7 +108,7 @@ class _CountrySelectorWidgetState
                   showCountryOnly: true,
                   showOnlyCountryWhenClosed: true,
                   alignLeft: true, // Changed to true for left alignment
-                  countryFilter: ['IL', 'US', 'GB', 'AU'],
+                  countryFilter: ["IL", "US", "GB", "AU", "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE"],
                   padding: EdgeInsets.zero, // Remove internal padding
                 ),
               ),
