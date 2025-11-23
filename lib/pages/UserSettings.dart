@@ -192,9 +192,6 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
         Provider.of<UserInformation>(context, listen: false);
 
     final gender = userInfoProvider.gender;
-    print(localesNames);
-    print(locales);
-    print(userInfoProvider.localeName);
 
     return GestureDetector(
       onTap: () {
