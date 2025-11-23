@@ -25,7 +25,7 @@ class _UserSettingsState extends State<UserSettings> {
   String? dropdownValueGender = '';
   String? name = '';
   List<String> ages = ['18-', '18-30', '30-40', '40-55', '55+'];
-  List<String> genders = ['זכר', 'נקבה', 'לא בינארי', 'לא מעוניין להגיד'];
+  List<String> genders = ['אתה', 'את', 'לשון מעורבת', 'לא מעוניין להגיד'];
 
   void savePage(age, gender) {
     widget.updateData(_namecontroller.text, gender, age);
@@ -37,8 +37,8 @@ class _UserSettingsState extends State<UserSettings> {
     // TODO: implement initState
     dropdownValueAge = widget.age;
     dropdownValueGender = widget.gender == 'male'
-        ? 'זכר'
-        : (widget.gender == 'female' ? 'נקבה' : '');
+        ? 'אתה'
+        : (widget.gender == 'female' ? 'את' : '');
     super.initState();
     _namecontroller = TextEditingController(text: widget.username);
   }
@@ -136,7 +136,7 @@ class _UserSettingsState extends State<UserSettings> {
                     child: Directionality(
                       textDirection: TextDirection.rtl,
                       child: DropdownMenu<String>(
-                        initialSelection: 'לא בינארי'
+                        initialSelection: 'לשון מעורבת'
 
                         //userInfoProvider.gender == 'nonbinary'
                         // ? 'לא בינארי'
@@ -174,13 +174,13 @@ class _UserSettingsState extends State<UserSettings> {
                     FocusScope.of(context).unfocus();
 
                     switch (dropdownValueGender!) {
-                      case 'זכר':
+                      case 'אתה':
                         savePage(dropdownValueAge!, 'male');
                         break;
-                      case 'נקבה':
+                      case 'את':
                         savePage(dropdownValueAge!, 'female');
                         break;
-                      case 'לא בינארי':
+                      case 'לשון מעורבת':
                         savePage(dropdownValueAge!, '');
                         break;
                       default:

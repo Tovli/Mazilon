@@ -108,9 +108,9 @@ void main() {
         findsOneWidget);
 
     // Verify the presence of the form labels
-    expect(find.text('כיצד היית רוצה שנפנה אליך?'), findsOneWidget);
-    expect(find.text('מהו הגיל שלך?'), findsOneWidget);
-    expect(find.text('כיצד היית רוצה שנפנה אליך?'), findsOneWidget);
+    expect(find.text('כיצד הייתי רוצה שיפנו אלי?'), findsOneWidget);
+    expect(find.text('מהו גילי?'), findsOneWidget);
+    expect(find.text('כיצד הייתי רוצה שיפנו אלי?'), findsOneWidget);
 
     // Verify the presence of the text field and dropdown menus
     expect(find.byType(TextField), findsWidgets);
@@ -144,11 +144,11 @@ void main() {
     // Tap on the gender dropdown menu and select an option
     await tester.tap(find.byType(TextField).last);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('נקבה').last);
+    await tester.tap(find.text('את').last);
     await tester.pumpAndSettle();
 
     // Verify the selected gender
-    expect(find.text('נקבה'), findsWidgets);
+    expect(find.text('את'), findsWidgets);
   });
 
   testWidgets('InitialFormPage2 button tap', (WidgetTester tester) async {

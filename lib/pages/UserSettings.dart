@@ -5,7 +5,7 @@ import 'package:mazilon/Locale/locale_service.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
@@ -102,8 +102,7 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
 
     userInfo.reset(localeService.getLocale());
     await pickerService.deleteImages();
-    final GoogleSignIn googleSignIn = GoogleSignIn.instance;
-    await googleSignIn.signOut();
+
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
             builder: (context) => FirstPage(

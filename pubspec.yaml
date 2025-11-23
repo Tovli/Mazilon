@@ -54,7 +54,6 @@ dependencies:
   cloud_firestore_platform_interface: ^7.0.3
   fluttertoast: ^9.0.0
   firebase_auth: ^6.1.1
-  google_sign_in: ^7.2.0
   font_awesome_flutter: ^10.10.0
   share_plus: ^12.0.0
   flutter_screenutil: ^5.9.3
