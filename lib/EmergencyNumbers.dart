@@ -5,20 +5,12 @@ dynamic numbers = {
     {
       "name": "105",
       "number": "105",
-      "link": "https://govforms.gov.il/mw/forms/moked105@police.gov.il",
+      "whatsappNumber": "0521210105",
+      "link": "",
       "description": "המטה הלאומי להגנת ילדים ברשת",
       "icon": Icons.phone,
-      "whatsapp": false,
-      "canCall": true,
-    },
-    {
-      "name": "whatsapp 105",
-      "number": "0521210105",
-      "link": "https://govforms.gov.il/mw/forms/moked105@police.gov.il",
-      "description": "וואטסאפ למטה הלאומי להגנת ילדים ברשת",
-      "icon": Icons.chat,
       "whatsapp": true,
-      "canCall": false,
+      "canCall": true,
     },
     {
       "name": "ער\"ן",
