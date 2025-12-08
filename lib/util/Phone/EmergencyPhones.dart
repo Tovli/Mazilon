@@ -21,19 +21,52 @@ class EmergencyPhonesGrid extends StatelessWidget {
     final localNumbers;
     final userInfo = Provider.of<UserInformation>(context, listen: false);
     final selectedCountry = userInfo.location.toLowerCase();
-
-
-    if (selectedCountry == "us") {
-      localNumbers = numbers["usa"];
-    } else if (selectedCountry == "gb") {
-      localNumbers = numbers["uk"];
-    } else if (selectedCountry == "au") {
-      localNumbers = numbers["australia"];
-    } else if (selectedCountry == "il") {
-      localNumbers = numbers["israel"];
-    } else {
-      localNumbers = numbers["eu"];
-    }
+    final Map<String, dynamic> numLookup = {
+      "at": "eu",
+      "be": "eu",
+      "bg": "eu",
+      "hr": "eu",
+      "cy": "eu",
+      "cz": "eu",
+      "dk": "eu",
+      "ee": "eu",
+      "fi": "eu",
+      "fr": "eu",
+      "de": "eu",
+      "gr": "eu",
+      "hu": "eu",
+      "ie": "eu",
+      "it": "eu",
+      "lv": "eu",
+      "lt": "eu",
+      "lu": "eu",
+      "mt": "eu",
+      "nl": "eu",
+      "pl": "eu",
+      "pt": "eu",
+      "ro": "eu",
+      "sk": "eu",
+      "si": "eu",
+      "es": "eu",
+      "se": "eu",
+      "us": "usa",
+      "il": "israel",
+      "gb": "uk",
+      "au": "australia",
+    };
+    // ["IL", "US", "GB", "AU", , "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE"],
+    localNumbers = numbers[numLookup[selectedCountry] ?? "eu"];
+    // if (selectedCountry == "us") {
+    //   localNumbers = numbers["usa"];
+    // } else if (selectedCountry == "gb") {
+    //   localNumbers = numbers["uk"];
+    // } else if (selectedCountry == "au") {
+    //   localNumbers = numbers["australia"];
+    // } else if (selectedCountry == "il") {
+    //   localNumbers = numbers["israel"];
+    // } else {
+    //   localNumbers = numbers["eu"];
+    // }
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
