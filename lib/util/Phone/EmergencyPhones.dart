@@ -54,19 +54,9 @@ class EmergencyPhonesGrid extends StatelessWidget {
       "gb": "uk",
       "au": "australia",
     };
-    // ["IL", "US", "GB", "AU", , "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE"],
+
     localNumbers = numbers[numLookup[selectedCountry] ?? "eu"];
-    // if (selectedCountry == "us") {
-    //   localNumbers = numbers["usa"];
-    // } else if (selectedCountry == "gb") {
-    //   localNumbers = numbers["uk"];
-    // } else if (selectedCountry == "au") {
-    //   localNumbers = numbers["australia"];
-    // } else if (selectedCountry == "il") {
-    //   localNumbers = numbers["israel"];
-    // } else {
-    //   localNumbers = numbers["eu"];
-    // }
+
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
