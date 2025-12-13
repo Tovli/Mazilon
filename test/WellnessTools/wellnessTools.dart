@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'player.dart';
 
 class WellnessTools extends StatefulWidget {
@@ -42,6 +41,7 @@ class _WellnessToolsState extends State<WellnessTools> {
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -60,7 +60,7 @@ class _WellnessToolsState extends State<WellnessTools> {
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
                     ),
-                    Container(
+                    SizedBox(
                       height: 100,
                       child: Image.asset(
                         'assets/images/Logo.png',
@@ -117,8 +117,8 @@ class _WellnessToolsState extends State<WellnessTools> {
                       return Container();
                     }
 
-                    return Container(
-                      key: Key("tap${index}"),
+                    return SizedBox(
+                      key: Key("tap$index"),
                       width: 150,
                       height: 100,
                       child: GestureDetector(
@@ -127,7 +127,7 @@ class _WellnessToolsState extends State<WellnessTools> {
                             selectedVideoId = index;
                           });
                         },
-                        child: Container(
+                        child: SizedBox(
                           width: 50,
                           height: 50,
                           child: Image.asset('assets/images/Logo.png'),

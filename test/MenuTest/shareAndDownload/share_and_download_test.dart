@@ -81,6 +81,7 @@ void main() {
       when(mockFileServiceImpl.download(any, any, any, any, any))
           .thenAnswer(((Invocation invocation) async {
         counterDownload = counterDownload + 1;
+        return null;
       }));
       mockSharedPreferences = MockSharedPreferences();
       mockUserInformation = UserInformation();

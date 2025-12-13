@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/Phone/emergencyDialogBox.dart';
-import 'package:provider/provider.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/EmergencyNumbers.dart';
 import 'dart:io';
+import 'package:flutter/widgets.dart' show WidgetsBinding;
 
 // Extracts and returns the list of child widgets from a Row widget
 List<Widget> extractChildrenFromRow(Row row) {
@@ -15,12 +15,15 @@ List<Widget> extractChildrenFromRow(Row row) {
 
 // A stateless widget that displays a grid of emergency phone items
 class EmergencyPhonesGrid extends StatelessWidget {
+  const EmergencyPhonesGrid({super.key});
+
   @override
   Widget build(BuildContext context) {
     final appLocale = AppLocalizations.of(context);
-    final String defaultLocale =
-        Platform.localeName; // Returns locale string in the form 'en_US'
-    String countryCode = defaultLocale.substring(defaultLocale.length - 2);
+    final String defaultLocale = kIsWeb
+        ? WidgetsBinding.instance.platformDispatcher.locale.toLanguageTag()
+        : Platform.localeName; // Returns locale string in the form 'en_US'
+    final String countryCode = defaultLocale.split(RegExp('[-_]')).last;
 
     final localNumbers = countryCode == "IL" || appLocale!.language == "עברית"
         ? numbers["israel"]

@@ -15,7 +15,6 @@ import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 // This widget displays the user's personalized plan with sections for various topics.
 // It allows the user to view their selected answers and navigate to additional forms or options.
@@ -24,7 +23,7 @@ class MyPlanPageFull extends StatefulWidget {
   final bool hasFilled; // Whether the user has filled out the required forms
   final Function changeLocale;
 
-  MyPlanPageFull(
+  const MyPlanPageFull(
       {super.key,
       required this.phonePageData,
       required this.hasFilled,
@@ -124,7 +123,7 @@ class _MyPlanPageFullState extends LPExtendedState<MyPlanPageFull> {
           title: SingleChildScrollView(
             child: Center(
                 child: myAutoSizedText(
-                    appLocale!.personalPlanPageMyPlan(gender),
+                    appLocale.personalPlanPageMyPlan(gender),
                     TextStyle(fontWeight: FontWeight.bold, fontSize: 30.sp),
                     null,
                     40)),
@@ -158,8 +157,8 @@ class _MyPlanPageFullState extends LPExtendedState<MyPlanPageFull> {
             ),
             // Additional section for phone-related information
             MyPlanSection(
-              title: appLocale!.phonesPageHeader(gender),
-              subTitle: appLocale!.phonesPageSubTitle(gender),
+              title: appLocale.phonesPageHeader(gender),
+              subTitle: appLocale.phonesPageSubTitle(gender),
               answers: phoneInformation,
             ),
             SizedBox(
@@ -175,7 +174,7 @@ class _MyPlanPageFullState extends LPExtendedState<MyPlanPageFull> {
                           textAlign: TextAlign.justify,
                           text: TextSpan(children: <TextSpan>[
                             TextSpan(
-                              text: text1 + " ",
+                              text: "$text1 ",
                               style: TextStyle(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.normal,
@@ -185,21 +184,21 @@ class _MyPlanPageFullState extends LPExtendedState<MyPlanPageFull> {
                               recognizer: TapGestureRecognizer()
                                 ..onTap =
                                     () => _launchURL(Uri.parse(text2Link)),
-                              text: text2 + " ",
+                              text: "$text2 ",
                               style: TextStyle(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.normal,
                                   color: Color.fromARGB(255, 6, 25, 231)),
                             ),
                             TextSpan(
-                              text: text3 + " ",
+                              text: "$text3 ",
                               style: TextStyle(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.normal,
                                   color: Colors.black),
                             ),
                             TextSpan(
-                              text: text4 + " ",
+                              text: "$text4 ",
                               style: TextStyle(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.normal,
@@ -209,14 +208,14 @@ class _MyPlanPageFullState extends LPExtendedState<MyPlanPageFull> {
                               recognizer: TapGestureRecognizer()
                                 ..onTap =
                                     () => _launchURL(Uri.parse(text5Link)),
-                              text: text5 + " ",
+                              text: "$text5 ",
                               style: TextStyle(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.normal,
                                   color: Color.fromARGB(255, 6, 25, 231)),
                             ),
                             TextSpan(
-                              text: text6 + ".",
+                              text: "$text6.",
                               style: TextStyle(
                                   fontSize: 15.sp,
                                   fontWeight: FontWeight.normal,
@@ -269,8 +268,8 @@ class _MyPlanPageFullState extends LPExtendedState<MyPlanPageFull> {
               ),
               child: myAutoSizedText(
                   widget.hasFilled
-                      ? appLocale!.personalPlanPageHasFilled(gender)
-                      : appLocale!.personalPlanPageDidNotFill(gender),
+                      ? appLocale.personalPlanPageHasFilled(gender)
+                      : appLocale.personalPlanPageDidNotFill(gender),
                   TextStyle(
                       fontSize: 20.sp,
                       fontWeight: FontWeight.bold,

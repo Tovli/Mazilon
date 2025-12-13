@@ -7,7 +7,6 @@ import 'package:mazilon/util/logger_service.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/type_utils.dart';
 import 'dart:math';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:mazilon/util/SignIn/popup_toast.dart';
@@ -347,7 +346,7 @@ Future<bool> loadAppInfoFromJson(
       appInfo.updateSyncPages(json['syncPages'].cast<String, String>());
 
       return true;
-    } catch (error, stackTrace) {
+    } catch (error) {
       /*  IncidentLoggerService loggerService =
           GetIt.instance<IncidentLoggerService>();
       await loggerService.captureLog(
@@ -417,7 +416,7 @@ Future<void> loadAppFromFirebase(AppInformation appInfo) async {
   Map<String, String> BT = {};
   Map<String, String> OS = {};
   var doc = await FirebaseFirestore.instance.collectionGroup('subgroup').get();
-  doc.docs.forEach((element) {
+  for (var element in doc.docs) {
     Map<String, dynamic> data = element.data();
 
     if (data.containsKey('page')) {
@@ -620,7 +619,7 @@ Future<void> loadAppFromFirebase(AppInformation appInfo) async {
         default:
       }
     }
-  });
+  }
 
   QuerySnapshot snapshot =
       await FirebaseFirestore.instance.collection('VersionManager').get();
@@ -869,7 +868,7 @@ Future<Warning> fetchWarnings() async {
   final List<DocumentSnapshot> documents = result.docs;
   List<String> warnings =
       documents.map((doc) => doc.get('suggestions') as String).toList();
-  var rng = new Random();
+  var rng = Random();
   var randomNumber = rng.nextInt(warnings.length);
   String text = warnings[randomNumber];
   return Warning(text: text, warnings: warnings);

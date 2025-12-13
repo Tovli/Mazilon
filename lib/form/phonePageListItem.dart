@@ -7,18 +7,16 @@ import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/userInformation.dart';
-import 'package:mazilon/util/appInformation.dart';
 
-import 'package:mazilon/l10n/app_localizations.dart';
 
 class PhonePageList extends StatefulWidget {
-  PhonePageData phonePageData;
+  final PhonePageData phonePageData;
   @override
   _PhonePageListState createState() => _PhonePageListState();
   PhonePageList({
-    Key? key,
+    super.key,
     required this.phonePageData,
-  }) : super(key: key);
+  });
 }
 
 class _PhonePageListState extends LPExtendedState<PhonePageList> {
@@ -55,7 +53,7 @@ class _PhonePageListState extends LPExtendedState<PhonePageList> {
               children: [
                 if (isEditing)
                   myText(
-                      appLocale!.phonesPageName(gender),
+                      appLocale.phonesPageName(gender),
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
                       null),
                 if (isEditing)
@@ -89,7 +87,7 @@ class _PhonePageListState extends LPExtendedState<PhonePageList> {
                 const SizedBox(width: 10),
                 if (isEditing)
                   myText(
-                      appLocale!.phonesPagePhone(gender),
+                      appLocale.phonesPagePhone(gender),
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 12.sp),
                       null),
                 Expanded(
@@ -161,7 +159,7 @@ class _PhonePageListState extends LPExtendedState<PhonePageList> {
               ],
             ),
           );
-        }).toList(),
+        }),
         const SizedBox(width: 10), // Add some space between the buttons
         //add contact manually button:
         TextButton(
@@ -191,7 +189,7 @@ class _PhonePageListState extends LPExtendedState<PhonePageList> {
             padding: const EdgeInsets.all(6),
           ),
           child: myText(
-              appLocale!.phonesPageManualTitle(gender),
+              appLocale.phonesPageManualTitle(gender),
               TextStyle(
                   fontWeight: FontWeight.bold,
                   color: primaryPurple,

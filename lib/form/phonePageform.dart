@@ -2,35 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:mazilon/form/phonePageListItem.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import 'package:permission_handler/permission_handler.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/userInformation.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 
-import 'package:mazilon/l10n/app_localizations.dart';
 
 class PhonePageForm extends StatefulWidget {
   final Function next;
   final Function prev;
 
-  PhonePageData phonePageData;
+  final PhonePageData phonePageData;
   PhonePageForm({
-    Key? key,
+    super.key,
     required this.next,
     required this.prev,
     required this.phonePageData,
-  }) : super(key: key);
+  });
 
   @override
   State<PhonePageForm> createState() => _PhonePageFormState();
 }
 
 class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
+  late PhonePageData phonePageData;
   List<TextEditingController> nameControllers = [];
   List<TextEditingController> numberControllers = [];
   TextEditingController controller1 = TextEditingController();
@@ -44,9 +41,9 @@ class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
     String? phoneName = contact.displayName;
     String? phoneNumber =
         contact.phones.isNotEmpty == true ? contact.phones[0].number : null;
-    if (phoneName != null && phoneNumber != null) {
-      widget.phonePageData.addItem(phoneName, phoneNumber);
-      editingIndex = widget.phonePageData.savedPhoneNames.length -
+    if (phoneNumber != null) {
+      phonePageData.addItem(phoneName, phoneNumber);
+      editingIndex = phonePageData.savedPhoneNames.length -
           1; // Set editingIndex to the index of the new contact
       nameControllers.add(TextEditingController(text: phoneName));
       numberControllers.add(TextEditingController(text: phoneNumber));
@@ -56,8 +53,6 @@ class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
   }
 
   Future<void> pickContact() async {
-    PermissionStatus status = await Permission.contacts.status;
-
     if (await FlutterContacts.requestPermission(readonly: true)) {
       final contact = await FlutterContacts.openExternalPick();
       //Contact? contact = await ContactsService.openDeviceContactPicker();
@@ -72,8 +67,12 @@ class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
 
   @override
   void dispose() {
-    nameControllers.forEach((controller) => controller.dispose());
-    numberControllers.forEach((controller) => controller.dispose());
+    for (var controller in nameControllers) {
+      controller.dispose();
+    }
+    for (var controller in numberControllers) {
+      controller.dispose();
+    }
     controller1.dispose();
     controller2.dispose();
     super.dispose();
@@ -82,21 +81,18 @@ class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
   @override
   void initState() {
     super.initState();
-    for (int i = 0; i < widget.phonePageData.savedPhoneNames.length; i++) {
-      nameControllers.add(
-          TextEditingController(text: widget.phonePageData.savedPhoneNames[i]));
-      numberControllers.add(TextEditingController(
-          text: widget.phonePageData.savedPhoneNumbers[i]));
+    phonePageData = widget.phonePageData;
+    for (int i = 0; i < phonePageData.savedPhoneNames.length; i++) {
+      nameControllers
+          .add(TextEditingController(text: phonePageData.savedPhoneNames[i]));
+      numberControllers.add(
+          TextEditingController(text: phonePageData.savedPhoneNumbers[i]));
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      widget.phonePageData = Provider.of<PhonePageData>(context, listen: false);
+      phonePageData = Provider.of<PhonePageData>(context, listen: false);
     });
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +115,7 @@ class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
                     alignment: Alignment.topCenter,
                     margin: EdgeInsets.symmetric(horizontal: 15),
                     child: myAutoSizedText(
-                        appLocale!.phonesPageHeader(gender),
+                        appLocale.phonesPageHeader(gender),
                         TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.sp,
@@ -146,7 +142,7 @@ class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
                             padding: const EdgeInsets.all(6),
                           ),
                           child: myText(
-                              appLocale!.phonesPageContactImportTitle(gender),
+                              appLocale.phonesPageContactImportTitle(gender),
                               TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: primaryPurple,
@@ -165,7 +161,7 @@ class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
               builder: (context, phonePageData, child) {
                 return Column(
                   children: [
-                    PhonePageList(phonePageData: widget.phonePageData),
+                    PhonePageList(phonePageData: phonePageData),
                     //add contact from contact list button:
                   ],
                 );
@@ -175,13 +171,13 @@ class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
               height: returnSizedBox(context, 10),
             ),
             //save all data after confirming:
-            ConfirmationButton(context, () async {
-              await widget.phonePageData.loadItemsFromPrefs();
-              await widget.phonePageData.saveItemsToPrefs();
-              widget.phonePageData.update();
+            confirmationButton(context, () async {
+              await phonePageData.loadItemsFromPrefs();
+              await phonePageData.saveItemsToPrefs();
+              phonePageData.update();
               widget.next();
             },
-                appLocale!.nextButton(gender),
+                appLocale.nextButton(gender),
                 myTextStyle.copyWith(
                     fontWeight: FontWeight.bold, fontSize: 20.sp)),
             Center(
@@ -189,7 +185,7 @@ class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
                 alignment: Alignment.topCenter,
                 margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 child: myAutoSizedText(
-                    appLocale!.addingContactDisclaimer,
+                    appLocale.addingContactDisclaimer,
                     TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 12.sp,

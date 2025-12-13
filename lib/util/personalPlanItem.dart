@@ -33,7 +33,7 @@ class _PersonalPlanItemState extends State<PersonalPlanItem> {
               fontFamily: 'Rubix'),
           overflowReplacement: AutoSizeText(
             widget.text.length > 13
-                ? widget.text.substring(0, 13) + '...'
+                ? '${widget.text.substring(0, 13)}...'
                 : widget.text,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(

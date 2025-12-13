@@ -131,7 +131,7 @@ void main() {
             'hasFilled', PersistentMemoryType.Bool, true))
         .thenAnswer((_) async {
       completer.complete();
-      return null;
+      return;
     });
 
     // Pump the widget and let it settle

@@ -10,14 +10,11 @@ import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/styles.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 
-import 'package:mazilon/l10n/app_localizations.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
 
 class FormPageTemplate extends StatefulWidget {
   //next page:
@@ -27,12 +24,11 @@ class FormPageTemplate extends StatefulWidget {
 
   final String collectionName;
 
-  FormPageTemplate(
-      {Key? key,
+  const FormPageTemplate(
+      {super.key,
       required this.next,
       required this.prev,
-      required this.collectionName})
-      : super(key: key);
+      required this.collectionName});
 
   @override
   State<FormPageTemplate> createState() => _FormPageTemplateState();
@@ -87,7 +83,7 @@ class _FormPageTemplateState extends LPExtendedState<FormPageTemplate> {
     setState(() {});
   }
 
-  void createSelection(userInfo) async {
+  void createSelection(UserInformation userInfo) async {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
@@ -114,7 +110,7 @@ class _FormPageTemplateState extends LPExtendedState<FormPageTemplate> {
         PersistentMemoryType.StringList, [...selectedItems]);
   }
 
-  void loadItems(userInfo) {
+  void loadItems(UserInformation userInfo) {
     switch (widget.collectionName) {
       case 'PersonalPlan-DifficultEvents':
         selectedItems = [...userInfo.difficultEvents];
@@ -335,7 +331,7 @@ class _FormPageTemplateState extends LPExtendedState<FormPageTemplate> {
                                   strokeWidth: 2,
                                 ),
                                 child: Container(
-                                  alignment: appLocale!.textDirection == "rtl"
+                                  alignment: appLocale.textDirection == "rtl"
                                       ? Alignment.centerRight
                                       : Alignment.centerLeft,
                                   constraints: BoxConstraints(minHeight: 55),
@@ -363,7 +359,7 @@ class _FormPageTemplateState extends LPExtendedState<FormPageTemplate> {
                                   strokeWidth: 2,
                                 ),
                                 child: Container(
-                                  alignment: appLocale!.textDirection == "rtl"
+                                  alignment: appLocale.textDirection == "rtl"
                                       ? Alignment.centerRight
                                       : Alignment.centerLeft,
                                   //height: returnSizedBox(context, 70),
@@ -446,7 +442,7 @@ class _FormPageTemplateState extends LPExtendedState<FormPageTemplate> {
                   height: returnSizedBox(context, 10),
                 ),
                 //next button:
-                ConfirmationButton(context, () {
+                confirmationButton(context, () {
                   AnalyticsService mixPanelService =
                       GetIt.instance<AnalyticsService>();
                   mixPanelService.trackEvent(

@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:mazilon/AnalyticsService.dart';
 
 import 'package:mazilon/pages/FeelGood/FeelGoodInheritedWidget.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
-import 'package:mazilon/util/appInformation.dart';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:mazilon/util/userInformation.dart';
 
 import 'package:provider/provider.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 class ImageAddItem extends StatefulWidget {
-  ImageAddItem({Key? key}) : super(key: key);
+  const ImageAddItem({super.key});
   @override
   _ImageAddItemState createState() => _ImageAddItemState();
 }

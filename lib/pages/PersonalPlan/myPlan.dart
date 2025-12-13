@@ -5,7 +5,6 @@ import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:mazilon/l10n/app_localizations.dart';
 // MyPlan is a custom widget that displays a title, a subtitle, and a list of answers in a structured format.
 // It is designed to present a section of a user's plan with clear and organized visual elements.
 
@@ -90,7 +89,7 @@ class _MyPlanSectionState extends LPExtendedState<MyPlanSection> {
                                     fontWeight: FontWeight.normal,
                                     fontSize: 12.sp,
                                     color: Colors.black),
-                                appLocale!.textDirection == "rtl"
+                                appLocale.textDirection == "rtl"
                                     ? TextAlign.right
                                     : TextAlign.left,
                                 40))

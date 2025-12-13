@@ -5,7 +5,6 @@ import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/type_utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PhonePageData extends ChangeNotifier {
   final String key;

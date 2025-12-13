@@ -1,6 +1,6 @@
 import json
 import os
-import google.generativeai as genai
+from google import generativeai as genai
 from dotenv import load_dotenv
 import time
 inspirationalQuotes = [
@@ -162,21 +162,21 @@ distractionsList =  [
       "נדודי שינה או שינה מעוטה",
     ]
 
-load_dotenv(dotenv_path='D:/Git/Mazilon/.env')
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+load_dotenv(dotenv_path=".env")
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])  # type: ignore[attr-defined]
 
 # Create the model
-generation_config = {
-  "temperature": 1,
-  "top_p": 0.95,
-  "top_k": 40,
-  "max_output_tokens": 8192,
-  "response_mime_type": "application/json",
-}
+generation_config = genai.types.GenerationConfig(  # type: ignore[attr-defined]
+    temperature=1,
+    top_p=0.95,
+    top_k=40,
+    max_output_tokens=8192,
+    response_mime_type="application/json",
+)
 
 
 def sendToGemini (text):
-    model = genai.GenerativeModel(
+    model = genai.GenerativeModel(  # type: ignore[attr-defined]
     model_name="gemini-1.5-flash-8b",
     generation_config=generation_config,
     system_instruction="Your job is given a sentence in Hebrew, to identify the gendered terms and return a json-like object with a corresponding sentence for each of the following genders: male, female,non binary. Also, in the json object there should be an \"english\" field with the translated sentence. If there are no gendered words, return 3 identical sentences, and the english translation of it in the json like object. You sould be consistent and always use the \".\" symbol for the nonbinary word.\nexamples:\noriginal input: זה מה שאני אומר\nexpected output: { male: \"זה מה שאני אומר\", female: \"זה מה שאני אומרת\", nonbinary:\"זה מה שאני אומר.ת\", english:\"That is what I'm saying\"}\noriginal input: שגרה מייצרת יציבות\nexpected output: { male: \"שגרה מייצרת יציבות\", female: \"שגרה מייצרת יציבות\", nonbinary:\"שגרה מייצרת יציבות\", english:\"Routine creates stability\"}",
@@ -293,7 +293,7 @@ if __name__ == "__main__":
    theList= {
         "name":"difficultEventsList",  
    }
-   theList["list"]=globals()[theList["name"]],
+   theList["list"] = globals()[theList["name"]]
    b=theList["list"]
    print( b[0])
    

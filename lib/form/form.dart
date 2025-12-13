@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:mazilon/form/phonePageform.dart';
@@ -20,7 +18,6 @@ import 'package:provider/provider.dart';
 
 import 'package:mazilon/util/userInformation.dart';
 
-import 'package:mazilon/l10n/app_localizations.dart';
 
 List<String> pages = [
   'PersonalPlan-DifficultEvents',
@@ -30,10 +27,10 @@ List<String> pages = [
 ];
 
 class FormProgressIndicator extends StatefulWidget {
-  PhonePageData phonePageData;
+  final PhonePageData phonePageData;
   final Function changeLocale;
 
-  FormProgressIndicator({
+  const FormProgressIndicator({
     super.key,
     required this.phonePageData,
     required this.changeLocale,
@@ -60,13 +57,13 @@ class FormProgressIndicatorState
     });
   }
 
-  void updateName(name) {
+  void updateName(String name) {
     setState(() {
       this.name = name;
     });
   }
 
-  void submitForm(mycontext) async {
+  void submitForm(BuildContext mycontext) async {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
@@ -89,7 +86,7 @@ class FormProgressIndicatorState
     );
   }
 
-  void navigateToMenu(mycontext) {
+  void navigateToMenu(BuildContext mycontext) {
     Navigator.pushAndRemoveUntil(
       mycontext,
       MaterialPageRoute(
@@ -191,7 +188,7 @@ class FormProgressIndicatorState
                             ),
                           IconButton(
                             icon: myAutoSizedText(
-                                appLocale!.saveAndQuitButton(gender),
+                                appLocale.saveAndQuitButton(gender),
                                 TextStyle(fontSize: 23.sp),
                                 null,
                                 23),

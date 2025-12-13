@@ -5,7 +5,6 @@ import 'steps_widget.dart'; // Import your widget file
 import 'text_widget.dart';
 import 'phone_widget.dart';
 
-import 'list.dart';
 
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -124,11 +123,11 @@ void main() {
     await tester.enterText(nameField2, 'Test Name');
     await tester.enterText(numberField2, 'Test Number');
     await tester.pump();
-    var myState = tester.state(find.byType(PhoneWidget));
+    tester.state(find.byType(PhoneWidget));
     expect(find.text('Test Name'), findsOneWidget);
     expect(find.text('Test Number'), findsOneWidget);
     await tester.tap(addPhoneButton2);
-    myState = tester.state(find.byType(PhoneWidget));
+    tester.state(find.byType(PhoneWidget));
     await tester.pump();
     expect(deletePhoneButton2, findsNothing);
     expect(nameField2, findsNothing);
@@ -144,7 +143,7 @@ void main() {
     expect(find.byKey(Key('enterEditingMode')), findsWidgets);
     await tester.tap(find.byKey(Key('enterEditingMode')));
     await tester.pump();
-    myState = tester.state(find.byType(PhoneWidget));
+    tester.state(find.byType(PhoneWidget));
 
     final deletePhoneButton3 = find.byKey(Key('deletePhoneButton'));
     final nameField3 = find.byKey(Key('nameField'));

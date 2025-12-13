@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class StepsWidget extends StatefulWidget {
+  const StepsWidget({super.key});
+
   @override
   _StepsWidgetState createState() => _StepsWidgetState();
 }
@@ -51,7 +53,7 @@ class _StepsWidgetState extends State<StepsWidget> {
           ),
           body: Column(
             children: [
-              Text('Step ' + currentStep.toString()),
+              Text('Step $currentStep'),
               ElevatedButton(
                 key: Key('Next'),
                 onPressed: next,

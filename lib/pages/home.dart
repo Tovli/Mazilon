@@ -30,7 +30,7 @@ import 'package:provider/provider.dart';
 //the main page of the app
 //allows navigation to all other pages
 class Home extends StatefulWidget {
-  PhonePageData phonePageData;
+  final PhonePageData phonePageData;
   final Function(BuildContext, PagesCode) changeCurrentIndex;
   final Function changeLocale;
 
@@ -69,9 +69,8 @@ class _HomeState extends LPExtendedState<Home> {
 
   @override
   void initState() {
-    loadData();
-    checkLanguage("a");
     super.initState();
+    loadData();
   }
 
 //fuction to handle the removal of a thank you
@@ -121,16 +120,6 @@ class _HomeState extends LPExtendedState<Home> {
     }
   }
 
-  void checkLanguage(String string) {
-    final regex = RegExp(r'[a-z]');
-    final regexHebrew = RegExp(r'[\u0590-\u05FF]');
-    if (regexHebrew.hasMatch("a"))
-      debugPrint("has match");
-    else
-      debugPrint("no match");
-    // return regex.hasMatch(input);
-  }
-
   @override
   Widget build(BuildContext context) {
     final userInfoProvider =
@@ -153,7 +142,7 @@ class _HomeState extends LPExtendedState<Home> {
             children: [
               //This shows the "hello <username>" banner and settings button
               NameBar(
-                  greetingString: appLocale!.homePageGreetings(gender),
+                  greetingString: appLocale.homePageGreetings(gender),
                   icons: [
                     //settings button:
                     myTextButton(() {

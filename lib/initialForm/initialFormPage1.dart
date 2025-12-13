@@ -7,7 +7,6 @@ import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 
-import 'package:mazilon/l10n/app_localizations.dart';
 
 //The first page of the initial form
 //all text is in the CMS and is fetched from there
@@ -41,7 +40,7 @@ class _InitialFormPage1State extends LPExtendedState<InitialFormPage1> {
           child: Column(
             children: [
               myAutoSizedText(
-                  appLocale!.introductionFormFirstPageMainTitle(gender),
+                  appLocale.introductionFormFirstPageMainTitle(gender),
                   TextStyle(
                     fontSize: 40.sp,
                     fontWeight: FontWeight.bold,
@@ -55,7 +54,7 @@ class _InitialFormPage1State extends LPExtendedState<InitialFormPage1> {
                     MediaQuery.of(context).size.width / 5,
                     0),
                 child: myAutoSizedText(
-                    appLocale!.introductionFormFirstPageSubTitle1(gender),
+                    appLocale.introductionFormFirstPageSubTitle1(gender),
                     TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
@@ -73,7 +72,7 @@ class _InitialFormPage1State extends LPExtendedState<InitialFormPage1> {
                     MediaQuery.of(context).size.width / 6,
                     0),
                 child: myAutoSizedText(
-                    appLocale!.introductionFormFirstPageSubTitle2(gender),
+                    appLocale.introductionFormFirstPageSubTitle2(gender),
                     TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
@@ -90,10 +89,10 @@ class _InitialFormPage1State extends LPExtendedState<InitialFormPage1> {
                 height:
                     MediaQuery.sizeOf(context).height * 0.3, // Adjust as needed
               ),
-              ConfirmationButton(context, () {
+              confirmationButton(context, () {
                 widget.next();
               },
-                  appLocale!.nextButton(gender),
+                  appLocale.nextButton(gender),
                   myTextStyle.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 20.sp,
@@ -101,10 +100,10 @@ class _InitialFormPage1State extends LPExtendedState<InitialFormPage1> {
               SizedBox(
                 height: returnSizedBox(context, 20),
               ),
-              ConfirmationButton(context, () {
+              confirmationButton(context, () {
                 widget.skip();
               },
-                  appLocale!.skipButton(gender),
+                  appLocale.skipButton(gender),
                   myTextStyle.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 20.sp,

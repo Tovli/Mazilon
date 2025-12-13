@@ -4,7 +4,6 @@ import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/styles.dart';
@@ -17,7 +16,7 @@ import 'package:mazilon/util/disclaimerLanguageSelect.dart';
 // it shows the disclaimer text and a button to confirm the disclaimer
 class DisclaimerPage extends StatefulWidget {
   final Function changeLocale;
-  DisclaimerPage({
+  const DisclaimerPage({
     required this.changeLocale,
     super.key,
   });
@@ -26,7 +25,7 @@ class DisclaimerPage extends StatefulWidget {
 }
 
 // a function to update the disclaimer signed in the shared preferences
-void updateDisclaimers(userInfo) async {
+void updateDisclaimers(UserInformation userInfo) async {
   // get the shared preferences
   PersistentMemoryService service = GetIt.instance<
       PersistentMemoryService>(); // Get the persistent memory service instance
@@ -38,9 +37,7 @@ void updateDisclaimers(userInfo) async {
 }
 
 String _formatDisclaimerText(AppLocalizations appLocale) {
-  return appLocale.disclaimerText +
-      '\n\n' +
-      appLocale.informationCollectionDisclaimer;
+  return '${appLocale.disclaimerText}\n\n${appLocale.informationCollectionDisclaimer}';
 }
 
 class _DisclaimerPageState extends LPExtendedState<DisclaimerPage> {
@@ -92,7 +89,7 @@ class _DisclaimerPageState extends LPExtendedState<DisclaimerPage> {
                         40),
                   ),
                   // the confirm disclaimer button
-                  ConfirmationButton(context, () {
+                  confirmationButton(context, () {
                     setState(() {
                       updateDisclaimers(
                           userInfoProvider); //if button is clicked,
@@ -100,7 +97,7 @@ class _DisclaimerPageState extends LPExtendedState<DisclaimerPage> {
                     });
                   },
                       //disclaimer next button text from CMS(Saved in appinfo)
-                      appLocale!.confirmButton(gender),
+                      appLocale.confirmButton(gender),
                       myTextStyle.copyWith(
                         fontSize: 20.sp,
                       )),

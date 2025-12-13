@@ -16,6 +16,7 @@ class AddForm extends StatefulWidget {
     required this.text,
     required this.formTitle,
   });
+  @override
   State<AddForm> createState() => _AddFormState();
 }
 
@@ -37,7 +38,7 @@ class _AddFormState extends State<AddForm> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      child: Container(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width > 1000
             ? 800
             : MediaQuery.of(context).size.width,
@@ -74,7 +75,7 @@ class _AddFormState extends State<AddForm> {
                                   controller: _controller,
                                   autofocus: true,
                                   decoration: InputDecoration(
-                                    labelText: '${widget.formTitle}',
+                                    labelText: widget.formTitle,
                                     contentPadding: EdgeInsets.only(right: 1.0),
                                     labelStyle: TextStyle(
                                         fontWeight: FontWeight.normal,

@@ -4,8 +4,7 @@ import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/userInformation.dart'; //
 import 'package:provider/provider.dart'; //
-import 'package:mazilon/util/appInformation.dart'; //
-import 'package:mazilon/l10n/app_localizations.dart';
+//
 
 // the add form widget, it shows a form to add or edit an item to the list
 class AddForm extends StatefulWidget {
@@ -23,6 +22,7 @@ class AddForm extends StatefulWidget {
     required this.text,
     required this.formTitle,
   });
+  @override
   State<AddForm> createState() => _AddFormState();
 }
 
@@ -51,7 +51,7 @@ class _AddFormState extends LPExtendedState<AddForm> {
     final gender = userInfoProvider.gender;
 
     return Dialog(
-      child: Container(
+      child: SizedBox(
         // set the width of the dialog to 800 if the screen width is more than 1000, else set it to the screen width
         width: MediaQuery.of(context).size.width > 1000
             ? 800
@@ -65,7 +65,7 @@ class _AddFormState extends LPExtendedState<AddForm> {
               ),
               // text on the top of the form
               myAutoSizedText(
-                  appLocale!.newTraitOrThanks(widget.formTitle),
+                  appLocale.newTraitOrThanks(widget.formTitle),
                   TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 20.sp // text size
                       ),
@@ -100,7 +100,7 @@ class _AddFormState extends LPExtendedState<AddForm> {
                                 validator: (value) {
                                   // validate the text field
                                   if (value == null || value.isEmpty) {
-                                    return appLocale!.validateEmpty;
+                                    return appLocale.validateEmpty;
                                   }
                                   return null;
                                 },
@@ -119,7 +119,7 @@ class _AddFormState extends LPExtendedState<AddForm> {
                   // the close button
                   TextButton(
                     child: myAutoSizedText(
-                        appLocale!.closeButton(gender),
+                        appLocale.closeButton(gender),
                         TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.sp // button text size
@@ -133,7 +133,7 @@ class _AddFormState extends LPExtendedState<AddForm> {
                   // the save button
                   TextButton(
                     child: myAutoSizedText(
-                        appLocale!.saveButton(gender),
+                        appLocale.saveButton(gender),
                         TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.sp // button text size

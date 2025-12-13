@@ -75,7 +75,7 @@ class NotificationsService {
     return TimeOfDay(hour: h, minute: m);
   }
 
-  static initializeNotification(
+  static Future<void> initializeNotification(
       List<String> quotes, int hour, int minute, Function createText) async {
     final bool? grantedNotificationPermission;
     if (Platform.isAndroid) {
@@ -110,7 +110,7 @@ class NotificationsService {
     );
 
     var message = createText(
-        '${hour < 10 ? "0${hour}" : hour}:${minute < 10 ? "0${minute}" : minute}');
+        '${hour < 10 ? "0$hour" : hour}:${minute < 10 ? "0$minute" : minute}');
     showToast(message: message);
   }
 

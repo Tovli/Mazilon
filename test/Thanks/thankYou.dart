@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ThankYou extends StatefulWidget {
   final String text;
@@ -56,7 +55,7 @@ class _ThankYouState extends State<ThankYou> {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  Container(
+                  SizedBox(
                     width: 50,
                     child: MaterialButton(
                       key: Key('deleteThankYou${widget.number}'),
@@ -73,7 +72,7 @@ class _ThankYouState extends State<ThankYou> {
                       ),
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     width: 50,
                     child: MaterialButton(
                       key: Key('editThankYou${widget.number}'),

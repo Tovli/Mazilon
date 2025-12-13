@@ -7,12 +7,10 @@ import 'package:mazilon/pages/FeelGood/add_Image_item.dart';
 import 'package:mazilon/pages/FeelGood/image_display_item.dart';
 import 'package:mazilon/pages/FeelGood/image_picker_service_impl.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 class FeelGood extends StatefulWidget {
   const FeelGood({super.key});
@@ -62,7 +60,7 @@ class _FeelGoodPageState extends LPExtendedState<FeelGood> {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(150.0),
           child: SafeArea(
-            child: Container(
+            child: SizedBox(
               height: 130.0,
               child: Image.asset(
                 'assets/images/Logo.png',
@@ -84,7 +82,7 @@ class _FeelGoodPageState extends LPExtendedState<FeelGood> {
                   alignment: Alignment.topCenter,
                   margin: const EdgeInsets.symmetric(horizontal: 15),
                   child: myAutoSizedText(
-                      appLocale!.feelGoodTitle(gender),
+                      appLocale.feelGoodTitle(gender),
                       const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 30,
@@ -95,7 +93,7 @@ class _FeelGoodPageState extends LPExtendedState<FeelGood> {
                 const SizedBox(height: 5),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: myAutoSizedText(appLocale!.feelGoodSubTitle(gender),
+                  child: myAutoSizedText(appLocale.feelGoodSubTitle(gender),
                       TextStyle(fontSize: 18.sp), null, 18),
                 ),
                 Padding(

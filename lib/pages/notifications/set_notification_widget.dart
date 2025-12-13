@@ -104,10 +104,10 @@ class _SetNotificationWidgetState
             child: TextButton(
               onPressed: () => {
                 initializeNotification(quotes, userInfoProvider,
-                    appLocale!.notifyOnscheduledNotification)
+                    appLocale.notifyOnscheduledNotification)
               },
               child: Text(
-                appLocale!.notificationSetTimeText(gender),
+                appLocale.notificationSetTimeText(gender),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white),
               ),
@@ -128,7 +128,7 @@ class _SetNotificationWidgetState
                     quotes[Random().nextInt(quotes.length)]),
               },
               child: Text(
-                appLocale!.notificationShowExampleNotification(gender),
+                appLocale.notificationShowExampleNotification(gender),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white),
               ),

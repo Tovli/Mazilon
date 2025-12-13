@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 
 import 'package:mazilon/util/styles.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 //Template for the "title" of sections in the home page
 //i.e "התוכנית שלי", "רשימת מעלות", "תודו ליסט"
@@ -58,7 +57,7 @@ class SectionBarHomeState extends LPExtendedState<SectionBarHome> {
                       fontSize: 14.sp,
                       color: darkGray,
                     ),
-                    appLocale!.textDirection == "rtl"
+                    appLocale.textDirection == "rtl"
                         ? TextAlign.right
                         : TextAlign.left,
                     30),

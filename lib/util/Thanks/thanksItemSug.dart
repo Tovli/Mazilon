@@ -11,7 +11,6 @@ import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 
 import 'package:intl/intl.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 // the thanks item suggested widget, it shows a suggested thank you text and an add button
 //its used in journal/homepage in todo list section to suggest a thank you to the user
@@ -189,7 +188,7 @@ class _ThanksItemSuggestedState extends LPExtendedState<ThanksItemSuggested> {
                 child: Row(
                   children: [
                     Container(
-                      alignment: appLocale!.textDirection == "rtl"
+                      alignment: appLocale.textDirection == "rtl"
                           ? Alignment.centerRight
                           : Alignment.centerLeft,
                       width: MediaQuery.of(context).size.width > 1000

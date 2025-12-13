@@ -10,9 +10,7 @@ import 'package:mazilon/util/logger_service.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/type_utils.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mazilon/AnalyticsService.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 abstract class FileService {
   Future<void> share(
@@ -36,7 +34,7 @@ class FileServiceImpl implements FileService {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
-    final futures = <String, Future>{
+    final Map<String, Future<dynamic>> futures = <String, Future<dynamic>>{
       'difficultEvents': service.getItem(
           "userSelectionPersonalPlan-DifficultEvents",
           PersistentMemoryType.StringList),
@@ -53,8 +51,9 @@ class FileServiceImpl implements FileService {
       'username': service.getItem("name", PersistentMemoryType.String),
     };
 
-    final results = await Future.wait(futures.values);
-    final data = Map.fromIterables(futures.keys, results);
+    final List<dynamic> results = await Future.wait(futures.values);
+    final Map<String, dynamic> data =
+        Map<String, dynamic>.fromIterables(futures.keys, results);
 
     return {
       'DifficultEvents': TypeUtils.castToStringList(data['difficultEvents']),
@@ -78,15 +77,16 @@ class FileServiceImpl implements FileService {
     return filtered;
   }
 
-  static List<String> formatPhonesText(names, numbers) {
+  static List<String> formatPhonesText(
+      List<String> names, List<String> numbers) {
     List<String> formattedText = [];
     for (var i = 0; i < names.length; i++) {
-      formattedText.add(names[i] + ':' + numbers[i]);
+      formattedText.add('${names[i]}:${numbers[i]}');
     }
     return formattedText;
   }
 
-  static organizeDataForFile(List<dynamic> titles, List<dynamic> subTitles,
+  static Future<Map<String, Object>> organizeDataForFile(List<dynamic> titles, List<dynamic> subTitles,
       Map<String, String> texts) async {
     // Set the page format to A4
 
@@ -157,19 +157,31 @@ class FileServiceImpl implements FileService {
     try {
       // Add the generated widgets to the PDF
       final dataForFile = await organizeDataForFile(titles, subTitles, texts);
+      final mapTexts = Map<String, String>.from(dataForFile["texts"] as Map);
+      final mainTitle = dataForFile["mainTitle"] as String;
+      final realData = List<List<String>>.from(
+        (dataForFile["realData"] as List).map(
+          (e) => List<String>.from(e as List),
+        ),
+      );
       Map<String, dynamic> file;
       switch (saveFormat) {
         case ShareFileType.PDF:
           file = await createPDF(
               titles,
               subTitles,
-              dataForFile["texts"]!,
-              dataForFile["mainTitle"]!,
-              dataForFile["realData"]!,
+              mapTexts,
+              mainTitle,
+              realData,
               textDirection);
           final tempFile = await saveTempPDF(file["file"], file["format"]);
           XFile tempXFile = XFile(tempFile.path);
-          await Share.shareXFiles([tempXFile], text: message);
+          await SharePlus.instance.share(
+            ShareParams(
+              text: message,
+              files: [tempXFile],
+            ),
+          );
           break;
         default:
           file = {"file": null, "format": null};
@@ -241,12 +253,19 @@ class FileServiceImpl implements FileService {
       ShareFileType saveFormat,
       String textDirection) async {
     final dataForFile = await organizeDataForFile(titles, subTitles, texts);
+    final mapTexts = Map<String, String>.from(dataForFile["texts"] as Map);
+    final mainTitle = dataForFile["mainTitle"] as String;
+    final realData = List<List<String>>.from(
+      (dataForFile["realData"] as List).map(
+        (e) => List<String>.from(e as List),
+      ),
+    );
     Map<String, dynamic> file;
     Uint8List data = Uint8List(0);
     switch (saveFormat) {
       case ShareFileType.PDF:
-        file = await createPDF(titles, subTitles, dataForFile["texts"]!,
-            dataForFile["mainTitle"]!, dataForFile["realData"]!, textDirection);
+        file =
+            await createPDF(titles, subTitles, mapTexts, mainTitle, realData, textDirection);
         // Save the PDF and share it
 
         // Save the PDF for download
@@ -271,7 +290,9 @@ class FileServiceImpl implements FileService {
   @override
   Future<void> shareTextOnly(String message) async {
     try {
-      await Share.share(message);
+      await SharePlus.instance.share(
+        ShareParams(text: message),
+      );
       AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
       mixPanelService.trackEvent("Text shared");
     } catch (error, stackTrace) {

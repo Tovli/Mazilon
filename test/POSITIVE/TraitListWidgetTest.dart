@@ -94,7 +94,7 @@ class _TraitListWidgetState extends State<TraitListWidget> {
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
                                 children: [
-                                  Container(
+                                  SizedBox(
                                     width: 32,
                                     child: MaterialButton(
                                       key: Key('deleteButton_$index'),
@@ -110,7 +110,7 @@ class _TraitListWidgetState extends State<TraitListWidget> {
                                       ),
                                     ),
                                   ),
-                                  Container(
+                                  SizedBox(
                                     width: 32,
                                     child: MaterialButton(
                                       key: Key('editButton_$index'),

@@ -101,7 +101,7 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Row(
                                       children: [
-                                        Container(
+                                        SizedBox(
                                           width: 32,
                                           child: MaterialButton(
                                             key: Key('deleteButton_$index'),
@@ -117,7 +117,7 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                                             ),
                                           ),
                                         ),
-                                        Container(
+                                        SizedBox(
                                           width: 32,
                                           child: MaterialButton(
                                             key: Key('editButton_$index'),

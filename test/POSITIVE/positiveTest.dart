@@ -56,41 +56,41 @@ class _PositiveState extends State<Positive> {
   }
 
   void removePositiveTrait(int removeIndex) async {
-    List<String> positiveTraits_temp =
+    List<String> positivetraitsTemp =
         widget.fakeSharedPreferencesStorage['positiveTraits'] ?? [];
-    List<String> positiveDates_temp =
+    List<String> positivedatesTemp =
         widget.fakeSharedPreferencesStorage['positiveDates'] ?? [];
-    positiveTraits_temp.removeAt(removeIndex);
-    positiveDates_temp.removeAt(removeIndex);
+    positivetraitsTemp.removeAt(removeIndex);
+    positivedatesTemp.removeAt(removeIndex);
     setState(() {
       widget.fakeSharedPreferencesStorage['positiveTraits'] =
-          positiveTraits_temp;
-      positiveTraits = positiveTraits_temp;
+          positivetraitsTemp;
+      positiveTraits = positivetraitsTemp;
       focusNodes.removeAt(removeIndex);
-      widget.fakeSharedPreferencesStorage['positiveDates'] = positiveDates_temp;
-      dates = positiveDates_temp;
+      widget.fakeSharedPreferencesStorage['positiveDates'] = positivedatesTemp;
+      dates = positivedatesTemp;
     });
   }
 
   void addPositiveTrait(String positiveTrait) async {
-    List<String> positiveTraits_temp =
+    List<String> positivetraitsTemp =
         widget.fakeSharedPreferencesStorage['positiveTraits'] ?? [];
-    List<String> positiveDates_temp =
+    List<String> positivedatesTemp =
         widget.fakeSharedPreferencesStorage['positiveDates'] ?? [];
-    positiveTraits_temp.add(positiveTrait);
+    positivetraitsTemp.add(positiveTrait);
 
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
-    positiveDates_temp.add(formattedDate);
+    positivedatesTemp.add(formattedDate);
 
     setState(() {
       widget.fakeSharedPreferencesStorage['positiveTraits'] =
-          positiveTraits_temp;
-      positiveTraits = positiveTraits_temp;
+          positivetraitsTemp;
+      positiveTraits = positivetraitsTemp;
       focusNodes.add(FocusNode());
 
-      widget.fakeSharedPreferencesStorage['positiveDates'] = positiveDates_temp;
-      dates = positiveDates_temp;
+      widget.fakeSharedPreferencesStorage['positiveDates'] = positivedatesTemp;
+      dates = positivedatesTemp;
     });
   }
 

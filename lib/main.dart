@@ -3,6 +3,7 @@ import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/Locale/locale_service.dart';
 import 'package:mazilon/iFx/service_locator.dart';
@@ -11,7 +12,6 @@ import 'package:mazilon/pages/notifications/notification_service.dart';
 import 'package:mazilon/util/logger_service.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'util/Firebase/firebase_options.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
@@ -22,9 +22,9 @@ import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/Firebase/firebase_functions.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:upgrader/upgrader.dart';
-import 'package:mazilon/util/LP_extended_state.dart';
 //testing:
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
+
 
 List<String> checkboxCollectionNames = [
   'PersonalPlan-DifficultEvents',
@@ -84,10 +84,12 @@ void main() async {
 
   IncidentLoggerService sentryService = GetIt.instance<IncidentLoggerService>();
 
-  Workmanager().initialize(
-    callbackDispatcher,
-    isInDebugMode: false,
-  );
+  if (!kIsWeb) {
+    Workmanager().initialize(
+      callbackDispatcher,
+      isInDebugMode: false,
+    );
+  }
   await sentryService.initializeSentry(
     MultiProvider(
       providers: [
@@ -125,6 +127,8 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -173,21 +177,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
     AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
     mixPanelService.trackEvent("Session Ended", {
-      "duration_seconds": duration,
-    });
-
-    _startTime = null; // Reset for next session
-  }
-
-  void _pauseSession() {
-    if (_startTime == null) return;
-
-    final endTime = DateTime.now();
-    final duration =
-        endTime.difference(_startTime!).inSeconds; // Calculate session length
-
-    AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
-    mixPanelService.trackEvent("Session Paused", {
       "duration_seconds": duration,
     });
 

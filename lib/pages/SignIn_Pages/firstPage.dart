@@ -11,10 +11,10 @@ import 'package:mazilon/menu.dart';
 // FirstPage widget determines the correct page
 // to navigate to based on the user's status (e.g., disclaimer signed, logged in, first time using the app).
 class FirstPage extends StatefulWidget {
-  PhonePageData phonePageData; // Data related to phone page
-  bool
+  final PhonePageData phonePageData; // Data related to phone page
+  final bool
       firsttime; // Flag indicating if this is the first time the user is using the app
-  bool hasFilled; // Flag indicating if the user has filled out required forms
+  final bool hasFilled; // Flag indicating if the user has filled out required forms
   final Function changeLocale;
   FirstPage(
       {super.key,

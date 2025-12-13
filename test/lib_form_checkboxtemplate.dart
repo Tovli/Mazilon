@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SimplifiedCheckboxForm extends StatefulWidget {
+  const SimplifiedCheckboxForm({super.key});
+
   @override
   _SimplifiedCheckboxFormState createState() => _SimplifiedCheckboxFormState();
 }
@@ -12,7 +14,7 @@ class _SimplifiedCheckboxFormState extends State<SimplifiedCheckboxForm> {
   @override
   void initState() {
     super.initState();
-    _isChecked = Map.fromIterable(data, key: (v) => v, value: (v) => false);
+    _isChecked = { for (var v in data) v : false };
   }
 
   @override
@@ -31,7 +33,7 @@ class _SimplifiedCheckboxFormState extends State<SimplifiedCheckboxForm> {
               });
             },
           );
-        }).toList(),
+        }),
         TextButton(
             onPressed: () {
               debugPrint("Next button clicked"); // Direct feedback

@@ -154,10 +154,10 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   children: [
-                                    Container(
+                                    SizedBox(
                                       width: 32,
                                       child: MaterialButton(
-                                        key: Key('removeButton${index}'),
+                                        key: Key('removeButton$index'),
                                         onPressed: () {
                                           setState(() {
                                             removeThank(
@@ -173,10 +173,10 @@ class _ThanksListWidgetState extends State<ThanksListWidget> {
                                         ),
                                       ),
                                     ),
-                                    Container(
+                                    SizedBox(
                                       width: 32,
                                       child: MaterialButton(
-                                        key: Key("editButton${index}"),
+                                        key: Key("editButton$index"),
                                         onPressed: () {
                                           setState(() {
                                             editThanksNotification(

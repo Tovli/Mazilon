@@ -5,23 +5,25 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/global_enums.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/util/logger_service.dart';
 import 'package:mazilon/util/userInformation.dart';
 
-Map<String, dynamic> getLocalizedTextForLists(locale, gender, type) {
+Map<String, dynamic> getLocalizedTextForLists(
+    AppLocalizations locale, String gender, PagesCode type) {
   try {
     switch (type) {
       case PagesCode.GratitudeJournal:
         return {
-          'mainTitle': locale!.homePageThanksMainTitle(gender),
-          'secondaryTitle': locale!.homePageThanksSecondaryTitle(gender),
+          'mainTitle': locale.homePageThanksMainTitle(gender),
+          'secondaryTitle': locale.homePageThanksSecondaryTitle(gender),
           "icon": FontAwesome5.praying_hands
         };
 
       case PagesCode.QualitiesList:
         return {
-          'mainTitle': locale!.homePageTraitsMainTitle(gender),
-          'secondaryTitle': locale!.homePageTraitsSecondaryTitle(gender),
+          'mainTitle': locale.homePageTraitsMainTitle(gender),
+          'secondaryTitle': locale.homePageTraitsSecondaryTitle(gender),
           "icon": Icons.diamond
         };
       default:
@@ -59,17 +61,23 @@ List<String> getListItems(PagesCode pageCode, UserInformation userInfoProvider,
   }
 }
 
-void addThankYou(String thankYou, UserInformation userInfoProvider,
-    stateFunction, popupFunction) {
-  List<String> thankYous_temp = userInfoProvider.thanks['thanks'] ?? [];
-  List<String> dates_temp = userInfoProvider.thanks['dates'] ?? [];
+void addThankYou(
+  String thankYou,
+  UserInformation userInfoProvider,
+  void Function(List<String> thankYous, List<String> dates,
+          UserInformation userInfoProvider)
+      stateFunction,
+  void Function(UserInformation userInfoProvider) popupFunction,
+) {
+  List<String> thankyousTemp = userInfoProvider.thanks['thanks'] ?? [];
+  List<String> datesTemp = userInfoProvider.thanks['dates'] ?? [];
 
-  thankYous_temp.add(thankYou);
+  thankyousTemp.add(thankYou);
 
   DateTime now = DateTime.now();
   String formattedDate = intl.DateFormat('yyyy-MM-dd – kk:mm').format(now);
-  dates_temp.add(formattedDate);
-  stateFunction(thankYous_temp, dates_temp, userInfoProvider);
+  datesTemp.add(formattedDate);
+  stateFunction(thankyousTemp, datesTemp, userInfoProvider);
 
   if (todayThankYousFunc(userInfoProvider.thanks["thanks"] ?? [],
               userInfoProvider.thanks["dates"] ?? [])
@@ -84,10 +92,14 @@ void addThankYou(String thankYou, UserInformation userInfoProvider,
 }
 
 void addPositiveTrait(
-    String positiveTrait, UserInformation userInfoProvider, stateFunction) {
-  List<String> positiveTraits_temp = userInfoProvider.positiveTraits;
-  positiveTraits_temp.add(positiveTrait);
-  stateFunction(positiveTraits_temp, userInfoProvider);
+  String positiveTrait,
+  UserInformation userInfoProvider,
+  void Function(List<String> positiveTraits, UserInformation userInfoProvider)
+      stateFunction,
+) {
+  List<String> positivetraitsTemp = userInfoProvider.positiveTraits;
+  positivetraitsTemp.add(positiveTrait);
+  stateFunction(positivetraitsTemp, userInfoProvider);
 
   AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
   mixPanelService.trackEvent(
@@ -96,41 +108,64 @@ void addPositiveTrait(
 }
 
 void editPositiveTrait(
-    String text, int index, UserInformation userInfoProvider, stateFunction) {
+  String text,
+  int index,
+  UserInformation userInfoProvider,
+  void Function(List<String> positiveTraits, UserInformation userInfoProvider)
+      stateFunction,
+) {
   List<String> positiveTraits = userInfoProvider.positiveTraits;
   positiveTraits[index] = text;
   stateFunction(positiveTraits, userInfoProvider);
 }
 
 void editThankYou(
-    String text, int index, UserInformation userinfoProvider, stateFunction) {
-  var thankYous_temp = userinfoProvider.thanks['thanks'] ?? [];
-  thankYous_temp[index] = text;
+  String text,
+  int index,
+  UserInformation userinfoProvider,
+  void Function(List<String> thankYous, List<String> dates,
+          UserInformation userInfoProvider)
+      stateFunction,
+) {
+  var thankyousTemp = userinfoProvider.thanks['thanks'] ?? [];
+  thankyousTemp[index] = text;
   var thankYouDates = userinfoProvider.thanks['dates'] ?? [];
   stateFunction(
-    thankYous_temp,
+    thankyousTemp,
     thankYouDates,
     userinfoProvider,
   );
 }
 
 void removeThankYou(
-    int removeIndex, UserInformation userInfoProvider, stateFunction) {
-  List<String> thankYous_temp = userInfoProvider.thanks['thanks'] ?? [];
-  List<String> dates_temp = userInfoProvider.thanks['dates'] ?? [];
+  int removeIndex,
+  UserInformation userInfoProvider,
+  void Function(List<String> thankYous, List<String> dates,
+          UserInformation userInfoProvider)
+      stateFunction,
+) {
+  List<String> thankyousTemp = userInfoProvider.thanks['thanks'] ?? [];
+  List<String> datesTemp = userInfoProvider.thanks['dates'] ?? [];
 
-  thankYous_temp.removeAt(removeIndex);
-  dates_temp.removeAt(removeIndex);
+  thankyousTemp.removeAt(removeIndex);
+  datesTemp.removeAt(removeIndex);
   stateFunction(
-    thankYous_temp,
-    dates_temp,
+    thankyousTemp,
+    datesTemp,
     userInfoProvider,
   );
 }
 
 void removePositiveTrait(
-    int removeIndex, UserInformation userInfoProvider, stateFunction) {
-  List<String> positiveTraits_temp = userInfoProvider.positiveTraits;
-  positiveTraits_temp.removeAt(removeIndex);
-  stateFunction(positiveTraits_temp, userInfoProvider);
+  int removeIndex,
+  UserInformation userInfoProvider,
+  void Function(
+    List<String> positiveTraits,
+    UserInformation userInfoProvider,
+  )
+      stateFunction,
+) {
+  List<String> positivetraitsTemp = userInfoProvider.positiveTraits;
+  positivetraitsTemp.removeAt(removeIndex);
+  stateFunction(positivetraitsTemp, userInfoProvider);
 }

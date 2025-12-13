@@ -14,8 +14,6 @@ import 'package:mazilon/util/type_utils.dart';
 
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/userInformation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 // the positive trait item suggested widget, it shows a suggested positive trait text and an add button
 //its used in positive trait page/homepage in todo list section to suggest a trait to the user
 // we use this in 2 ways , if the input text is not empty, it will show the input text in the suggestion
@@ -55,9 +53,9 @@ class _PositiveTraitItemSugState extends LPExtendedState<PositiveTraitItemSug> {
     setState(() {
       myPositiveTraits = userInfoProvider.positiveTraits;
 
-      List<String> tempTraitSuggestionList = widget.fullSuggestionList ?? [];
+      List<String> tempTraitSuggestionList = widget.fullSuggestionList;
 
-      positiveTraitsSuggestionList = List.from(widget.fullSuggestionList ?? []);
+      positiveTraitsSuggestionList = List.from(widget.fullSuggestionList);
       // remove the traits that are already written by the user
       for (String suggestion in tempTraitSuggestionList) {
         if (positiveTraitsSuggestionList.length > 1 &&
@@ -116,7 +114,6 @@ class _PositiveTraitItemSugState extends LPExtendedState<PositiveTraitItemSug> {
                 myPositiveTraits
                     .add(widget.inputText == '' ? text : widget.inputText);
 
-                String gender = userInfoProvider.gender;
                 List<String> tempTraitSuggestionList =
                     widget.fullSuggestionList;
 
@@ -197,7 +194,7 @@ class _PositiveTraitItemSugState extends LPExtendedState<PositiveTraitItemSug> {
                 child: Row(
                   children: [
                     Container(
-                      alignment: appLocale!.textDirection == "rtl"
+                      alignment: appLocale.textDirection == "rtl"
                           ? Alignment.centerRight
                           : Alignment.centerLeft,
                       width: MediaQuery.of(context).size.width > 1000

@@ -30,18 +30,19 @@ class SharedPreferencesService implements PersistentMemoryService {
       switch (type) {
         case PersistentMemoryType.String:
           prefs.setString(key, value);
+          break;
         case PersistentMemoryType.Int:
           prefs.setInt(key, value);
+          break;
         case PersistentMemoryType.Double:
           prefs.setDouble(key, value);
+          break;
         case PersistentMemoryType.Bool:
           prefs.setBool(key, value);
+          break;
         case PersistentMemoryType.StringList:
           prefs.setStringList(key, List<String>.from(value));
-        default:
-          throw Exception(
-            'Unsupported type for persistent memory service: $type',
-          );
+          break;
       }
     } catch (error, stackTrace) {
       loggerService.captureLog(
@@ -68,10 +69,6 @@ class SharedPreferencesService implements PersistentMemoryService {
           return prefs.getBool(key) ?? false;
         case PersistentMemoryType.StringList:
           return prefs.getStringList(key) ?? [];
-        default:
-          throw Exception(
-            'Unsupported type for persistent memory service: $type',
-          );
       }
     } catch (error, stackTrace) {
       loggerService.captureLog(

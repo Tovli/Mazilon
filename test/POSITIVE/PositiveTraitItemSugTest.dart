@@ -62,7 +62,7 @@ class _PositiveTraitItemSugState extends State<PositiveTraitItemSug> {
                 padding: const EdgeInsets.all(7.0),
                 child: Row(
                   children: [
-                    Container(
+                    SizedBox(
                       width: MediaQuery.of(context).size.width > 1000
                           ? 600
                           : MediaQuery.of(context).size.width * 0.6 + 36,

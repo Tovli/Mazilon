@@ -15,7 +15,7 @@ Technion.''';
 
 class About extends StatelessWidget {
   final String version;
-  About({
+  const About({super.key, 
     required this.version,
   });
   @override
@@ -26,7 +26,7 @@ class About extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(150.0),
         child: SafeArea(
-          child: Container(
+          child: SizedBox(
             height: 130.0,
             // Mazilon Logo in the app bar
             child: Image.asset(
@@ -59,7 +59,7 @@ class About extends StatelessWidget {
                 alignment: Alignment.topCenter,
                 margin: EdgeInsets.symmetric(horizontal: 20),
                 child: myAutoSizedText(
-                    appLocale!.aboutPage1,
+                    appLocale.aboutPage1,
                     TextStyle(fontWeight: FontWeight.normal, fontSize: 20),
                     appLocale.textDirection == "rtl"
                         ? TextAlign.right
@@ -96,7 +96,7 @@ class About extends StatelessWidget {
                 child: myAutoSizedText(
                     appLocale.aboutPage2,
                     TextStyle(fontWeight: FontWeight.normal, fontSize: 20),
-                    appLocale!.textDirection == "rtl"
+                    appLocale.textDirection == "rtl"
                         ? TextAlign.right
                         : TextAlign.left,
                     35),
@@ -122,7 +122,7 @@ class About extends StatelessWidget {
                     child: Directionality(
                         textDirection: TextDirection.ltr,
                         child: Text(
-                          "Living Positively App Version : ${version}",
+                          "Living Positively App Version : $version",
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               fontWeight: FontWeight.normal, fontSize: 20),

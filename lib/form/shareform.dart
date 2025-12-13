@@ -19,11 +19,11 @@ class ShareForm extends StatefulWidget {
   final Function prev;
   final Function submit;
 
-  ShareForm({
-    Key? key,
+  const ShareForm({
+    super.key,
     required this.prev,
     required this.submit,
-  }) : super(key: key);
+  });
 
   @override
   State<ShareForm> createState() => _ShareFormState();
@@ -65,7 +65,7 @@ class _ShareFormState extends LPExtendedState<ShareForm> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
                   child: myAutoSizedText(
-                      appLocale!.sharePageHeader(gender),
+                      appLocale.sharePageHeader(gender),
                       TextStyle(
                           fontSize: 40.sp,
                           fontWeight: FontWeight.bold,
@@ -74,7 +74,7 @@ class _ShareFormState extends LPExtendedState<ShareForm> {
                       80),
                 ),
                 myAutoSizedText(
-                    appLocale!.sharePageSubTitle(gender),
+                    appLocale.sharePageSubTitle(gender),
                     TextStyle(
                         fontWeight: FontWeight.normal,
                         fontSize: 16.sp,
@@ -82,10 +82,10 @@ class _ShareFormState extends LPExtendedState<ShareForm> {
                     null,
                     35),
                 myImage('assets/images/FormSubmit.png', context, 0.8, 0.4),
-                Container(
+                SizedBox(
                   width: MediaQuery.sizeOf(context).width * 0.8,
                   child: myAutoSizedText(
-                      appLocale!.sharePageMidTitle(gender),
+                      appLocale.sharePageMidTitle(gender),
                       TextStyle(fontWeight: FontWeight.normal, fontSize: 18.sp),
                       null,
                       35),
@@ -93,7 +93,7 @@ class _ShareFormState extends LPExtendedState<ShareForm> {
                 const SizedBox(
                   height: 30,
                 ),
-                Container(
+                SizedBox(
                   width: MediaQuery.sizeOf(context).width * 0.5,
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -138,13 +138,13 @@ class _ShareFormState extends LPExtendedState<ShareForm> {
                             if (result == null) {
                               // Show him a message
                               showToast(
-                                  message: appLocale!.downloadFailed(gender));
+                                  message: appLocale.downloadFailed(gender));
                               return;
                             }
                             // Show a toast message to the user
                             showToast(
                                 message:
-                                    appLocale!.finishedDownloading(gender));
+                                    appLocale.finishedDownloading(gender));
                           },
 
                           style: TextButton.styleFrom(
@@ -167,10 +167,10 @@ class _ShareFormState extends LPExtendedState<ShareForm> {
                 const SizedBox(
                   height: 30,
                 ),
-                ConfirmationButton(context, () {
+                confirmationButton(context, () {
                   widget.submit(context);
                 },
-                    appLocale!.sharePageFinishButton(gender),
+                    appLocale.sharePageFinishButton(gender),
                     myTextStyle.copyWith(
                         fontWeight: FontWeight.bold, fontSize: 22.sp)),
                 const SizedBox(

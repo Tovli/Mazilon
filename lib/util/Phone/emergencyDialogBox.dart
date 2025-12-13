@@ -5,7 +5,6 @@ import 'package:mazilon/util/Phone/phoneTextAndIcon.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/userInformation.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
 
@@ -27,8 +26,6 @@ class EmergencyDialogBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppInformation appInfoProvider = Provider.of<AppInformation>(context);
-
     UserInformation userInfoProvider = Provider.of<UserInformation>(context);
     final appLocale = AppLocalizations.of(context);
     final gender = userInfoProvider.gender;
@@ -48,19 +45,19 @@ class EmergencyDialogBox extends StatelessWidget {
               children: <Widget>[
                 if (canCall)
                   getTextIconWidget(
-                    appLocale!.dialButton(gender),
+                    appLocale.dialButton(gender),
                     () async {
                       await dialPhone(number);
                     },
                     Icons.phone,
                   ),
                 if (hasWhatsApp)
-                  getTextIconWidget(appLocale!.whatsApp, () async {
+                  getTextIconWidget(appLocale.whatsApp, () async {
                     await openWhatsApp(number);
                   }, Icons.chat),
 
                 if (hasLink)
-                  getTextIconWidget(appLocale!.link, () async {
+                  getTextIconWidget(appLocale.link, () async {
                     await openSite(link);
                   }, Icons.search),
 
@@ -74,7 +71,7 @@ class EmergencyDialogBox extends StatelessWidget {
       actions: <Widget>[
         TextButton(
           child: myText(
-              appLocale!.backButton(gender),
+              appLocale.backButton(gender),
               TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20.sp > 30 ? 30 : 20.sp),

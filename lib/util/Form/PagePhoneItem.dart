@@ -7,8 +7,8 @@ class PagePhoneItem extends StatefulWidget {
   final String phoneName;
   final String phoneDescription;
   final IconData icon;
-  PagePhoneItem(
-      {required this.phoneNumber,
+  const PagePhoneItem(
+      {super.key, required this.phoneNumber,
       required this.phoneName,
       required this.phoneDescription,
       required this.icon});
@@ -23,6 +23,7 @@ class _PagePhoneItemState extends State<PagePhoneItem>
   bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     //item in the phone page form(icon + data)
     return Container(
       child: Row(

@@ -2,9 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:mazilon/form/phonePageform.dart';
@@ -29,7 +27,7 @@ List<String> pages = [
 ];
 
 class FormProgressIndicator extends StatefulWidget {
-  PhonePageData phonePageData;
+  final PhonePageData phonePageData;
   final Function changeLocale;
 
   FormProgressIndicator({
@@ -58,13 +56,13 @@ class FormProgressIndicatorState extends State<FormProgressIndicator> {
     });
   }
 
-  void updateName(name) {
+  void updateName(String name) {
     setState(() {
       this.name = name;
     });
   }
 
-  void submitForm(mycontext) async {
+  void submitForm(BuildContext mycontext) async {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
 
@@ -87,7 +85,7 @@ class FormProgressIndicatorState extends State<FormProgressIndicator> {
     );
   }
 
-  void navigateToMenu(mycontext) {
+  void navigateToMenu(BuildContext mycontext) {
     Navigator.pushAndRemoveUntil(
       mycontext,
       MaterialPageRoute(

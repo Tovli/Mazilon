@@ -3,7 +3,6 @@ import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:mazilon/menu.dart';
@@ -12,10 +11,8 @@ import 'package:mazilon/form/form.dart';
 import 'package:mazilon/util/styles.dart';
 
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 //the page before the personal plan questionnaire that allows the user to fill the questionnaire or skip it.
 class ToFormPage extends StatefulWidget {
@@ -23,8 +20,7 @@ class ToFormPage extends StatefulWidget {
   final Function changeLocale;
 
   const ToFormPage(
-      {Key? key, required this.phonePageData, required this.changeLocale})
-      : super(key: key);
+      {super.key, required this.phonePageData, required this.changeLocale});
 
   @override
   State<ToFormPage> createState() => _ToFormPageState();
@@ -60,7 +56,7 @@ class _ToFormPageState extends LPExtendedState<ToFormPage> {
         body: SingleChildScrollView(
       child: Column(children: [
         myAutoSizedText(
-            appLocale!.introductionFormLastPageMainTitle(gender),
+            appLocale.introductionFormLastPageMainTitle(gender),
             TextStyle(
                 fontSize: 40.sp,
                 fontWeight: FontWeight.bold,
@@ -70,7 +66,7 @@ class _ToFormPageState extends LPExtendedState<ToFormPage> {
         Padding(
           padding: const EdgeInsets.fromLTRB(60, 0, 60, 0),
           child: myAutoSizedText(
-              appLocale!.introductionFormLastPageSubTitle1(gender),
+              appLocale.introductionFormLastPageSubTitle1(gender),
               TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
@@ -84,7 +80,7 @@ class _ToFormPageState extends LPExtendedState<ToFormPage> {
         Padding(
           padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
           child: myAutoSizedText(
-              appLocale!.introductionFormLastPageSubTitle2(gender),
+              appLocale.introductionFormLastPageSubTitle2(gender),
               TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
@@ -130,7 +126,7 @@ class _ToFormPageState extends LPExtendedState<ToFormPage> {
             },
             style: myButtonStyle,
             child: myAutoSizedText(
-                appLocale!.introductionFormLastPageNext(gender),
+                appLocale.introductionFormLastPageNext(gender),
                 myTextStyle.copyWith(
                     fontWeight: FontWeight.bold, fontSize: 20.sp),
                 null,
@@ -153,7 +149,7 @@ class _ToFormPageState extends LPExtendedState<ToFormPage> {
                     horizontal: returnSizedBox(context, 20),
                     vertical: returnSizedBox(context, 10)))),
             child: myAutoSizedText(
-                appLocale!.skipButton(gender),
+                appLocale.skipButton(gender),
                 myTextStyle.copyWith(
                     fontWeight: FontWeight.bold, fontSize: 20.sp),
                 null,

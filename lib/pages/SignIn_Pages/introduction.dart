@@ -4,9 +4,7 @@ import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 // Introduction widget serves as an initial loading screen or introduction page.
 class Introduction extends StatefulWidget {
@@ -31,7 +29,7 @@ class _IntroductionState extends LPExtendedState<Introduction> {
           children: [
             // Displaying a welcome message in Hebrew with custom styling
             myAutoSizedText(
-                appLocale!.introductionRestartGreeting(
+                appLocale.introductionRestartGreeting(
                     userInfoProvider.gender), // Welcome message in Hebrew
                 TextStyle(
                   fontSize: 40.sp,

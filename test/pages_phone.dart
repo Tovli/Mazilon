@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'EmergencyPhonesTest.dart'; // Adjust the import path as necessary
 import 'package:mockito/mockito.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MockUrlLauncher extends Mock {
   Future<bool> canLaunchUrl(Uri url) => super.noSuchMethod(
@@ -23,12 +21,12 @@ class SimplifiedPhonePage extends StatelessWidget {
   final Future<bool> Function(Uri url) canLaunchUrl;
   final Future<void> Function(Uri url) launchUrl;
 
-  SimplifiedPhonePage({
-    Key? key,
+  const SimplifiedPhonePage({
+    super.key,
     required this.phoneNumbers,
     required this.canLaunchUrl,
     required this.launchUrl,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

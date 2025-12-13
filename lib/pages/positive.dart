@@ -6,7 +6,6 @@ import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/type_utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/pages/thankYou.dart';
@@ -108,12 +107,12 @@ class _PositiveState extends LPExtendedState<Positive> {
   //add the given positive trait to the list
   void addPositiveTrait(
       String positiveTrait, UserInformation userInfoProvider) async {
-    List<String> positiveTraits_temp = userInfoProvider.positiveTraits;
-    positiveTraits_temp.add(positiveTrait);
+    List<String> positivetraitsTemp = userInfoProvider.positiveTraits;
+    positivetraitsTemp.add(positiveTrait);
 
     setState(() {
-      userInfoProvider.updatePositiveTraits(positiveTraits_temp);
-      positiveTraits = positiveTraits_temp;
+      userInfoProvider.updatePositiveTraits(positivetraitsTemp);
+      positiveTraits = positivetraitsTemp;
       focusNodes.add(FocusNode());
     });
     AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
@@ -144,7 +143,7 @@ class _PositiveState extends LPExtendedState<Positive> {
             actions: <Widget>[
               // close button
               TextButton(
-                child: Text(appLocale!.backButton(gender)),
+                child: Text(appLocale.backButton(gender)),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -210,7 +209,7 @@ class _PositiveState extends LPExtendedState<Positive> {
                       IconButton(
                           onPressed: () {
                             editNotification(
-                                "", 0, appLocale!.trait, userInfoProvider);
+                                "", 0, appLocale.trait, userInfoProvider);
                           },
                           icon: Icon(
                             Icons.add,
@@ -226,13 +225,13 @@ class _PositiveState extends LPExtendedState<Positive> {
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                           child: myAutoSizedText(
-                              appLocale!.homePageTraitsSecondaryTitle(gender),
+                              appLocale.homePageTraitsSecondaryTitle(gender),
                               TextStyle(
                                 color: darkGray,
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.bold,
                               ),
-                              appLocale!.textDirection == "rtl"
+                              appLocale.textDirection == "rtl"
                                   ? TextAlign.right
                                   : TextAlign.left,
                               30,
@@ -254,7 +253,7 @@ class _PositiveState extends LPExtendedState<Positive> {
                 number: (index + 1),
                 edit: (String text, int index) {
                   editNotification(
-                      text, index, appLocale!.trait, userInfoProvider);
+                      text, index, appLocale.trait, userInfoProvider);
                 },
                 remove: (int index) {
                   removePositiveTrait(index, userInfoProvider);
@@ -327,7 +326,7 @@ class _PositiveState extends LPExtendedState<Positive> {
                 children: <Widget>[
                   //refresh button text
                   Text(
-                    appLocale!.otherSuggestions(gender),
+                    appLocale.otherSuggestions(gender),
                     style:
                         TextStyle(fontWeight: FontWeight.bold, color: appGreen),
                   ),

@@ -5,6 +5,7 @@ import 'package:mazilon/MainPageHelpers/MainPageList/mainpage_list_body_widget.d
 import 'package:mazilon/MainPageHelpers/MainPageList/list_utils.dart';
 import 'package:mazilon/MainPageHelpers/show_all_button.dart';
 import 'package:mazilon/global_enums.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:mazilon/util/HomePage/sectionBarHome.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
@@ -38,6 +39,7 @@ class _ListWidgetState extends LPExtendedState<ListWidget> {
 
   void showThankYouPopup(UserInformation userInfoProvider) {
     Future.delayed(const Duration(seconds: 0), () {
+      if (!mounted) return;
       final gender = userInfoProvider.gender;
       showDialog(
         context: context,
@@ -65,22 +67,26 @@ class _ListWidgetState extends LPExtendedState<ListWidget> {
   }
 
   void editThanksState(
-      List<String> thankYous_temp, List<String> dates_temp, userInfoProvider) {
+      List<String> thankyousTemp,
+      List<String> datesTemp,
+      UserInformation userInfoProvider) {
     setState(() {
       userInfoProvider
-          .updateThanks({'thanks': thankYous_temp, 'dates': dates_temp});
+          .updateThanks({'thanks': thankyousTemp, 'dates': datesTemp});
 
-      todayThankYous = todayThankYousFunc(thankYous_temp, dates_temp);
+      todayThankYous = todayThankYousFunc(thankyousTemp, datesTemp);
     });
   }
 
-  void editTraitsState(positiveTraits_temp, userInfoProvider) {
+  void editTraitsState(
+      List<String> positivetraitsTemp, UserInformation userInfoProvider) {
     setState(() {
-      userInfoProvider.updatePositiveTraits(positiveTraits_temp);
+      userInfoProvider.updatePositiveTraits(positivetraitsTemp);
     });
   }
 
-  Function getSuggestionBox(appLocale) {
+  Widget Function(int stopShowingNumber, String gender) getSuggestionBox(
+      AppLocalizations appLocale) {
     if (widget.pageCode == PagesCode.QualitiesList) {
       return (stopShowingNumber, gender) =>
           buildPositiveTraitItemSug(stopShowingNumber, gender, appLocale);
@@ -121,8 +127,8 @@ class _ListWidgetState extends LPExtendedState<ListWidget> {
         });
   }
 
-  Function(int index) editItemFunction(
-      userInfoProvider, thanksListLength, traitsListlength) {
+  Function(int index) editItemFunction(UserInformation userInfoProvider,
+      int thanksListLength, int traitsListlength) {
     if (widget.pageCode == PagesCode.GratitudeJournal) {
       return (index) => editThanks(appLocale.thanks, todayThankYous[index],
           thanksListLength - todayThankYous.length + index);
@@ -134,8 +140,8 @@ class _ListWidgetState extends LPExtendedState<ListWidget> {
     }
   }
 
-  Function(int index) removeItemFunction(
-      userInfoProvider, thanksListLength, traitsListlength) {
+  Function(int index) removeItemFunction(UserInformation userInfoProvider,
+      int thanksListLength, int traitsListlength) {
     if (widget.pageCode == PagesCode.GratitudeJournal) {
       return (index) => removeThankYou(
           thanksListLength - todayThankYous.length + index,
@@ -149,7 +155,8 @@ class _ListWidgetState extends LPExtendedState<ListWidget> {
     }
   }
 
-  Widget buildThanksItemSug(stopShowingNumber, gender, appLocale) {
+  Widget buildThanksItemSug(int stopShowingNumber, String gender,
+      AppLocalizations appLocale) {
     return ThanksItemSuggested(
       stopShowing: stopShowingNumber,
       add: (thankYou, userInfoProvider) => {
@@ -162,7 +169,8 @@ class _ListWidgetState extends LPExtendedState<ListWidget> {
     );
   }
 
-  Widget buildPositiveTraitItemSug(stopShowingNumber, gender, appLocale) {
+  Widget buildPositiveTraitItemSug(int stopShowingNumber, String gender,
+      AppLocalizations appLocale) {
     return PositiveTraitItemSug(
       stopShowing: stopShowingNumber,
       add: (trait, userInfoProvider) =>
@@ -193,11 +201,12 @@ class _ListWidgetState extends LPExtendedState<ListWidget> {
     final thanksListLength = userInfoProvider.thanks['thanks']?.length ?? 0;
     todayThankYous = todayThankYousFunc(userInfoProvider.thanks["thanks"] ?? [],
         userInfoProvider.thanks["dates"] ?? []);
-    final pageData =
+    final Map<String, dynamic> pageData =
         getLocalizedTextForLists(appLocale, gender, widget.pageCode);
-    final listItems =
+    final List<String> listItems =
         getListItems(widget.pageCode, userInfoProvider, todayThankYous);
-    final sugBox = getSuggestionBox(appLocale);
+    final Widget Function(int stopShowingNumber, String gender) sugBox =
+        getSuggestionBox(appLocale);
     return SizedBox(
       // the width of the widget is 800 if the screen width is more than 1000, otherwise it is the screen width
       width: MediaQuery.of(context).size.width > 1000

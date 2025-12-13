@@ -7,7 +7,6 @@ import 'package:mazilon/pages/WellnessTools/VideoPlayerPageFactory.dart';
 import 'package:mazilon/pages/WellnessTools/more_videos_item.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/styles.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 class WellnessTools extends StatefulWidget {
   final Function setBool;
@@ -82,7 +81,7 @@ class _WellnessToolsState extends LPExtendedState<WellnessTools> {
                 Visibility(
                   visible: !isFullScreen,
                   child: Center(
-                    child: Container(
+                    child: SizedBox(
                       //color: Colors.white,
                       height: 130.0,
                       //margin: EdgeInsets.only(top: 15),
@@ -107,7 +106,7 @@ class _WellnessToolsState extends LPExtendedState<WellnessTools> {
                           fontSize: 24.sp,
                           fontWeight: FontWeight.bold,
                         ),
-                        appLocale!.textDirection == "rtl"
+                        appLocale.textDirection == "rtl"
                             ? TextAlign.right
                             : TextAlign.left,
                         28,
@@ -134,7 +133,7 @@ class _WellnessToolsState extends LPExtendedState<WellnessTools> {
                           fontSize: 18.sp,
                           fontWeight: FontWeight.normal,
                         ),
-                        appLocale!.textDirection == "rtl"
+                        appLocale.textDirection == "rtl"
                             ? TextAlign.right
                             : TextAlign.left,
                         20,
@@ -146,12 +145,12 @@ class _WellnessToolsState extends LPExtendedState<WellnessTools> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 4.0, 4, 20),
                     child: myAutoSizedText(
-                        appLocale!.moreVideos,
+                        appLocale.moreVideos,
                         TextStyle(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
                         ),
-                        appLocale!.textDirection == "rtl"
+                        appLocale.textDirection == "rtl"
                             ? TextAlign.right
                             : TextAlign.left,
                         20,

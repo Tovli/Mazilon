@@ -1,19 +1,7 @@
 // ignore_for_file: unused_local_variable
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mazilon/form/form.dart';
-import 'package:mazilon/menu.dart';
 
-import 'package:mazilon/util/Form/formPagePhoneModel.dart';
-import 'package:mazilon/util/appInformation.dart';
-import 'package:mazilon/util/styles.dart';
-import 'package:mazilon/util/userInformation.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mazilon/initialForm/toFormPage.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mockito/mockito.dart';
 
 void main() {
   try {

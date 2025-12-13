@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/styles.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 //Widget for the name of the user in the home page
 class NameBar extends StatefulWidget {
@@ -43,7 +42,7 @@ class NameBarState extends LPExtendedState<NameBar> {
                 Container(
                   child: Expanded(
                     child: AutoSizeText(
-                      appLocale!.greetings(userInfoProvider.name),
+                      appLocale.greetings(userInfoProvider.name),
                       overflow: TextOverflow.ellipsis,
                       minFontSize: 12,
                       maxFontSize: 30,

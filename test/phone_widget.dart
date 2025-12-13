@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class PhoneWidget extends StatefulWidget {
-  PhoneWidget({
-    Key? key,
-  }) : super(key: key);
+  const PhoneWidget({
+    super.key,
+  });
 
   @override
   State<PhoneWidget> createState() => _PhoneWidgetState();
@@ -20,8 +20,12 @@ class _PhoneWidgetState extends State<PhoneWidget> {
 
   @override
   void dispose() {
-    nameControllers.forEach((controller) => controller.dispose());
-    numberControllers.forEach((controller) => controller.dispose());
+    for (var controller in nameControllers) {
+      controller.dispose();
+    }
+    for (var controller in numberControllers) {
+      controller.dispose();
+    }
     controller1.dispose();
     controller2.dispose();
     super.dispose();
@@ -166,7 +170,7 @@ class _PhoneWidgetState extends State<PhoneWidget> {
                             ],
                           ),
                         );
-                      }).toList(),
+                      }),
 
                       SizedBox(width: 10), // Add some space between the buttons
                       TextButton(

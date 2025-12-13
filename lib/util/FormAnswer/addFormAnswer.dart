@@ -4,8 +4,6 @@ import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:mazilon/util/appInformation.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 class AddFormAnswer extends StatefulWidget {
   final int index; // The index of the item being edited
@@ -21,6 +19,7 @@ class AddFormAnswer extends StatefulWidget {
     required this.text,
   });
 
+  @override
   State<AddFormAnswer> createState() => _AddFormAnswerState();
 }
 
@@ -41,7 +40,7 @@ class _AddFormAnswerState extends LPExtendedState<AddFormAnswer> {
         listen: true); // Access the UserInformation provider
     final gender = userInfoProvider.gender;
     return Dialog(
-      child: Container(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width > 1000
             ? 800
             : MediaQuery.of(context)
@@ -75,7 +74,7 @@ class _AddFormAnswerState extends LPExtendedState<AddFormAnswer> {
                                 true, // Automatically focus on the text field when the dialog is opened
                             maxLength: 100, // Set maximum length of text
                             decoration: InputDecoration(
-                              labelText: appLocale!.addFormEdit(
+                              labelText: appLocale.addFormEdit(
                                   gender), // Set label text dynamically based on user gender
                               contentPadding: EdgeInsets.only(right: 8.0),
                               labelStyle: TextStyle(
@@ -92,7 +91,7 @@ class _AddFormAnswerState extends LPExtendedState<AddFormAnswer> {
                                     : 18.sp), // Set text field style
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return appLocale!
+                                return appLocale
                                     .validateEmpty; // Validate that the field is not empty
                               }
                               return null;
@@ -111,7 +110,7 @@ class _AddFormAnswerState extends LPExtendedState<AddFormAnswer> {
               children: <Widget>[
                 TextButton(
                   child: myAutoSizedText(
-                      appLocale!.closeButton(
+                      appLocale.closeButton(
                           gender), // Set cancel button text dynamically based on user gender
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp),
                       null,
@@ -122,7 +121,7 @@ class _AddFormAnswerState extends LPExtendedState<AddFormAnswer> {
                 ),
                 TextButton(
                   child: myAutoSizedText(
-                      appLocale!.saveButton(
+                      appLocale.saveButton(
                           gender), // Set save button text dynamically based on user gender
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp),
                       null,

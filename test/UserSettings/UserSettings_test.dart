@@ -2,17 +2,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mockito/mockito.dart';
 import 'UserSettings.dart';
-import 'dart:math';
 import 'package:flutter/material.dart';
 
 class MockSharedPreferences extends Mock implements SharedPreferences {}
 
 void main() {
   group('User Settings Component Test', () {
-    Map<String, dynamic> fakeSharedPreferencesStorage = {
-      'thankYous': [''],
-      'dates': [''],
-    };
     dynamic updateData(name, gender, age) {
       return;
     }

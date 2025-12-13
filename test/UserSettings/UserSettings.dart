@@ -73,11 +73,11 @@ class _UserSettingsState extends State<UserSettings> {
                   Directionality(
                       textDirection: TextDirection.rtl,
                       child: Text(widget.titles["name"] ?? "")),
-                  Container(
+                  SizedBox(
                     width: 300,
                     child: Directionality(
                       textDirection: TextDirection.rtl,
-                      child: Container(
+                      child: SizedBox(
                         height: 35,
                         child: TextField(
                           key: Key('nameField'),
@@ -100,7 +100,7 @@ class _UserSettingsState extends State<UserSettings> {
                       widget.titles["age"] ?? 'גיל',
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     key: Key('dropdownAge'),
                     width: 300,
                     child: Directionality(
@@ -130,7 +130,7 @@ class _UserSettingsState extends State<UserSettings> {
                       widget.titles["gender"] ?? "",
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     key: Key('dropdownGender'),
                     width: 300,
                     child: Directionality(
@@ -147,7 +147,7 @@ class _UserSettingsState extends State<UserSettings> {
                           ...genders
                               .map((gender) => DropdownMenuEntry(
                                   value: gender, label: gender))
-                              .toList()
+                              
                         ],
                         onSelected: (String? newValue) {
                           setState(() {
@@ -165,7 +165,7 @@ class _UserSettingsState extends State<UserSettings> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.2,
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width > 1000
                     ? 600
                     : MediaQuery.of(context).size.width * 0.6,

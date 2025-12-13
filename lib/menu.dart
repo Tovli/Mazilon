@@ -21,7 +21,6 @@ import 'package:mazilon/pages/phone.dart';
 import 'package:mazilon/pages/positive.dart';
 import 'package:mazilon/pages/PersonalPlan/myPlanPageFull.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:mazilon/pages/UserSettings.dart';
 
 
 import 'package:mazilon/util/appInformation.dart';
@@ -152,7 +151,7 @@ class _MenuState extends LPExtendedState<Menu> {
     };
  
     for (var i = 0; i < videos["videoLocale"]!.length; i++) {
-      var video = videos["videoLocale"]![i] ?? "he";
+      var video = videos["videoLocale"]![i];
       if (video == Localizations.localeOf(context).languageCode) {
         /*    'videoId': [],
     'videoHeadline': [],
@@ -326,7 +325,7 @@ class _MenuState extends LPExtendedState<Menu> {
                                 AppLocalizations.of(context)!
                                     .homePageFeelGood(gender))),
                       ),
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width / 5.5,
                         child: Align(
                           alignment: appLocale.textDirection == "rtl"
@@ -348,7 +347,7 @@ class _MenuState extends LPExtendedState<Menu> {
                                   return FractionallySizedBox(
                                     heightFactor: 0.85,
                                     widthFactor: 0.6,
-                                    alignment: appLocale!.textDirection == "rtl"
+                                    alignment: appLocale.textDirection == "rtl"
                                         ? Alignment.centerLeft
                                         : Alignment.centerRight,
                                     child: Align(
@@ -363,7 +362,7 @@ class _MenuState extends LPExtendedState<Menu> {
                                             color: primaryPurple,
                                             width: 2,
                                           ),
-                                          child: Container(
+                                          child: SizedBox(
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
@@ -505,10 +504,14 @@ class _MenuState extends LPExtendedState<Menu> {
                                                   ),
                                                   onPressed: () async {
                                                     // Share app text with others
-                                                    await Share.share(
-                                                      '${appLocale.shareAppMessage}\n https://sites.google.com/mishol.org/matzilon/%D7%91%D7%99%D7%AA',
-                                                      subject:
-                                                          'Living Positively App',
+                                                    await SharePlus.instance
+                                                        .share(
+                                                      ShareParams(
+                                                        text:
+                                                            '${appLocale.shareAppMessage}\n https://sites.google.com/mishol.org/matzilon/%D7%91%D7%99%D7%AA',
+                                                        subject:
+                                                            'Living Positively App',
+                                                      ),
                                                     );
                                                   },
                                                 ),
@@ -530,7 +533,7 @@ class _MenuState extends LPExtendedState<Menu> {
                                     current == PagesCode.About ||
                                     current == PagesCode.NotificationPage,
                                 Icons.menu,
-                                appLocale!.menu(gender)),
+                                appLocale.menu(gender)),
                           ),
                         ),
                       ),

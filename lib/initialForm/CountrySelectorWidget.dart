@@ -15,8 +15,7 @@ class CountrySelectorWidget extends StatefulWidget {
   final String disclaimerText;
 
   const CountrySelectorWidget(
-      {Key? key, required this.text, required this.disclaimerText})
-      : super(key: key);
+      {super.key, required this.text, required this.disclaimerText});
 
   @override
   _CountrySelectorWidgetState createState() => _CountrySelectorWidgetState();

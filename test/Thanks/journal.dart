@@ -60,44 +60,44 @@ class _JournalState extends State<Journal> {
   }
 
   void removeThankYou(int removeIndex) async {
-    List<String> thankYous_temp =
+    List<String> thankyousTemp =
         widget.fakeSharedPreferencesStorage['thankYous'] ?? [];
-    List<String> dates_temp =
+    List<String> datesTemp =
         widget.fakeSharedPreferencesStorage['dates'] ?? [];
-    thankYous_temp.removeAt(removeIndex);
-    dates_temp.removeAt(removeIndex);
+    thankyousTemp.removeAt(removeIndex);
+    datesTemp.removeAt(removeIndex);
     setState(() {
-      widget.fakeSharedPreferencesStorage['thankYous'] = thankYous_temp;
+      widget.fakeSharedPreferencesStorage['thankYous'] = thankyousTemp;
 
-      thankYous = thankYous_temp;
+      thankYous = thankyousTemp;
       focusNodes.removeAt(removeIndex);
-      widget.fakeSharedPreferencesStorage['dates'] = dates_temp;
-      dates = dates_temp;
+      widget.fakeSharedPreferencesStorage['dates'] = datesTemp;
+      dates = datesTemp;
     });
   }
 
   void addThankYou(String thankYou) async {
     counter = counter < 6 ? counter + 1 : counter;
 
-    List<String> thankYous_temp =
+    List<String> thankyousTemp =
         widget.fakeSharedPreferencesStorage['thankYous'] ?? [];
-    List<String> dates_temp =
+    List<String> datesTemp =
         widget.fakeSharedPreferencesStorage['dates'] ?? [];
 
-    thankYous_temp.add(thankYou);
+    thankyousTemp.add(thankYou);
 
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
-    dates_temp.add(formattedDate);
+    datesTemp.add(formattedDate);
 
     setState(() {
-      widget.fakeSharedPreferencesStorage['thankYous'] = thankYous_temp;
+      widget.fakeSharedPreferencesStorage['thankYous'] = thankyousTemp;
 
-      thankYous = thankYous_temp;
+      thankYous = thankyousTemp;
       focusNodes.add(FocusNode());
-      widget.fakeSharedPreferencesStorage['dates'] = dates_temp;
+      widget.fakeSharedPreferencesStorage['dates'] = datesTemp;
 
-      dates = dates_temp;
+      dates = datesTemp;
     });
     if (counter == 1) {
       showPopup();

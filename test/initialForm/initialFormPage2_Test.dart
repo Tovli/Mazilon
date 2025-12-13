@@ -26,7 +26,6 @@ void main() {
   late MockAppInformation mockAppInformation;
   late MockPersistentMemoryService mockPersistentMemoryService;
   bool nextTapped = false;
-  void mockNext() {}
   void mockPrev() {}
   void mockUpdateName(String name) {}
   setUp(() async {
@@ -57,8 +56,8 @@ void main() {
     when(mockPersistentMemoryService.getItem(any, any))
         .thenAnswer((_) async => null);
     when(mockPersistentMemoryService.setItem(any, any, any))
-        .thenAnswer((_) async => null);
-    when(mockPersistentMemoryService.reset()).thenAnswer((_) async => null);
+        .thenAnswer((_) async {});
+    when(mockPersistentMemoryService.reset()).thenAnswer((_) async {});
 
     GetIt.instance.registerSingleton<PersistentMemoryService>(
         mockPersistentMemoryService);

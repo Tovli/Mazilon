@@ -8,8 +8,7 @@ class VideoPlayerPage extends StatefulWidget {
   final Function(bool isFullScreen) onFullScreenChanged;
   final Map<String, List<String>> videoData;
   const VideoPlayerPage(
-      {Key? key, required this.onFullScreenChanged, required this.videoData})
-      : super(key: key);
+      {super.key, required this.onFullScreenChanged, required this.videoData});
   @override
   _VideoPlayerPageState createState() => _VideoPlayerPageState();
 }

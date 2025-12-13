@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:mazilon/pages/notifications/set_notification_widget.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +36,7 @@ class _NotificationPageState extends LPExtendedState<NotificationPage> {
               children: <Widget>[
                 SizedBox(height: 100),
                 Text(
-                  appLocale!.notificationPageHeader(gender),
+                  appLocale.notificationPageHeader(gender),
                 ),
                 SizedBox(height: 20),
                 SetNotificationWidget()

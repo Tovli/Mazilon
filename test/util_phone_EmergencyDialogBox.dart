@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mazilon/util/Phone/emergencyDialogBox.dart'; // Update with the correct path
+// Update with the correct path
 import 'package:mockito/mockito.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MockUrlLauncher extends Mock {
   Future<bool> canLaunchUrl(Uri url) => super.noSuchMethod(
@@ -24,11 +23,11 @@ class SimpleEmergencyDialogBox extends StatelessWidget {
   final Future<void> Function(Uri url) launchUrl;
 
   const SimpleEmergencyDialogBox({
-    Key? key,
+    super.key,
     required this.number,
     required this.canLaunchUrl,
     required this.launchUrl,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -94,11 +93,11 @@ class EmergencyDialogBoxNoWhatsapp extends StatelessWidget {
   final Future<void> Function(Uri url) launchUrl;
 
   const EmergencyDialogBoxNoWhatsapp({
-    Key? key,
+    super.key,
     required this.number,
     required this.canLaunchUrl,
     required this.launchUrl,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -153,11 +152,11 @@ class EmergencyDialogBoxWithLink extends StatelessWidget {
   final Future<void> Function(Uri url) launchUrl;
 
   const EmergencyDialogBoxWithLink({
-    Key? key,
+    super.key,
     required this.number,
     required this.canLaunchUrl,
     required this.launchUrl,
-  }) : super(key: key);
+  });
 
   void _launchURL(String url) async {
     if (await canLaunchUrl(Uri.parse(url))) {

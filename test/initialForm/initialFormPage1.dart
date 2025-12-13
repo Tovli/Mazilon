@@ -73,7 +73,7 @@ class _InitialFormPage1State extends State<InitialFormPage1> {
               SizedBox(
                 height: returnSizedBox(context, 50),
               ),
-              // ConfirmationButton(context, () {
+              // confirmationButton(context, () {
               //   widget.next();
               // },
               //     'המשך',
@@ -96,7 +96,7 @@ class _InitialFormPage1State extends State<InitialFormPage1> {
               SizedBox(
                 height: returnSizedBox(context, 20),
               ),
-              ConfirmationButton(context, () {
+              confirmationButton(context, () {
                 widget.skip();
               },
                   'לדילוג',

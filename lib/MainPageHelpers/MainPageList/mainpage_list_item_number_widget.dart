@@ -6,9 +6,9 @@ class ListItemNumberWidget extends StatelessWidget {
   final int index;
 
   const ListItemNumberWidget({
-    Key? key,
+    super.key,
     required this.index,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

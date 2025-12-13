@@ -5,7 +5,6 @@ import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/FormAnswer/addFormAnswer.dart';
 
-import 'package:mazilon/l10n/app_localizations.dart';
 
 //the template for the answers in the personal plan questionnaire
 //this is used in the formpagetemplate to display(remove/edit) the selected/inserted user promptss
@@ -72,7 +71,7 @@ class _FormAnswerState extends LPExtendedState<FormAnswer> {
                                   //maxLines: 10,
 
                                   TextStyle(fontSize: 16.sp),
-                                  appLocale!.textDirection == "rtl"
+                                  appLocale.textDirection == "rtl"
                                       ? TextAlign.right
                                       : TextAlign.left,
                                   28)),

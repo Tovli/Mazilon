@@ -3,9 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 
 import 'package:mazilon/util/styles.dart';
@@ -14,12 +12,11 @@ import 'package:mazilon/initialForm/toFormPage.dart';
 import 'package:mazilon/initialForm/initialFormPage2.dart';
 import 'package:mazilon/initialForm/initialFormPage1.dart';
 import 'package:mazilon/menu.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/disclaimerPage.dart';
 
 class InitialFormProgressIndicator extends StatefulWidget {
-  PhonePageData phonePageData;
+  final PhonePageData phonePageData;
   final Function changeLocale;
 
   InitialFormProgressIndicator({
@@ -74,7 +71,7 @@ class InitialFormProgressIndicatorState
     });
   }
 
-  void updateName(name) {
+  void updateName(String name) {
     setState(() {
       this.name = name;
     });
@@ -158,7 +155,7 @@ class InitialFormProgressIndicatorState
             leading: currentStep != (steps.length - 1)
                 ? IconButton(
                     icon: myAutoSizedText(
-                        appLocale!.skipButton(gender),
+                        appLocale.skipButton(gender),
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 12.sp),
                         null,
                         25),

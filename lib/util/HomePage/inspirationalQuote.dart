@@ -5,7 +5,6 @@ import 'package:mazilon/util/LP_extended_state.dart';
 import 'dart:math';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 //Display a random Inspirational Quote
 class InspirationalQuote extends StatefulWidget {
@@ -64,8 +63,8 @@ class _InspirationalQuoteState extends LPExtendedState<InspirationalQuote> {
           children: [
             Positioned(
               top: 5, // Adjust the position as needed
-              left: appLocale!.textDirection == "rtl" ? 5 : null,
-              right: appLocale!.textDirection == "rtl" ? null : 5,
+              left: appLocale.textDirection == "rtl" ? 5 : null,
+              right: appLocale.textDirection == "rtl" ? null : 5,
 
               child: GestureDetector(
                 onTap: setShow,
@@ -106,7 +105,7 @@ class _InspirationalQuoteState extends LPExtendedState<InspirationalQuote> {
                               fontWeight: FontWeight.normal,
                               color: appWhite,
                               fontSize: 24.sp),
-                          appLocale!.textDirection == "rtl"
+                          appLocale.textDirection == "rtl"
                               ? TextAlign.right
                               : TextAlign.left,
                           24,

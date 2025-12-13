@@ -67,7 +67,6 @@ void main() {
   });
 
   testWidgets('test the positive trait list', (WidgetTester tester) async {
-    String name = '';
     bool tapnext = false;
     bool tapskip = false;
     bool tapprev = false;
@@ -76,14 +75,7 @@ void main() {
     mockNext() => {tapnext = !tapnext};
     mockSkip() => {tapskip = !tapskip};
     mockPrev() => {tapprev = !tapprev};
-    mockUpdateName(String n) => {name = n};
-
-    // Mock titles
-    final Map<String, String> mockTitles = {
-      'mainTitle': 'Main Title',
-      'subTitle1': 'Subtitle 1',
-      'subTitle2': 'Subtitle 2'
-    };
+    mockUpdateName(String n) {};
 
     await tester.pumpWidget(MultiProvider(
       providers: [

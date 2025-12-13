@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -13,6 +14,11 @@ class SentryServiceImpl implements IncidentLoggerService {
   Future<void> initializeSentry(Widget MyApp) async {
     try {
       await dotenv.load(fileName: ".env");
+      if (kIsWeb) {
+        debugPrint("sentry skipped on web; running app directly");
+        runApp(MyApp);
+        return;
+      }
       if (dotenv.env['SENTRY_DSN'] == null) {
         debugPrint("sentry will not be initialized");
         runApp(MyApp);

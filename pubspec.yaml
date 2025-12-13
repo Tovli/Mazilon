@@ -58,6 +58,7 @@ dependencies:
   share_plus: ^12.0.0
   flutter_screenutil: ^5.9.3
   auto_size_text: ^3.0.0
+  package_info_plus: ^8.0.2
   image_picker: ^1.1.2
   youtube_player_flutter: ^9.1.1
   url_launcher_platform_interface: ^2.3.2
@@ -85,6 +86,7 @@ dependencies:
   upgrader: ^12.1.0
   country_code_picker: ^3.3.0
 dev_dependencies:
+  sentry_dart_plugin: ^3.2.0
   flutter_test:
     sdk: flutter
   mockito: ^5.4.4
@@ -156,3 +158,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+sentry:
+  upload_debug_symbols: true
+  upload_source_maps: true
+  project: mazilon
+  org: luba-ira-korlat

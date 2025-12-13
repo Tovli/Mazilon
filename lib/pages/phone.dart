@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/Phone/phoneTextAndIcon.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/userInformation.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/util/Phone/EmergencyPhones.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 class PhonePage extends StatefulWidget {
-  PhonePageData phonePageData;
+  final PhonePageData phonePageData;
   PhonePage({super.key, required this.phonePageData});
 
   @override
@@ -20,6 +17,7 @@ class PhonePage extends StatefulWidget {
 }
 
 class _PhonePageState extends LPExtendedState<PhonePage> {
+  late PhonePageData phonePageData;
   String mainTitle = '';
   String contactsTitle = '';
   String emergencyNumbersTitle = '';
@@ -31,16 +29,16 @@ class _PhonePageState extends LPExtendedState<PhonePage> {
   void loadData() async {
     setState(() {
       //numbers:
-      myPhones = widget.phonePageData.savedPhoneNumbers;
+      myPhones = phonePageData.savedPhoneNumbers;
       //names:
-      myContacts = widget.phonePageData.savedPhoneNames;
+      myContacts = phonePageData.savedPhoneNames;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    widget.phonePageData = context.read<PhonePageData>();
+    phonePageData = context.read<PhonePageData>();
     loadData();
   }
 
@@ -64,7 +62,7 @@ class _PhonePageState extends LPExtendedState<PhonePage> {
               child: Column(
                 children: <Widget>[
                   myAutoSizedText(
-                      appLocale!.phonePageTitle(gender),
+                      appLocale.phonePageTitle(gender),
                       TextStyle(fontWeight: FontWeight.bold, fontSize: 24.sp),
                       TextAlign.center,
                       60),
@@ -74,7 +72,7 @@ class _PhonePageState extends LPExtendedState<PhonePage> {
                       alignment: Alignment.topCenter,
                       margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                       child: myAutoSizedText(
-                          appLocale!.addingContactDisclaimer,
+                          appLocale.addingContactDisclaimer,
                           TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 12.sp,
@@ -85,14 +83,14 @@ class _PhonePageState extends LPExtendedState<PhonePage> {
                   ),
                   const SizedBox(height: 30.0),
                   Align(
-                    alignment: appLocale!.textDirection == "rtl"
+                    alignment: appLocale.textDirection == "rtl"
                         ? Alignment.centerRight
                         : Alignment.centerLeft,
                     child: Padding(
                       padding: const EdgeInsets.only(
                           right: 30.0), // adjust the value as needed
                       child: myAutoSizedText(
-                          appLocale!.yourContacts(gender),
+                          appLocale.yourContacts(gender),
                           TextStyle(
                               fontSize: 18.sp, fontWeight: FontWeight.normal),
                           null,
@@ -116,14 +114,14 @@ class _PhonePageState extends LPExtendedState<PhonePage> {
                           )),
                   const SizedBox(height: 10.0),
                   Align(
-                    alignment: appLocale!.textDirection == "rtl"
+                    alignment: appLocale.textDirection == "rtl"
                         ? Alignment.centerRight
                         : Alignment.centerLeft,
                     child: Padding(
                       padding: const EdgeInsets.only(
                           right: 30.0), // adjust the value as needed
                       child: myAutoSizedText(
-                          appLocale!.emergencyNumbers(gender),
+                          appLocale.emergencyNumbers(gender),
                           TextStyle(
                               fontSize: 18.sp, fontWeight: FontWeight.normal),
                           null,
