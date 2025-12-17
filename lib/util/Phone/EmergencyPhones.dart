@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/Phone/emergencyDialogBox.dart';
+import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:mazilon/util/appInformation.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
+//import 'package:mazilon/util/appInformation.dart';
+//import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/EmergencyNumbers.dart';
-import 'dart:io';
+//import 'dart:io';
 
 // Extracts and returns the list of child widgets from a Row widget
 List<Widget> extractChildrenFromRow(Row row) {
@@ -17,14 +18,46 @@ List<Widget> extractChildrenFromRow(Row row) {
 class EmergencyPhonesGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
-    final String defaultLocale =
-        Platform.localeName; // Returns locale string in the form 'en_US'
-    String countryCode = defaultLocale.substring(defaultLocale.length - 2);
+    final localNumbers;
+    final userInfo = Provider.of<UserInformation>(context, listen: false);
+    final selectedCountry = userInfo.location.toLowerCase();
+    final Map<String, dynamic> numLookup = {
+      "at": "eu",
+      "be": "eu",
+      "bg": "eu",
+      "hr": "eu",
+      "cy": "eu",
+      "cz": "eu",
+      "dk": "eu",
+      "ee": "eu",
+      "fi": "eu",
+      "fr": "eu",
+      "de": "eu",
+      "gr": "eu",
+      "hu": "eu",
+      "ie": "eu",
+      "it": "eu",
+      "lv": "eu",
+      "lt": "eu",
+      "lu": "eu",
+      "mt": "eu",
+      "nl": "eu",
+      "pl": "eu",
+      "pt": "eu",
+      "ro": "eu",
+      "sk": "eu",
+      "si": "eu",
+      "es": "eu",
+      "se": "eu",
+      "us": "usa",
+      "il": "israel",
+      "gb": "uk",
+      "au": "australia",
+    };
 
-    final localNumbers = countryCode == "IL" || appLocale!.language == "עברית"
-        ? numbers["israel"]
-        : numbers["usa"];
+    localNumbers = numbers[numLookup[selectedCountry] ?? "eu"];
+
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GridView.builder(
