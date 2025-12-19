@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:get_it/get_it.dart';
@@ -97,17 +98,24 @@ class NotificationsService {
     String id = "${calculatedTime.hour}${calculatedTime.minute}";
     await cancelNotifications(null, cancelWorker: true);
 
-    Workmanager().registerPeriodicTask(
-      id,
-      "simpleTask",
-      inputData: {
-        "text": quotes,
-        "timeHour": hour,
-        "timeMinute": minute,
-        "id": id
-      },
-      frequency: Duration(hours: 10),
-    );
+    // Only use Workmanager on mobile platforms (not web)
+    if (!kIsWeb) {
+      Workmanager().registerPeriodicTask(
+        id,
+        "simpleTask",
+        inputData: {
+          "text": quotes,
+          "timeHour": hour,
+          "timeMinute": minute,
+          "id": id
+        },
+        frequency: Duration(hours: 10),
+      );
+    } else {
+      // For web, we can show an immediate notification or handle differently
+      // Since workmanager doesn't work on web, we could implement alternative logic here
+      print("Workmanager not supported on web - notifications scheduled for mobile only");
+    }
 
     var message = createText(
         '${hour < 10 ? "0${hour}" : hour}:${minute < 10 ? "0${minute}" : minute}');
@@ -143,7 +151,7 @@ class NotificationsService {
   // Cancel a specific notification
   static Future<void> cancelNotifications(int? id,
       {bool cancelWorker = false}) async {
-    if (cancelWorker) {
+    if (cancelWorker && !kIsWeb) {
       await Workmanager().cancelAll();
     }
     if (id == null) {

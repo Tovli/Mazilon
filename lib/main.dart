@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/Locale/locale_service.dart';
@@ -84,10 +85,14 @@ void main() async {
 
   IncidentLoggerService sentryService = GetIt.instance<IncidentLoggerService>();
 
-  Workmanager().initialize(
-    callbackDispatcher,
-    isInDebugMode: false,
-  );
+  // Initialize Workmanager only on mobile platforms (not web)
+  if (!kIsWeb) {
+    Workmanager().initialize(
+      callbackDispatcher,
+      isInDebugMode: false,
+    );
+  }
+  
   await sentryService.initializeSentry(
     MultiProvider(
       providers: [
