@@ -92,7 +92,7 @@ void main() async {
       isInDebugMode: false,
     );
   }
-  
+
   await sentryService.initializeSentry(
     MultiProvider(
       providers: [

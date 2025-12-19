@@ -114,7 +114,8 @@ class NotificationsService {
     } else {
       // For web, we can show an immediate notification or handle differently
       // Since workmanager doesn't work on web, we could implement alternative logic here
-      print("Workmanager not supported on web - notifications scheduled for mobile only");
+      print(
+          "Workmanager not supported on web - notifications scheduled for mobile only");
     }
 
     var message = createText(
