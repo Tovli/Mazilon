@@ -24,12 +24,12 @@ jobs:
         with:
           secrets: ${{ toJSON(secrets) }}
               
-      - name: Create .env file            
+      - name: Create dotenv file            
         uses: SpicyPizza/create-envfile@v2.0.3
         with:
             envkey_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
             envkey_MIXPANEL_PROJECT_TOKEN: ${{ secrets.MIXPANEL_PROJECT_TOKEN }}
-            file_name: .env
+            file_name: dotenv
       - name: Write key store file for release signing
         run: |
           echo "$APPSIGNINGKEY" | base64 --decode > "${{ env.KEYSTORE_PATH }}${{ env.KEYSTORE_FILE }}"
@@ -111,12 +111,12 @@ jobs:
         with:
           secrets: ${{ toJSON(secrets) }}
               
-      - name: Create .env file            
+      - name: Create dotenv file            
         uses: SpicyPizza/create-envfile@v2.0.3
         with:
             envkey_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
             envkey_MIXPANEL_PROJECT_TOKEN: ${{ secrets.MIXPANEL_PROJECT_TOKEN }}
-            file_name: .env
+            file_name: dotenv
 
       - name: Write firebase options file
         run: |
