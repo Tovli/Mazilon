@@ -887,7 +887,7 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
-  /// **'Share text to involve supporters'**
+  /// **'Share text to involve\nsupporters'**
   String get shareRoutine;
 
   ///

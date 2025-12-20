@@ -541,7 +541,7 @@
   "@shareFile": {
     "description": ""
   },
-  "shareRoutine": "Share text to involve supporters",
+  "shareRoutine": "Share text to involve\nsupporters",
   "@shareRoutine": {
     "description": ""
   },

@@ -1589,7 +1589,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shareFile => 'Share file of personal plan';
 
   @override
-  String get shareRoutine => 'Share text to involve supporters';
+  String get shareRoutine => 'Share text to involve\nsupporters';
 
   @override
   String get shareEmergency => 'Share text in case of crises';
