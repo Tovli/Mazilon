@@ -64,6 +64,7 @@ dynamic numbers = {
       "number": "18664887386",
       "link": "",
       "description": "Center for LTBTQ+ youth",
+      "descriptionHe": "מרכז לנוער להטב\"ק+",
       "whatsapp": false,
       "canCall": true,
       "icon": Icons.phone
@@ -86,6 +87,7 @@ dynamic numbers = {
       "email": "jo@samaritans.org",
       "description":
           "Samaritans is the charity that prevents suicide.",
+      "descriptionHe": "סמריטנס היא עמותה למניעת התאבדות.",
       "whatsapp": false,
       "canCall": true,
       "icon": Icons.chat
@@ -95,6 +97,7 @@ dynamic numbers = {
       "number": "0800585858",
       "link": "https://www.thecalmzone.net/",
       "description": "A leading movement against male suicide.",
+      "descriptionHe": "תנועה מובילה למאבק בהתאבדות בקרב גברים.",
       "whatsapp": false,
       "canCall": true,
       "icon": Icons.chat
@@ -104,6 +107,7 @@ dynamic numbers = {
       "number": "08000684141",
       "link": "https://www.papyrus-uk.org/",
       "description": "Papyrus is dedicated to the prevention of young suicide.",
+      "descriptionHe": "פאפירוס מוקדשת למניעת התאבדות בקרב צעירים.",
       "whatsapp": false,
       "canCall": true,
       "icon": Icons.chat
@@ -115,6 +119,7 @@ dynamic numbers = {
       "number": "112",
       "description":
           "Need help? 112 is your life-saving number!",
+      "descriptionHe": "צריך עזרה? 112 הוא מספר החירום שלך להצלת חיים!",
       "whatsapp": false,
       "canCall": true,
       "icon": Icons.phone
@@ -124,6 +129,7 @@ dynamic numbers = {
       "link": "https://mhe-sme.org/",
       "description":
           "The leading NGO for mental health and well-being.",
+      "descriptionHe": "הארגון המוביל לבריאות הנפש ולרווחה.",
       "whatsapp": false,
       "number": "",
       "canCall": false,
@@ -136,6 +142,7 @@ dynamic numbers = {
       "number": "131114",
       "link": "https://www.lifeline.org.au/",
       "description": "24 hour crisis support and suicide prevention.",
+      "descriptionHe": "תמיכה במשברים ומניעת התאבדות 24/7.",
       "canCall": false,
       "icon": Icons.chat
     },
@@ -145,6 +152,7 @@ dynamic numbers = {
       "link": "https://www.beyondblue.org.au/get-support/urgent-help",
       "description":
           "A reliable source of mental health information.",
+      "descriptionHe": "מקור מידע אמין לבריאות הנפש.",
       "canCall": false,
       "icon": Icons.chat
     },
@@ -154,6 +162,7 @@ dynamic numbers = {
       "link": "https://kidshelpline.com.au/",
       "description":
           "24 hour counseling for young people aged 5 to 25.",
+      "descriptionHe": "ייעוץ 24/7 לצעירים בגילאי 5 עד 25.",
       "canCall": true,
       "icon": Icons.chat
     },
@@ -163,6 +172,7 @@ dynamic numbers = {
       "link": "https://mensline.org.au/",
       "description":
           "A telephone and online counseling service for men.",
+      "descriptionHe": "שירות ייעוץ טלפוני ומקוון לגברים.",
       "canCall": true,
       "icon": Icons.chat
     }
