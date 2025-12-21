@@ -35,13 +35,7 @@ if (keystorePropertiesFile.exists()) {
     signingKeyStorePassword = System.getenv("APPSIGNINGKEYSTOREPASSWORD") ?: ""
 }
 
-val isReleaseBuild =
-    gradle.startParameter.taskNames.any { it.contains("Release", ignoreCase = true) }
-val hasSigningConfig =
-    signingKeyFile.isNotEmpty() &&
-        signingKeyPassword.isNotEmpty() &&
-        signingKeyStorePassword.isNotEmpty()
-if (isReleaseBuild && !hasSigningConfig) {
+if (signingKeyFile.isEmpty() || signingKeyPassword.isEmpty() || signingKeyStorePassword.isEmpty()) {
     throw Exception("Keystore credentials are not properly set in either key.properties or environment variables.")
 }
 
@@ -80,22 +74,18 @@ android {
         versionName = flutter.versionName
     }
 
-    buildTypes {
-        release {
-            if (hasSigningConfig) {
-                signingConfig = signingConfigs.getByName("release")
-            }
+    signingConfigs {
+        create("release") {
+            keyAlias = signingKeyAlias
+            keyPassword = signingKeyPassword
+            storeFile = file(signingKeyFile)
+            storePassword = signingKeyStorePassword
         }
     }
 
-    signingConfigs {
-        if (hasSigningConfig) {
-            create("release") {
-                keyAlias = signingKeyAlias
-                keyPassword = signingKeyPassword
-                storeFile = file(signingKeyFile)
-                storePassword = signingKeyStorePassword
-            }
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
