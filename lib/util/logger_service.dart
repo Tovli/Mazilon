@@ -12,7 +12,7 @@ class SentryServiceImpl implements IncidentLoggerService {
   @override
   Future<void> initializeSentry(Widget MyApp) async {
     try {
-      await dotenv.load(fileName: ".env");
+      await dotenv.load(fileName: "dotenv");
       if (dotenv.env['SENTRY_DSN'] == null) {
         debugPrint("sentry will not be initialized");
         runApp(MyApp);

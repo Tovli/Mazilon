@@ -13,7 +13,7 @@ class MixPanelService implements AnalyticsService {
   String key = "";
   @override
   Future<void> init() async {
-    await dotenv.load(fileName: ".env");
+    await dotenv.load(fileName: "dotenv");
 
     if (dotenv.env['MIXPANEL_PROJECT_TOKEN'] == null) {
       return;
