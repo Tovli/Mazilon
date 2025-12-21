@@ -1,13 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/Phone/emergencyDialogBox.dart';
+import 'package:mazilon/util/Phone/emergency_countries.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-//import 'package:mazilon/util/appInformation.dart';
-//import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/EmergencyNumbers.dart';
-//import 'dart:io';
 
 // Extracts and returns the list of child widgets from a Row widget
 List<Widget> extractChildrenFromRow(Row row) {
@@ -18,46 +16,15 @@ List<Widget> extractChildrenFromRow(Row row) {
 class EmergencyPhonesGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final localNumbers;
-    final userInfo = Provider.of<UserInformation>(context, listen: false);
-    final selectedCountry = userInfo.location.toLowerCase();
-    final Map<String, dynamic> numLookup = {
-      "at": "eu",
-      "be": "eu",
-      "bg": "eu",
-      "hr": "eu",
-      "cy": "eu",
-      "cz": "eu",
-      "dk": "eu",
-      "ee": "eu",
-      "fi": "eu",
-      "fr": "eu",
-      "de": "eu",
-      "gr": "eu",
-      "hu": "eu",
-      "ie": "eu",
-      "it": "eu",
-      "lv": "eu",
-      "lt": "eu",
-      "lu": "eu",
-      "mt": "eu",
-      "nl": "eu",
-      "pl": "eu",
-      "pt": "eu",
-      "ro": "eu",
-      "sk": "eu",
-      "si": "eu",
-      "es": "eu",
-      "se": "eu",
-      "us": "usa",
-      "il": "israel",
-      "gb": "uk",
-      "au": "australia",
-    };
+    final userInfo = Provider.of<UserInformation>(context, listen: true);
+    String countryCode = userInfo.location.trim();
+    if (countryCode.isEmpty) {
+      countryCode = Localizations.localeOf(context).countryCode ??
+          defaultEmergencyCountryCode;
+    }
 
-    localNumbers = numbers[numLookup[selectedCountry] ?? "eu"];
-
-
+    final localNumbers =
+        numbers[emergencyGroupForCountryCode(countryCode)] ?? numbers["eu"];
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GridView.builder(
@@ -88,6 +55,11 @@ class EmergencyPhoneItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isHebrew =
+        Localizations.localeOf(context).languageCode.toLowerCase() == 'he';
+    final descriptionText = isHebrew
+        ? (number["descriptionHe"] ?? number["description"] ?? '')
+        : (number["description"] ?? '');
     return InkWell(
       onTap: () async {
         // Display a dialog when the item is tapped
@@ -119,26 +91,34 @@ class EmergencyPhoneItem extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Center(
-                    child: myAutoSizedText(
-                        number["name"],
-                        TextStyle(
-                            color: primaryPurple,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14.sp),
-                        TextAlign.center,
-                        40),
+                  Expanded(
+                    flex: 2,
+                    child: Center(
+                      child: myAutoSizedText(
+                          number["name"],
+                          TextStyle(
+                              color: primaryPurple,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.sp),
+                          TextAlign.center,
+                          18,
+                          2),
+                    ),
                   ),
-                  Center(
-                    child: myAutoSizedText(
-                        number["description"]
-                            .replaceAll('/', '\n'), // Replace '/' with newline
-                        TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: primaryPurple,
-                            fontSize: 14.sp),
-                        TextAlign.center,
-                        30),
+                  Expanded(
+                    flex: 3,
+                    child: Center(
+                      child: myAutoSizedText(
+                          descriptionText
+                              .replaceAll('/', '\n'), // Replace '/' with newline
+                          TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: primaryPurple,
+                              fontSize: 14.sp),
+                          TextAlign.center,
+                          14,
+                          6),
+                    ),
                   ),
                 ],
               ),
