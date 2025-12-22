@@ -1,9 +1,6 @@
-name: "Build production artifacts"
+name: "Build development artifacts"
 on:
   pull_request:
-    branches:
-      - main
-  push:
     branches:
       - main
 
@@ -97,90 +94,9 @@ jobs:
       #     name: app-release-apk
       #     path: ${{ env.APK_PATH }}
 
-  build-web:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    env:
-      FIREBASE_OPTIONS_PATH: lib/util/Firebase/firebase_options.dart
-      WEB_BUILD_PATH: build/web
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Export secrets as env vars
-        uses: oNaiPs/secrets-to-env-action@v1
-        with:
-          secrets: ${{ toJSON(secrets) }}
-              
-      - name: Create dotenv file            
-        uses: SpicyPizza/create-envfile@v2.0.3
-        with:
-            envkey_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-            envkey_MIXPANEL_PROJECT_TOKEN: ${{ secrets.MIXPANEL_PROJECT_TOKEN }}
-            file_name: dotenv
-
-      - name: Write firebase options file
-        run: |
-          echo "$FIREBASE_OPTIONS" | base64 --decode > "${{ env.FIREBASE_OPTIONS_PATH }}"
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.35.6"
-          cache: true
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Get version from pubspec.yaml
-        id: get_version
-        run: |
-          VERSION_LINE=$(grep '^version: ' pubspec.yaml)
-          VERSION_STRING=${VERSION_LINE#version: }
-          echo "VERSION_STRING=$VERSION_STRING" >> $GITHUB_ENV
-
-      - name: Parse version components
-        run: |
-          VERSION_NO_BUILD="${VERSION_STRING%%+*}"
-          echo "VERSION_NO_BUILD=$VERSION_NO_BUILD" >> $GITHUB_ENV
-
-      - name: Get short commit hash
-        run: |
-          COMMIT_HASH=$(git rev-parse --short HEAD)
-          echo "COMMIT_HASH=$COMMIT_HASH" >> $GITHUB_ENV
-
-      - name: Set build name and number
-        run: |
-          BUILD_NAME="${VERSION_NO_BUILD}+${COMMIT_HASH}"
-          BUILD_NUMBER="${GITHUB_RUN_NUMBER}"
-          echo "BUILD_NAME=$BUILD_NAME" >> $GITHUB_ENV
-          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
-
-      - name: Build Web App
-        run: |
-          flutter build web --release \
-            --build-name="${BUILD_NAME}" \
-            --build-number="${BUILD_NUMBER}"
-
-      - name: Upload Web Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: web-build
-          path: ${{ env.WEB_BUILD_PATH }}
-
-      - name: Deploy to Azure Storage Static Website
-        uses: azure/cli@v2
-        with:
-          inlineScript: |
-            az storage blob upload-batch \
-              --account-name ${{ secrets.AZURE_WEB_STORAGE_ACCOUNT }} \
-              --account-key ${{ secrets.AZURE_WEB_STORAGE_KEY }} \
-              --destination '$web' \
-              --source build/web \
-              --overwrite
+  
   build-dev-web:
     runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/main'
     env:
       FIREBASE_OPTIONS_PATH: lib/util/Firebase/firebase_options.dart
       WEB_BUILD_PATH: build/web
