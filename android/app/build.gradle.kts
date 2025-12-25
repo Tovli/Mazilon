@@ -30,9 +30,9 @@ if (keystorePropertiesFile.exists()) {
     signingKeyFile = keystoreProperties["storeFile"] as String
     signingKeyStorePassword = keystoreProperties["storePassword"] as String
 } else {
-    signingKeyPassword = System.getenv("APPSIGNINGKEYPASSWORD") ?: ""
-    signingKeyFile = System.getenv("KEYSTORE_FILE") ?: ""
-    signingKeyStorePassword = System.getenv("APPSIGNINGKEYSTOREPASSWORD") ?: ""
+    signingKeyPassword = System.getenv("APPSIGNINGKEYPASSWORD") ?: " "
+    signingKeyFile = System.getenv("KEYSTORE_FILE") ?: " "
+    signingKeyStorePassword = System.getenv("APPSIGNINGKEYSTOREPASSWORD") ?: " "
 }
 
 if (signingKeyFile.isEmpty() || signingKeyPassword.isEmpty() || signingKeyStorePassword.isEmpty()) {
