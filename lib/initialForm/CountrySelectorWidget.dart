@@ -3,7 +3,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
-import 'package:mazilon/util/Phone/emergency_countries.dart';
+import 'package:mazilon/EmergencyNumbers.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,9 +30,10 @@ class _CountrySelectorWidgetState
   void saveLocation(String location, UserInformation userInfo) async {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
-    final normalized = location.trim().toUpperCase();
-    await service.setItem("location", PersistentMemoryType.String, normalized);
-    userInfo.updateLocation(normalized);
+    final normalizedLocation = location.trim().toUpperCase();
+    await service.setItem(
+        "location", PersistentMemoryType.String, normalizedLocation);
+    userInfo.updateLocation(normalizedLocation);
   }
 
   void changeVisible() {
@@ -51,7 +52,7 @@ class _CountrySelectorWidgetState
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
     if (userInfoProvider.location.isEmpty) {
-      saveLocation(defaultEmergencyCountryCode, userInfoProvider);
+      saveLocation(defaultPickerCountry.countryCodes.first, userInfoProvider);
     }
     _didInitLocation = true;
   }
@@ -121,11 +122,11 @@ class _CountrySelectorWidgetState
                   },
                   initialSelection: userInfoProvider.location.isNotEmpty
                       ? userInfoProvider.location
-                      : defaultEmergencyCountryCode,
+                      : defaultPickerCountry.countryCodes.first,
                   showCountryOnly: true,
                   showOnlyCountryWhenClosed: true,
                   alignLeft: true, // Changed to true for left alignment
-                  countryFilter: emergencyCountryCodes,
+                  countryFilter: countryPickerCodes,
                   padding: EdgeInsets.zero, // Remove internal padding
                 ),
               ),

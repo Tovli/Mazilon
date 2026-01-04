@@ -1,7 +1,57 @@
 import 'package:flutter/material.dart';
 
-dynamic numbers = {
-  "israel": [
+class Country {
+  final String id;
+  final List<String> countryCodes;
+  final List<Map<String, dynamic>> emergencyNumbers;
+  final bool isDefaultPicker;
+  final bool isDefaultEmergency;
+
+  const Country({
+    required this.id,
+    required this.countryCodes,
+    required this.emergencyNumbers,
+    this.isDefaultPicker = false,
+    this.isDefaultEmergency = false,
+  });
+}
+
+const List<String> euCountryCodes = [
+  'AT',
+  'BE',
+  'BG',
+  'HR',
+  'CY',
+  'CZ',
+  'DK',
+  'EE',
+  'FI',
+  'FR',
+  'DE',
+  'GR',
+  'HU',
+  'IE',
+  'IT',
+  'LV',
+  'LT',
+  'LU',
+  'MT',
+  'NL',
+  'PL',
+  'PT',
+  'RO',
+  'SK',
+  'SI',
+  'ES',
+  'SE',
+];
+
+final Map<String, Country> countries = {
+  "israel": Country(
+    id: "israel",
+    countryCodes: ["IL"],
+    isDefaultPicker: true,
+    emergencyNumbers: [
     {
       "name": "105",
       "number": "105",
@@ -39,8 +89,12 @@ dynamic numbers = {
       "whatsapp": false,
       "canCall": true,
     }
-  ],
-  "usa": [
+    ],
+  ),
+  "usa": Country(
+    id: "usa",
+    countryCodes: ["US"],
+    emergencyNumbers: [
     {
       "name": "Police",
       "number": "911",
@@ -78,8 +132,12 @@ dynamic numbers = {
       "canCall": true,
       "icon": Icons.chat
     }
-  ],
-  "uk": [
+    ],
+  ),
+  "uk": Country(
+    id: "uk",
+    countryCodes: ["GB"],
+    emergencyNumbers: [
     {
       "name": "Samaritans",
       "number": "116123",
@@ -112,8 +170,13 @@ dynamic numbers = {
       "canCall": true,
       "icon": Icons.chat
     }
-  ],
-  "eu": [
+    ],
+  ),
+  "eu": Country(
+    id: "eu",
+    countryCodes: euCountryCodes,
+    isDefaultEmergency: true,
+    emergencyNumbers: [
     {
       "name": "Emergency",
       "number": "112",
@@ -135,8 +198,12 @@ dynamic numbers = {
       "canCall": false,
       "icon": Icons.link
     }
-  ],
-  "australia": [
+    ],
+  ),
+  "australia": Country(
+    id: "australia",
+    countryCodes: ["AU"],
+    emergencyNumbers: [
     {
       "name": "Lifeline",
       "number": "131114",
@@ -176,6 +243,32 @@ dynamic numbers = {
       "canCall": true,
       "icon": Icons.chat
     }
-  ]
+    ],
+  )
 };
+
+List<String> get countryPickerCodes => countries.values
+    .expand((country) => country.countryCodes)
+    .toList();
+
+Country get defaultPickerCountry => countries.values.firstWhere(
+    (country) => country.isDefaultPicker,
+    orElse: () => countries.values.first);
+
+Country get defaultEmergencyCountry => countries.values.firstWhere(
+    (country) => country.isDefaultEmergency,
+    orElse: () => countries.values.first);
+
+Country? findCountryByCode(String code) {
+  final normalized = code.trim().toUpperCase();
+  if (normalized.isEmpty) {
+    return null;
+  }
+  for (final country in countries.values) {
+    if (country.countryCodes.contains(normalized)) {
+      return country;
+    }
+  }
+  return null;
+}
 //{"name":, "number":, "link":,"description":,"icon":}

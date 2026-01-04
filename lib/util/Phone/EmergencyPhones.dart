@@ -2,10 +2,10 @@
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/Phone/emergencyDialogBox.dart';
-import 'package:mazilon/util/Phone/emergency_countries.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/EmergencyNumbers.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 // Extracts and returns the list of child widgets from a Row widget
 List<Widget> extractChildrenFromRow(Row row) {
@@ -20,11 +20,15 @@ class EmergencyPhonesGrid extends StatelessWidget {
     String countryCode = userInfo.location.trim();
     if (countryCode.isEmpty) {
       countryCode = Localizations.localeOf(context).countryCode ??
-          defaultEmergencyCountryCode;
+          defaultPickerCountry.countryCodes.first;
     }
 
-    final localNumbers =
-        numbers[emergencyGroupForCountryCode(countryCode)] ?? numbers["eu"];
+    final Country? country = findCountryByCode(countryCode);
+    if (country == null) {
+      debugPrint(
+          'No emergency mapping for countryCode="$countryCode". Using default "${defaultEmergencyCountry.id}".');
+    }
+    final localNumbers = (country ?? defaultEmergencyCountry).emergencyNumbers;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GridView.builder(
@@ -55,9 +59,9 @@ class EmergencyPhoneItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isHebrew =
-        Localizations.localeOf(context).languageCode.toLowerCase() == 'he';
-    final descriptionText = isHebrew
+    final appLocale = AppLocalizations.of(context);
+    final isRtl = appLocale?.textDirection == "rtl";
+    final descriptionText = isRtl
         ? (number["descriptionHe"] ?? number["description"] ?? '')
         : (number["description"] ?? '');
     return InkWell(
