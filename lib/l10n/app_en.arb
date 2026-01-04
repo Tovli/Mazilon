@@ -506,6 +506,10 @@
     "@notificationSetTimeText": { 
     "description": ""
   },
+     "notificationCancelNotification": "{gender,select,male{Cancel current notification} female{Cancel current notification} other{Cancel current notification}}",
+    "@notificationSetTimeText": { 
+    "description": ""
+  },
 
   "finishedDownloading": "{gender,select,male{finishedDownloading} female{finishedDownloading} other{finishedDownloading}}",
   "@finishedDownloading": {

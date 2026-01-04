@@ -1534,6 +1534,19 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String notificationCancelNotification(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'Cancel current notification',
+        'female': 'Cancel current notification',
+        'other': 'Cancel current notification',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
   String finishedDownloading(String gender) {
     String _temp0 = intl.Intl.selectLogic(
       gender,

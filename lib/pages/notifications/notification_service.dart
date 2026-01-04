@@ -5,8 +5,11 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
+import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:mazilon/util/SignIn/popup_toast.dart';
 import 'package:mazilon/util/logger_service.dart';
+import 'package:mazilon/util/userInformation.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:workmanager/workmanager.dart';
@@ -37,8 +40,9 @@ class NotificationsService {
       //  String currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
 
       // Set the local time zone
+
       tz.setLocalLocation(
-          tz.getLocation(timeZoneName.localizedName?.name ?? "Asia/Jerusalem"));
+          tz.getLocation(timeZoneName.identifier ?? "Asia/Jerusalem"));
       await _flutterLocalNotificationsPlugin
           .initialize(_initializationSettings);
       _isInitialized = true;
@@ -47,12 +51,16 @@ class NotificationsService {
       await _flutterLocalNotificationsPlugin
           .initialize(_initializationSettings);
       _isInitialized = true;
-      IncidentLoggerService loggerService =
-          GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureLog(
-        error,
-        stackTrace: stackTrace,
-      );
+      try {
+        IncidentLoggerService loggerService =
+            GetIt.instance<IncidentLoggerService>();
+        await loggerService.captureLog(
+          error,
+          stackTrace: stackTrace,
+        );
+      } catch (e) {
+        debugPrint("Failed to log the error: $e");
+      }
     }
   }
 
@@ -76,8 +84,8 @@ class NotificationsService {
     return TimeOfDay(hour: h, minute: m);
   }
 
-  static initializeNotification(
-      List<String> quotes, int hour, int minute, Function createText) async {
+  static Future<void> initializeNotification(List<String> quotes, int hour,
+      int minute, Function createText, UserInformation userInfo) async {
     final bool? grantedNotificationPermission;
     if (Platform.isAndroid) {
       final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
@@ -96,7 +104,32 @@ class NotificationsService {
     }
     TimeOfDay calculatedTime = calculateTime(hour, minute);
     String id = "${calculatedTime.hour}${calculatedTime.minute}";
+
+    userInfo.updateNotificationHour(hour);
+    userInfo.updateNotificationMinute(minute);
+
     await cancelNotifications(null, cancelWorker: true);
+    Workmanager().registerOneOffTask(
+      id,
+      "NotificationWorker${calculatedTime.hour}${calculatedTime.minute}",
+      inputData: {
+        "text": quotes,
+        "timeHour": hour,
+        "timeMinute": minute,
+        "id": id
+      },
+    );
+    Workmanager().registerPeriodicTask(
+      id,
+      "NotificationWorker${calculatedTime.hour}${calculatedTime.minute}Periodic",
+      inputData: {
+        "text": quotes,
+        "timeHour": hour,
+        "timeMinute": minute,
+        "id": id
+      },
+      frequency: Duration(days: 1),
+    );
 
     // Only use Workmanager on mobile platforms (not web)
     if (!kIsWeb) {
@@ -114,13 +147,22 @@ class NotificationsService {
     } else {
       // For web, we can show an immediate notification or handle differently
       // Since workmanager doesn't work on web, we could implement alternative logic here
-      print(
+      debugPrint(
           "Workmanager not supported on web - notifications scheduled for mobile only");
     }
 
     var message = createText(
-        '${hour < 10 ? "0${hour}" : hour}:${minute < 10 ? "0${minute}" : minute}');
+        '${hour < 10 ? "0$hour" : hour}:${minute < 10 ? "0$minute" : minute}');
     showToast(message: message);
+  }
+
+  static Future<void> updateNotification(
+      UserInformation userInfo, AppLocalizations? appLocale) async {
+    var hour = userInfo.notificationHour;
+    var minute = userInfo.notificationMinute;
+    var newQuotes = retrieveInspirationalQuotes(appLocale, userInfo.gender);
+    initializeNotification(newQuotes, hour, minute,
+        appLocale!.notifyOnscheduledNotification, userInfo);
   }
 
   static Future<void> scheduleNotification(
@@ -129,11 +171,12 @@ class NotificationsService {
 
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month,
         now.day, timeOfDay.hour, timeOfDay.minute);
-
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+    print(scheduledDate);
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
-
     await _flutterLocalNotificationsPlugin.zonedSchedule(
       matchDateTimeComponents: DateTimeComponents.time,
       (int.parse(id)), // Use a different ID for each notification if needed
