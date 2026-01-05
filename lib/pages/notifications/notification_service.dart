@@ -84,8 +84,8 @@ class NotificationsService {
     return TimeOfDay(hour: h, minute: m);
   }
 
-  static Future<void> initializeNotification(List<String> quotes, int hour,
-      int minute, Function createText, UserInformation userInfo) async {
+  static Future<void> initializeNotification(
+      List<String> quotes, int hour, int minute, Function createText) async {
     final bool? grantedNotificationPermission;
     if (Platform.isAndroid) {
       final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
@@ -101,12 +101,11 @@ class NotificationsService {
     if (grantedNotificationPermission != null &&
         grantedNotificationPermission == false) {
       showToast(message: "notifications permission denied");
+      //if there are no permissions granted, or no permissions, the rest of the function should not run
+      return;
     }
     TimeOfDay calculatedTime = calculateTime(hour, minute);
     String id = "${calculatedTime.hour}${calculatedTime.minute}";
-
-    userInfo.updateNotificationHour(hour);
-    userInfo.updateNotificationMinute(minute);
 
     await cancelNotifications(null, cancelWorker: true);
     Workmanager().registerOneOffTask(
@@ -157,12 +156,12 @@ class NotificationsService {
   }
 
   static Future<void> updateNotification(
-      UserInformation userInfo, AppLocalizations? appLocale) async {
+      UserInformation userInfo, AppLocalizations appLocale) async {
     var hour = userInfo.notificationHour;
     var minute = userInfo.notificationMinute;
     var newQuotes = retrieveInspirationalQuotes(appLocale, userInfo.gender);
-    initializeNotification(newQuotes, hour, minute,
-        appLocale!.notifyOnscheduledNotification, userInfo);
+    initializeNotification(
+        newQuotes, hour, minute, appLocale.notifyOnscheduledNotification);
   }
 
   static Future<void> scheduleNotification(

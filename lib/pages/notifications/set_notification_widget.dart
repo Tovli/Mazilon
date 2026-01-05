@@ -34,15 +34,8 @@ class _SetNotificationWidgetState
 
   void saveNotificationTime(
       int hour, int minute, UserInformation userInfo) async {
-    PersistentMemoryService service = GetIt.instance<
-        PersistentMemoryService>(); // Get the persistent memory service instance
-
-    await service.setItem("notificationHour", PersistentMemoryType.Int, hour);
-    await service.setItem(
-        "notificationMinute", PersistentMemoryType.Int, minute);
     userInfo.updateNotificationHour(hour);
     userInfo.updateNotificationMinute(minute);
-
     setState(() {
       _currentHour = hour;
       _currentMinute = minute;
@@ -52,7 +45,7 @@ class _SetNotificationWidgetState
   void initializeNotification(
       List<String> quotes, UserInformation userInfo, Function createText) {
     NotificationsService.initializeNotification(
-        quotes, _currentHour, _currentMinute, createText, userInfo);
+        quotes, _currentHour, _currentMinute, createText);
     saveNotificationTime(_currentHour, _currentMinute, userInfo);
   }
 
