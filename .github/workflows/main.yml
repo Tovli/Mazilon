@@ -54,20 +54,19 @@ jobs:
           mkdir -p ~/.gradle/init.d
           cat > ~/.gradle/init.d/maven-mirror.gradle <<'EOF'
           def mirrorUrl = 'https://maven-central.storage-download.googleapis.com/maven2'
-          gradle.beforeProject { project ->
-            project.buildscript.repositories {
-              maven { url mirrorUrl }
-            }
-            project.repositories {
-              maven { url mirrorUrl }
-            }
-          }
           gradle.settingsEvaluated { settings ->
             settings.pluginManagement.repositories {
               maven { url mirrorUrl }
               gradlePluginPortal()
               google()
               mavenCentral()
+            }
+            settings.dependencyResolutionManagement {
+              repositories {
+                maven { url mirrorUrl }
+                google()
+                mavenCentral()
+              }
             }
           }
           EOF
