@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/Phone/emergencyDialogBox.dart';
+import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:mazilon/util/appInformation.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/EmergencyNumbers.dart';
-import 'dart:io';
+import 'package:mazilon/l10n/app_localizations.dart';
 
 // Extracts and returns the list of child widgets from a Row widget
 List<Widget> extractChildrenFromRow(Row row) {
@@ -17,14 +16,19 @@ List<Widget> extractChildrenFromRow(Row row) {
 class EmergencyPhonesGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final appLocale = AppLocalizations.of(context);
-    final String defaultLocale =
-        Platform.localeName; // Returns locale string in the form 'en_US'
-    String countryCode = defaultLocale.substring(defaultLocale.length - 2);
+    final userInfo = Provider.of<UserInformation>(context, listen: true);
+    String countryCode = userInfo.location.trim();
+    if (countryCode.isEmpty) {
+      countryCode = Localizations.localeOf(context).countryCode ??
+          defaultPickerCountry.countryCodes.first;
+    }
 
-    final localNumbers = countryCode == "IL" || appLocale!.language == "עברית"
-        ? numbers["israel"]
-        : numbers["usa"];
+    final Country? country = findCountryByCode(countryCode);
+    if (country == null) {
+      debugPrint(
+          'No emergency mapping for countryCode="$countryCode". Using default "${defaultEmergencyCountry.id}".');
+    }
+    final localNumbers = (country ?? defaultEmergencyCountry).emergencyNumbers;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GridView.builder(
@@ -55,6 +59,11 @@ class EmergencyPhoneItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appLocale = AppLocalizations.of(context);
+    final isRtl = appLocale?.textDirection == "rtl";
+    final descriptionText = isRtl
+        ? (number["descriptionHe"] ?? number["description"] ?? '')
+        : (number["description"] ?? '');
     return InkWell(
       onTap: () async {
         // Display a dialog when the item is tapped
@@ -86,26 +95,34 @@ class EmergencyPhoneItem extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Center(
-                    child: myAutoSizedText(
-                        number["name"],
-                        TextStyle(
-                            color: primaryPurple,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14.sp),
-                        TextAlign.center,
-                        40),
+                  Expanded(
+                    flex: 2,
+                    child: Center(
+                      child: myAutoSizedText(
+                          number["name"],
+                          TextStyle(
+                              color: primaryPurple,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.sp),
+                          TextAlign.center,
+                          18,
+                          2),
+                    ),
                   ),
-                  Center(
-                    child: myAutoSizedText(
-                        number["description"]
-                            .replaceAll('/', '\n'), // Replace '/' with newline
-                        TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: primaryPurple,
-                            fontSize: 14.sp),
-                        TextAlign.center,
-                        30),
+                  Expanded(
+                    flex: 3,
+                    child: Center(
+                      child: myAutoSizedText(
+                          descriptionText
+                              .replaceAll('/', '\n'), // Replace '/' with newline
+                          TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: primaryPurple,
+                              fontSize: 14.sp),
+                          TextAlign.center,
+                          14,
+                          6),
+                    ),
                   ),
                 ],
               ),

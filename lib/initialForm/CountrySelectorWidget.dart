@@ -3,6 +3,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
+import 'package:mazilon/EmergencyNumbers.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,18 +26,35 @@ class CountrySelectorWidget extends StatefulWidget {
 class _CountrySelectorWidgetState
     extends LPExtendedState<CountrySelectorWidget> {
   bool isVisible = false;
+  bool _didInitLocation = false;
   void saveLocation(String location, UserInformation userInfo) async {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
-
-    await service.setItem("location", PersistentMemoryType.String, location);
-    userInfo.updateLocation(location);
+    final normalizedLocation = location.trim().toUpperCase();
+    await service.setItem(
+        "location", PersistentMemoryType.String, normalizedLocation);
+    userInfo.updateLocation(normalizedLocation);
   }
 
   void changeVisible() {
     setState(() {
       isVisible = !isVisible;
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didInitLocation) {
+      return;
+    }
+
+    final userInfoProvider =
+        Provider.of<UserInformation>(context, listen: false);
+    if (userInfoProvider.location.isEmpty) {
+      saveLocation(defaultPickerCountry.countryCodes.first, userInfoProvider);
+    }
+    _didInitLocation = true;
   }
 
   @override
@@ -104,11 +122,11 @@ class _CountrySelectorWidgetState
                   },
                   initialSelection: userInfoProvider.location.isNotEmpty
                       ? userInfoProvider.location
-                      : 'IL',
+                      : defaultPickerCountry.countryCodes.first,
                   showCountryOnly: true,
                   showOnlyCountryWhenClosed: true,
                   alignLeft: true, // Changed to true for left alignment
-                  countryFilter: ['IL', 'US'],
+                  countryFilter: countryPickerCodes,
                   padding: EdgeInsets.zero, // Remove internal padding
                 ),
               ),
