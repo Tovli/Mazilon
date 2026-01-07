@@ -12,7 +12,6 @@ import 'package:mazilon/pages/notifications/notification_service.dart';
 import 'package:mazilon/util/logger_service.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'util/Firebase/firebase_options.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
@@ -23,7 +22,6 @@ import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/Firebase/firebase_functions.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:upgrader/upgrader.dart';
-import 'package:mazilon/util/LP_extended_state.dart';
 //testing:
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
 
@@ -53,10 +51,8 @@ void callbackDispatcher() {
       TimeOfDay calculatedTime = NotificationsService.calculateTime(
           inputData["timeHour"],
           inputData["timeMinute"]); // Calculate the time for the notification
-
       NotificationsService.scheduleNotification(
           calculatedTime, inputData["id"], inputData["text"][number]);
-
       return Future.value(true);
     } catch (error, stackTrace) {
       IncidentLoggerService loggerService =
@@ -64,8 +60,8 @@ void callbackDispatcher() {
       await loggerService.captureLog(error,
           stackTrace: stackTrace,
           exceptionData: {'name': 'inputData', 'value': inputData});
+      return Future.value(false);
     }
-    return Future.value(false);
   });
 }
 
@@ -76,8 +72,6 @@ Future<void> initializeApp() async {
   );
 
   setupLocator();
-  //REMOVE COMMENT ON FUTURE UPDATES FOR SYNC DEVICE FUNCTIONALITY
-  // Initialize the second Firebase app for dbUsers
 }
 
 void main() async {
@@ -116,8 +110,6 @@ void main() async {
                 )
               ..loadItemsFromPrefs(), // Initialize phonePageData
           ),
-        //REMOVE COMMENT ON FUTURE UPDATES FOR SYNC DEVICE FUNCTIONALITY
-        // Initialize the FirebaseAppProvider for dbUsersApp-REALTIME DB
 
         // Initialize the APP information provider
         ChangeNotifierProvider(create: (context) => AppInformation()),
@@ -136,6 +128,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   late Mixpanel mixpanel;
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   bool enteredBefore = true;
   String localeName = '';
   bool _initializationStarted = false; // Add this flag
@@ -309,8 +302,20 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   void changeLocale(String locale) {
     LocaleService localeService = GetIt.instance<LocaleService>();
+
     setState(() {
       localeService.setLocale(locale);
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final currentContext = _navigatorKey.currentContext;
+      if (currentContext == null) return;
+      final appLocale = AppLocalizations.of(currentContext);
+      if (appLocale == null) return;
+
+      final userInfo =
+          Provider.of<UserInformation>(currentContext, listen: false);
+      NotificationsService.init();
+      NotificationsService.updateNotification(userInfo, appLocale);
     });
   }
 
@@ -358,6 +363,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     return ScreenUtilInit(
       designSize: Size(360, 690),
       builder: (context, child) => MaterialApp(
+        navigatorKey: _navigatorKey,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: Locale(localeService.getLocale()),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
