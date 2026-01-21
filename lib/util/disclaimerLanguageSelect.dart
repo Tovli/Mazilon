@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mazilon/util/styles.dart';
-import 'dart:io' show Platform;
 
 class LanguageDropDown extends StatefulWidget {
   final List<Map<String, String>> list = [
@@ -28,14 +27,12 @@ class _LanguageDropDownState extends State<LanguageDropDown> {
   void initState() {
     super.initState();
     // Initialize dropdownValue with null to show "Change Language" initially
-    final String defaultSystemLocale = Platform.localeName;
-
-    switch (defaultSystemLocale) {
-      case 'he_IL':
-        dropdownValue = widget.list[1]['locale'];
-        break;
-      default:
-        dropdownValue = widget.list[0]['locale'];
+    final Locale defaultSystemLocale =
+        WidgetsBinding.instance.platformDispatcher.locale;
+    if (defaultSystemLocale.languageCode == 'he') {
+      dropdownValue = widget.list[1]['locale'];
+    } else {
+      dropdownValue = widget.list[0]['locale'];
     }
   }
 

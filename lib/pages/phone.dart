@@ -59,6 +59,7 @@ class _PhonePageState extends LPExtendedState<PhonePage> {
             right: MediaQuery.of(context).size.width * 0.05),
         child: SafeArea(
           child: SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 100.0),
             child: Center(
               // Replaced Expanded with Center
               child: Column(
@@ -131,11 +132,8 @@ class _PhonePageState extends LPExtendedState<PhonePage> {
                     ),
                   ),
                   const SizedBox(height: 20.0),
-                  SizedBox(
-                    height: 400.0,
-                    //emergency phones grid: (police/105/etc..)
-                    child: EmergencyPhonesGrid(),
-                  ),
+                  //emergency phones grid: (police/105/etc..)
+                  EmergencyPhonesGrid(),
                 ],
               ),
             ),
