@@ -90,6 +90,12 @@ void main() {
       getData(mockAppInformation);
       when(mockSharedPreferences.getBool('enteredBefore')).thenReturn(false);
     });
+    Future<void> tapAndSettle(WidgetTester tester, Finder finder) async {
+      await tester.ensureVisible(finder);
+      await tester.pumpAndSettle(const Duration(milliseconds: 200));
+      await tester.tap(finder);
+      await tester.pumpAndSettle(const Duration(milliseconds: 200));
+    }
     testWidgets('Display exists', (WidgetTester tester) async {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
@@ -110,16 +116,14 @@ void main() {
       expect(find.byIcon(Elusive.share), findsOneWidget);
       expect(counterDownload, 0);
       expect(counterShare, 0);
-      await tester.tap(find.byIcon(Icons.download));
-      await tester.pump();
+      await tapAndSettle(tester, find.byIcon(Icons.download));
 
       expect(counterDownload, 1);
-      await tester.tap(find.byIcon(Elusive.share));
-      await tester.pump();
+      await tapAndSettle(tester, find.byIcon(Elusive.share));
       expect(find.byType(LPShareAlertDialog), findsWidgets);
       expect(find.byIcon(Icons.insert_drive_file_outlined), findsWidgets);
-      await tester.tap(find.text("שיתוף קובץ של התוכנית האישית"));
-      await tester.pump();
+      await tapAndSettle(
+          tester, find.text("שיתוף קובץ של התוכנית האישית"));
       expect(counterShare, 1);
     });
   });

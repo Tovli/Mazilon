@@ -70,7 +70,6 @@ class _HomeState extends LPExtendedState<Home> {
   @override
   void initState() {
     loadData();
-    checkLanguage("a");
     super.initState();
   }
 
@@ -119,16 +118,6 @@ class _HomeState extends LPExtendedState<Home> {
           homeTitles = {'SubTitle': '', 'list': []};
         });
     }
-  }
-
-  void checkLanguage(String string) {
-    final regex = RegExp(r'[a-z]');
-    final regexHebrew = RegExp(r'[\u0590-\u05FF]');
-    if (regexHebrew.hasMatch("a"))
-      debugPrint("has match");
-    else
-      debugPrint("no match");
-    // return regex.hasMatch(input);
   }
 
   @override

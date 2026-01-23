@@ -72,7 +72,9 @@ class _MenuState extends LPExtendedState<Menu> {
     var location =
         await service.getItem("location", PersistentMemoryType.String);
 
-    debugPrint(location);
+    if (location != null && location.toString().isNotEmpty) {
+      debugPrint(location.toString());
+    }
   }
 
 //Function to check if the user wants to go full screen
