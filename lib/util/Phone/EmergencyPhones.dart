@@ -74,6 +74,7 @@ class EmergencyPhoneItem extends StatelessWidget {
           builder: (BuildContext context) {
             return EmergencyDialogBox(
               number: number["number"],
+              whatsappNumber: number["whatsappNumber"] ?? number["number"],
               link: number["link"],
               hasWhatsApp: number["whatsapp"],
               hasLink: number["link"] != "",
