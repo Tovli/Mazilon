@@ -27,6 +27,27 @@ class _CountrySelectorWidgetState
     extends LPExtendedState<CountrySelectorWidget> {
   bool isVisible = false;
   bool _didInitLocation = false;
+  String resolveCountryCode(String? currentLocation, BuildContext context) {
+    final normalizedLocation = (currentLocation ?? '').trim().toUpperCase();
+    if (normalizedLocation.isNotEmpty) {
+      return normalizedLocation;
+    }
+
+    final platformLocale = WidgetsBinding.instance.platformDispatcher.locale;
+    final platformCode = (platformLocale.countryCode ?? '').trim().toUpperCase();
+    if (platformCode.isNotEmpty && countryPickerCodes.contains(platformCode)) {
+      return platformCode;
+    }
+
+    final localeCode = Localizations.localeOf(context).countryCode ?? '';
+    final normalizedLocale = localeCode.trim().toUpperCase();
+    if (normalizedLocale.isNotEmpty &&
+        countryPickerCodes.contains(normalizedLocale)) {
+      return normalizedLocale;
+    }
+
+    return defaultPickerCountry.countryCodes.first;
+  }
   void saveLocation(String location, UserInformation userInfo) async {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
@@ -52,7 +73,7 @@ class _CountrySelectorWidgetState
     final userInfoProvider =
         Provider.of<UserInformation>(context, listen: false);
     if (userInfoProvider.location.isEmpty) {
-      saveLocation(defaultPickerCountry.countryCodes.first, userInfoProvider);
+      saveLocation(resolveCountryCode('', context), userInfoProvider);
     }
     _didInitLocation = true;
   }
@@ -60,6 +81,8 @@ class _CountrySelectorWidgetState
   @override
   Widget build(BuildContext context) {
     final userInfoProvider = Provider.of<UserInformation>(context);
+    final initialCountryCode =
+        resolveCountryCode(userInfoProvider.location, context);
     final rightPadding = appLocale.textDirection == "rtl" ? 10.0 : 0.0;
     final leftPadding = appLocale.textDirection == "rtl" ? 0.0 : 10.0;
     return Column(
@@ -115,14 +138,15 @@ class _CountrySelectorWidgetState
               Expanded(
                 child: CountryCodePicker(
                   showDropDownButton: false, // Remove the default button
+                  showFlag: true,
+                  showFlagDialog: true,
+                  showFlagMain: true,
                   onChanged: (country) {
                     setState(() {
                       saveLocation(country.code!, userInfoProvider);
                     });
                   },
-                  initialSelection: userInfoProvider.location.isNotEmpty
-                      ? userInfoProvider.location
-                      : defaultPickerCountry.countryCodes.first,
+                  initialSelection: initialCountryCode,
                   showCountryOnly: true,
                   showOnlyCountryWhenClosed: true,
                   alignLeft: true, // Changed to true for left alignment

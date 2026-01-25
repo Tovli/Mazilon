@@ -91,52 +91,47 @@ void main() {
 
       when(mockSharedPreferences.getBool('enteredBefore')).thenReturn(false);
     });
+    Future<void> tapAndSettle(WidgetTester tester, Finder finder) async {
+      await tester.ensureVisible(finder);
+      await tester.pumpAndSettle(const Duration(milliseconds: 200));
+      await tester.tap(finder);
+      await tester.pumpAndSettle(const Duration(milliseconds: 200));
+    }
     testWidgets('Navigate to WellnessTools screen',
         (WidgetTester tester) async {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
-      await tester.tap(find.text('תפריט'));
-      await tester.pumpAndSettle();
+      await tapAndSettle(tester, find.text('תפריט'));
       expect(find.byType(FractionallySizedBox), findsOneWidget);
-      await tester.tap(find.text('כלי תמיכה'));
-      await tester.pumpAndSettle();
+      await tapAndSettle(tester, find.text('כלי תמיכה'));
       expect(find.byType(WellnessTools), findsOneWidget);
     });
     testWidgets('Navigate from WellnessTools screen',
         (WidgetTester tester) async {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
-      await tester.tap(find.text('תפריט'));
-      await tester.pumpAndSettle();
+      await tapAndSettle(tester, find.text('תפריט'));
 
-      await tester.tap(find.text('כלי תמיכה'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('בית'));
-      await tester.pumpAndSettle();
+      await tapAndSettle(tester, find.text('כלי תמיכה'));
+      await tapAndSettle(tester, find.text('בית'));
       expect(find.byType(Home), findsOneWidget);
     });
     testWidgets('Test Repeated Navigation to and from WellnessTools screen',
         (WidgetTester tester) async {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
-      await tester.tap(find.text('תפריט'));
-      await tester.pumpAndSettle();
+      await tapAndSettle(tester, find.text('תפריט'));
 
-      await tester.tap(find.text('כלי תמיכה'));
-      await tester.pumpAndSettle();
+      await tapAndSettle(tester, find.text('כלי תמיכה'));
       expect(find.byType(WellnessTools), findsOneWidget);
-      await tester.tap(find.text('בית'));
-      await tester.pumpAndSettle();
+      await tapAndSettle(tester, find.text('בית'));
       expect(find.byType(WellnessTools), findsNothing);
       expect(find.byType(Home), findsOneWidget);
-      await tester.tap(find.text('תפריט'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('כלי תמיכה'));
-      await tester.pumpAndSettle();
+      await tapAndSettle(tester, find.text('תפריט'));
+      await tapAndSettle(tester, find.text('כלי תמיכה'));
       expect(find.byType(Home), findsNothing);
       expect(find.byType(WellnessTools), findsOneWidget);
-      await tester.tap(find.text('בית'));
-      await tester.pumpAndSettle();
+      await tapAndSettle(tester, find.text('בית'));
       expect(find.byType(Home), findsOneWidget);
       expect(find.byType(WellnessTools), findsNothing);
     });
@@ -144,11 +139,9 @@ void main() {
         (WidgetTester tester) async {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
-      await tester.tap(find.text('תפריט'));
-      await tester.pumpAndSettle();
+      await tapAndSettle(tester, find.text('תפריט'));
 
-      await tester.tap(find.text('כלי תמיכה'));
-      await tester.pumpAndSettle();
+      await tapAndSettle(tester, find.text('כלי תמיכה'));
       expect(find.byType(FakeVideoPlayerPage), findsOneWidget);
       expect(find.byType(MoreVideosItem), findsWidgets);
       expect(find.byKey(const Key("Image")), findsOneWidget);
@@ -157,11 +150,9 @@ void main() {
         (WidgetTester tester) async {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
-      await tester.tap(find.text('תפריט'));
-      await tester.pumpAndSettle();
+      await tapAndSettle(tester, find.text('תפריט'));
 
-      await tester.tap(find.text('כלי תמיכה'));
-      await tester.pumpAndSettle();
+      await tapAndSettle(tester, find.text('כלי תמיכה'));
       expect(find.text("Image"), findsOneWidget);
       expect(find.text('v1'), findsOneWidget);
       expect(find.text('v2'), findsOneWidget);
@@ -171,13 +162,10 @@ void main() {
     testWidgets('Test change video', (WidgetTester tester) async {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
-      await tester.tap(find.text('תפריט'));
-      await tester.pumpAndSettle();
+      await tapAndSettle(tester, find.text('תפריט'));
 
-      await tester.tap(find.text('כלי תמיכה'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('v2'));
-      await tester.pumpAndSettle();
+      await tapAndSettle(tester, find.text('כלי תמיכה'));
+      await tapAndSettle(tester, find.text('v2'));
       expect(find.text("Image"), findsOneWidget);
       expect(find.text('v1'), findsOneWidget);
       expect(find.text('v2'), findsOneWidget);
