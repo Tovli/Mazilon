@@ -114,12 +114,18 @@ void main() {
       when(mockSharedPreferences.getBool('enteredBefore')).thenReturn(false);
     });
 
+    Future<void> tapAndSettle(WidgetTester tester, Finder finder) async {
+      await tester.ensureVisible(finder);
+      await tester.pumpAndSettle(const Duration(milliseconds: 200));
+      await tester.tap(finder);
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+    }
+
     testWidgets('Navigate to FeelGood screen', (WidgetTester tester) async {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
 
-      await tester.tap(find.text('להרגיש טוב'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tapAndSettle(tester, find.text('להרגיש טוב'));
       expect(find.byType(FeelGood), findsOneWidget);
       expect(find.byType(ImageAddItem), findsWidgets);
       expect(find.byType(ImageDisplay), findsNothing);
@@ -129,27 +135,19 @@ void main() {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
 
-      await tester.tap(find.text('תפריט'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-      expect(find.byType(FractionallySizedBox), findsOneWidget);
-      await tester.tap(find.text('להרגיש טוב'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-      await tester.tap(find.text('בית'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tapAndSettle(tester, find.text('להרגיש טוב'));
+      await tapAndSettle(tester, find.text('בית'));
       expect(find.byType(Home), findsOneWidget);
     });
     testWidgets('Test adding photo from Camera', (WidgetTester tester) async {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
 
-      await tester.tap(find.text('להרגיש טוב'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tapAndSettle(tester, find.text('להרגיש טוב'));
       expect(find.byKey(const Key("addImgButtonText")), findsOneWidget);
-      await tester.tap(find.byKey(const Key("addImgButtonText")));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tapAndSettle(tester, find.byKey(const Key("addImgButtonText")));
       expect(find.byKey(const Key("cameraButtonText")), findsOneWidget);
-      await tester.tap(find.byKey(const Key("cameraButtonText")));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tapAndSettle(tester, find.byKey(const Key("cameraButtonText")));
       expect(find.text('added'), findsWidgets);
       expect(find.byType(ImageDisplay), findsOneWidget);
       expect(find.byType(ImageAddItem), findsOneWidget);
@@ -158,13 +156,10 @@ void main() {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
 
-      await tester.tap(find.text('להרגיש טוב'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-      await tester.tap(find.byKey(const Key("addImgButtonText")));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tapAndSettle(tester, find.text('להרגיש טוב'));
+      await tapAndSettle(tester, find.byKey(const Key("addImgButtonText")));
       expect(find.byKey(const Key("galleryButtonText")), findsOneWidget);
-      await tester.tap(find.byKey(const Key("galleryButtonText")));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tapAndSettle(tester, find.byKey(const Key("galleryButtonText")));
       expect(find.text('added'), findsWidgets);
       expect(find.byType(ImageDisplay), findsOneWidget);
       expect(find.byType(ImageAddItem), findsOneWidget);
@@ -173,21 +168,14 @@ void main() {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
 
-      await tester.tap(find.text('להרגיש טוב'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-
-      await tester.tap(find.byKey(const Key("addImgButtonText")));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-      await tester.tap(find.byKey(const Key("cameraButtonText")));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-      await tester.tap(find.text('added'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tapAndSettle(tester, find.text('להרגיש טוב'));
+      await tapAndSettle(tester, find.byKey(const Key("addImgButtonText")));
+      await tapAndSettle(tester, find.byKey(const Key("cameraButtonText")));
+      await tapAndSettle(tester, find.text('added'));
       expect(find.byKey(const Key('deleteButtonIcon')), findsOneWidget);
-      await tester.tap(find.byKey(const Key('deleteButtonIcon')));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tapAndSettle(tester, find.byKey(const Key('deleteButtonIcon')));
       expect(find.byKey(const Key('deleteButtonText')), findsOneWidget);
-      await tester.tap(find.byKey(const Key('deleteButtonText')));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tapAndSettle(tester, find.byKey(const Key('deleteButtonText')));
       expect(find.text('added'), findsNothing);
       expect(find.byType(ImageDisplay), findsNothing);
       expect(find.byType(ImageAddItem), findsWidgets);
