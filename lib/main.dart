@@ -214,8 +214,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       PersistentMemoryService service = GetIt.instance<
           PersistentMemoryService>(); // Get the persistent memory service instance
 
-      await service.setItem(
-          "disclaimerConfirmed", PersistentMemoryType.Bool, true);
       var hasFilledValue =
           await service.getItem("hasFilled", PersistentMemoryType.Bool) ??
               false;
@@ -236,8 +234,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
       PersistentMemoryService service = GetIt.instance<
           PersistentMemoryService>(); // Get the persistent memory service instance
-      await service.setItem(
-          "disclaimerConfirmed", PersistentMemoryType.Bool, true);
+
       String? prefsLocale =
           await service.getItem('localeName', PersistentMemoryType.String);
 

@@ -1,5 +1,6 @@
 //import 'package:mazilon/pages/schedule.dart';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/AnalyticsService.dart';
@@ -14,7 +15,6 @@ import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/pages/UserSettings.dart';
 
-
 import 'package:mazilon/pages/home.dart';
 import 'package:mazilon/pages/journal.dart';
 import 'package:mazilon/pages/phone.dart';
@@ -22,7 +22,6 @@ import 'package:mazilon/pages/positive.dart';
 import 'package:mazilon/pages/PersonalPlan/myPlanPageFull.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:mazilon/pages/UserSettings.dart';
-
 
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/styles.dart';
@@ -123,10 +122,9 @@ class _MenuState extends LPExtendedState<Menu> {
       } else if (index == PagesCode.About) {
         currentScreen = About(version: version);
       } else if (index == PagesCode.NotificationPage) {
-        currentScreen = NotificationPage();
-      } else if (index == 7) {
-        //currentScreen =
-        //    WellnessTools( videoData: appInfoProvider.wellnessVideos,setBool: setFullScreen, isFullScreen: isFullScreen);
+        if (!kIsWeb) {
+          currentScreen = NotificationPage();
+        }
       } else if (index == PagesCode.FeelGoodPage) {
         currentScreen = FeelGood();
       } /*else if (index == 9) {
@@ -144,6 +142,31 @@ class _MenuState extends LPExtendedState<Menu> {
     version = packageInfo.version;
   }
 
+  Widget displayNotificationButton(gender, kIsWeb) {
+    if (kIsWeb) {
+      return SizedBox.shrink();
+    }
+
+    return TextButton(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Icon(Icons.notification_add),
+          SizedBox(width: 20),
+          Text(AppLocalizations.of(context)!.notifications(gender)),
+        ],
+      ),
+      onPressed: () {
+        setState(() {
+          currentScreen = NotificationPage();
+
+          current = PagesCode.NotificationPage;
+        });
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
   Map<String, List<String>> _filterVideoByLocal(
       Map<String, List<String>> videos) {
     var localizedVideos = {
@@ -152,7 +175,7 @@ class _MenuState extends LPExtendedState<Menu> {
       'videoDescription': <String>[],
       'videoLocale': <String>[]
     };
- 
+
     for (var i = 0; i < videos["videoLocale"]!.length; i++) {
       var video = videos["videoLocale"]![i] ?? "he";
       if (video == Localizations.localeOf(context).languageCode) {
@@ -410,32 +433,8 @@ class _MenuState extends LPExtendedState<Menu> {
                                                     Navigator.of(context).pop();
                                                   },
                                                 ),
-                                                
-                                                TextButton(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Icon(Icons
-                                                          .notification_add),
-                                                      SizedBox(width: 20),
-                                                      Text(AppLocalizations.of(
-                                                              context)!
-                                                          .notifications(
-                                                              gender)),
-                                                    ],
-                                                  ),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      currentScreen =
-                                                          NotificationPage();
-
-                                                      current = PagesCode
-                                                          .NotificationPage;
-                                                    });
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
+                                                displayNotificationButton(
+                                                    gender, kIsWeb),
                                                 TextButton(
                                                   child: Row(
                                                     mainAxisAlignment:
@@ -445,23 +444,28 @@ class _MenuState extends LPExtendedState<Menu> {
                                                       SizedBox(width: 20),
                                                       Text(AppLocalizations.of(
                                                               context)!
-                                                          .settings(
-                                                              gender)),
+                                                          .settings(gender)),
                                                     ],
                                                   ),
                                                   onPressed: () {
                                                     Navigator.of(context).pop();
                                                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => UserSettings(
-                                  phonePageData: widget.phonePageData,
-                                  username: userInformation.name,
-                                  age: age,
-                                  gender: gender,
-                                  changeLocale: widget.changeLocale,
-                                )),
-                      );
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              UserSettings(
+                                                                phonePageData:
+                                                                    widget
+                                                                        .phonePageData,
+                                                                username:
+                                                                    userInformation
+                                                                        .name,
+                                                                age: age,
+                                                                gender: gender,
+                                                                changeLocale: widget
+                                                                    .changeLocale,
+                                                              )),
+                                                    );
                                                   },
                                                 ),
                                                 TextButton(
