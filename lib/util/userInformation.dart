@@ -144,12 +144,23 @@ class UserInformation with ChangeNotifier {
   }
 
   void updateNotificationHour(int value) {
+    Future<void> saveNotificationHour(int hour) async {
+      await service.setItem('notificationHour', PersistentMemoryType.Int, hour);
+    }
+
     notificationHour = value;
+    saveNotificationHour(value);
     notifyListeners();
   }
 
   void updateNotificationMinute(int value) {
+    Future<void> saveNotificationMinute(int minute) async {
+      await service.setItem(
+          'notificationMinute', PersistentMemoryType.Int, minute);
+    }
+
     notificationMinute = value;
+    saveNotificationMinute(value);
     notifyListeners();
   }
 

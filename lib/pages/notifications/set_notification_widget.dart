@@ -34,15 +34,8 @@ class _SetNotificationWidgetState
 
   void saveNotificationTime(
       int hour, int minute, UserInformation userInfo) async {
-    PersistentMemoryService service = GetIt.instance<
-        PersistentMemoryService>(); // Get the persistent memory service instance
-
-    await service.setItem("notificationHour", PersistentMemoryType.Int, hour);
-    await service.setItem(
-        "notificationMinute", PersistentMemoryType.Int, minute);
     userInfo.updateNotificationHour(hour);
     userInfo.updateNotificationMinute(minute);
-
     setState(() {
       _currentHour = hour;
       _currentMinute = minute;
@@ -61,10 +54,9 @@ class _SetNotificationWidgetState
     super.initState();
     NotificationsService.init(); // Initialize NotificationsHelper
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      var userInfo = context.read<UserInformation>();
       setState(() {
-        _currentHour = userInfo.notificationHour;
-        _currentMinute = userInfo.notificationMinute;
+        _currentHour = 12;
+        _currentMinute = 0;
       });
     });
   }
@@ -129,6 +121,27 @@ class _SetNotificationWidgetState
               },
               child: Text(
                 appLocale!.notificationShowExampleNotification(gender),
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 25),
+        Center(
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 139, 96, 96).withOpacity(0.7),
+              borderRadius: BorderRadius.circular(7),
+            ),
+            child: TextButton(
+              onPressed: () => {
+                NotificationsService.cancelNotifications(null,
+                    cancelWorker: true)
+              },
+              child: Text(
+                appLocale!.notificationCancelNotification(gender),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white),
               ),
