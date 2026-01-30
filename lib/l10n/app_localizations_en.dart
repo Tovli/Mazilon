@@ -1476,6 +1476,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notWillingToSay => 'Not interested sharing';
 
   @override
+  String get noPermissionAllowedText => 'Permission not granted';
+
+  @override
   String get female => 'Female';
 
   @override

@@ -481,6 +481,11 @@
   "@notSharingInformation": {
     "description": ""
   },
+
+  "noPermissionAllowedText": "Permission not granted",
+  "@noPermissionAllowedText": {
+    "description": ""
+  },
   "female": "Female",
   "@female": {
     "description": ""

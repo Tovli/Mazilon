@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/pages/notifications/notification_service.dart';
 import 'package:mazilon/pages/notifications/time_picker.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
@@ -42,10 +43,10 @@ class _SetNotificationWidgetState
     });
   }
 
-  void initializeNotification(
-      List<String> quotes, UserInformation userInfo, Function createText) {
+  void initializeNotification(List<String> quotes, UserInformation userInfo,
+      Function createText, AppLocalizations appLocale) {
     NotificationsService.initializeNotification(
-        quotes, _currentHour, _currentMinute, createText);
+        quotes, _currentHour, _currentMinute, createText, appLocale);
     saveNotificationTime(_currentHour, _currentMinute, userInfo);
   }
 
@@ -54,9 +55,10 @@ class _SetNotificationWidgetState
     super.initState();
     NotificationsService.init(); // Initialize NotificationsHelper
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var userInfo = context.read<UserInformation>();
       setState(() {
-        _currentHour = 12;
-        _currentMinute = 0;
+        _currentHour = userInfo.notificationHour;
+        _currentMinute = userInfo.notificationMinute;
       });
     });
   }
@@ -96,7 +98,7 @@ class _SetNotificationWidgetState
             child: TextButton(
               onPressed: () => {
                 initializeNotification(quotes, userInfoProvider,
-                    appLocale!.notifyOnscheduledNotification)
+                    appLocale!.notifyOnscheduledNotification, appLocale)
               },
               child: Text(
                 appLocale!.notificationSetTimeText(gender),

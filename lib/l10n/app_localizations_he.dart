@@ -1458,6 +1458,9 @@ class AppLocalizationsHe extends AppLocalizations {
   String get notWillingToSay => 'אחר';
 
   @override
+  String get noPermissionAllowedText => 'הרשאה לא ניתנה';
+
+  @override
   String get female => 'את';
 
   @override

@@ -803,6 +803,12 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
+  /// **'Permission not granted'**
+  String get noPermissionAllowedText;
+
+  ///
+  ///
+  /// In en, this message translates to:
   /// **'Female'**
   String get female;
 
