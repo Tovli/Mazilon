@@ -12,6 +12,7 @@ import 'package:mazilon/l10n/app_localizations.dart';
 // This widget is a dialog box for making emergency phone calls and sending WhatsApp messages.
 class EmergencyDialogBox extends StatelessWidget {
   final String number; // The phone number to dial or message
+  final String whatsappNumber;
   final String
       link; // Index used to retrieve appropriate text from AppInformation
   final bool hasWhatsApp;
@@ -20,6 +21,7 @@ class EmergencyDialogBox extends StatelessWidget {
   const EmergencyDialogBox(
       {super.key,
       required this.number,
+      required this.whatsappNumber,
       required this.link,
       required this.hasWhatsApp,
       required this.canCall,
@@ -56,7 +58,7 @@ class EmergencyDialogBox extends StatelessWidget {
                   ),
                 if (hasWhatsApp)
                   getTextIconWidget(appLocale!.whatsApp, () async {
-                    await openWhatsApp(number);
+                    await openWhatsApp(whatsappNumber);
                   }, Icons.chat),
 
                 if (hasLink)

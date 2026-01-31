@@ -31,11 +31,13 @@ class LPAlertDialogBoxItem extends StatelessWidget {
         children: [
           SizedBox(width: 10.0),
           Icon(icon, color: Colors.black, size: 30.sp),
-          TextButton(
-            onPressed: press,
-            child: Text(
-              buttonText,
-              style: TextStyle(color: Colors.black, fontSize: 13.sp),
+          Expanded(
+            child: TextButton(
+              onPressed: press,
+              child: Text(
+                buttonText,
+                style: TextStyle(color: Colors.black, fontSize: 13.sp),
+              ),
             ),
           ),
         ],

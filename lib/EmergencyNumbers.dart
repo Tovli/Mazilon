@@ -65,10 +65,11 @@ final Map<String, Country> countries = {
     {
       "name": "ער\"ן",
       "number": "1201",
+      "whatsappNumber": "972528451201",
       "link": "",
       "description": "טלפון-1201/מחו\"ל-*2201 | שלוחה 5",
       "icon": Icons.phone,
-      "whatsapp": false,
+      "whatsapp": true,
       "canCall": true,
     },
     {
@@ -96,28 +97,28 @@ final Map<String, Country> countries = {
     countryCodes: ["US"],
     emergencyNumbers: [
     {
-      "name": "Police",
+      "name": "Emergency",
       "number": "911",
       "link": "",
-      "description": "",
+      "description": "Call: 911",
       "whatsapp": false,
       "icon": Icons.phone,
       "canCall": true,
     },
     {
-      "name": "Vetern Crisis Line",
+      "name": "Veterans Crisis Line",
       "number": "18002738255",
       "link": "",
-      "description": "",
+      "description": "Call: 1-800-273-8255 and Press 1 / Text: 838255",
       "whatsapp": false,
       "canCall": true,
       "icon": Icons.phone
     },
     {
-      "name": "The Trevor Project",
+      "name": "The Trevor Project (for LGBTQ+ youth)",
       "number": "18664887386",
       "link": "",
-      "description": "Center for LTBTQ+ youth",
+      "description": "Call: 1-866-488-7386 / Text: START to 678678",
       "descriptionHe": "מרכז לנוער להטב\"ק+",
       "whatsapp": false,
       "canCall": true,
@@ -126,10 +127,19 @@ final Map<String, Country> countries = {
     {
       "name": "National Suicide Prevention Lifeline",
       "number": "988",
-      "link": "988lifeline.org/chat",
-      "description": "",
+      "link": "https://988lifeline.org/chat",
+      "description": "Call: 988 / Text: 988 / Chat online: 988lifeline.org/chat",
       "whatsapp": false,
       "canCall": true,
+      "icon": Icons.chat
+    },
+    {
+      "name": "Crisis Text Line",
+      "number": "741741",
+      "link": "https://www.crisistextline.org/",
+      "description": "Text: HOME to 741741",
+      "whatsapp": false,
+      "canCall": false,
       "icon": Icons.chat
     }
     ],
@@ -139,32 +149,49 @@ final Map<String, Country> countries = {
     countryCodes: ["GB"],
     emergencyNumbers: [
     {
+      "name": "Emergency",
+      "number": "999",
+      "link": "",
+      "description": "Call: 999",
+      "whatsapp": false,
+      "canCall": true,
+      "icon": Icons.phone
+    },
+    {
       "name": "Samaritans",
       "number": "116123",
       "link": "http://samaritans.org/how-we-can-help/contact-samaritan/",
       "email": "jo@samaritans.org",
-      "description":
-          "Samaritans is the charity that prevents suicide.",
+      "description": "Call: 116 123 (UK and ROI) / Email: jo@samaritans.org",
       "descriptionHe": "סמריטנס היא עמותה למניעת התאבדות.",
       "whatsapp": false,
       "canCall": true,
       "icon": Icons.chat
     },
     {
-      "name": "CALM",
+      "name": "Shout",
+      "number": "85258",
+      "link": "",
+      "description": "Text: SHOUT to 85258",
+      "whatsapp": false,
+      "canCall": false,
+      "icon": Icons.chat
+    },
+    {
+      "name": "CALM (Campaign Against Living Miserably, for men)",
       "number": "0800585858",
       "link": "https://www.thecalmzone.net/",
-      "description": "A leading movement against male suicide.",
+      "description": "Call: 0800 58 58 58 (5pm to midnight)",
       "descriptionHe": "תנועה מובילה למאבק בהתאבדות בקרב גברים.",
       "whatsapp": false,
       "canCall": true,
       "icon": Icons.chat
     },
     {
-      "name": "Papyrus",
+      "name": "Papyrus (for people under 35)",
       "number": "08000684141",
       "link": "https://www.papyrus-uk.org/",
-      "description": "Papyrus is dedicated to the prevention of young suicide.",
+      "description": "Call: 0800 068 4141 / Text: 07860 039967",
       "descriptionHe": "פאפירוס מוקדשת למניעת התאבדות בקרב צעירים.",
       "whatsapp": false,
       "canCall": true,
@@ -178,20 +205,20 @@ final Map<String, Country> countries = {
     isDefaultEmergency: true,
     emergencyNumbers: [
     {
-      "name": "Emergency",
+      "name": "European Emergency Number",
       "number": "112",
       "description":
-          "Need help? 112 is your life-saving number!",
+          "Call: 112 / Note: Many EU countries have their own national helplines. We recommend checking with local authorities for country-specific resources.",
       "descriptionHe": "צריך עזרה? 112 הוא מספר החירום שלך להצלת חיים!",
       "whatsapp": false,
       "canCall": true,
       "icon": Icons.phone
     },
     {
-      "name": "Mental Health",
+      "name": "Mental Health Europe",
       "link": "https://mhe-sme.org/",
       "description":
-          "The leading NGO for mental health and well-being.",
+          "Website: mhe-sme.org / Provides links to mental health services across Europe.",
       "descriptionHe": "הארגון המוביל לבריאות הנפש ולרווחה.",
       "whatsapp": false,
       "number": "",
@@ -205,41 +232,53 @@ final Map<String, Country> countries = {
     countryCodes: ["AU"],
     emergencyNumbers: [
     {
-      "name": "Lifeline",
+      "name": "Emergency",
+      "number": "000",
+      "link": "",
+      "description": "Call: 000",
+      "whatsapp": false,
+      "canCall": true,
+      "icon": Icons.phone
+    },
+    {
+      "name": "Lifeline Australia",
       "number": "131114",
-      "link": "https://www.lifeline.org.au/",
-      "description": "24 hour crisis support and suicide prevention.",
+      "link": "https://www.lifeline.org.au/crisis-chat/",
+      "description":
+          "Call: 13 11 14 / Text: 0477 13 11 14 (12pm to midnight AEST) / Chat online: lifeline.org.au/crisis-chat/",
       "descriptionHe": "תמיכה במשברים ומניעת התאבדות 24/7.",
-      "canCall": false,
+      "whatsapp": false,
+      "canCall": true,
       "icon": Icons.chat
     },
     {
       "name": "Beyond Blue",
       "number": "1300224636",
-      "link": "https://www.beyondblue.org.au/get-support/urgent-help",
+      "link": "https://www.beyondblue.org.au/get-support/get-immediate-support",
       "description":
-          "A reliable source of mental health information.",
+          "Call: 1300 22 4636 / Chat online: beyondblue.org.au/get-support/get-immediate-support",
       "descriptionHe": "מקור מידע אמין לבריאות הנפש.",
-      "canCall": false,
-      "icon": Icons.chat
-    },
-    {
-      "name": "Kids Helpline",
-      "number": "1800551800",
-      "link": "https://kidshelpline.com.au/",
-      "description":
-          "24 hour counseling for young people aged 5 to 25.",
-      "descriptionHe": "ייעוץ 24/7 לצעירים בגילאי 5 עד 25.",
+      "whatsapp": false,
       "canCall": true,
       "icon": Icons.chat
     },
     {
-      "name": "Men's Line",
+      "name": "Kids Helpline (for people aged 5-25)",
+      "number": "1800551800",
+      "link": "https://kidshelpline.com.au/",
+      "description": "Call: 1800 55 1800",
+      "descriptionHe": "ייעוץ 24/7 לצעירים בגילאי 5 עד 25.",
+      "whatsapp": false,
+      "canCall": true,
+      "icon": Icons.chat
+    },
+    {
+      "name": "MensLine Australia",
       "number": "1300789978",
       "link": "https://mensline.org.au/",
-      "description":
-          "A telephone and online counseling service for men.",
+      "description": "Call: 1300 78 99 78",
       "descriptionHe": "שירות ייעוץ טלפוני ומקוון לגברים.",
+      "whatsapp": false,
       "canCall": true,
       "icon": Icons.chat
     }
