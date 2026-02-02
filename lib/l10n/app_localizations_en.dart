@@ -1476,6 +1476,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notWillingToSay => 'Not interested sharing';
 
   @override
+  String get noPermissionAllowedText => 'Permission not granted';
+
+  @override
   String get female => 'Female';
 
   @override
@@ -1528,6 +1531,19 @@ class AppLocalizationsEn extends AppLocalizations {
         'male': 'Show an example reminder',
         'female': 'Show an example reminder',
         'other': 'Show an example reminder',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notificationCancelNotification(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'Cancel current notification',
+        'female': 'Cancel current notification',
+        'other': 'Cancel current notification',
       },
     );
     return '$_temp0';

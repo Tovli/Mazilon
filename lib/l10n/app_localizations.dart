@@ -803,6 +803,12 @@ abstract class AppLocalizations {
   ///
   ///
   /// In en, this message translates to:
+  /// **'Permission not granted'**
+  String get noPermissionAllowedText;
+
+  ///
+  ///
+  /// In en, this message translates to:
   /// **'Female'**
   String get female;
 
@@ -830,11 +836,17 @@ abstract class AppLocalizations {
   /// **'{gender,select,male{Schedule a reminder for the selected time} female{Schedule a reminder for the selected time} other{Schedule a reminder for the selected time}}'**
   String notificationSetTimeText(String gender);
 
-  /// No description provided for @notificationShowExampleNotification.
+  ///
   ///
   /// In en, this message translates to:
   /// **'{gender,select,male{Show an example reminder} female{Show an example reminder} other{Show an example reminder}}'**
   String notificationShowExampleNotification(String gender);
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'{gender,select,male{Cancel current notification} female{Cancel current notification} other{Cancel current notification}}'**
+  String notificationCancelNotification(String gender);
 
   ///
   ///

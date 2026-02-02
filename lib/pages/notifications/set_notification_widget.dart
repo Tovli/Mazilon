@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/global_enums.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/pages/notifications/notification_service.dart';
 import 'package:mazilon/pages/notifications/time_picker.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
@@ -34,25 +35,18 @@ class _SetNotificationWidgetState
 
   void saveNotificationTime(
       int hour, int minute, UserInformation userInfo) async {
-    PersistentMemoryService service = GetIt.instance<
-        PersistentMemoryService>(); // Get the persistent memory service instance
-
-    await service.setItem("notificationHour", PersistentMemoryType.Int, hour);
-    await service.setItem(
-        "notificationMinute", PersistentMemoryType.Int, minute);
     userInfo.updateNotificationHour(hour);
     userInfo.updateNotificationMinute(minute);
-
     setState(() {
       _currentHour = hour;
       _currentMinute = minute;
     });
   }
 
-  void initializeNotification(
-      List<String> quotes, UserInformation userInfo, Function createText) {
+  void initializeNotification(List<String> quotes, UserInformation userInfo,
+      Function createText, AppLocalizations appLocale) {
     NotificationsService.initializeNotification(
-        quotes, _currentHour, _currentMinute, createText);
+        quotes, _currentHour, _currentMinute, createText, appLocale);
     saveNotificationTime(_currentHour, _currentMinute, userInfo);
   }
 
@@ -104,7 +98,7 @@ class _SetNotificationWidgetState
             child: TextButton(
               onPressed: () => {
                 initializeNotification(quotes, userInfoProvider,
-                    appLocale!.notifyOnscheduledNotification)
+                    appLocale!.notifyOnscheduledNotification, appLocale)
               },
               child: Text(
                 appLocale!.notificationSetTimeText(gender),
@@ -129,6 +123,27 @@ class _SetNotificationWidgetState
               },
               child: Text(
                 appLocale!.notificationShowExampleNotification(gender),
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 25),
+        Center(
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 139, 96, 96).withOpacity(0.7),
+              borderRadius: BorderRadius.circular(7),
+            ),
+            child: TextButton(
+              onPressed: () => {
+                NotificationsService.cancelNotifications(null,
+                    cancelWorker: true)
+              },
+              child: Text(
+                appLocale!.notificationCancelNotification(gender),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white),
               ),

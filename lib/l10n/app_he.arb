@@ -149,6 +149,7 @@
     
      "notificationSetTimeText": "{gender,select,male{קבע תזכורת לזמן שנבחר} female{קבעי תזכורת לזמן שנבחר} other{לקביעת תזכורת לזמן שנבחר}}",
      "notificationShowExampleNotification": "{gender,select,male{הצג תזכורת לדוגמא} female{הצגי תזכורת לדוגמא} other{להצגת תזכורת לדוגמא}}",
+     "notificationCancelNotification": "{gender,select,male{לביטול תזכורת נוכחית} female{לביטול תזכורת נוכחית} other{לביטול תזכורת נוכחית}}",
 
           "notifyOnscheduledNotification": "תזכורת נקבעה לשעה {time}",
       
@@ -368,6 +369,6 @@
 
   
     "shareEmergency": "שיתוף הודעה במקרה של משבר",
-
+  "noPermissionAllowedText": "הרשאה לא ניתנה",
 "shareEmergencyMessage":"אני במצב לא טוב ויש לי צורך בעזרה.אשמח לעזרתך בהפעלת התוכנית האישית שלי. בתודה מראש."
 } 

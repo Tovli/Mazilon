@@ -1458,6 +1458,9 @@ class AppLocalizationsHe extends AppLocalizations {
   String get notWillingToSay => 'אחר';
 
   @override
+  String get noPermissionAllowedText => 'הרשאה לא ניתנה';
+
+  @override
   String get female => 'את';
 
   @override
@@ -1510,6 +1513,19 @@ class AppLocalizationsHe extends AppLocalizations {
         'male': 'הצג תזכורת לדוגמא',
         'female': 'הצגי תזכורת לדוגמא',
         'other': 'להצגת תזכורת לדוגמא',
+      },
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String notificationCancelNotification(String gender) {
+    String _temp0 = intl.Intl.selectLogic(
+      gender,
+      {
+        'male': 'לביטול תזכורת נוכחית',
+        'female': 'לביטול תזכורת נוכחית',
+        'other': 'לביטול תזכורת נוכחית',
       },
     );
     return '$_temp0';
