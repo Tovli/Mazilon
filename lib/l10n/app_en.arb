@@ -481,6 +481,11 @@
   "@notSharingInformation": {
     "description": ""
   },
+
+  "noPermissionAllowedText": "Permission not granted",
+  "@noPermissionAllowedText": {
+    "description": ""
+  },
   "female": "Female",
   "@female": {
     "description": ""
@@ -503,7 +508,11 @@
     "description": ""
     },
      "notificationShowExampleNotification": "{gender,select,male{Show an example reminder} female{Show an example reminder} other{Show an example reminder}}",
-    "@notificationSetTimeText": { 
+    "@notificationShowExampleNotification": { 
+    "description": ""
+  },
+     "notificationCancelNotification": "{gender,select,male{Cancel current notification} female{Cancel current notification} other{Cancel current notification}}",
+    "@notificationCancelNotification": { 
     "description": ""
   },
 
