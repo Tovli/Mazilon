@@ -13,15 +13,22 @@ class MixPanelService implements AnalyticsService {
   String key = "";
   @override
   Future<void> init() async {
-    await dotenv.load(fileName: "dotenv");
-
-    if (dotenv.env['MIXPANEL_PROJECT_TOKEN'] == null) {
+    try {
+      await dotenv.load(fileName: "dotenv");
+    } catch (e) {
+      debugPrint("mixpanel will not be initialized,error");
+      debugPrint(e.toString());
       return;
     }
-    key = dotenv.env['MIXPANEL_PROJECT_TOKEN'] as String;
+
+    final mixpanelToken = dotenv.env['MIXPANEL_PROJECT_TOKEN']?.trim();
+    if (mixpanelToken == null || mixpanelToken.isEmpty) {
+      return;
+    }
 
     // Once you've called this method once, you can access `mixpanel` throughout the rest of your application.
-    _mixpanel = await Mixpanel.init(key, trackAutomaticEvents: false);
+    _mixpanel = await Mixpanel.init(mixpanelToken, trackAutomaticEvents: false);
+    key = mixpanelToken;
     _isInitialized = true;
   }
 
