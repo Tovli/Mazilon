@@ -1,7 +1,7 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:mazilon/util/styles.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/Phone/emergencyDialogBox.dart';
+import 'package:mazilon/util/Phone/phoneTextAndIcon.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/EmergencyNumbers.dart';
@@ -14,9 +14,31 @@ List<Widget> extractChildrenFromRow(Row row) {
 
 // A stateless widget that displays a grid of emergency phone items
 class EmergencyPhonesGrid extends StatelessWidget {
+  const EmergencyPhonesGrid({super.key});
+
+  int _getCrossAxisCount(double screenWidth) {
+    if (screenWidth >= 1600) return 3;
+    if (screenWidth >= 760) return 2;
+    return 1;
+  }
+
+  double _getChildAspectRatio(double screenWidth, int crossAxisCount) {
+    if (crossAxisCount == 1) {
+      return screenWidth >= 500 ? 2.8 : 1.8;
+    }
+    if (crossAxisCount == 3) {
+      return 2.8;
+    }
+    if (screenWidth >= 1400) return 2.7;
+    if (screenWidth >= 1000) return 2.3;
+    return 1.8;
+  }
+
   @override
   Widget build(BuildContext context) {
     final userInfo = Provider.of<UserInformation>(context, listen: true);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final crossAxisCount = _getCrossAxisCount(screenWidth);
     String countryCode = userInfo.location.trim();
     if (countryCode.isEmpty) {
       countryCode = Localizations.localeOf(context).countryCode ??
@@ -35,10 +57,11 @@ class EmergencyPhonesGrid extends StatelessWidget {
         primary: false,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // Number of columns in the grid
-          crossAxisSpacing: 10.0, // Horizontal spacing between items
-          mainAxisSpacing: 10.0, // Vertical spacing between items
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: crossAxisCount, // Number of columns in the grid
+          crossAxisSpacing: 12.0, // Horizontal spacing between items
+          mainAxisSpacing: 12.0, // Vertical spacing between items
+          childAspectRatio: _getChildAspectRatio(screenWidth, crossAxisCount),
         ),
         itemCount: localNumbers.length, // Number of items in the grid
         itemBuilder: (BuildContext context, int index) {
@@ -62,29 +85,47 @@ class EmergencyPhoneItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appLocale = AppLocalizations.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isWideLayout = screenWidth >= 1000;
+    final titleMaxFont = isWideLayout ? 28.0 : 20.0;
+    final descriptionMaxFont = isWideLayout ? 22.0 : 16.0;
+    final descriptionMaxLines = isWideLayout ? 6 : 8;
+    final String phoneNumber = (number["number"] ?? '').toString().trim();
+    final bool canCall = number["canCall"] == true && phoneNumber.isNotEmpty;
+    final bool hasWhatsApp = number["whatsapp"] == true;
+    final bool hasLink = (number["link"] ?? '').toString().trim().isNotEmpty;
+    final bool hasAnyAction = canCall || hasWhatsApp || hasLink;
     final isRtl = appLocale?.textDirection == "rtl";
     final descriptionText = isRtl
         ? (number["descriptionHe"] ?? number["description"] ?? '')
         : (number["description"] ?? '');
     return InkWell(
-      onTap: () async {
-        // Display a dialog when the item is tapped
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return EmergencyDialogBox(
-              number: number["number"],
-              whatsappNumber: number["whatsappNumber"] ?? number["number"],
-              link: number["link"],
-              hasWhatsApp: number["whatsapp"],
-              hasLink: number["link"] != "",
-              canCall: number["canCall"],
-            );
-          },
-        );
-      },
+      onTap: hasAnyAction
+          ? () async {
+              // Directly dial call-only numbers. Keep dialog for multi-action entries.
+              if (canCall && !hasWhatsApp && !hasLink) {
+                await dialPhone(phoneNumber);
+                return;
+              }
+
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return EmergencyDialogBox(
+                    number: number["number"],
+                    whatsappNumber:
+                        number["whatsappNumber"] ?? number["number"],
+                    link: number["link"],
+                    hasWhatsApp: number["whatsapp"],
+                    hasLink: number["link"] != "",
+                    canCall: number["canCall"],
+                  );
+                },
+              );
+            }
+          : null,
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
           border: Border.all(color: primaryPurple, width: 1),
           color: Colors.white,
@@ -94,49 +135,68 @@ class EmergencyPhoneItem extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Center(
+                    child: myAutoSizedText(
+                        number["name"],
+                        TextStyle(
+                            color: primaryPurple,
+                            fontWeight: FontWeight.w800,
+                            fontSize: isWideLayout ? 22 : 15),
+                        TextAlign.center,
+                        titleMaxFont,
+                        2),
+                  ),
+                  const SizedBox(height: 6),
                   Expanded(
-                    flex: 2,
                     child: Center(
                       child: myAutoSizedText(
-                          number["name"],
+                          descriptionText.replaceAll(
+                              '/', '\n'), // Replace '/' with newline
                           TextStyle(
+                              fontWeight: FontWeight.w700,
                               color: primaryPurple,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14.sp),
+                              fontSize: isWideLayout ? 18 : 13),
                           TextAlign.center,
-                          18,
-                          2),
+                          descriptionMaxFont,
+                          descriptionMaxLines),
                     ),
                   ),
-                  Expanded(
-                    flex: 3,
-                    child: Center(
+                  if (phoneNumber.isNotEmpty) ...[
+                    const SizedBox(height: 6),
+                    InkWell(
+                      onTap: canCall
+                          ? () async {
+                              await dialPhone(phoneNumber);
+                            }
+                          : null,
                       child: myAutoSizedText(
-                          descriptionText
-                              .replaceAll('/', '\n'), // Replace '/' with newline
+                          phoneNumber,
                           TextStyle(
-                              fontWeight: FontWeight.normal,
-                              color: primaryPurple,
-                              fontSize: 14.sp),
+                            fontWeight: FontWeight.w800,
+                            color: primaryPurple,
+                            fontSize: isWideLayout ? 18 : 14,
+                            decoration:
+                                canCall ? TextDecoration.underline : null,
+                          ),
                           TextAlign.center,
-                          14,
-                          6),
+                          isWideLayout ? 24 : 20,
+                          1),
                     ),
-                  ),
+                  ],
                 ],
               ),
             ),
             Transform.translate(
-              offset: const Offset(-20, -20), // Adjust the position of the icon
+              offset: const Offset(-14, -14), // Adjust the position of the icon
               child: Material(
                 color: Colors.transparent,
                 child: Container(
-                  width: 40,
-                  height: 40,
+                  width: 30,
+                  height: 30,
                   decoration: BoxDecoration(
                     border: Border.all(color: primaryPurple, width: 1),
                     color: primaryPurple,
@@ -145,7 +205,7 @@ class EmergencyPhoneItem extends StatelessWidget {
                   child: Icon(
                     number['icon'],
                     color: Colors.white,
-                    size: 20,
+                    size: 16,
                   ),
                 ),
               ),

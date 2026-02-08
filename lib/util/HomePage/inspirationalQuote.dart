@@ -5,7 +5,6 @@ import 'package:mazilon/util/LP_extended_state.dart';
 import 'dart:math';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 //Display a random Inspirational Quote
 class InspirationalQuote extends StatefulWidget {
@@ -49,6 +48,8 @@ class _InspirationalQuoteState extends LPExtendedState<InspirationalQuote> {
 
   @override
   Widget build(BuildContext context) {
+    final refreshIconSize = min(38.0, max(26.0, 18.sp.toDouble()));
+
     return Visibility(
       visible: showText,
       child: Container(
@@ -82,9 +83,13 @@ class _InspirationalQuoteState extends LPExtendedState<InspirationalQuote> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   IconButton(
+                    constraints:
+                        const BoxConstraints.tightFor(width: 44, height: 44),
+                    padding: EdgeInsets.zero,
+                    splashRadius: 22,
                     icon: Icon(
                       Icons.refresh,
-                      size: 35.sp,
+                      size: refreshIconSize,
                       color: appWhite,
                     ),
                     //"refresh" button to change the quote

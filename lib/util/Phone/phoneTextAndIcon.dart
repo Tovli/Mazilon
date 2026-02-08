@@ -3,12 +3,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Widget phoneContact(phone, contact) {
+Widget phoneContact(String phone, String contact) {
+  final trimmedPhone = phone.trim();
+  final displayName = contact.trim().isEmpty ? trimmedPhone : contact.trim();
+
   return Row(
     children: <Widget>[
       InkWell(
         onTap: () async {
-          await dialPhone(phone);
+          await dialPhone(trimmedPhone);
         },
         child: CircleAvatar(
           radius: 20, // adjust as needed
@@ -19,14 +22,38 @@ Widget phoneContact(phone, contact) {
       ),
       const SizedBox(width: 10.0), // adjust as needed
       Expanded(
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: myAutoSizedText(
-                contact,
-                TextStyle(fontWeight: FontWeight.normal, fontSize: 20.sp),
-                null,
-                30), // present the contacts from myContacts list
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: () async {
+            await dialPhone(trimmedPhone);
+          },
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  myAutoSizedText(
+                      displayName,
+                      TextStyle(fontWeight: FontWeight.w600, fontSize: 18.sp),
+                      TextAlign.left,
+                      26,
+                      2),
+                  if (trimmedPhone.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    myAutoSizedText(
+                        trimmedPhone,
+                        TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.sp,
+                            color: primaryPurple),
+                        TextAlign.left,
+                        22,
+                        1),
+                  ],
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -35,28 +62,59 @@ Widget phoneContact(phone, contact) {
 }
 
 Future<void> dialPhone(String number) async {
-  String url = 'tel:$number';
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
-  } else {
-    throw 'Could not launch $url';
+  final normalized = number.replaceAll(RegExp(r'\s+'), '').trim();
+  if (normalized.isEmpty) {
+    return;
+  }
+
+  final uri = Uri.parse('tel:$normalized');
+  try {
+    var launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!launched) {
+      launched = await launchUrl(uri, webOnlyWindowName: '_self');
+    }
+
+    if (!launched) {
+      debugPrint('Could not launch $uri');
+    }
+  } catch (e) {
+    debugPrint('Could not launch $uri');
+    debugPrint(e.toString());
   }
 }
 
 Future<void> openWhatsApp(String number) async {
-  String url = 'https://wa.me/$number';
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
-  } else {
-    debugPrint('Could not launch $url');
+  final normalized = number.replaceAll(RegExp(r'\s+'), '').trim();
+  final uri = Uri.parse('https://wa.me/$normalized');
+  try {
+    var launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!launched) {
+      launched = await launchUrl(uri, webOnlyWindowName: '_blank');
+    }
+
+    if (!launched) {
+      debugPrint('Could not launch $uri');
+    }
+  } catch (e) {
+    debugPrint('Could not launch $uri');
+    debugPrint(e.toString());
   }
 }
 
 Future<void> openSite(String url) async {
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
-  } else {
-    debugPrint('Could not launch $url');
+  final uri = Uri.parse(url);
+  try {
+    var launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!launched) {
+      launched = await launchUrl(uri, webOnlyWindowName: '_blank');
+    }
+
+    if (!launched) {
+      debugPrint('Could not launch $uri');
+    }
+  } catch (e) {
+    debugPrint('Could not launch $uri');
+    debugPrint(e.toString());
   }
 }
 
