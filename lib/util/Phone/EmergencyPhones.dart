@@ -7,6 +7,63 @@ import 'package:provider/provider.dart';
 import 'package:mazilon/EmergencyNumbers.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
 
+// Breakpoints and sizing constants for the SOS grid on web/desktop.
+const double _threeColumnMinWidth = 1600.0;
+const double _wideTwoColumnMinWidth = 1400.0;
+const double _standardTwoColumnMinWidth = 1000.0;
+const double _tabletTwoColumnMinWidth = 760.0;
+const double _singleColumnWideMinWidth = 500.0;
+
+const int _oneColumn = 1;
+const int _twoColumns = 2;
+const int _threeColumns = 3;
+
+const double _singleColumnAspectRatioCompact = 1.8;
+const double _singleColumnAspectRatioWide = 2.8;
+const double _twoColumnAspectRatioTablet = 1.8;
+const double _twoColumnAspectRatioStandard = 2.3;
+const double _twoColumnAspectRatioWide = 2.7;
+const double _threeColumnAspectRatio = 2.8;
+
+const double _gridOuterPadding = 8.0;
+const double _gridItemSpacing = 12.0;
+const double _cardBorderRadius = 10.0;
+const double _cardBorderWidth = 1.0;
+const double _cardHorizontalPadding = 10.0;
+const double _cardVerticalPadding = 8.0;
+const double _cardInnerHorizontalPadding = 8.0;
+const double _cardInnerVerticalPadding = 6.0;
+const double _cardContentSpacing = 6.0;
+const double _iconBubbleSize = 30.0;
+const double _iconSize = 16.0;
+const Offset _iconOffset = Offset(-14, -14);
+
+const double _desktopTypographyMinWidth = 1000.0;
+const double _desktopTitleMaxFont = 28.0;
+const double _mobileTitleMaxFont = 20.0;
+const double _desktopDescriptionMaxFont = 22.0;
+const double _mobileDescriptionMaxFont = 16.0;
+const int _desktopDescriptionMaxLines = 6;
+const int _mobileDescriptionMaxLines = 8;
+const double _desktopNameFontSize = 22.0;
+const double _mobileNameFontSize = 15.0;
+const double _desktopDescriptionFontSize = 18.0;
+const double _mobileDescriptionFontSize = 13.0;
+const double _desktopPhoneFontSize = 18.0;
+const double _mobilePhoneFontSize = 14.0;
+const double _desktopPhoneMaxFont = 24.0;
+const double _mobilePhoneMaxFont = 20.0;
+
+class _EmergencyGridLayout {
+  final int crossAxisCount;
+  final double childAspectRatio;
+
+  const _EmergencyGridLayout({
+    required this.crossAxisCount,
+    required this.childAspectRatio,
+  });
+}
+
 // Extracts and returns the list of child widgets from a Row widget
 List<Widget> extractChildrenFromRow(Row row) {
   return row.children;
@@ -16,29 +73,49 @@ List<Widget> extractChildrenFromRow(Row row) {
 class EmergencyPhonesGrid extends StatelessWidget {
   const EmergencyPhonesGrid({super.key});
 
-  int _getCrossAxisCount(double screenWidth) {
-    if (screenWidth >= 1600) return 3;
-    if (screenWidth >= 760) return 2;
-    return 1;
-  }
+  _EmergencyGridLayout _resolveGridLayout(double screenWidth) {
+    if (screenWidth >= _threeColumnMinWidth) {
+      return const _EmergencyGridLayout(
+        crossAxisCount: _threeColumns,
+        childAspectRatio: _threeColumnAspectRatio,
+      );
+    }
+    if (screenWidth >= _wideTwoColumnMinWidth) {
+      return const _EmergencyGridLayout(
+        crossAxisCount: _twoColumns,
+        childAspectRatio: _twoColumnAspectRatioWide,
+      );
+    }
+    if (screenWidth >= _standardTwoColumnMinWidth) {
+      return const _EmergencyGridLayout(
+        crossAxisCount: _twoColumns,
+        childAspectRatio: _twoColumnAspectRatioStandard,
+      );
+    }
+    if (screenWidth >= _tabletTwoColumnMinWidth) {
+      return const _EmergencyGridLayout(
+        crossAxisCount: _twoColumns,
+        childAspectRatio: _twoColumnAspectRatioTablet,
+      );
+    }
+    if (screenWidth >= _singleColumnWideMinWidth) {
+      return const _EmergencyGridLayout(
+        crossAxisCount: _oneColumn,
+        childAspectRatio: _singleColumnAspectRatioWide,
+      );
+    }
 
-  double _getChildAspectRatio(double screenWidth, int crossAxisCount) {
-    if (crossAxisCount == 1) {
-      return screenWidth >= 500 ? 2.8 : 1.8;
-    }
-    if (crossAxisCount == 3) {
-      return 2.8;
-    }
-    if (screenWidth >= 1400) return 2.7;
-    if (screenWidth >= 1000) return 2.3;
-    return 1.8;
+    return const _EmergencyGridLayout(
+      crossAxisCount: _oneColumn,
+      childAspectRatio: _singleColumnAspectRatioCompact,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final userInfo = Provider.of<UserInformation>(context, listen: true);
     final screenWidth = MediaQuery.of(context).size.width;
-    final crossAxisCount = _getCrossAxisCount(screenWidth);
+    final gridLayout = _resolveGridLayout(screenWidth);
     String countryCode = userInfo.location.trim();
     if (countryCode.isEmpty) {
       countryCode = Localizations.localeOf(context).countryCode ??
@@ -52,16 +129,16 @@ class EmergencyPhonesGrid extends StatelessWidget {
     }
     final localNumbers = (country ?? defaultEmergencyCountry).emergencyNumbers;
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(_gridOuterPadding),
       child: GridView.builder(
         primary: false,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount, // Number of columns in the grid
-          crossAxisSpacing: 12.0, // Horizontal spacing between items
-          mainAxisSpacing: 12.0, // Vertical spacing between items
-          childAspectRatio: _getChildAspectRatio(screenWidth, crossAxisCount),
+          crossAxisCount: gridLayout.crossAxisCount,
+          crossAxisSpacing: _gridItemSpacing,
+          mainAxisSpacing: _gridItemSpacing,
+          childAspectRatio: gridLayout.childAspectRatio,
         ),
         itemCount: localNumbers.length, // Number of items in the grid
         itemBuilder: (BuildContext context, int index) {
@@ -86,10 +163,13 @@ class EmergencyPhoneItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final appLocale = AppLocalizations.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
-    final isWideLayout = screenWidth >= 1000;
-    final titleMaxFont = isWideLayout ? 28.0 : 20.0;
-    final descriptionMaxFont = isWideLayout ? 22.0 : 16.0;
-    final descriptionMaxLines = isWideLayout ? 6 : 8;
+    final isWideLayout = screenWidth >= _desktopTypographyMinWidth;
+    final titleMaxFont =
+        isWideLayout ? _desktopTitleMaxFont : _mobileTitleMaxFont;
+    final descriptionMaxFont =
+        isWideLayout ? _desktopDescriptionMaxFont : _mobileDescriptionMaxFont;
+    final descriptionMaxLines =
+        isWideLayout ? _desktopDescriptionMaxLines : _mobileDescriptionMaxLines;
     final String phoneNumber = (number["number"] ?? '').toString().trim();
     final bool canCall = number["canCall"] == true && phoneNumber.isNotEmpty;
     final bool hasWhatsApp = number["whatsapp"] == true;
@@ -125,17 +205,21 @@ class EmergencyPhoneItem extends StatelessWidget {
             }
           : null,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        padding: const EdgeInsets.symmetric(
+            horizontal: _cardHorizontalPadding, vertical: _cardVerticalPadding),
         decoration: BoxDecoration(
-          border: Border.all(color: primaryPurple, width: 1),
+          border: Border.all(color: primaryPurple, width: _cardBorderWidth),
           color: Colors.white,
-          borderRadius: BorderRadius.circular(10), // Rounded corners
+          borderRadius: BorderRadius.circular(_cardBorderRadius),
         ),
         child: Stack(
           clipBehavior: Clip.none,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              padding: const EdgeInsets.symmetric(
+                horizontal: _cardInnerHorizontalPadding,
+                vertical: _cardInnerVerticalPadding,
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -145,12 +229,14 @@ class EmergencyPhoneItem extends StatelessWidget {
                         TextStyle(
                             color: primaryPurple,
                             fontWeight: FontWeight.w800,
-                            fontSize: isWideLayout ? 22 : 15),
+                            fontSize: isWideLayout
+                                ? _desktopNameFontSize
+                                : _mobileNameFontSize),
                         TextAlign.center,
                         titleMaxFont,
                         2),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: _cardContentSpacing),
                   Expanded(
                     child: Center(
                       child: myAutoSizedText(
@@ -159,14 +245,16 @@ class EmergencyPhoneItem extends StatelessWidget {
                           TextStyle(
                               fontWeight: FontWeight.w700,
                               color: primaryPurple,
-                              fontSize: isWideLayout ? 18 : 13),
+                              fontSize: isWideLayout
+                                  ? _desktopDescriptionFontSize
+                                  : _mobileDescriptionFontSize),
                           TextAlign.center,
                           descriptionMaxFont,
                           descriptionMaxLines),
                     ),
                   ),
                   if (phoneNumber.isNotEmpty) ...[
-                    const SizedBox(height: 6),
+                    const SizedBox(height: _cardContentSpacing),
                     InkWell(
                       onTap: canCall
                           ? () async {
@@ -178,12 +266,16 @@ class EmergencyPhoneItem extends StatelessWidget {
                           TextStyle(
                             fontWeight: FontWeight.w800,
                             color: primaryPurple,
-                            fontSize: isWideLayout ? 18 : 14,
+                            fontSize: isWideLayout
+                                ? _desktopPhoneFontSize
+                                : _mobilePhoneFontSize,
                             decoration:
                                 canCall ? TextDecoration.underline : null,
                           ),
                           TextAlign.center,
-                          isWideLayout ? 24 : 20,
+                          isWideLayout
+                              ? _desktopPhoneMaxFont
+                              : _mobilePhoneMaxFont,
                           1),
                     ),
                   ],
@@ -191,12 +283,12 @@ class EmergencyPhoneItem extends StatelessWidget {
               ),
             ),
             Transform.translate(
-              offset: const Offset(-14, -14), // Adjust the position of the icon
+              offset: _iconOffset,
               child: Material(
                 color: Colors.transparent,
                 child: Container(
-                  width: 30,
-                  height: 30,
+                  width: _iconBubbleSize,
+                  height: _iconBubbleSize,
                   decoration: BoxDecoration(
                     border: Border.all(color: primaryPurple, width: 1),
                     color: primaryPurple,
@@ -205,7 +297,7 @@ class EmergencyPhoneItem extends StatelessWidget {
                   child: Icon(
                     number['icon'],
                     color: Colors.white,
-                    size: 16,
+                    size: _iconSize,
                   ),
                 ),
               ),
