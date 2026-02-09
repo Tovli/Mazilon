@@ -7,23 +7,14 @@ import 'package:provider/provider.dart';
 import 'package:mazilon/EmergencyNumbers.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
 
-// Breakpoints and sizing constants for the SOS grid on web/desktop.
-const double _threeColumnMinWidth = 1600.0;
-const double _wideTwoColumnMinWidth = 1400.0;
-const double _standardTwoColumnMinWidth = 1000.0;
-const double _tabletTwoColumnMinWidth = 760.0;
-const double _singleColumnWideMinWidth = 500.0;
-
-const int _oneColumn = 1;
-const int _twoColumns = 2;
-const int _threeColumns = 3;
-
-const double _singleColumnAspectRatioCompact = 1.8;
-const double _singleColumnAspectRatioWide = 2.8;
-const double _twoColumnAspectRatioTablet = 1.8;
-const double _twoColumnAspectRatioStandard = 2.3;
-const double _twoColumnAspectRatioWide = 2.7;
-const double _threeColumnAspectRatio = 2.8;
+enum _EmergencyScreenSize {
+  compact,
+  xs,
+  sm,
+  md,
+  lg,
+  xl,
+}
 
 const double _gridOuterPadding = 8.0;
 const double _gridItemSpacing = 12.0;
@@ -39,20 +30,6 @@ const double _iconSize = 16.0;
 const Offset _iconOffset = Offset(-14, -14);
 
 const double _desktopTypographyMinWidth = 1000.0;
-const double _desktopTitleMaxFont = 28.0;
-const double _mobileTitleMaxFont = 20.0;
-const double _desktopDescriptionMaxFont = 22.0;
-const double _mobileDescriptionMaxFont = 16.0;
-const int _desktopDescriptionMaxLines = 6;
-const int _mobileDescriptionMaxLines = 8;
-const double _desktopNameFontSize = 22.0;
-const double _mobileNameFontSize = 15.0;
-const double _desktopDescriptionFontSize = 18.0;
-const double _mobileDescriptionFontSize = 13.0;
-const double _desktopPhoneFontSize = 18.0;
-const double _mobilePhoneFontSize = 14.0;
-const double _desktopPhoneMaxFont = 24.0;
-const double _mobilePhoneMaxFont = 20.0;
 
 class _EmergencyGridLayout {
   final int crossAxisCount;
@@ -64,6 +41,67 @@ class _EmergencyGridLayout {
   });
 }
 
+class _EmergencyGridBreakpoint {
+  final double minWidth;
+  final _EmergencyScreenSize screenSize;
+
+  const _EmergencyGridBreakpoint({
+    required this.minWidth,
+    required this.screenSize,
+  });
+}
+
+const Map<_EmergencyScreenSize, _EmergencyGridLayout> _gridLayoutByScreenSize =
+    {
+  _EmergencyScreenSize.compact: _EmergencyGridLayout(
+    crossAxisCount: 1,
+    childAspectRatio: 1.8,
+  ),
+  _EmergencyScreenSize.xs: _EmergencyGridLayout(
+    crossAxisCount: 1,
+    childAspectRatio: 2.8,
+  ),
+  _EmergencyScreenSize.sm: _EmergencyGridLayout(
+    crossAxisCount: 2,
+    childAspectRatio: 1.8,
+  ),
+  _EmergencyScreenSize.md: _EmergencyGridLayout(
+    crossAxisCount: 2,
+    childAspectRatio: 2.3,
+  ),
+  _EmergencyScreenSize.lg: _EmergencyGridLayout(
+    crossAxisCount: 2,
+    childAspectRatio: 2.7,
+  ),
+  _EmergencyScreenSize.xl: _EmergencyGridLayout(
+    crossAxisCount: 3,
+    childAspectRatio: 2.8,
+  ),
+};
+
+const List<_EmergencyGridBreakpoint> _gridBreakpoints = [
+  _EmergencyGridBreakpoint(
+    minWidth: 1600.0,
+    screenSize: _EmergencyScreenSize.xl,
+  ),
+  _EmergencyGridBreakpoint(
+    minWidth: 1400.0,
+    screenSize: _EmergencyScreenSize.lg,
+  ),
+  _EmergencyGridBreakpoint(
+    minWidth: 1000.0,
+    screenSize: _EmergencyScreenSize.md,
+  ),
+  _EmergencyGridBreakpoint(
+    minWidth: 760.0,
+    screenSize: _EmergencyScreenSize.sm,
+  ),
+  _EmergencyGridBreakpoint(
+    minWidth: 500.0,
+    screenSize: _EmergencyScreenSize.xs,
+  ),
+];
+
 // Extracts and returns the list of child widgets from a Row widget
 List<Widget> extractChildrenFromRow(Row row) {
   return row.children;
@@ -74,41 +112,14 @@ class EmergencyPhonesGrid extends StatelessWidget {
   const EmergencyPhonesGrid({super.key});
 
   _EmergencyGridLayout _resolveGridLayout(double screenWidth) {
-    if (screenWidth >= _threeColumnMinWidth) {
-      return const _EmergencyGridLayout(
-        crossAxisCount: _threeColumns,
-        childAspectRatio: _threeColumnAspectRatio,
-      );
-    }
-    if (screenWidth >= _wideTwoColumnMinWidth) {
-      return const _EmergencyGridLayout(
-        crossAxisCount: _twoColumns,
-        childAspectRatio: _twoColumnAspectRatioWide,
-      );
-    }
-    if (screenWidth >= _standardTwoColumnMinWidth) {
-      return const _EmergencyGridLayout(
-        crossAxisCount: _twoColumns,
-        childAspectRatio: _twoColumnAspectRatioStandard,
-      );
-    }
-    if (screenWidth >= _tabletTwoColumnMinWidth) {
-      return const _EmergencyGridLayout(
-        crossAxisCount: _twoColumns,
-        childAspectRatio: _twoColumnAspectRatioTablet,
-      );
-    }
-    if (screenWidth >= _singleColumnWideMinWidth) {
-      return const _EmergencyGridLayout(
-        crossAxisCount: _oneColumn,
-        childAspectRatio: _singleColumnAspectRatioWide,
-      );
+    for (final breakpoint in _gridBreakpoints) {
+      if (screenWidth >= breakpoint.minWidth) {
+        return _gridLayoutByScreenSize[breakpoint.screenSize] ??
+            _gridLayoutByScreenSize[_EmergencyScreenSize.compact]!;
+      }
     }
 
-    return const _EmergencyGridLayout(
-      crossAxisCount: _oneColumn,
-      childAspectRatio: _singleColumnAspectRatioCompact,
-    );
+    return _gridLayoutByScreenSize[_EmergencyScreenSize.compact]!;
   }
 
   @override
@@ -164,12 +175,9 @@ class EmergencyPhoneItem extends StatelessWidget {
     final appLocale = AppLocalizations.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
     final isWideLayout = screenWidth >= _desktopTypographyMinWidth;
-    final titleMaxFont =
-        isWideLayout ? _desktopTitleMaxFont : _mobileTitleMaxFont;
-    final descriptionMaxFont =
-        isWideLayout ? _desktopDescriptionMaxFont : _mobileDescriptionMaxFont;
-    final descriptionMaxLines =
-        isWideLayout ? _desktopDescriptionMaxLines : _mobileDescriptionMaxLines;
+    final typography = isWideLayout
+        ? emergencyDesktopPhoneTypography
+        : emergencyMobilePhoneTypography;
     final String phoneNumber = (number["number"] ?? '').toString().trim();
     final bool canCall = number["canCall"] == true && phoneNumber.isNotEmpty;
     final bool hasWhatsApp = number["whatsapp"] == true;
@@ -229,11 +237,9 @@ class EmergencyPhoneItem extends StatelessWidget {
                         TextStyle(
                             color: primaryPurple,
                             fontWeight: FontWeight.w800,
-                            fontSize: isWideLayout
-                                ? _desktopNameFontSize
-                                : _mobileNameFontSize),
+                            fontSize: typography.nameFontSize),
                         TextAlign.center,
-                        titleMaxFont,
+                        typography.titleMaxFont,
                         2),
                   ),
                   const SizedBox(height: _cardContentSpacing),
@@ -245,12 +251,10 @@ class EmergencyPhoneItem extends StatelessWidget {
                           TextStyle(
                               fontWeight: FontWeight.w700,
                               color: primaryPurple,
-                              fontSize: isWideLayout
-                                  ? _desktopDescriptionFontSize
-                                  : _mobileDescriptionFontSize),
+                              fontSize: typography.descriptionFontSize),
                           TextAlign.center,
-                          descriptionMaxFont,
-                          descriptionMaxLines),
+                          typography.descriptionMaxFont,
+                          typography.descriptionMaxLines),
                     ),
                   ),
                   if (phoneNumber.isNotEmpty) ...[
@@ -266,16 +270,12 @@ class EmergencyPhoneItem extends StatelessWidget {
                           TextStyle(
                             fontWeight: FontWeight.w800,
                             color: primaryPurple,
-                            fontSize: isWideLayout
-                                ? _desktopPhoneFontSize
-                                : _mobilePhoneFontSize,
+                            fontSize: typography.phoneFontSize,
                             decoration:
                                 canCall ? TextDecoration.underline : null,
                           ),
                           TextAlign.center,
-                          isWideLayout
-                              ? _desktopPhoneMaxFont
-                              : _mobilePhoneMaxFont,
+                          typography.phoneMaxFont,
                           1),
                     ),
                   ],
