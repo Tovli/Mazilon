@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -46,7 +48,8 @@ class _ListWidgetState extends LPExtendedState<ListWidget> {
             title: const Text(''),
             content: Text(
               appLocale.homePageThankyouPopup(gender),
-              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14.sp),
+              style: TextStyle(
+                  fontWeight: FontWeight.normal, fontSize: min(24, 14.sp)),
               textAlign: TextAlign.center,
             ),
             actions: <Widget>[

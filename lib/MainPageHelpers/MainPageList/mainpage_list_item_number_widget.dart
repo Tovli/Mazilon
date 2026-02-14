@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/styles.dart';
+import 'dart:math';
 
 class ListItemNumberWidget extends StatelessWidget {
   final int index;
@@ -23,7 +24,7 @@ class ListItemNumberWidget extends StatelessWidget {
           '${index + 1}',
           style: TextStyle(
             color: Colors.white,
-            fontSize: index + 1 < 10 ? (14.sp) : (10.sp),
+            fontSize: min(30, index + 1 < 10 ? (14.sp) : (10.sp)),
             fontWeight: FontWeight.bold,
           ),
         ),
