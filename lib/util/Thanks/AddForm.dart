@@ -29,6 +29,18 @@ class AddForm extends StatefulWidget {
 class _AddFormState extends LPExtendedState<AddForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _controller = TextEditingController();
+
+  void _onSubmitForm(UserInformation userInfoProvider) {
+    if (_formKey.currentState!.validate()) {
+      if (widget.text != '') {
+        widget.edit(_controller.text, widget.index, userInfoProvider);
+      } else {
+        widget.add(_controller.text, userInfoProvider);
+      }
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -84,6 +96,8 @@ class _AddFormState extends LPExtendedState<AddForm> {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
                               child: TextFormField(
+                                onFieldSubmitted: (_) =>
+                                    _onSubmitForm(userInfoProvider),
                                 maxLength:
                                     100, // set the max length of the text field
                                 controller: _controller,
@@ -140,18 +154,7 @@ class _AddFormState extends LPExtendedState<AddForm> {
                             ),
                         null,
                         30),
-                    onPressed: () {
-                      // Save the item (add or edit) to the list
-                      if (_formKey.currentState!.validate()) {
-                        if (widget.text != '') {
-                          widget.edit(
-                              _controller.text, widget.index, userInfoProvider);
-                        } else {
-                          widget.add(_controller.text, userInfoProvider);
-                        }
-                        Navigator.of(context).pop();
-                      }
-                    },
+                    onPressed: () => {_onSubmitForm(userInfoProvider)},
                   ),
                 ],
               ),
