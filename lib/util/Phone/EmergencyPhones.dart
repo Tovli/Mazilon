@@ -17,7 +17,8 @@ enum _EmergencyScreenSize {
 }
 
 const double _gridOuterPadding = 8.0;
-const double _gridItemSpacing = 12.0;
+const double _gridCrossAxisSpacing = 12.0;
+const double _gridMainAxisSpacing = 12.0;
 const double _cardBorderRadius = 10.0;
 const double _cardBorderWidth = 1.0;
 const double _cardHorizontalPadding = 10.0;
@@ -111,9 +112,9 @@ List<Widget> extractChildrenFromRow(Row row) {
 class EmergencyPhonesGrid extends StatelessWidget {
   const EmergencyPhonesGrid({super.key});
 
-  _EmergencyGridLayout _resolveGridLayout(double screenWidth) {
+  _EmergencyGridLayout _resolveGridLayout(double availableWidth) {
     for (final breakpoint in _gridBreakpoints) {
-      if (screenWidth >= breakpoint.minWidth) {
+      if (availableWidth >= breakpoint.minWidth) {
         return _gridLayoutByScreenSize[breakpoint.screenSize] ??
             _gridLayoutByScreenSize[_EmergencyScreenSize.compact]!;
       }
@@ -122,43 +123,60 @@ class EmergencyPhonesGrid extends StatelessWidget {
     return _gridLayoutByScreenSize[_EmergencyScreenSize.compact]!;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final userInfo = Provider.of<UserInformation>(context, listen: true);
-    final screenWidth = MediaQuery.of(context).size.width;
-    final gridLayout = _resolveGridLayout(screenWidth);
-    String countryCode = userInfo.location.trim();
-    if (countryCode.isEmpty) {
-      countryCode = Localizations.localeOf(context).countryCode ??
-          defaultPickerCountry.countryCodes.first;
+  String _resolveCountryCode(BuildContext context, UserInformation userInfo) {
+    final locationCountryCode = userInfo.location.trim();
+    if (locationCountryCode.isNotEmpty) {
+      return locationCountryCode;
     }
 
-    final Country? country = findCountryByCode(countryCode);
+    return Localizations.localeOf(context).countryCode ??
+        defaultPickerCountry.countryCodes.first;
+  }
+
+  Country _resolveCountryWithFallback(String countryCode) {
+    final country = findCountryByCode(countryCode);
     if (country == null) {
       debugPrint(
           'No emergency mapping for countryCode="$countryCode". Using default "${defaultEmergencyCountry.id}".');
     }
-    final localNumbers = (country ?? defaultEmergencyCountry).emergencyNumbers;
-    return Padding(
-      padding: const EdgeInsets.all(_gridOuterPadding),
-      child: GridView.builder(
-        primary: false,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: gridLayout.crossAxisCount,
-          crossAxisSpacing: _gridItemSpacing,
-          mainAxisSpacing: _gridItemSpacing,
-          childAspectRatio: gridLayout.childAspectRatio,
-        ),
-        itemCount: localNumbers.length, // Number of items in the grid
-        itemBuilder: (BuildContext context, int index) {
-          return EmergencyPhoneItem(
-            i: index,
-            number: localNumbers[index],
-          );
-        },
-      ),
+    return country ?? defaultEmergencyCountry;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final userInfo = Provider.of<UserInformation>(context, listen: true);
+    final countryCode = _resolveCountryCode(context, userInfo);
+    final localNumbers =
+        _resolveCountryWithFallback(countryCode).emergencyNumbers;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final availableWidth = constraints.maxWidth;
+        final gridLayout = _resolveGridLayout(availableWidth);
+        final isWideLayout = availableWidth >= _desktopTypographyMinWidth;
+
+        return Padding(
+          padding: const EdgeInsets.all(_gridOuterPadding),
+          child: GridView.builder(
+            primary: false,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: gridLayout.crossAxisCount,
+              crossAxisSpacing: _gridCrossAxisSpacing,
+              mainAxisSpacing: _gridMainAxisSpacing,
+              childAspectRatio: gridLayout.childAspectRatio,
+            ),
+            itemCount: localNumbers.length, // Number of items in the grid
+            itemBuilder: (BuildContext context, int index) {
+              return EmergencyPhoneItem(
+                i: index,
+                number: localNumbers[index],
+                isWideLayout: isWideLayout,
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
@@ -168,20 +186,29 @@ class EmergencyPhoneItem extends StatelessWidget {
   final int i; // Index of the emergency phone item
 
   final dynamic number;
-  const EmergencyPhoneItem({required this.i, required this.number, super.key});
+  final bool isWideLayout;
+  const EmergencyPhoneItem(
+      {required this.i,
+      required this.number,
+      required this.isWideLayout,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
     final appLocale = AppLocalizations.of(context);
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isWideLayout = screenWidth >= _desktopTypographyMinWidth;
     final typography = isWideLayout
         ? emergencyDesktopPhoneTypography
         : emergencyMobilePhoneTypography;
     final String phoneNumber = (number["number"] ?? '').toString().trim();
-    final bool canCall = number["canCall"] == true && phoneNumber.isNotEmpty;
-    final bool hasWhatsApp = number["whatsapp"] == true;
-    final bool hasLink = (number["link"] ?? '').toString().trim().isNotEmpty;
+    final String whatsappNumber =
+        (number["whatsappNumber"] ?? '').toString().trim();
+    final String link = (number["link"] ?? '').toString().trim();
+    final bool canCall = isPhoneDialingSupported &&
+        number["canCall"] == true &&
+        phoneNumber.isNotEmpty;
+    final bool hasWhatsApp =
+        number["whatsapp"] == true && whatsappNumber.isNotEmpty;
+    final bool hasLink = link.isNotEmpty;
     final bool hasAnyAction = canCall || hasWhatsApp || hasLink;
     final isRtl = appLocale?.textDirection == "rtl";
     final descriptionText = isRtl
@@ -200,13 +227,12 @@ class EmergencyPhoneItem extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) {
                   return EmergencyDialogBox(
-                    number: number["number"],
-                    whatsappNumber:
-                        number["whatsappNumber"] ?? number["number"],
-                    link: number["link"],
-                    hasWhatsApp: number["whatsapp"],
-                    hasLink: number["link"] != "",
-                    canCall: number["canCall"],
+                    number: phoneNumber,
+                    whatsappNumber: whatsappNumber,
+                    link: link,
+                    hasWhatsApp: hasWhatsApp,
+                    hasLink: hasLink,
+                    canCall: canCall,
                   );
                 },
               );

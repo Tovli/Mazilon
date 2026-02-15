@@ -1,7 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+@visibleForTesting
+bool? debugPhoneDialingSupportedOverride;
+
+bool get isPhoneDialingSupported =>
+    debugPhoneDialingSupportedOverride ?? !kIsWeb;
+
+Future<bool> _launchWithFallback(Uri uri) async {
+  try {
+    var launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!launched) {
+      launched = await launchUrl(uri, mode: LaunchMode.platformDefault);
+    }
+    return launched;
+  } catch (e) {
+    debugPrint('Could not launch $uri');
+    debugPrint(e.toString());
+    return false;
+  }
+}
 
 Widget phoneContact(String phone, String contact) {
   final trimmedPhone = phone.trim();
@@ -62,89 +83,87 @@ Widget phoneContact(String phone, String contact) {
 }
 
 Future<void> dialPhone(String number) async {
+  if (!isPhoneDialingSupported) {
+    debugPrint('Phone dialing is not supported on this platform.');
+    return;
+  }
+
   final normalized = number.replaceAll(RegExp(r'\s+'), '').trim();
   if (normalized.isEmpty) {
     return;
   }
 
   final uri = Uri.parse('tel:$normalized');
-  try {
-    var launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
-    if (!launched) {
-      launched = await launchUrl(uri, webOnlyWindowName: '_self');
-    }
-
-    if (!launched) {
-      debugPrint('Could not launch $uri');
-    }
-  } catch (e) {
+  final launched = await _launchWithFallback(uri);
+  if (!launched) {
     debugPrint('Could not launch $uri');
-    debugPrint(e.toString());
   }
 }
 
 Future<void> openWhatsApp(String number) async {
   final normalized = number.replaceAll(RegExp(r'\s+'), '').trim();
-  final uri = Uri.parse('https://wa.me/$normalized');
-  try {
-    var launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
-    if (!launched) {
-      launched = await launchUrl(uri, webOnlyWindowName: '_blank');
-    }
+  if (normalized.isEmpty) {
+    return;
+  }
 
-    if (!launched) {
-      debugPrint('Could not launch $uri');
-    }
-  } catch (e) {
+  final uri = Uri.parse('https://wa.me/$normalized');
+  final launched = await _launchWithFallback(uri);
+  if (!launched) {
     debugPrint('Could not launch $uri');
-    debugPrint(e.toString());
   }
 }
 
 Future<void> openSite(String url) async {
-  final uri = Uri.parse(url);
-  try {
-    var launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
-    if (!launched) {
-      launched = await launchUrl(uri, webOnlyWindowName: '_blank');
-    }
+  final trimmedUrl = url.trim();
+  if (trimmedUrl.isEmpty) {
+    return;
+  }
 
-    if (!launched) {
-      debugPrint('Could not launch $uri');
-    }
-  } catch (e) {
+  final hasExplicitScheme = trimmedUrl.contains('://');
+  final uri = Uri.tryParse(
+    hasExplicitScheme ? trimmedUrl : 'https://$trimmedUrl',
+  );
+  if (uri == null ||
+      uri.host.isEmpty ||
+      (!uri.isScheme('https') && !uri.isScheme('http'))) {
+    debugPrint('Could not launch invalid url: $url');
+    return;
+  }
+
+  final launched = await _launchWithFallback(uri);
+  if (!launched) {
     debugPrint('Could not launch $uri');
-    debugPrint(e.toString());
   }
 }
 
 Widget getTextIconWidget(
   String text,
-  Function onClick,
+  Future<void> Function() onClick,
   IconData icon,
 ) {
-  return SizedBox(
-      child: Row(
-    children: [
-      myText(
-          text,
-          TextStyle(
-              fontWeight: FontWeight.normal, fontSize: 18.sp > 35 ? 35 : 20.sp),
-          null),
-      SizedBox(width: 5.0),
-      // Button to make a phone call
-      GestureDetector(
-        child: CircleAvatar(
-          radius: 20, // adjust as needed
+  return InkWell(
+    borderRadius: BorderRadius.circular(24),
+    onTap: () async {
+      await onClick();
+    },
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        myText(
+            text,
+            TextStyle(
+                fontWeight: FontWeight.normal,
+                fontSize: 18.sp > 35 ? 35 : 20.sp),
+            null),
+        SizedBox(width: 5.0),
+        CircleAvatar(
+          radius: 20,
           backgroundColor: primaryPurple,
           foregroundColor: Colors.white,
-          child: Icon(icon, size: 20), // adjust as needed
+          child: Icon(icon, size: 20),
         ),
-        onTap: () async {
-          onClick();
-        },
-      ),
-      SizedBox(width: 10.0),
-    ],
-  ));
+        SizedBox(width: 10.0),
+      ],
+    ),
+  );
 }
