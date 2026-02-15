@@ -5,7 +5,6 @@ import 'package:mazilon/util/Phone/phoneTextAndIcon.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/userInformation.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
 
@@ -29,46 +28,49 @@ class EmergencyDialogBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppInformation appInfoProvider = Provider.of<AppInformation>(context);
-
     UserInformation userInfoProvider = Provider.of<UserInformation>(context);
-    final appLocale = AppLocalizations.of(context);
+    final appLocale = AppLocalizations.of(context)!;
     final gender = userInfoProvider.gender;
+
+    Future<void> runAction(Future<void> Function() action) async {
+      final navigator = Navigator.of(context);
+      if (navigator.canPop()) {
+        navigator.pop();
+      }
+      await action();
+    }
+
     return AlertDialog(
       // Title of the dialog box
       title: myText(
-          appLocale!.select(gender),
+          appLocale.select(gender),
           TextStyle(
               fontWeight: FontWeight.normal, fontSize: 18.sp > 40 ? 40 : 20.sp),
           null),
       // Content of the dialog box, which includes options to make a call or send a WhatsApp message
       content: SingleChildScrollView(
-        child: ListBody(
+        child: Wrap(
+          spacing: 12,
+          runSpacing: 12,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                if (canCall)
-                  getTextIconWidget(
-                    appLocale!.dialButton(gender),
-                    () async {
-                      await dialPhone(number);
-                    },
-                    Icons.phone,
-                  ),
-                if (hasWhatsApp)
-                  getTextIconWidget(appLocale!.whatsApp, () async {
-                    await openWhatsApp(whatsappNumber);
-                  }, Icons.chat),
-
-                if (hasLink)
-                  getTextIconWidget(appLocale!.link, () async {
-                    await openSite(link);
-                  }, Icons.search),
-
-                // Button to make a phone call
-              ],
-            ),
+            if (canCall)
+              getTextIconWidget(
+                appLocale.dialButton(gender),
+                () => runAction(() => dialPhone(number)),
+                Icons.phone,
+              ),
+            if (hasWhatsApp)
+              getTextIconWidget(
+                appLocale.whatsApp,
+                () => runAction(() => openWhatsApp(whatsappNumber)),
+                Icons.chat,
+              ),
+            if (hasLink)
+              getTextIconWidget(
+                appLocale.link,
+                () => runAction(() => openSite(link)),
+                Icons.search,
+              ),
           ],
         ),
       ),
@@ -76,7 +78,7 @@ class EmergencyDialogBox extends StatelessWidget {
       actions: <Widget>[
         TextButton(
           child: myText(
-              appLocale!.backButton(gender),
+              appLocale.backButton(gender),
               TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20.sp > 30 ? 30 : 20.sp),

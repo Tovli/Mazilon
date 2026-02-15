@@ -12,6 +12,49 @@ Color appBlue = const Color(0xFF0F2851);
 Color lightPurple = const Color(0xFFE3C6FF);
 Color appWhite = const Color(0xFFFAF8F8);
 
+// Emergency phones typography grouped by layout to keep related values together.
+class EmergencyPhoneTypography {
+  final double titleMaxFont;
+  final double descriptionMaxFont;
+  final int descriptionMaxLines;
+  final double nameFontSize;
+  final double descriptionFontSize;
+  final double phoneFontSize;
+  final double phoneMaxFont;
+
+  const EmergencyPhoneTypography({
+    required this.titleMaxFont,
+    required this.descriptionMaxFont,
+    required this.descriptionMaxLines,
+    required this.nameFontSize,
+    required this.descriptionFontSize,
+    required this.phoneFontSize,
+    required this.phoneMaxFont,
+  });
+}
+
+const EmergencyPhoneTypography emergencyDesktopPhoneTypography =
+    EmergencyPhoneTypography(
+  titleMaxFont: 28.0,
+  descriptionMaxFont: 22.0,
+  descriptionMaxLines: 6,
+  nameFontSize: 22.0,
+  descriptionFontSize: 18.0,
+  phoneFontSize: 18.0,
+  phoneMaxFont: 24.0,
+);
+
+const EmergencyPhoneTypography emergencyMobilePhoneTypography =
+    EmergencyPhoneTypography(
+  titleMaxFont: 20.0,
+  descriptionMaxFont: 16.0,
+  descriptionMaxLines: 8,
+  nameFontSize: 15.0,
+  descriptionFontSize: 13.0,
+  phoneFontSize: 14.0,
+  phoneMaxFont: 20.0,
+);
+
 double returnSizedBox(context, int size) {
   if (MediaQuery.of(context).size.width < 400) {
     return size / 2;

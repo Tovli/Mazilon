@@ -14,9 +14,13 @@ import 'package:provider/provider.dart';
 class CountrySelectorWidget extends StatefulWidget {
   final String text;
   final String disclaimerText;
+  final bool centerContent;
 
   const CountrySelectorWidget(
-      {Key? key, required this.text, required this.disclaimerText})
+      {Key? key,
+      required this.text,
+      required this.disclaimerText,
+      this.centerContent = false})
       : super(key: key);
 
   @override
@@ -27,6 +31,15 @@ class _CountrySelectorWidgetState
     extends LPExtendedState<CountrySelectorWidget> {
   bool isVisible = false;
   bool _didInitLocation = false;
+
+  double _getContentWidth(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    if (screenWidth >= 1000) {
+      return 360;
+    }
+    return (screenWidth * 0.9).clamp(280.0, 340.0).toDouble();
+  }
+
   String resolveCountryCode(String? currentLocation, BuildContext context) {
     final normalizedLocation = (currentLocation ?? '').trim().toUpperCase();
     if (normalizedLocation.isNotEmpty) {
@@ -34,7 +47,8 @@ class _CountrySelectorWidgetState
     }
 
     final platformLocale = WidgetsBinding.instance.platformDispatcher.locale;
-    final platformCode = (platformLocale.countryCode ?? '').trim().toUpperCase();
+    final platformCode =
+        (platformLocale.countryCode ?? '').trim().toUpperCase();
     if (platformCode.isNotEmpty && countryPickerCodes.contains(platformCode)) {
       return platformCode;
     }
@@ -48,6 +62,7 @@ class _CountrySelectorWidgetState
 
     return defaultPickerCountry.countryCodes.first;
   }
+
   void saveLocation(String location, UserInformation userInfo) async {
     PersistentMemoryService service = GetIt.instance<
         PersistentMemoryService>(); // Get the persistent memory service instance
@@ -83,23 +98,32 @@ class _CountrySelectorWidgetState
     final userInfoProvider = Provider.of<UserInformation>(context);
     final initialCountryCode =
         resolveCountryCode(userInfoProvider.location, context);
+    final contentWidth = _getContentWidth(context);
     final rightPadding = appLocale.textDirection == "rtl" ? 10.0 : 0.0;
     final leftPadding = appLocale.textDirection == "rtl" ? 0.0 : 10.0;
+    final titleAlign = widget.centerContent
+        ? TextAlign.center
+        : (appLocale.textDirection == "rtl" ? TextAlign.right : TextAlign.left);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: widget.centerContent
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
       children: [
         ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 300.w),
+          constraints: BoxConstraints(maxWidth: contentWidth),
           child: Row(
+            mainAxisSize: MainAxisSize.max,
             children: [
-              myAutoSizedText(
-                  widget.text,
-                  TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black),
-                  null,
-                  24),
+              Expanded(
+                child: myAutoSizedText(
+                    widget.text,
+                    TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.black),
+                    titleAlign,
+                    24),
+              ),
               TextButton(
                   style: ButtonStyle(
                       padding: WidgetStatePropertyAll(
@@ -117,9 +141,11 @@ class _CountrySelectorWidgetState
           ),
         ),
         Container(
-          width: 300,
+          width: contentWidth,
           height: 70,
-          padding: EdgeInsets.fromLTRB(rightPadding, 12, leftPadding, 12),
+          padding: widget.centerContent
+              ? const EdgeInsets.symmetric(horizontal: 12, vertical: 12)
+              : EdgeInsets.fromLTRB(rightPadding, 12, leftPadding, 12),
           decoration: BoxDecoration(
               border: Border.all(color: Colors.grey, width: 1),
               boxShadow: [
@@ -149,7 +175,7 @@ class _CountrySelectorWidgetState
                   initialSelection: initialCountryCode,
                   showCountryOnly: true,
                   showOnlyCountryWhenClosed: true,
-                  alignLeft: true, // Changed to true for left alignment
+                  alignLeft: !widget.centerContent,
                   countryFilter: countryPickerCodes,
                   padding: EdgeInsets.zero, // Remove internal padding
                 ),
@@ -170,8 +196,12 @@ class _CountrySelectorWidgetState
               },
               child: Container(
                   alignment: appLocale.textDirection == "rtl"
-                      ? Alignment.centerRight
-                      : Alignment.centerLeft,
+                      ? (widget.centerContent
+                          ? Alignment.center
+                          : Alignment.centerRight)
+                      : (widget.centerContent
+                          ? Alignment.center
+                          : Alignment.centerLeft),
                   padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                   decoration: BoxDecoration(
                       color: Colors.white,
@@ -185,9 +215,16 @@ class _CountrySelectorWidgetState
                           offset: Offset(0, 3), // changes position of shadow
                         ),
                       ]),
-                  width: 300.w,
-                  height: 50.h,
-                  child: Text(widget.disclaimerText)),
+                  width: contentWidth,
+                  constraints: const BoxConstraints(minHeight: 50),
+                  child: Text(
+                    widget.disclaimerText,
+                    textAlign: widget.centerContent
+                        ? TextAlign.center
+                        : (appLocale.textDirection == "rtl"
+                            ? TextAlign.right
+                            : TextAlign.left),
+                  )),
             ))
       ],
     );
