@@ -12,6 +12,10 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We use your photo library only when you choose to upload or select an image to include in your content.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We use your camera only when you choose to take a photo to include in your content.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>This app requires contacts access to function properly.</string>
 	<key>CFBundleName</key>
