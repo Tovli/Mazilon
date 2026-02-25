@@ -22,6 +22,8 @@
 	<string>mezilon</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
