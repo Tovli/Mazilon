@@ -354,7 +354,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
 
     if (localeName == '') {
-      return const Center(child: CircularProgressIndicator());
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        ),
+      );
     }
 
     return ScreenUtilInit(
