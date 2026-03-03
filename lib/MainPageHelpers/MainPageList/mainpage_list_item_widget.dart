@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:math';
 
 class MainpageListItemWidget extends StatelessWidget {
   final String item;
@@ -40,7 +41,7 @@ class MainpageListItemWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontFamily: "Rubix",
-                  fontSize: 16.sp,
+                  fontSize: min(30, 16.sp),
                   fontWeight: FontWeight.normal,
                 ),
               ),

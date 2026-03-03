@@ -64,8 +64,8 @@ class _InspirationalQuoteState extends LPExtendedState<InspirationalQuote> {
           children: [
             Positioned(
               top: 5, // Adjust the position as needed
-              left: appLocale!.textDirection == "rtl" ? 5 : null,
-              right: appLocale!.textDirection == "rtl" ? null : 5,
+              left: appLocale.textDirection == "rtl" ? 5 : null,
+              right: appLocale.textDirection == "rtl" ? null : 5,
 
               child: GestureDetector(
                 onTap: setShow,
@@ -84,7 +84,7 @@ class _InspirationalQuoteState extends LPExtendedState<InspirationalQuote> {
                   IconButton(
                     icon: Icon(
                       Icons.refresh,
-                      size: 35.sp,
+                      size: min(35.sp, 40),
                       color: appWhite,
                     ),
                     //"refresh" button to change the quote
