@@ -51,7 +51,7 @@ void callbackDispatcher() {
       TimeOfDay calculatedTime = NotificationsService.calculateTime(
           inputData["timeHour"],
           inputData["timeMinute"]); // Calculate the time for the notification
-      NotificationsService.scheduleNotification(
+      await NotificationsService.scheduleNotification(
           calculatedTime, inputData["id"], inputData["text"][number]);
       return Future.value(true);
     } catch (error, stackTrace) {
