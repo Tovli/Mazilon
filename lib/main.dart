@@ -45,8 +45,6 @@ void callbackDispatcher() {
       if (dsn != null && !Sentry.isEnabled) {
         await Sentry.init((options) => options.dsn = dsn);
       }
-      Sentry.captureMessage(
-          "Managed to initialize Sentry, and start worker call from background");
       if (inputData == null ||
           !inputData.containsKey("text") ||
           !inputData.containsKey("timeHour") ||
@@ -55,24 +53,25 @@ void callbackDispatcher() {
         throw ArgumentError("Invalid input data for notification");
       }
       int number = Random().nextInt(inputData["text"].length);
-      Sentry.captureMessage(
-          "All the needed data for scheduling the notification arrived");
       await NotificationsService.init();
-      Sentry.captureMessage("Initialized Notification Service");
       await NotificationsService.cancelNotifications(null, cancelWorker: false);
-      Sentry.captureMessage("Cancelled previous notifications.");
       TimeOfDay calculatedTime = NotificationsService.calculateTime(
-          inputData["timeHour"],
-          inputData["timeMinute"]); // Calculate the time for the notification
+        inputData["timeHour"],
+        inputData["timeMinute"],
+      ); // Calculate the time for the notification
       await NotificationsService.scheduleNotification(
-          calculatedTime, inputData["id"], inputData["text"][number]);
-      Sentry.captureMessage("Scheduled a new notification");
+        calculatedTime,
+        inputData["id"],
+        inputData["text"][number],
+      );
       return Future.value(true);
     } catch (error, stackTrace) {
       try {
-        await Sentry.captureException(error,
-            stackTrace: stackTrace,
-            withScope: (scope) => scope.setContexts('inputData', inputData));
+        await Sentry.captureException(
+          error,
+          stackTrace: stackTrace,
+          withScope: (scope) => scope.setContexts('inputData', inputData),
+        );
       } catch (_) {}
       return Future.value(false);
     }
@@ -81,9 +80,7 @@ void callbackDispatcher() {
 
 Future<void> initializeApp() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   setupLocator();
 }
