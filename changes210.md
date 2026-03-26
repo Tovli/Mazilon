@@ -2,6 +2,11 @@
 
 This document explains the technical changes introduced for issue `#210` on branch `issue-210-countries`.
 
+After the initial `#210` work, this branch was also merged with the still-unmerged `issue-226-sos` branch so that the final branch state includes both:
+
+- the country-specific SOS resource/action updates from `#210`
+- the SOS web layout and `tel:` launch fixes from `#226`
+
 ## Scope
 
 The work was intentionally limited to the existing SOS/settings boundary.
@@ -97,11 +102,22 @@ Updated datasets:
 
 The SOS grid still resolves country data exactly as before.
 
-The only change here was to pass the new optional SOS action fields into the existing dialog:
+This file now contains two kinds of changes:
+
+- the `#210` dialog wiring for the new optional SOS action fields
+- the `#226` responsive SOS card layout fix for narrower screens and web
+
+The new optional SOS action fields passed into the existing dialog are:
 
 - `textNumber`
 - `textMessage`
 - `linkType`
+
+The responsive layout change from `#226` was kept when the branches were merged:
+
+- the emergency cards are rendered through `LayoutBuilder` + `Wrap`
+- narrow widths fall back to a single column
+- card content is no longer forced through the previous rigid `GridView` + `Expanded` sizing
 
 No routing, selection, or provider behavior was changed.
 
@@ -124,7 +140,7 @@ The shared SOS launch helpers were updated to attempt the launch directly and on
 
 Changes:
 
-- `dialPhone(...)` now launches a `tel:` URI directly
+- `dialPhone(...)` now launches a `tel:` URI directly and keeps the `#226` web fix of using `webOnlyWindowName: '_self'`
 - `openSite(...)` now launches the site directly
 - `openWhatsApp(...)` now launches the WhatsApp URL directly
 - added `openTextMessage(...)` for `sms:` URIs with optional message bodies
@@ -140,6 +156,7 @@ The test file was extended to cover:
 - updated SOS data for USA, UK, EU, and Australia
 - WhatsApp launch behavior
 - SMS launch behavior
+- web `tel:` launch behavior
 - chat-link labeling in the SOS dialog
 - saved country overriding locale fallback in `EmergencyPhonesGrid`
 
@@ -180,10 +197,12 @@ Two screenshot values were intentionally replaced with current official details:
 
 ## Summary
 
-This fix keeps the existing country-selection architecture and narrows the implementation to the SOS data + action path.
+This branch keeps the existing country-selection architecture and narrows the implementation to the SOS data + action path, while also carrying forward the pending `#226` SOS web fix.
 
 The result is:
 
 - country-specific SOS resources remain driven by the saved country setting
 - services that require `text` or `chat` actions can now be represented directly
 - the requested USA, UK, EU, and Australia SOS issues are addressed without introducing new layers or changing app structure
+- the SOS emergency cards also keep the responsive web layout fix from `#226`
+- `tel:` actions also keep the web launch fix from `#226`
