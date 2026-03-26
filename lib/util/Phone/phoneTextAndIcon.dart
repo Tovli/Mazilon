@@ -35,28 +35,41 @@ Widget phoneContact(phone, contact) {
 }
 
 Future<void> dialPhone(String number) async {
-  String url = 'tel:$number';
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
-  } else {
-    throw 'Could not launch $url';
+  final uri = Uri(scheme: 'tel', path: number);
+  final launched = await launchUrl(uri);
+  if (!launched) {
+    debugPrint('Could not launch $uri');
   }
 }
 
 Future<void> openWhatsApp(String number) async {
-  String url = 'https://wa.me/$number';
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
-  } else {
-    debugPrint('Could not launch $url');
+  final uri = Uri.parse('https://wa.me/$number');
+  final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+  if (!launched) {
+    debugPrint('Could not launch $uri');
   }
 }
 
 Future<void> openSite(String url) async {
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
-  } else {
-    debugPrint('Could not launch $url');
+  final uri = Uri.parse(url);
+  final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+  if (!launched) {
+    debugPrint('Could not launch $uri');
+  }
+}
+
+Future<void> openTextMessage(String number, {String body = ''}) async {
+  final trimmedBody = body.trim();
+  final uri = trimmedBody.isEmpty
+      ? Uri(scheme: 'sms', path: number)
+      : Uri(
+          scheme: 'sms',
+          path: number,
+          queryParameters: {'body': trimmedBody},
+        );
+  final launched = await launchUrl(uri);
+  if (!launched) {
+    debugPrint('Could not launch $uri');
   }
 }
 
