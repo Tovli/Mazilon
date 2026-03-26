@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/Phone/emergencyDialogBox.dart';
@@ -31,20 +31,27 @@ class EmergencyPhonesGrid extends StatelessWidget {
     final localNumbers = (country ?? defaultEmergencyCountry).emergencyNumbers;
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: GridView.builder(
-        primary: false,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // Number of columns in the grid
-          crossAxisSpacing: 10.0, // Horizontal spacing between items
-          mainAxisSpacing: 10.0, // Vertical spacing between items
-        ),
-        itemCount: localNumbers.length, // Number of items in the grid
-        itemBuilder: (BuildContext context, int index) {
-          return EmergencyPhoneItem(
-            i: index,
-            number: localNumbers[index],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          const spacing = 10.0;
+          final crossAxisCount = constraints.maxWidth < 600 ? 1 : 2;
+          final itemWidth = crossAxisCount == 1
+              ? constraints.maxWidth
+              : (constraints.maxWidth - spacing) / crossAxisCount;
+
+          return Wrap(
+            spacing: spacing,
+            runSpacing: spacing,
+            children: [
+              for (int index = 0; index < localNumbers.length; index++)
+                SizedBox(
+                  width: itemWidth,
+                  child: EmergencyPhoneItem(
+                    i: index,
+                    number: localNumbers[index],
+                  ),
+                ),
+            ],
           );
         },
       ),
@@ -87,6 +94,7 @@ class EmergencyPhoneItem extends StatelessWidget {
         );
       },
       child: Container(
+        constraints: const BoxConstraints(minHeight: 170),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           border: Border.all(color: primaryPurple, width: 1),
@@ -97,38 +105,33 @@ class EmergencyPhoneItem extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    flex: 2,
-                    child: Center(
-                      child: myAutoSizedText(
-                          number["name"],
-                          TextStyle(
-                              color: primaryPurple,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14.sp),
-                          TextAlign.center,
-                          18,
-                          2),
-                    ),
+                  Center(
+                    child: myAutoSizedText(
+                        number["name"],
+                        TextStyle(
+                            color: primaryPurple,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.sp),
+                        TextAlign.center,
+                        18,
+                        2),
                   ),
-                  Expanded(
-                    flex: 3,
-                    child: Center(
-                      child: myAutoSizedText(
-                          descriptionText
-                              .replaceAll('/', '\n'), // Replace '/' with newline
-                          TextStyle(
-                              fontWeight: FontWeight.normal,
-                              color: primaryPurple,
-                              fontSize: 14.sp),
-                          TextAlign.center,
-                          14,
-                          6),
-                    ),
+                  const SizedBox(height: 8),
+                  Center(
+                    child: myAutoSizedText(
+                        descriptionText.replaceAll(
+                            '/', '\n'), // Replace '/' with newline
+                        TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: primaryPurple,
+                            fontSize: 14.sp),
+                        TextAlign.center,
+                        14),
                   ),
                 ],
               ),
