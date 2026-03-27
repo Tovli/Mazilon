@@ -24,6 +24,8 @@ import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:upgrader/upgrader.dart';
 //testing:
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
+import 'package:sentry/sentry.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 List<String> checkboxCollectionNames = [
   'PersonalPlan-DifficultEvents',
@@ -38,6 +40,11 @@ List<String> checkboxCollectionNames = [
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {
+      await dotenv.load(fileName: "dotenv");
+      final dsn = dotenv.env['SENTRY_DSN'];
+      if (dsn != null && !Sentry.isEnabled) {
+        await Sentry.init((options) => options.dsn = dsn);
+      }
       if (inputData == null ||
           !inputData.containsKey("text") ||
           !inputData.containsKey("timeHour") ||
@@ -49,17 +56,23 @@ void callbackDispatcher() {
       await NotificationsService.init();
       await NotificationsService.cancelNotifications(null, cancelWorker: false);
       TimeOfDay calculatedTime = NotificationsService.calculateTime(
-          inputData["timeHour"],
-          inputData["timeMinute"]); // Calculate the time for the notification
-      NotificationsService.scheduleNotification(
-          calculatedTime, inputData["id"], inputData["text"][number]);
+        inputData["timeHour"],
+        inputData["timeMinute"],
+      ); // Calculate the time for the notification
+      await NotificationsService.scheduleNotification(
+        calculatedTime,
+        inputData["id"],
+        inputData["text"][number],
+      );
       return Future.value(true);
     } catch (error, stackTrace) {
-      IncidentLoggerService loggerService =
-          GetIt.instance<IncidentLoggerService>();
-      await loggerService.captureLog(error,
+      try {
+        await Sentry.captureException(
+          error,
           stackTrace: stackTrace,
-          exceptionData: {'name': 'inputData', 'value': inputData});
+          withScope: (scope) => scope.setContexts('inputData', inputData),
+        );
+      } catch (_) {}
       return Future.value(false);
     }
   });
@@ -67,9 +80,7 @@ void callbackDispatcher() {
 
 Future<void> initializeApp() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   setupLocator();
 }

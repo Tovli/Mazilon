@@ -10,9 +10,7 @@ import 'package:mazilon/util/logger_service.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/type_utils.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mazilon/AnalyticsService.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 abstract class FileService {
   Future<void> share(
@@ -78,16 +76,17 @@ class FileServiceImpl implements FileService {
     return filtered;
   }
 
-  static List<String> formatPhonesText(names, numbers) {
+  static List<String> formatPhonesText(
+      List<String> names, List<String> numbers) {
     List<String> formattedText = [];
     for (var i = 0; i < names.length; i++) {
-      formattedText.add(names[i] + ':' + numbers[i]);
+      formattedText.add('${names[i]}:${numbers[i]}');
     }
     return formattedText;
   }
 
-  static organizeDataForFile(List<dynamic> titles, List<dynamic> subTitles,
-      Map<String, String> texts) async {
+  Future<Map<String, dynamic>> organizeDataForFile(List<dynamic> titles,
+      List<dynamic> subTitles, Map<String, String> texts) async {
     // Set the page format to A4
 
     // Load the font for the PDF
@@ -146,6 +145,11 @@ class FileServiceImpl implements FileService {
     };
   }
 
+//New version of SharePlus can't sennd empty "" message
+  String? checkEmptyMessage(String message) {
+    return message.isEmpty ? null : message;
+  }
+
   @override
   Future<void> share(
       String message,
@@ -169,7 +173,9 @@ class FileServiceImpl implements FileService {
               textDirection);
           final tempFile = await saveTempPDF(file["file"], file["format"]);
           XFile tempXFile = XFile(tempFile.path);
-          await Share.shareXFiles([tempXFile], text: message);
+
+          await SharePlus.instance.share(ShareParams(
+              files: [tempXFile], text: checkEmptyMessage(message)));
           break;
         default:
           file = {"file": null, "format": null};
@@ -227,7 +233,7 @@ class FileServiceImpl implements FileService {
       ..setAttribute('download', 'MyPlan.pdf')
       // Trigger a click on the anchor element to start the download
       ..click();*/
-    //TODO: return a String to show a message to the user
+
     AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
     mixPanelService.trackEvent("Plan downloaded Web");
     return null;
@@ -271,7 +277,7 @@ class FileServiceImpl implements FileService {
   @override
   Future<void> shareTextOnly(String message) async {
     try {
-      await Share.share(message);
+      await SharePlus.instance.share(ShareParams(text: message));
       AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
       mixPanelService.trackEvent("Text shared");
     } catch (error, stackTrace) {
