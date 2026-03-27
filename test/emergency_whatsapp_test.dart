@@ -5,6 +5,7 @@ import 'package:mazilon/EmergencyNumbers.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/util/Phone/emergencyDialogBox.dart';
+import 'package:mazilon/util/Phone/phoneTextAndIcon.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/userInformation.dart';
@@ -22,11 +23,13 @@ class FakePersistentMemoryService implements PersistentMemoryService {
   Future<void> reset() async {}
 
   @override
-  Future<void> setItem(String key, PersistentMemoryType type, dynamic value) async {}
+  Future<void> setItem(
+      String key, PersistentMemoryType type, dynamic value) async {}
 }
 
 class FakeUrlLauncherPlatform extends UrlLauncherPlatform {
   String? lastLaunchedUrl;
+  String? lastWebOnlyWindowName;
 
   @override
   LinkDelegate? get linkDelegate => null;
@@ -48,6 +51,7 @@ class FakeUrlLauncherPlatform extends UrlLauncherPlatform {
     String? webOnlyWindowName,
   }) async {
     lastLaunchedUrl = url;
+    lastWebOnlyWindowName = webOnlyWindowName;
     return true;
   }
 }
@@ -91,8 +95,8 @@ void main() {
     final israel = countries['israel'];
     expect(israel, isNotNull);
 
-    final entry105 = israel!.emergencyNumbers
-        .firstWhere((entry) => entry['name'] == '105');
+    final entry105 =
+        israel!.emergencyNumbers.firstWhere((entry) => entry['name'] == '105');
 
     expect(entry105['number'], '105');
     expect(entry105['whatsapp'], true);
@@ -110,8 +114,8 @@ void main() {
     expect(eu, isNotNull);
     expect(australia, isNotNull);
 
-    final usaEmergency =
-        usa!.emergencyNumbers.firstWhere((entry) => entry['name'] == 'Emergency');
+    final usaEmergency = usa!.emergencyNumbers
+        .firstWhere((entry) => entry['name'] == 'Emergency');
     expect(usaEmergency['number'], '911');
 
     final veterans = usa.emergencyNumbers
@@ -130,12 +134,12 @@ void main() {
         .firstWhere((entry) => entry['name'] == 'Crisis Text Line');
     expect(crisisTextLine['number'], '741741');
 
-    final ukEmergency =
-        uk!.emergencyNumbers.firstWhere((entry) => entry['name'] == 'Emergency');
+    final ukEmergency = uk!.emergencyNumbers
+        .firstWhere((entry) => entry['name'] == 'Emergency');
     expect(ukEmergency['number'], '999');
 
-    final samaritans =
-        uk.emergencyNumbers.firstWhere((entry) => entry['name'] == 'Samaritans');
+    final samaritans = uk.emergencyNumbers
+        .firstWhere((entry) => entry['name'] == 'Samaritans');
     expect(samaritans['number'], '116123');
 
     final shout =
@@ -146,12 +150,12 @@ void main() {
         entry['name'] == 'CALM (Campaign Against Living Miserably, for men)');
     expect(calm['number'], '0800585858');
 
-    final papyrus = uk.emergencyNumbers
-        .firstWhere((entry) => entry['name'] == 'Papyrus (for people under 35)');
+    final papyrus = uk.emergencyNumbers.firstWhere(
+        (entry) => entry['name'] == 'Papyrus (for people under 35)');
     expect(papyrus['number'], '08000684141');
 
-    final euEmergency = eu!.emergencyNumbers.firstWhere(
-        (entry) => entry['name'] == 'European Emergency Number');
+    final euEmergency = eu!.emergencyNumbers
+        .firstWhere((entry) => entry['name'] == 'European Emergency Number');
     expect(euEmergency['number'], '112');
 
     final mentalHealthEurope = eu.emergencyNumbers
@@ -213,5 +217,19 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(fakePlatform.lastLaunchedUrl, 'https://wa.me/0521210105');
+  });
+
+  test('dialPhone launches tel links without a canLaunch pre-check', () async {
+    final originalPlatform = UrlLauncherPlatform.instance;
+    final fakePlatform = FakeUrlLauncherPlatform();
+    UrlLauncherPlatform.instance = fakePlatform;
+    addTearDown(() {
+      UrlLauncherPlatform.instance = originalPlatform;
+    });
+
+    await dialPhone('1201');
+
+    expect(fakePlatform.lastLaunchedUrl, 'tel:1201');
+    expect(fakePlatform.lastWebOnlyWindowName, '_self');
   });
 }
