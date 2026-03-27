@@ -36,7 +36,7 @@ Widget phoneContact(phone, contact) {
 
 Future<void> dialPhone(String number) async {
   final uri = Uri.parse('tel:$number');
-  if (!await launchUrl(uri, webOnlyWindowName: '_self')) {
+  if (!await launchUrl(uri)) {
     debugPrint('Could not launch $uri');
   }
 }

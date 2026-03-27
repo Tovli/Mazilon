@@ -30,7 +30,6 @@ class FakePersistentMemoryService implements PersistentMemoryService {
 
 class FakeUrlLauncherPlatform extends UrlLauncherPlatform {
   String? lastLaunchedUrl;
-  String? lastWebOnlyWindowName;
 
   @override
   LinkDelegate? get linkDelegate => null;
@@ -52,7 +51,6 @@ class FakeUrlLauncherPlatform extends UrlLauncherPlatform {
     String? webOnlyWindowName,
   }) async {
     lastLaunchedUrl = url;
-    lastWebOnlyWindowName = webOnlyWindowName;
     return true;
   }
 }
@@ -313,7 +311,6 @@ void main() {
     await dialPhone('1201');
 
     expect(fakePlatform.lastLaunchedUrl, 'tel:1201');
-    expect(fakePlatform.lastWebOnlyWindowName, '_self');
   });
 
   testWidgets('EmergencyDialogBox labels chat links as Chat', (tester) async {

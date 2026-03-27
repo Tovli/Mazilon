@@ -140,7 +140,7 @@ The shared SOS launch helpers were updated to attempt the launch directly and on
 
 Changes:
 
-- `dialPhone(...)` now launches a `tel:` URI directly and keeps the `#226` web fix of using `webOnlyWindowName: '_self'`
+- `dialPhone(...)` now launches a `tel:` URI directly
 - `openSite(...)` now launches the site directly
 - `openWhatsApp(...)` now launches the WhatsApp URL directly
 - added `openTextMessage(...)` for `sms:` URIs with optional message bodies
