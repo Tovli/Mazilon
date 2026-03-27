@@ -27,7 +27,7 @@ class SentryServiceImpl implements IncidentLoggerService {
       }
     } catch (e) {
       debugPrint("sentry will not be initialized,error");
-      debugPrint(e as String);
+      debugPrint(e.toString());
       runApp(MyApp);
     }
   }
