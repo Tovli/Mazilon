@@ -5,7 +5,6 @@ import 'package:mazilon/util/Phone/phoneTextAndIcon.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/userInformation.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
 
@@ -13,8 +12,10 @@ import 'package:mazilon/l10n/app_localizations.dart';
 class EmergencyDialogBox extends StatelessWidget {
   final String number; // The phone number to dial or message
   final String whatsappNumber;
-  final String
-      link; // Index used to retrieve appropriate text from AppInformation
+  final String link;
+  final String textNumber;
+  final String textMessage;
+  final String linkType;
   final bool hasWhatsApp;
   final bool hasLink;
   final bool canCall;
@@ -23,17 +24,20 @@ class EmergencyDialogBox extends StatelessWidget {
       required this.number,
       required this.whatsappNumber,
       required this.link,
+      this.textNumber = '',
+      this.textMessage = '',
+      this.linkType = 'website',
       required this.hasWhatsApp,
       required this.canCall,
       required this.hasLink});
 
   @override
   Widget build(BuildContext context) {
-    AppInformation appInfoProvider = Provider.of<AppInformation>(context);
-
     UserInformation userInfoProvider = Provider.of<UserInformation>(context);
     final appLocale = AppLocalizations.of(context);
     final gender = userInfoProvider.gender;
+    final hasText = textNumber.trim().isNotEmpty;
+    final isChatLink = linkType == 'chat';
     return AlertDialog(
       // Title of the dialog box
       title: myText(
@@ -45,8 +49,11 @@ class EmergencyDialogBox extends StatelessWidget {
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            Wrap(
+              alignment: WrapAlignment.center,
+              runAlignment: WrapAlignment.center,
+              spacing: 12,
+              runSpacing: 12,
               children: <Widget>[
                 if (canCall)
                   getTextIconWidget(
@@ -56,15 +63,30 @@ class EmergencyDialogBox extends StatelessWidget {
                     },
                     Icons.phone,
                   ),
+                if (hasText)
+                  getTextIconWidget(
+                    'Text',
+                    () async {
+                      await openTextMessage(
+                        textNumber,
+                        body: textMessage,
+                      );
+                    },
+                    Icons.sms,
+                  ),
                 if (hasWhatsApp)
                   getTextIconWidget(appLocale!.whatsApp, () async {
                     await openWhatsApp(whatsappNumber);
                   }, Icons.chat),
 
                 if (hasLink)
-                  getTextIconWidget(appLocale!.link, () async {
-                    await openSite(link);
-                  }, Icons.search),
+                  getTextIconWidget(
+                    isChatLink ? 'Chat' : appLocale.link,
+                    () async {
+                      await openSite(link);
+                    },
+                    isChatLink ? Icons.chat_bubble_outline : Icons.language,
+                  ),
 
                 // Button to make a phone call
               ],
