@@ -107,28 +107,35 @@ final Map<String, Country> countries = {
     },
     {
       "name": "Veterans Crisis Line",
-      "number": "18002738255",
-      "link": "",
-      "description": "Call: 1-800-273-8255 and Press 1 / Text: 838255",
+      "number": "988",
+      "link": "https://www.veteranscrisisline.net/get-help-now/chat/",
+      "linkType": "chat",
+      "textNumber": "838255",
+      "description": "Call: 988 and Press 1 / Text: 838255 / Chat online: veteranscrisisline.net/get-help-now/chat/",
       "whatsapp": false,
       "canCall": true,
-      "icon": Icons.phone
+      "icon": Icons.chat
     },
     {
       "name": "The Trevor Project (for LGBTQ+ youth)",
       "number": "18664887386",
-      "link": "",
-      "description": "Call: 1-866-488-7386 / Text: START to 678678",
+      "link": "https://www.thetrevorproject.org/get-help/",
+      "linkType": "chat",
+      "textNumber": "678678",
+      "textMessage": "START",
+      "description": "Call: 1-866-488-7386 / Text: START to 678678 / Chat online: thetrevorproject.org/get-help/",
       "descriptionHe": "מרכז לנוער להטב\"ק+",
       "whatsapp": false,
       "canCall": true,
-      "icon": Icons.phone
+      "icon": Icons.chat
     },
     {
-      "name": "National Suicide Prevention Lifeline",
+      "name": "988 Suicide & Crisis Lifeline",
       "number": "988",
-      "link": "https://988lifeline.org/chat",
-      "description": "Call: 988 / Text: 988 / Chat online: 988lifeline.org/chat",
+      "link": "https://988lifeline.org/chat/",
+      "linkType": "chat",
+      "textNumber": "988",
+      "description": "Call or Text: 988 / Chat online: 988lifeline.org/chat/",
       "whatsapp": false,
       "canCall": true,
       "icon": Icons.chat
@@ -137,10 +144,12 @@ final Map<String, Country> countries = {
       "name": "Crisis Text Line",
       "number": "741741",
       "link": "https://www.crisistextline.org/",
+      "textNumber": "741741",
+      "textMessage": "HOME",
       "description": "Text: HOME to 741741",
       "whatsapp": false,
       "canCall": false,
-      "icon": Icons.chat
+      "icon": Icons.sms
     }
     ],
   ),
@@ -172,10 +181,12 @@ final Map<String, Country> countries = {
       "name": "Shout",
       "number": "85258",
       "link": "",
+      "textNumber": "85258",
+      "textMessage": "SHOUT",
       "description": "Text: SHOUT to 85258",
       "whatsapp": false,
       "canCall": false,
-      "icon": Icons.chat
+      "icon": Icons.sms
     },
     {
       "name": "CALM (Campaign Against Living Miserably, for men)",
@@ -190,12 +201,13 @@ final Map<String, Country> countries = {
     {
       "name": "Papyrus (for people under 35)",
       "number": "08000684141",
-      "link": "https://www.papyrus-uk.org/",
-      "description": "Call: 0800 068 4141 / Text: 07860 039967",
+      "link": "",
+      "textNumber": "88247",
+      "description": "Call: 0800 068 4141 / Text: 88247",
       "descriptionHe": "פאפירוס מוקדשת למניעת התאבדות בקרב צעירים.",
       "whatsapp": false,
       "canCall": true,
-      "icon": Icons.chat
+      "icon": Icons.sms
     }
     ],
   ),
@@ -207,6 +219,7 @@ final Map<String, Country> countries = {
     {
       "name": "European Emergency Number",
       "number": "112",
+      "link": "",
       "description":
           "Call: 112 / Note: Many EU countries have their own national helplines. We recommend checking with local authorities for country-specific resources.",
       "descriptionHe": "צריך עזרה? 112 הוא מספר החירום שלך להצלת חיים!",
@@ -244,8 +257,10 @@ final Map<String, Country> countries = {
       "name": "Lifeline Australia",
       "number": "131114",
       "link": "https://www.lifeline.org.au/crisis-chat/",
+      "linkType": "chat",
+      "textNumber": "0477131114",
       "description":
-          "Call: 13 11 14 / Text: 0477 13 11 14 (12pm to midnight AEST) / Chat online: lifeline.org.au/crisis-chat/",
+          "Call: 13 11 14 / Text: 0477 13 11 14 / Chat online: lifeline.org.au/crisis-chat/",
       "descriptionHe": "תמיכה במשברים ומניעת התאבדות 24/7.",
       "whatsapp": false,
       "canCall": true,
@@ -254,9 +269,10 @@ final Map<String, Country> countries = {
     {
       "name": "Beyond Blue",
       "number": "1300224636",
-      "link": "https://www.beyondblue.org.au/get-support/get-immediate-support",
+      "link": "https://www.beyondblue.org.au/get-support/talk-to-a-counsellor",
+      "linkType": "chat",
       "description":
-          "Call: 1300 22 4636 / Chat online: beyondblue.org.au/get-support/get-immediate-support",
+          "Call: 1300 22 4636 / Chat online: beyondblue.org.au/get-support/talk-to-a-counsellor",
       "descriptionHe": "מקור מידע אמין לבריאות הנפש.",
       "whatsapp": false,
       "canCall": true,
