@@ -14,6 +14,7 @@ import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SetNotificationWidget extends StatefulWidget {
   const SetNotificationWidget({super.key});
@@ -26,10 +27,28 @@ class _SetNotificationWidgetState
     extends LPExtendedState<SetNotificationWidget> {
   int _currentHour = 12;
   int _currentMinute = 0;
+  Map<String, String> _debugInfo = {};
+
   void setTime(int minute, int hour) {
     setState(() {
       _currentHour = hour;
       _currentMinute = minute;
+    });
+  }
+
+  Future<void> _loadDebugInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _debugInfo = {
+        'run_count': prefs.getInt('wm_run_count')?.toString() ?? 'never',
+        'last_attempt': prefs.getString('wm_last_attempt') ?? 'never',
+        'last_task': prefs.getString('wm_last_task_name') ?? 'n/a',
+        'dotenv_ok': prefs.getString('wm_dotenv_ok') ?? 'never',
+        'init_ok': prefs.getString('wm_init_ok') ?? 'never',
+        'schedule_ok': prefs.getString('wm_schedule_ok') ?? 'never',
+        'scheduled_text': prefs.getString('wm_scheduled_text') ?? 'n/a',
+        'last_error': prefs.getString('wm_last_error') ?? 'none',
+      };
     });
   }
 
@@ -150,6 +169,48 @@ class _SetNotificationWidgetState
             ),
           ),
         ),
+        SizedBox(height: 40),
+        Divider(color: Colors.grey),
+        SizedBox(height: 10),
+        Center(
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.blueGrey.withOpacity(0.7),
+              borderRadius: BorderRadius.circular(7),
+            ),
+            child: TextButton(
+              onPressed: _loadDebugInfo,
+              child: Text(
+                'DEBUG: Load WorkManager Status',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+        if (_debugInfo.isNotEmpty) ...[
+          SizedBox(height: 10),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(7),
+              border: Border.all(color: Colors.grey),
+            ),
+            child: SelectableText(
+              _debugInfo.entries
+                  .map((e) => '${e.key}: ${e.value}')
+                  .join('\n'),
+              style: TextStyle(
+                fontFamily: 'monospace',
+                fontSize: 12,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+        ],
       ],
     );
   }

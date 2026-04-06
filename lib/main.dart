@@ -26,6 +26,7 @@ import 'package:upgrader/upgrader.dart';
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
 import 'package:sentry/sentry.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 List<String> checkboxCollectionNames = [
   'PersonalPlan-DifficultEvents',
@@ -39,8 +40,17 @@ List<String> checkboxCollectionNames = [
     'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
+    final prefs = await SharedPreferences.getInstance();
+    final now = DateTime.now().toIso8601String();
+    final runCount = (prefs.getInt('wm_run_count') ?? 0) + 1;
+    await prefs.setInt('wm_run_count', runCount);
+    await prefs.setString('wm_last_attempt', now);
+    await prefs.setString('wm_last_task_name', task);
+
     try {
       await dotenv.load(fileName: "dotenv");
+      await prefs.setString('wm_dotenv_ok', now);
+
       final dsn = dotenv.env['SENTRY_DSN'];
       if (dsn != null && !Sentry.isEnabled) {
         await Sentry.init((options) => options.dsn = dsn);
@@ -54,6 +64,8 @@ void callbackDispatcher() {
       }
       int number = Random().nextInt(inputData["text"].length);
       await NotificationsService.init();
+      await prefs.setString('wm_init_ok', now);
+
       await NotificationsService.cancelNotifications(null, cancelWorker: false);
       TimeOfDay calculatedTime = NotificationsService.calculateTime(
         inputData["timeHour"],
@@ -64,8 +76,13 @@ void callbackDispatcher() {
         inputData["id"],
         inputData["text"][number],
       );
+      await prefs.setString('wm_schedule_ok', now);
+      await prefs.setString('wm_scheduled_text', inputData["text"][number]);
+
       return Future.value(true);
     } catch (error, stackTrace) {
+      await prefs.setString('wm_last_error', '$now | $error');
+
       try {
         await Sentry.captureException(
           error,
