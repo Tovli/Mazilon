@@ -32,11 +32,11 @@ void main() {
   late AppInformation mockAppInformation;
   late GetIt locator;
 
-  setUp(() {
+  setUp(() async {
     locator = GetIt.instance;
 
     // Reset getIt before each test
-    locator.reset();
+    await locator.reset();
     // Create and register ONLY PersistentMemoryService
     final mockPersistentMemoryService = MockPersistentMemoryService();
 
@@ -60,10 +60,10 @@ void main() {
     final mockFileServiceImpl = MockFileService();
     getIt.registerLazySingleton<FileService>(() => mockFileServiceImpl);
   });
-  tearDown(() {
+  tearDown(() async {
     final locator = GetIt.instance;
     // Optionally reset GetIt after each test
-    locator.reset();
+    await locator.reset();
   });
   // Mock data for the test
 
