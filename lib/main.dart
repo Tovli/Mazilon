@@ -39,42 +39,7 @@ List<String> checkboxCollectionNames = [
     'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    try {
-      await dotenv.load(fileName: "dotenv");
-      final dsn = dotenv.env['SENTRY_DSN'];
-      if (dsn != null && !Sentry.isEnabled) {
-        await Sentry.init((options) => options.dsn = dsn);
-      }
-      if (inputData == null ||
-          !inputData.containsKey("text") ||
-          !inputData.containsKey("timeHour") ||
-          !inputData.containsKey("timeMinute") ||
-          !inputData.containsKey("id")) {
-        throw ArgumentError("Invalid input data for notification");
-      }
-      int number = Random().nextInt(inputData["text"].length);
-      await NotificationsService.init();
-      await NotificationsService.cancelNotifications(null, cancelWorker: false);
-      TimeOfDay calculatedTime = NotificationsService.calculateTime(
-        inputData["timeHour"],
-        inputData["timeMinute"],
-      ); // Calculate the time for the notification
-      await NotificationsService.scheduleNotification(
-        calculatedTime,
-        inputData["id"],
-        inputData["text"][number],
-      );
-      return Future.value(true);
-    } catch (error, stackTrace) {
-      try {
-        await Sentry.captureException(
-          error,
-          stackTrace: stackTrace,
-          withScope: (scope) => scope.setContexts('inputData', inputData),
-        );
-      } catch (_) {}
-      return Future.value(false);
-    }
+    return Future.value(true);
   });
 }
 
@@ -203,10 +168,22 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     _startTime = null; // Reset for next session
   }
 
+  void _refillNotificationsIfNeeded() {
+    final context = _navigatorKey.currentContext;
+    if (context == null) return;
+    final appLocale = AppLocalizations.of(context);
+    if (appLocale == null) return;
+    final userInfo = Provider.of<UserInformation>(context, listen: false);
+    final timeOfDay = TimeOfDay(
+        hour: userInfo.notificationHour, minute: userInfo.notificationMinute);
+    NotificationsService.refillNotificationsIfNeeded(
+        timeOfDay, appLocale, userInfo.gender);
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      _startSession(); // App is active
+      _startSession();
     } else if (state == AppLifecycleState.hidden ||
         state == AppLifecycleState.detached) {
       _endSession(); // App is inactive or closed
@@ -276,11 +253,22 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
   }
 
+  Future<void> _cancelNotificationsIfNeeded() async {
+    PersistentMemoryService service = GetIt.instance<PersistentMemoryService>();
+    final hasWorkDeleted =
+        await service.getItem('has_work_deleted', PersistentMemoryType.Bool) ??
+            false;
+    if (hasWorkDeleted) return;
+    await NotificationsService.cancelNotifications(null);
+    service.setItem('has_work_deleted', PersistentMemoryType.Bool, true);
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
     mixPanelService.init();
+    _cancelNotificationsIfNeeded();
     getHasFilled();
     loadFirstTime();
     super.initState();
@@ -352,6 +340,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             hasFilled: hasFilled,
             changeLocale: changeLocale,
             phonePageData: phonePageData);
+        _refillNotificationsIfNeeded();
       }).catchError((error, stackTrace) {
         // Handle errors and provide a fallback widget
 

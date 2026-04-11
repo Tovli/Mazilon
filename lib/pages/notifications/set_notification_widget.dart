@@ -139,8 +139,9 @@ class _SetNotificationWidgetState
             ),
             child: TextButton(
               onPressed: () => {
-                NotificationsService.cancelNotifications(null,
-                    cancelWorker: true)
+                NotificationsService.cancelNotifications(
+                  null,
+                )
               },
               child: Text(
                 appLocale!.notificationCancelNotification(gender),
