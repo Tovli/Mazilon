@@ -13,6 +13,7 @@ import 'package:mazilon/util/logger_service.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:workmanager/workmanager.dart';
 
 class NotificationsService {
   static bool _isInitialized = false;
@@ -213,6 +214,8 @@ class NotificationsService {
   static Future<void> cancelNotifications(int? id) async {
     if (id == null) {
       await _flutterLocalNotificationsPlugin.cancelAll();
+      //Workmanager().cancelAll(); is here in order to remove work manaer from previous versions of the app
+      await Workmanager().cancelAll();
     } else {
       if (id == 100) {
         for (int i = 100; i < 150; i++) {
