@@ -6,17 +6,14 @@ class LanguageDropDown extends StatefulWidget {
     {
       'locale': 'en',
       'label': 'English',
-      'image': 'assets/images/united-states.png'
     },
     {
       'locale': 'he',
       'label': 'עברית',
-      'image': 'assets/images/israel.png'
     },
     {
       'locale': 'ar',
       'label': 'العربية',
-      'image': ''
     },
   ];
 
@@ -95,15 +92,8 @@ class _LanguageDropDownState extends State<LanguageDropDown> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (item['image']!.isNotEmpty) ...[
-                      Image.asset(
-                        item['image']!,
-                        width: 45,
-                        height: 30,
-                        fit: BoxFit.cover,
-                      ),
-                      const SizedBox(width: 10),
-                    ],
+                    const Icon(Icons.language, size: 20),
+                    const SizedBox(width: 10),
                     Text(item['label'] ?? item['locale']!),
                   ],
                 ),
