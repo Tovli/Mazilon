@@ -268,7 +268,8 @@ class _FormPageTemplateState extends LPExtendedState<FormPageTemplate> {
                               fontSize: 14.sp > 40 ? 40 : 14.sp),
                           controller: _controller,
                           decoration: InputDecoration(
-                            errorText: validate ? "Value Can't Be Empty" : null,
+                            errorText:
+                                validate ? appLocale.validateEmpty : null,
                           ),
                         ),
                       ),

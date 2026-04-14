@@ -537,6 +537,14 @@
   "@moreVideos": {
     "description": ""
   },
+  "noVideosAvailableForLocale": "No videos available for your locale, sorry.",
+  "@noVideosAvailableForLocale": {
+    "description": ""
+  },
+  "confirmResetTitle": "Are you sure?",
+  "@confirmResetTitle": {
+    "description": ""
+  },
 
   "shareRoutineMessage": "Here is my personal plan that is meant to help keep me safe. I’m sending it to you because, in my view, you also have a part in it. I hope this works for you. I would greatly appreciate your agreement to take part in it if needed. Many thanks in advance, and I look forward to your reply.",
   "@shareRoutineMessage": {
@@ -1498,6 +1506,15 @@
   "aboutTitle2": "Terms of Use and Privacy",
   "@aboutTitle2": {
     "description": ""
+  },
+  "aboutVersionLabel": "Living Positively App Version : {version}",
+  "@aboutVersionLabel": {
+    "description": "The app version label shown on the about page.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
   },
   "locationSelect": "{gender,select,male{Please select your location:} female{Please select your location:} other{Please select your location:}}",
   "@locationSelect": {

@@ -66,7 +66,7 @@ class _WellnessToolsState extends LPExtendedState<WellnessTools> {
     if (widget.videoData['videoId']!.isEmpty) {
       return Center(
         child: Text(
-          "No videos available for your locale, sorry.",
+          appLocale.noVideosAvailableForLocale,
           style: TextStyle(fontSize: 18.sp),
         ),
       );

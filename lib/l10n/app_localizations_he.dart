@@ -1577,6 +1577,12 @@ class AppLocalizationsHe extends AppLocalizations {
   String get moreVideos => 'סרטונים נוספים';
 
   @override
+  String get noVideosAvailableForLocale => 'אין סרטונים זמינים בשפה שבחרת.';
+
+  @override
+  String get confirmResetTitle => 'האם את/ה בטוח/ה?';
+
+  @override
   String get shareRoutineMessage =>
       'הנה התוכנית האישית שלי שנועדה לעזור לשמור עלי. שלחתי לך זאת כי מבחינתי גם לך יש חלק בה. מקווה שזה מתאים לך .אעריך מאוד את הסכמתך לקחת בה חלק בעת הצורך. בהרבה תודה מראש ומצפה לתשובתך.';
 
@@ -3804,6 +3810,11 @@ class AppLocalizationsHe extends AppLocalizations {
 
   @override
   String get aboutTitle2 => 'תנאי שימוש ופרטיות';
+
+  @override
+  String aboutVersionLabel(String version) {
+    return 'גרסת האפליקציה Living Positively: $version';
+  }
 
   @override
   String locationSelect(String gender) {
