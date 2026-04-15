@@ -44,11 +44,11 @@ void main() {
     late AppInformation mockAppInformation;
     late GetIt locator;
 
-    setUp(() {
+    setUp(() async {
       locator = GetIt.instance;
 
       // Reset getIt before each test
-      locator.reset();
+      await locator.reset();
       final mockAnalytics = MockAnalyticsService();
       getIt.registerLazySingleton<AnalyticsService>(() => mockAnalytics);
       final mockFileServiceImpl = MockFileService();

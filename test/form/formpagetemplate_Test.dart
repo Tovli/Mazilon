@@ -26,11 +26,11 @@ void main() {
     late UserInformation mockUserInformation;
     late AppInformation mockAppInformation;
     late GetIt locator;
-    setUp(() {
+    setUp(() async {
       locator = GetIt.instance;
 
       // Reset getIt before each test
-      locator.reset();
+      await locator.reset();
 
       // Create and register ONLY PersistentMemoryService
       final mockPersistentMemoryService =
