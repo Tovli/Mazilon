@@ -10,7 +10,7 @@ import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
-import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:flutter_contacts/flutter_contacts.dart' hide PermissionStatus;
 
 import 'package:mazilon/l10n/app_localizations.dart';
 
@@ -58,15 +58,18 @@ class _PhonePageFormState extends LPExtendedState<PhonePageForm> {
   Future<void> pickContact() async {
     PermissionStatus status = await Permission.contacts.status;
 
-    if (await FlutterContacts.requestPermission(readonly: true)) {
-      final contact = await FlutterContacts.openExternalPick();
-      //Contact? contact = await ContactsService.openDeviceContactPicker();
-      if (contact != null) {
-        addItem(contact);
+    if (await FlutterContacts.permissions.has(PermissionType.read)) {
+      final contactId = await FlutterContacts.native.showPicker();
+      if (contactId != null) {
+        final contact = await FlutterContacts.get(contactId,
+            properties: {ContactProperty.phone, ContactProperty.name});
+        if (contact != null) {
+          addItem(contact);
+        }
       }
       setState(() {});
     } else {
-      debugPrint("Permission to read contacts was denied");
+      await FlutterContacts.permissions.request(PermissionType.read);
     }
   }
 
