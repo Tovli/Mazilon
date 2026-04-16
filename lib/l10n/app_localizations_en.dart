@@ -1595,6 +1595,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get moreVideos => 'More videos';
 
   @override
+  String get noVideosAvailableForLocale =>
+      'No videos available for your locale, sorry.';
+
+  @override
+  String get confirmResetTitle => 'Are you sure?';
+
+  @override
   String get shareRoutineMessage =>
       'Here is my personal plan that is meant to help keep me safe. I’m sending it to you because, in my view, you also have a part in it. I hope this works for you. I would greatly appreciate your agreement to take part in it if needed. Many thanks in advance, and I look forward to your reply.';
 
@@ -3831,6 +3838,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutTitle2 => 'Terms of Use and Privacy';
+
+  @override
+  String aboutVersionLabel(String version) {
+    return 'Living Positively App Version : $version';
+  }
 
   @override
   String locationSelect(String gender) {

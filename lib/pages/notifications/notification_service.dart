@@ -45,12 +45,12 @@ class NotificationsService {
       tz.setLocalLocation(
           tz.getLocation(timeZoneName.identifier ?? "Asia/Jerusalem"));
       await _flutterLocalNotificationsPlugin
-          .initialize(_initializationSettings);
+          .initialize(settings: _initializationSettings);
       _isInitialized = true;
     } catch (error, stackTrace) {
       tz.setLocalLocation(tz.getLocation('Asia/Jerusalem'));
       await _flutterLocalNotificationsPlugin
-          .initialize(_initializationSettings);
+          .initialize(settings: _initializationSettings);
       _isInitialized = true;
       try {
         IncidentLoggerService loggerService =
@@ -77,8 +77,12 @@ class NotificationsService {
             ticker: 'ticker');
     const NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
-    await _flutterLocalNotificationsPlugin
-        .show(0, title, body, notificationDetails, payload: 'item x');
+    await _flutterLocalNotificationsPlugin.show(
+        id: 0,
+        title: title,
+        body: body,
+        notificationDetails: notificationDetails,
+        payload: 'item x');
   }
 
   static TimeOfDay calculateTime(int h, int m) {
@@ -164,17 +168,17 @@ class NotificationsService {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
     await _flutterLocalNotificationsPlugin.zonedSchedule(
-      matchDateTimeComponents: DateTimeComponents.time,
-      (int.parse(id)), // Use a different ID for each notification if needed
-      'Living Positively',
-      text,
-      scheduledDate,
-      const NotificationDetails(
+      id: int.parse(id),
+      title: 'Living Positively',
+      body: text,
+      scheduledDate: scheduledDate,
+      notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(
               'LPNotificationServiceID', 'LP Notifications',
               channelDescription:
                   'LP Notifications allows you to receive daily reminders from the Mazilon app to keep track of your mental health')),
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
     );
   }
 
@@ -187,7 +191,7 @@ class NotificationsService {
     if (id == null) {
       await _flutterLocalNotificationsPlugin.cancelAll();
     } else {
-      await _flutterLocalNotificationsPlugin.cancel(id);
+      await _flutterLocalNotificationsPlugin.cancel(id: id);
     }
     debugPrint('Notification with ID $id cancelled');
   }

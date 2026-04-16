@@ -4,6 +4,8 @@ String languageName(String code) {
       return 'English';
     case 'he':
       return 'עברית';
+    case 'ar':
+      return 'العربية';
     default:
       return code; // Return the code itself if no match found
   }
@@ -27,6 +29,8 @@ String languageCode(String name) {
       return 'en';
     case 'עברית':
       return 'he';
+    case 'العربية':
+      return 'ar';
     default:
       return name; // Return the name itself if no match found
   }

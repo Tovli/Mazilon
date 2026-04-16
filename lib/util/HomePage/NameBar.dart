@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/styles.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 //Widget for the name of the user in the home page
 class NameBar extends StatefulWidget {
@@ -33,7 +32,7 @@ class NameBarState extends LPExtendedState<NameBar> {
           ? 800
           : MediaQuery.of(context).size.width,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 0, 20, 0),
+        padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 20, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

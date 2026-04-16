@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 
 import 'package:mazilon/util/styles.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 //Template for the "title" of sections in the home page
 //i.e "התוכנית שלי", "רשימת מעלות", "תודו ליסט"
@@ -50,7 +49,8 @@ class SectionBarHomeState extends LPExtendedState<SectionBarHome> {
         ),
         widget.subHeader.isNotEmpty
             ? Padding(
-                padding: const EdgeInsets.only(right: 18.0, left: 5),
+                padding:
+                    const EdgeInsetsDirectional.only(start: 5, end: 18.0),
                 child: myAutoSizedText(
                     widget.subHeader,
                     TextStyle(

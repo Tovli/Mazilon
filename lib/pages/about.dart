@@ -122,7 +122,7 @@ class About extends StatelessWidget {
                     child: Directionality(
                         textDirection: TextDirection.ltr,
                         child: Text(
-                          "Living Positively App Version : ${version}",
+                          appLocale.aboutVersionLabel(version),
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               fontWeight: FontWeight.normal, fontSize: 20),

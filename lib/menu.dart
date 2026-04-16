@@ -284,7 +284,7 @@ class _MenuState extends LPExtendedState<Menu> {
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        width: appLocale.language == 'English'
+                        width: appLocale.localeName == 'en'
                             ? MediaQuery.of(context).size.width / 6
                             : MediaQuery.of(context).size.width / 8,
                         alignment: appLocale.textDirection == "rtl"
@@ -308,7 +308,7 @@ class _MenuState extends LPExtendedState<Menu> {
                         alignment: appLocale.textDirection == "rtl"
                             ? Alignment.centerLeft
                             : Alignment.centerRight,
-                        width: appLocale.language == 'English'
+                        width: appLocale.localeName == 'en'
                             ? MediaQuery.of(context).size.width / 5
                             : MediaQuery.of(context).size.width / 4,
                         child: TextButton(
