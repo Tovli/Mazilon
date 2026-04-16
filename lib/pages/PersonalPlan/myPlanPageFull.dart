@@ -167,7 +167,7 @@ class _MyPlanPageFullState extends LPExtendedState<MyPlanPageFull> {
             ),
             // Display additional text with links, if available
             Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              appLocale.language != 'עברית'
+              appLocale.localeName != 'he'
                   ? Container()
                   : Padding(
                       padding: const EdgeInsets.all(10.0),

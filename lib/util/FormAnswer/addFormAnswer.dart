@@ -4,8 +4,6 @@ import 'package:mazilon/util/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
-import 'package:mazilon/util/appInformation.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 class AddFormAnswer extends StatefulWidget {
   final int index; // The index of the item being edited
@@ -57,52 +55,45 @@ class _AddFormAnswerState extends LPExtendedState<AddFormAnswer> {
             SizedBox(
               height: 20.h,
             ),
-            Form(
-              key: _formKey, // Associate the form with the key
-              child: Column(
-                children: [
-                  SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: TextFormField(
-                            maxLines:
-                                null, // Allow multiple lines in the text field
-                            controller:
-                                _controller, // Associate the controller with the text field
-                            autofocus:
-                                true, // Automatically focus on the text field when the dialog is opened
-                            maxLength: 100, // Set maximum length of text
-                            decoration: InputDecoration(
-                              labelText: appLocale!.addFormEdit(
-                                  gender), // Set label text dynamically based on user gender
-                              contentPadding: EdgeInsets.only(right: 8.0),
-                              labelStyle: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  height: 0,
-                                  fontSize: 30.sp > 40
-                                      ? 40
-                                      : 30.sp), // Set label style
-                            ),
-                            style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 18.sp > 30
-                                    ? 30
-                                    : 18.sp), // Set text field style
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return appLocale!
-                                    .validateEmpty; // Validate that the field is not empty
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      ],
+            Expanded(
+              child: Form(
+                key: _formKey, // Associate the form with the key
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: TextFormField(
+                      maxLines:
+                          null, // Allow multiple lines in the text field
+                      controller:
+                          _controller, // Associate the controller with the text field
+                      autofocus:
+                          true, // Automatically focus on the text field when the dialog is opened
+                      maxLength: 100, // Set maximum length of text
+                      decoration: InputDecoration(
+                        labelText: appLocale!.addFormEdit(
+                            gender), // Set label text dynamically based on user gender
+                        contentPadding:
+                            const EdgeInsetsDirectional.only(end: 8.0),
+                        labelStyle: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            height: 0,
+                            fontSize:
+                                30.sp > 40 ? 40 : 30.sp), // Set label style
+                      ),
+                      style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize:
+                              18.sp > 30 ? 30 : 18.sp), // Set text field style
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return appLocale!
+                              .validateEmpty; // Validate that the field is not empty
+                        }
+                        return null;
+                      },
                     ),
                   ),
-                ],
+                ),
               ),
             ),
             Row(

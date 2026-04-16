@@ -9,11 +9,13 @@ class LocaleServiceImpl implements LocaleService {
   static String? locale;
 
   static String getLocaleName() {
-    String deviceLocale = LanguageCode.rawLocale.toString();
-    switch (deviceLocale) {
-      case "he_IL":
+    final deviceLocale = LanguageCode.rawLocale;
+    switch (deviceLocale.languageCode) {
+      case 'ar':
+        return 'ar';
+      case 'he':
         return 'he';
-      case "en_US":
+      case 'en':
         return 'en';
       default:
         return 'en';

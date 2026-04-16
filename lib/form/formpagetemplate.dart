@@ -10,14 +10,9 @@ import 'package:mazilon/util/persistent_memory_service.dart';
 import 'package:mazilon/util/styles.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
-
-import 'package:mazilon/l10n/app_localizations.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
 
 class FormPageTemplate extends StatefulWidget {
   //next page:
@@ -268,7 +263,8 @@ class _FormPageTemplateState extends LPExtendedState<FormPageTemplate> {
                               fontSize: 14.sp > 40 ? 40 : 14.sp),
                           controller: _controller,
                           decoration: InputDecoration(
-                            errorText: validate ? "Value Can't Be Empty" : null,
+                            errorText:
+                                validate ? appLocale.validateEmpty : null,
                           ),
                         ),
                       ),
@@ -322,7 +318,8 @@ class _FormPageTemplateState extends LPExtendedState<FormPageTemplate> {
                       String item = displayInformation["list"][index];
                       return CheckboxListTile(
                         controlAffinity: ListTileControlAffinity.leading,
-                        contentPadding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                        contentPadding:
+                            const EdgeInsetsDirectional.only(start: 15.0),
                         activeColor: appGreen,
                         checkboxShape: CircleBorder(),
                         visualDensity: VisualDensity.compact,

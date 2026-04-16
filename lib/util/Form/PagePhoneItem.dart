@@ -39,7 +39,8 @@ class _PagePhoneItemState extends State<PagePhoneItem>
               ),
           const SizedBox(width: 3.0),
           Padding(
-            padding: const EdgeInsets.only(left: 8.0), // Add horizontal spacing
+            padding: const EdgeInsetsDirectional.only(
+                start: 8.0), // Add horizontal spacing
             child: myAutoSizedText(
                 widget.phoneDescription,
                 TextStyle(

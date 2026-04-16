@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_ar.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_he.dart';
 
@@ -94,6 +95,7 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('ar'),
     Locale('en'),
     Locale('he')
   ];
@@ -877,6 +879,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More videos'**
   String get moreVideos;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'No videos available for your locale, sorry.'**
+  String get noVideosAvailableForLocale;
+
+  ///
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure?'**
+  String get confirmResetTitle;
 
   ///
   ///
@@ -1964,6 +1978,12 @@ abstract class AppLocalizations {
   /// **'Terms of Use and Privacy'**
   String get aboutTitle2;
 
+  /// The app version label shown on the about page.
+  ///
+  /// In en, this message translates to:
+  /// **'Living Positively App Version : {version}'**
+  String aboutVersionLabel(String version);
+
   ///
   ///
   /// In en, this message translates to:
@@ -2006,7 +2026,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'he'].contains(locale.languageCode);
+      <String>['ar', 'en', 'he'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -2015,6 +2035,8 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'ar':
+      return AppLocalizationsAr();
     case 'en':
       return AppLocalizationsEn();
     case 'he':

@@ -148,7 +148,8 @@ class _PersonalPlanWidgetState extends LPExtendedState<PersonalPlanWidget> {
                 // the personal plan items that the user filled in the form
                 children: randomItems
                     .map((pPlan) => Padding(
-                          padding: const EdgeInsets.only(top: 2.0, left: 5),
+                          padding: const EdgeInsetsDirectional.only(
+                              top: 2.0, start: 5),
                           child: PersonalPlanItem(text: pPlan),
                         ))
                     .toList()
@@ -170,7 +171,9 @@ class _PersonalPlanWidgetState extends LPExtendedState<PersonalPlanWidget> {
                           ),
                       null,
                       20),
-                  const Icon(Icons.arrow_right),
+                  Icon(appLocale!.textDirection == "rtl"
+                      ? Icons.arrow_left
+                      : Icons.arrow_right),
                 ],
               ),
             )

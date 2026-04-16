@@ -416,7 +416,7 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
                                   ),
                                   // text on the top of the form
                                   myAutoSizedText(
-                                      "Are you sure?",
+                                      appLocale.confirmResetTitle,
                                       TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20.sp // text size
