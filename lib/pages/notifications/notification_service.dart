@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:get_it/get_it.dart';
@@ -13,7 +12,6 @@ import 'package:mazilon/util/userInformation.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:workmanager/workmanager.dart';
-import 'package:mazilon/l10n/app_localizations.dart';
 
 class NotificationsService {
   static bool _isInitialized = false;
@@ -26,6 +24,19 @@ class NotificationsService {
         '@mipmap/ic_launcher'), // Replace with your actual icon name
     iOS: DarwinInitializationSettings(),
   );
+
+  static bool supportsReminderSettings({
+    bool? isWebOverride,
+    TargetPlatform? platformOverride,
+  }) {
+    final isWeb = isWebOverride ?? kIsWeb;
+    if (isWeb) {
+      return false;
+    }
+
+    final platform = platformOverride ?? defaultTargetPlatform;
+    return platform != TargetPlatform.iOS;
+  }
 
   static Future<void> init() async {
     if (_isInitialized) {
@@ -91,58 +102,53 @@ class NotificationsService {
 
   static Future<void> initializeNotification(List<String> quotes, int hour,
       int minute, Function createText, AppLocalizations appLocale) async {
-    if (!kIsWeb) {
-      final bool? grantedNotificationPermission;
-      if (Platform.isAndroid) {
-        final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-            _flutterLocalNotificationsPlugin
-                .resolvePlatformSpecificImplementation<
-                    AndroidFlutterLocalNotificationsPlugin>();
-
-        grantedNotificationPermission =
-            await androidImplementation?.requestNotificationsPermission();
-      } else {
-        grantedNotificationPermission = false;
-      }
-      if (grantedNotificationPermission != null &&
-          grantedNotificationPermission == false) {
-        showToast(message: appLocale.noPermissionAllowedText);
-        //if there are no permissions granted, or no permissions, the rest of the function should not run
-        return;
-      }
-      TimeOfDay calculatedTime = calculateTime(hour, minute);
-      String id = "${calculatedTime.hour}${calculatedTime.minute}";
-
-      await cancelNotifications(null, cancelWorker: true);
-      Workmanager().registerOneOffTask(
-        id,
-        "NotificationWorker${calculatedTime.hour}${calculatedTime.minute}",
-        inputData: {
-          "text": quotes,
-          "timeHour": hour,
-          "timeMinute": minute,
-          "id": id
-        },
-      );
-      Workmanager().registerPeriodicTask(
-        id,
-        "NotificationWorker${calculatedTime.hour}${calculatedTime.minute}Periodic",
-        inputData: {
-          "text": quotes,
-          "timeHour": hour,
-          "timeMinute": minute,
-          "id": id
-        },
-        frequency: Duration(days: 1),
-      );
-
-      // Only use Workmanager on mobile platforms (not web)
-    } else {
-      // For web, we can show an immediate notification or handle differently
-      // Since workmanager doesn't work on web, we could implement alternative logic here
-      debugPrint(
-          "Workmanager not supported on web - notifications scheduled for mobile only");
+    if (!supportsReminderSettings()) {
+      return;
     }
+
+    final bool? grantedNotificationPermission;
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+          _flutterLocalNotificationsPlugin
+              .resolvePlatformSpecificImplementation<
+                  AndroidFlutterLocalNotificationsPlugin>();
+
+      grantedNotificationPermission =
+          await androidImplementation?.requestNotificationsPermission();
+    } else {
+      grantedNotificationPermission = false;
+    }
+    if (grantedNotificationPermission != null &&
+        grantedNotificationPermission == false) {
+      showToast(message: appLocale.noPermissionAllowedText);
+      //if there are no permissions granted, or no permissions, the rest of the function should not run
+      return;
+    }
+    TimeOfDay calculatedTime = calculateTime(hour, minute);
+    String id = "${calculatedTime.hour}${calculatedTime.minute}";
+
+    await cancelNotifications(null, cancelWorker: true);
+    Workmanager().registerOneOffTask(
+      id,
+      "NotificationWorker${calculatedTime.hour}${calculatedTime.minute}",
+      inputData: {
+        "text": quotes,
+        "timeHour": hour,
+        "timeMinute": minute,
+        "id": id
+      },
+    );
+    Workmanager().registerPeriodicTask(
+      id,
+      "NotificationWorker${calculatedTime.hour}${calculatedTime.minute}Periodic",
+      inputData: {
+        "text": quotes,
+        "timeHour": hour,
+        "timeMinute": minute,
+        "id": id
+      },
+      frequency: Duration(days: 1),
+    );
 
     var message = createText(
         '${hour < 10 ? "0$hour" : hour}:${minute < 10 ? "0$minute" : minute}');
@@ -151,10 +157,14 @@ class NotificationsService {
 
   static Future<void> updateNotification(
       UserInformation userInfo, AppLocalizations appLocale) async {
+    if (!supportsReminderSettings()) {
+      return;
+    }
+
     var hour = userInfo.notificationHour;
     var minute = userInfo.notificationMinute;
     var newQuotes = retrieveInspirationalQuotes(appLocale, userInfo.gender);
-    initializeNotification(newQuotes, hour, minute,
+    await initializeNotification(newQuotes, hour, minute,
         appLocale.notifyOnscheduledNotification, appLocale);
   }
 

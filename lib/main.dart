@@ -78,6 +78,19 @@ void callbackDispatcher() {
   });
 }
 
+Future<void> refreshReminderForLocaleChange({
+  required bool remindersSupported,
+  required Future<void> Function() initializeNotifications,
+  required Future<void> Function() updateNotifications,
+}) async {
+  if (!remindersSupported) {
+    return;
+  }
+
+  await initializeNotifications();
+  await updateNotifications();
+}
+
 Future<void> initializeApp() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -314,7 +327,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     setState(() {
       localeService.setLocale(locale);
     });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       final currentContext = _navigatorKey.currentContext;
       if (currentContext == null) return;
       final appLocale = AppLocalizations.of(currentContext);
@@ -322,8 +335,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
       final userInfo =
           Provider.of<UserInformation>(currentContext, listen: false);
-      NotificationsService.init();
-      NotificationsService.updateNotification(userInfo, appLocale);
+      await refreshReminderForLocaleChange(
+        remindersSupported: NotificationsService.supportsReminderSettings(),
+        initializeNotifications: () => NotificationsService.init(),
+        updateNotifications: () =>
+            NotificationsService.updateNotification(userInfo, appLocale),
+      );
     });
   }
 

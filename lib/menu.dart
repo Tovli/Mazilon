@@ -1,6 +1,5 @@
 //import 'package:mazilon/pages/schedule.dart';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/AnalyticsService.dart';
@@ -9,6 +8,7 @@ import 'package:mazilon/pages/about.dart';
 import 'package:mazilon/pages/FeelGood/feelGood.dart';
 import 'package:mazilon/pages/WellnessTools/wellnessTools.dart';
 import 'package:mazilon/pages/notifications/notification_page.dart';
+import 'package:mazilon/pages/notifications/notification_service.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:flutter/services.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
@@ -91,6 +91,11 @@ class _MenuState extends LPExtendedState<Menu> {
     final gender = userInformation.gender;
     AnalyticsService mixPanelService = GetIt.instance<AnalyticsService>();
 
+    if (index == PagesCode.NotificationPage &&
+        !NotificationsService.supportsReminderSettings()) {
+      return;
+    }
+
     setState(() {
       current = index;
       //adding pages to menu here:
@@ -122,9 +127,7 @@ class _MenuState extends LPExtendedState<Menu> {
       } else if (index == PagesCode.About) {
         currentScreen = About(version: version);
       } else if (index == PagesCode.NotificationPage) {
-        if (!kIsWeb) {
-          currentScreen = NotificationPage();
-        }
+        currentScreen = NotificationPage();
       } else if (index == PagesCode.FeelGoodPage) {
         currentScreen = FeelGood();
       } /*else if (index == 9) {
@@ -142,8 +145,8 @@ class _MenuState extends LPExtendedState<Menu> {
     version = packageInfo.version;
   }
 
-  Widget displayNotificationButton(gender, kIsWeb) {
-    if (kIsWeb) {
+  Widget displayNotificationButton(gender) {
+    if (!NotificationsService.supportsReminderSettings()) {
       return SizedBox.shrink();
     }
 
@@ -433,8 +436,7 @@ class _MenuState extends LPExtendedState<Menu> {
                                                     Navigator.of(context).pop();
                                                   },
                                                 ),
-                                                displayNotificationButton(
-                                                    gender, kIsWeb),
+                                                displayNotificationButton(gender),
                                                 TextButton(
                                                   child: Row(
                                                     mainAxisAlignment:
