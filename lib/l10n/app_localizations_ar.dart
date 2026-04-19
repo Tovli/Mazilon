@@ -52,7 +52,7 @@ class AppLocalizationsAr extends AppLocalizations {
       {
         'male': 'مرحبًا بك في Living Positively',
         'female': 'مرحبًا بكِ في Living Positively',
-        'other': 'مرحبًا بك في Living Positively',
+        'other': 'مرحبًا في Living Positively',
       },
     );
     return '$_temp0';
@@ -675,7 +675,7 @@ class AppLocalizationsAr extends AppLocalizations {
       {
         'male': 'كيف تفضل أن نخاطبك؟',
         'female': 'كيف تفضلين أن نخاطبك؟',
-        'other': 'كيف تفضل أن نخاطبك؟',
+        'other': 'ما الصيغة المفضلة للمخاطبة؟',
       },
     );
     return '$_temp0';
@@ -882,7 +882,7 @@ class AppLocalizationsAr extends AppLocalizations {
       {
         'male': 'تحتاج إلى مساعدة؟ إليك بعض الاقتراحات',
         'female': 'تحتاجين إلى مساعدة؟ إليكِ بعض الاقتراحات',
-        'other': 'تحتاج إلى مساعدة؟ إليك بعض الاقتراحات',
+        'other': 'بحاجة إلى مساعدة؟ هذه بعض الاقتراحات',
       },
     );
     return '$_temp0';
@@ -934,7 +934,7 @@ class AppLocalizationsAr extends AppLocalizations {
       {
         'male': 'تحتاج إلى مساعدة؟ إليك بعض الاقتراحات',
         'female': 'تحتاجين إلى مساعدة؟ إليكِ بعض الاقتراحات',
-        'other': 'تحتاج إلى مساعدة؟ إليك بعض الاقتراحات',
+        'other': 'بحاجة إلى مساعدة؟ هذه بعض الاقتراحات',
       },
     );
     return '$_temp0';
@@ -991,7 +991,7 @@ class AppLocalizationsAr extends AppLocalizations {
       {
         'male': 'تحتاج إلى مساعدة؟ إليك بعض الاقتراحات',
         'female': 'تحتاجين إلى مساعدة؟ إليكِ بعض الاقتراحات',
-        'other': 'تحتاج إلى مساعدة؟ إليك بعض الاقتراحات',
+        'other': 'بحاجة إلى مساعدة؟ هذه بعض الاقتراحات',
       },
     );
     return '$_temp0';
@@ -1046,7 +1046,7 @@ class AppLocalizationsAr extends AppLocalizations {
       {
         'male': 'تحتاج إلى مساعدة؟ إليك بعض الاقتراحات',
         'female': 'تحتاجين إلى مساعدة؟ إليكِ بعض الاقتراحات',
-        'other': 'تحتاج إلى مساعدة؟ إليك بعض الاقتراحات',
+        'other': 'بحاجة إلى مساعدة؟ هذه بعض الاقتراحات',
       },
     );
     return '$_temp0';
@@ -1471,7 +1471,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get female => 'أنثى';
 
   @override
-  String get nonBinary => 'غير ثنائي الجنس';
+  String get nonBinary => 'غير ثنائي';
 
   @override
   String showAll(String gender) {
@@ -1493,7 +1493,7 @@ class AppLocalizationsAr extends AppLocalizations {
       {
         'male': 'أضف تذكيرًا لاستخدام Living Positively.',
         'female': 'أضيفي تذكيرًا لاستخدام Living Positively.',
-        'other': 'أضف تذكيرًا لاستخدام Living Positively.',
+        'other': 'إضافة تذكير لاستخدام Living Positively.',
       },
     );
     return '$_temp0';
@@ -1592,7 +1592,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get shareRoutineMessage =>
-      'هذه هي خطتي الشخصية التي تهدف إلى المساعدة في الحفاظ على سلامتي. أرسلها إليك لأنه، من وجهة نظري، لديك دور فيها أيضًا. آمل أن يكون هذا مناسبًا لك. وسأكون ممتنًا جدًا لموافقتك على المشاركة فيها إذا لزم الأمر. شكرًا جزيلاً مقدمًا، وأتطلع إلى ردك.';
+      'هذه هي خطتي الشخصية التي تساعدني على الحفاظ على سلامتي. أرسلها إليك لأنني أرى أن لك دورًا فيها أيضًا. آمل أن يكون ذلك مناسبًا لك. سأكون ممتنًا جدًا إذا وافقت على المشاركة فيها عند الحاجة. شكرًا جزيلًا مقدمًا، وأتطلع إلى ردك.';
 
   @override
   String get shareOptions => 'خيارات المشاركة';
@@ -1625,7 +1625,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String newTraitOrThanks(Object item) {
-    return '$item جديد';
+    return 'عنصر جديد: $item';
   }
 
   @override
@@ -2376,9 +2376,9 @@ class AppLocalizationsAr extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(
       gender,
       {
-        'male': 'أنا مستعد للعطاء',
-        'female': 'أنا مستعدة للعطاء',
-        'other': 'أنا مستعد للعطاء',
+        'male': 'أنا على استعداد لبذل الجهد',
+        'female': 'أنا على استعداد لبذل الجهد',
+        'other': 'أنا على استعداد لبذل الجهد',
       },
     );
     return '$_temp0';
@@ -2547,7 +2547,7 @@ class AppLocalizationsAr extends AppLocalizations {
       {
         'male': 'أنا أب جيد',
         'female': 'أنا أم جيدة',
-        'other': 'أنا والد/ة جيد/ة',
+        'other': 'أعتني بأبنائي بمحبة ومسؤولية',
       },
     );
     return '$_temp0';
@@ -3809,7 +3809,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get aboutPage1 =>
-      'Living Positively عبارة عن منصة مصممة لتعزيز المرونة النفسية، والمساعدة في التعامل مع الأزمات المرتبطة بأفكار انتحارية، وتشجيع الإدارة الذاتية، وإنشاء شبكة دعم شخصية، وتعزيز حياة أفضل وذات جودة أعلى. تم تطويرها من قِبل منظمة النادي التابعة لجمعية أميت.\n\nيستخدم هذا التطبيق أدوات من مجال علم النفس الإيجابي، وإدارة الحالة والتعافي، وأبحاث الوقاية من الانتحار.\n\nيجمع البرنامج الشخصي بين خطة الوقاية من الانتكاس من دورة IMR (إدارة الحالة والتعافي) بالإضافة إلى خطة السلامة من ستانلي وبراون.\n\nمصطلح \"قائمة الامتنان\" قدّمته لنا الدكتورة شيرلي يوفال يائير لمجلة الامتنان وتم نشره هنا بموافقتها.\n\nيتم تطوير المنتج بالتعاون والإثراء المتبادل مع الحاضنة الاجتماعية في التخنيون، بمساعدة فريق التطوير.';
+      'يُعدّ \"Living Positively\" منصة مصممة لتعزيز المرونة النفسية، والمساعدة في التعامل مع الأزمات المرتبطة بأفكار انتحارية، وتشجيع الإدارة الذاتية، وإنشاء شبكة دعم شخصية، وتعزيز حياة أفضل وذات جودة أعلى. تم تطويرها من قِبل منظمة النادي التابعة لجمعية أميت.\n\nيستخدم هذا التطبيق أدوات من مجال علم النفس الإيجابي، وإدارة الحالة والتعافي، وأبحاث الوقاية من الانتحار.\n\nيجمع البرنامج الشخصي بين خطة الوقاية من الانتكاس من دورة IMR (إدارة الحالة والتعافي) بالإضافة إلى خطة السلامة من ستانلي وبراون.\n\nمصطلح \"قائمة الامتنان\" قدّمته لنا الدكتورة شيرلي يوفال يائير لمجلة الامتنان وتم نشره هنا بموافقتها.\n\nيتم تطوير المنتج بالتعاون والإثراء المتبادل مع الحاضنة الاجتماعية في التخنيون، بمساعدة فريق التطوير.';
 
   @override
   String get aboutPage2 =>
