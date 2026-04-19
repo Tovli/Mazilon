@@ -60,7 +60,7 @@
   "userSettingsHeader": "{gender,select,male{إعدادات الحساب} female{إعدادات الحساب} other{إعدادات الحساب}}",
   "userSettingsReset": "{gender,select,male{إعادة ضبط البيانات} female{إعادة ضبط البيانات} other{إعادة ضبط البيانات}}",
   "userSettingsName": "{gender,select,male{كيف تحب أن نناديك؟ (يمكنك استخدام لقب)} female{كيف تحبين أن نناديكِ؟ (يمكنكِ استخدام لقب)} other{كيف تحب أن نناديك؟ (يمكنك استخدام لقب)}}",
-  "userSettingsGender": "{gender,select,male{كيف تفضل أن نخاطبك؟} female{كيف تفضلين أن نخاطبكِ؟} other{كيف تفضل أن نخاطبك؟}}",
+  "userSettingsGender": "{gender,select,male{كيف تفضل أن نخاطبك؟} female{كيف تفضلين أن نخاطبك؟} other{كيف تفضل أن نخاطبك؟}}",
   "userSettingsAge": "{gender,select,male{ما هو عمرك؟} female{ما هو عمركِ؟} other{ما هو عمرك؟}}",
   "settings": "{gender,select,male{إعدادات} female{إعدادات} other{إعدادات}}",
   "introductionFormFirstPageMainTitle": "{gender,select,male{ما الذي يبقيني آمنًا؟} female{ما الذي يبقيني آمنة؟} other{ما الذي يبقيني آمنًا؟}}",
@@ -122,7 +122,7 @@
   "addImageButton": "{gender,select,male{إضافة صورة} female{إضافة صورة} other{إضافة صورة}}",
   "addImageTitle": "{gender,select,male{من أين تضيف} female{من أين تضيفين} other{من أين تضيف}}",
   "feelGoodTitle": "{gender,select,male{صور مشجعة وملهمة} female{صور مشجعة وملهمة} other{صور مشجعة وملهمة}}",
-  "feelGoodSubTitle": "{gender,select,male{يُنصح بإضافة صور مشجعة وملهمة ومبهجة. صور مبتسمة للعائلة والأصدقاء والهوايات والرحلات الناجحة والمزيد} female{يُنصح بإضافة صور مشجعة وملهمة ومبهجة. صور مبتسمة للعائلة والأصدقاء والهوايات والرحلات الناجحة والمزيد} other{يُنصح بإضافة صور مشجعة وملهمة ومبهجة. صور مبتسمة للعائلة والأصدقاء والهوايات والرحلات الناجحة والمزيد}}",
+  "feelGoodSubTitle": "{gender,select,male{يوصى بإضافة صور مشجعة وملهمة ومبهجة. صور مبتسمة للعائلة والأصدقاء والهوايات والرحلات الناجحة والمزيد} female{يوصى بإضافة صور مشجعة وملهمة ومبهجة. صور مبتسمة للعائلة والأصدقاء والهوايات والرحلات الناجحة والمزيد} other{يوصى بإضافة صور مشجعة وملهمة ومبهجة. صور مبتسمة للعائلة والأصدقاء والهوايات والرحلات الناجحة والمزيد}}",
   "male": "ذكر",
   "notWillingToSay": "أفضل عدم الإفصاح",
   "noPermissionAllowedText": "لم يتم منح الإذن",
@@ -157,7 +157,7 @@
       }
     }
   },
-  "newTraitOrThanks": "إضافة {item}",
+  "newTraitOrThanks": "{item} جديد",
   "@newTraitOrThanks": {
     "description": "",
     "placeholder": {
@@ -201,7 +201,7 @@
   "inspirationalQuotesNo31": "{gender,select,male{الممارسة اليومية تُحسّن مزاجي، والاستمرار يستحق كل هذا العناء} female{الممارسة اليومية تُحسّن مزاجي، والاستمرار يستحق كل هذا العناء} other{الممارسة اليومية تُحسّن مزاجي، والاستمرار يستحق كل هذا العناء}}",
   "inspirationalQuotesNo32": "{gender,select,male{أنا ذو قيمة} female{أنا ذات قيمة} other{أنا ذو قيمة}}",
   "inspirationalQuotesNo33": "{gender,select,male{أنا أؤمن بقدراتي} female{أنا أؤمن بقدراتي} other{أنا أؤمن بقدراتي}}",
-  "inspirationalQuotesNo34": "{gender,select,male{أنا أستحقّ ذلك} female{أنا أستحقّ ذلك} other{أنا أستحقّ ذلك}}",
+  "inspirationalQuotesNo34": "{gender,select,male{أنا أستحق ذلك} female{أنا أستحق ذلك} other{أنا أستحق ذلك}}",
   "inspirationalQuotesNo35": "{gender,select,male{أنا أعمل على الشعور بالتحسّن} female{أنا أعمل على الشعور بالتحسّن} other{أنا أعمل على الشعور بالتحسّن}}",
   "inspirationalQuotesNo36": "{gender,select,male{الحياة تستحقّ العناء} female{الحياة تستحقّ العناء} other{الحياة تستحقّ العناء}}",
   "inspirationalQuotesNo37": "{gender,select,male{تشير الدراسات إلى أن الأفكار تؤثر على المشاعر} female{تشير الدراسات إلى أن الأفكار تؤثر على المشاعر} other{تشير الدراسات إلى أن الأفكار تؤثر على المشاعر}}",
@@ -249,7 +249,7 @@
   "difficultEventsListNo5": "{gender,select,male{البطالة} female{البطالة} other{البطالة}}",
   "difficultEventsListNo6": "{gender,select,male{فقدان} female{فقدان} other{فقدان}}",
   "difficultEventsListNo7": "{gender,select,male{تسريح العمال والبطالة} female{تسريح العمال والبطالة} other{تسريح العمال والبطالة}}",
-  "difficultEventsListNo8": "{gender,select,male{الحِمل الزائد} female{الحِمل الزائد} other{الحِمل الزائد}}",
+  "difficultEventsListNo8": "{gender,select,male{الحمل الزائد} female{الحمل الزائد} other{الحمل الزائد}}",
   "difficultEventsListNo9": "{gender,select,male{الشعور بالضيق المالي} female{الشعور بالضيق المالي} other{الشعور بالضيق المالي}}",
   "difficultEventsListNo10": "{gender,select,male{الإجهاد وتعدد المهام} female{الإجهاد وتعدد المهام} other{الإجهاد وتعدد المهام}}",
   "difficultEventsListNo11": "{gender,select,male{أمور غير مكتملة} female{أمور غير مكتملة} other{أمور غير مكتملة}}",
