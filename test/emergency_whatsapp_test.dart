@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mazilon/EmergencyNumbers.dart';
@@ -55,6 +57,8 @@ class FakeUrlLauncherPlatform extends UrlLauncherPlatform {
   }
 }
 
+const MethodChannel phoneChannel = MethodChannel('mazilon/phone');
+
 Widget buildEmergencyDialogTestApp({
   required EmergencyDialogBox dialog,
   required UserInformation userInformation,
@@ -100,12 +104,14 @@ Widget buildEmergencyGridTestApp({
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   test('Israel emergency numbers include correct Eran phone + WhatsApp', () {
     final israel = countries['israel'];
     expect(israel, isNotNull);
 
-    final eran =
-        israel!.emergencyNumbers.firstWhere((entry) => entry['name'] == 'ער\"ן');
+    final eran = israel!.emergencyNumbers
+        .firstWhere((entry) => entry['name'] == 'ער\"ן');
 
     expect(eran['number'], '1201');
     expect(eran['whatsapp'], true);
@@ -300,11 +306,56 @@ void main() {
     expect(fakePlatform.lastLaunchedUrl, 'sms:741741?body=HOME');
   });
 
-  test('dialPhone launches tel links without a canLaunch pre-check', () async {
+  test('dialPhone sends Android 4-digit short codes with a display hint',
+      () async {
+    final calls = <MethodCall>[];
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(phoneChannel, (call) async {
+      calls.add(call);
+      return true;
+    });
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+    addTearDown(() {
+      debugDefaultTargetPlatformOverride = null;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(phoneChannel, null);
+    });
+
+    await dialPhone(' 1201 ');
+
+    expect(calls, hasLength(1));
+    expect(calls.single.method, 'dial');
+    expect(calls.single.arguments, <String, String>{'number': '1201\u2060'});
+  });
+
+  test('dialPhone sends non-4-digit Android numbers unchanged', () async {
+    final calls = <MethodCall>[];
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(phoneChannel, (call) async {
+      calls.add(call);
+      return true;
+    });
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+    addTearDown(() {
+      debugDefaultTargetPlatformOverride = null;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(phoneChannel, null);
+    });
+
+    await dialPhone('105');
+
+    expect(calls, hasLength(1));
+    expect(calls.single.method, 'dial');
+    expect(calls.single.arguments, <String, String>{'number': '105'});
+  });
+
+  test('dialPhone uses url_launcher outside Android', () async {
     final originalPlatform = UrlLauncherPlatform.instance;
     final fakePlatform = FakeUrlLauncherPlatform();
     UrlLauncherPlatform.instance = fakePlatform;
+    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
     addTearDown(() {
+      debugDefaultTargetPlatformOverride = null;
       UrlLauncherPlatform.instance = originalPlatform;
     });
 

@@ -1,7 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+
+const MethodChannel _androidPhoneChannel = MethodChannel('mazilon/phone');
 
 Widget phoneContact(phone, contact) {
   return Row(
@@ -35,10 +40,32 @@ Widget phoneContact(phone, contact) {
 }
 
 Future<void> dialPhone(String number) async {
-  final uri = Uri.parse('tel:$number');
-  if (!await launchUrl(uri)) {
-    debugPrint('Could not launch $uri');
+  final phoneNumber = _phoneNumberForTelUri(number);
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    final launched = await _androidPhoneChannel.invokeMethod<bool>(
+      'dial',
+      <String, String>{'number': phoneNumber},
+    );
+    if (launched != true) {
+      debugPrint('Could not launch tel:$phoneNumber');
+    }
+    return;
   }
+
+  final url = 'tel:$phoneNumber';
+  if (!await launchUrlString(url)) {
+    debugPrint('Could not launch $url');
+  }
+}
+
+String _phoneNumberForTelUri(String number) {
+  final trimmedNumber = number.trim();
+  if (defaultTargetPlatform == TargetPlatform.android &&
+      RegExp(r'^\d{4}$').hasMatch(trimmedNumber)) {
+    // Prevent Google Dialer from rendering 1201 as US-style "1 (201".
+    return '$trimmedNumber\u2060';
+  }
+  return trimmedNumber;
 }
 
 Future<void> openWhatsApp(String number) async {

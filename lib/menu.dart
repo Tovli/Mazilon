@@ -219,19 +219,22 @@ class _MenuState extends LPExtendedState<Menu> {
     final age = userInformation.age;
     final mediaQuery = MediaQuery.of(context);
     final screenWidth = mediaQuery.size.width;
-    final menuWidth = screenWidth * 0.5;
+    final isRtl = appLocale.textDirection == "rtl";
+    final maxMenuWidth = screenWidth - 24 < 260 ? screenWidth - 24 : 260.0;
+    final minMenuWidth = maxMenuWidth < 180 ? maxMenuWidth : 180.0;
+    final menuWidth = (screenWidth * (isRtl ? 0.38 : 0.45))
+        .clamp(minMenuWidth, maxMenuWidth)
+        .toDouble();
     final anchorBox = anchorContext.findRenderObject();
     final overlayBox = Overlay.of(context).context.findRenderObject();
-    var menuLeft = appLocale.textDirection == "rtl"
-        ? 12.0
-        : screenWidth - menuWidth - 12.0;
+    var menuLeft = isRtl ? 12.0 : screenWidth - menuWidth - 12.0;
     var menuTop = mediaQuery.padding.top + kToolbarHeight;
 
     if (anchorBox is RenderBox && overlayBox is RenderBox) {
       final anchorOffset =
           anchorBox.localToGlobal(Offset.zero, ancestor: overlayBox);
 
-      menuLeft = appLocale.textDirection == "rtl"
+      menuLeft = isRtl
           ? anchorOffset.dx
           : anchorOffset.dx + anchorBox.size.width - menuWidth;
       menuTop = anchorOffset.dy + anchorBox.size.height + 8;
@@ -264,33 +267,42 @@ class _MenuState extends LPExtendedState<Menu> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Align(
-                      alignment: appLocale.textDirection == "rtl"
-                          ? Alignment.topRight
-                          : Alignment.topLeft,
-                      child: IconButton(
-                        icon: Icon(Icons.close),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ),
-                    TextButton(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(Icons.people),
-                          SizedBox(width: 20),
-                          Text(appLocale.homePageAbout(gender)),
-                        ],
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          currentScreen = About(version: version);
-                          current = PagesCode.About;
-                        });
-                        Navigator.of(context).pop();
-                      },
+                    Row(
+                      textDirection:
+                          isRtl ? TextDirection.ltr : TextDirection.rtl,
+                      children: [
+                        IconButton(
+                          key: const Key('mainMenuCloseButton'),
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        Expanded(
+                          child: Align(
+                            alignment: isRtl
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: TextButton(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.people),
+                                  SizedBox(width: 20),
+                                  Text(appLocale.homePageAbout(gender)),
+                                ],
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  currentScreen = About(version: version);
+                                  current = PagesCode.About;
+                                });
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     displayNotificationButton(gender, kIsWeb),
                     TextButton(

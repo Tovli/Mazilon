@@ -119,10 +119,49 @@ void main() {
       await tapAndSettle(tester, menuButton);
 
       final menuDialog = find.byKey(const Key('mainMenuDialog'));
+      final closeButton = find.byKey(const Key('mainMenuCloseButton'));
       final menuDialogTop = tester.getTopLeft(menuDialog).dy;
+      final menuDialogLeft = tester.getTopLeft(menuDialog).dx;
+      final menuDialogWidth = tester.getSize(menuDialog).width;
+      final closeButtonLeft = tester.getTopLeft(closeButton).dx;
+      final closeButtonCenterY = tester.getCenter(closeButton).dy;
+      final aboutIconCenterY = tester.getCenter(find.byIcon(Icons.people)).dy;
+
       expect(find.byKey(const Key('mainMenuDialog')), findsOneWidget);
       expect(menuDialogTop, greaterThanOrEqualTo(menuButtonBottom));
       expect(menuDialogTop - menuButtonBottom, lessThan(20));
+      expect(menuDialogWidth, lessThanOrEqualTo(260));
+      expect(closeButtonLeft, lessThan(menuDialogLeft + menuDialogWidth / 2));
+      expect((closeButtonCenterY - aboutIconCenterY).abs(), lessThan(8));
+    });
+    testWidgets('Header menu puts close button on the right in English',
+        (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(1200, 900);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(getMenuForTests(
+          mockUserInformation, mockAppInformation,
+          locale: const Locale('en')));
+      final menuButton = find.byIcon(Icons.menu);
+      final menuButtonBottom = tester.getBottomLeft(menuButton).dy;
+
+      await tapAndSettle(tester, menuButton);
+
+      final menuDialog = find.byKey(const Key('mainMenuDialog'));
+      final closeButton = find.byKey(const Key('mainMenuCloseButton'));
+      final menuDialogTop = tester.getTopLeft(menuDialog).dy;
+      final menuDialogLeft = tester.getTopLeft(menuDialog).dx;
+      final menuDialogWidth = tester.getSize(menuDialog).width;
+      final closeButtonLeft = tester.getTopLeft(closeButton).dx;
+
+      expect(menuDialogTop, greaterThanOrEqualTo(menuButtonBottom));
+      expect(menuDialogTop - menuButtonBottom, lessThan(20));
+      expect(
+          closeButtonLeft, greaterThan(menuDialogLeft + menuDialogWidth / 2));
     });
     testWidgets('Navigate from WellnessTools screen',
         (WidgetTester tester) async {
