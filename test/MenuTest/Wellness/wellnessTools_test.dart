@@ -12,6 +12,7 @@ import 'package:mazilon/pages/WellnessTools/more_videos_item.dart';
 import 'package:mazilon/pages/home.dart';
 import 'package:mazilon/pages/WellnessTools/wellnessTools.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
+import 'package:mazilon/util/styles.dart';
 
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
@@ -97,20 +98,36 @@ void main() {
       await tester.tap(finder);
       await tester.pumpAndSettle(const Duration(milliseconds: 200));
     }
+
     testWidgets('Navigate to WellnessTools screen',
         (WidgetTester tester) async {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
-      await tapAndSettle(tester, find.text('תפריט'));
-      expect(find.byType(FractionallySizedBox), findsOneWidget);
       await tapAndSettle(tester, find.text('כלי תמיכה'));
       expect(find.byType(WellnessTools), findsOneWidget);
+    });
+    testWidgets('Header menu opens from hamburger icon',
+        (WidgetTester tester) async {
+      await tester
+          .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
+      final menuButton = find.byIcon(Icons.menu);
+      final menuIcon = tester.widget<Icon>(menuButton);
+      final menuButtonBottom = tester.getBottomLeft(menuButton).dy;
+
+      expect(menuIcon.color, primaryPurple);
+
+      await tapAndSettle(tester, menuButton);
+
+      final menuDialog = find.byKey(const Key('mainMenuDialog'));
+      final menuDialogTop = tester.getTopLeft(menuDialog).dy;
+      expect(find.byKey(const Key('mainMenuDialog')), findsOneWidget);
+      expect(menuDialogTop, greaterThanOrEqualTo(menuButtonBottom));
+      expect(menuDialogTop - menuButtonBottom, lessThan(20));
     });
     testWidgets('Navigate from WellnessTools screen',
         (WidgetTester tester) async {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
-      await tapAndSettle(tester, find.text('תפריט'));
 
       await tapAndSettle(tester, find.text('כלי תמיכה'));
       await tapAndSettle(tester, find.text('בית'));
@@ -120,14 +137,12 @@ void main() {
         (WidgetTester tester) async {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
-      await tapAndSettle(tester, find.text('תפריט'));
 
       await tapAndSettle(tester, find.text('כלי תמיכה'));
       expect(find.byType(WellnessTools), findsOneWidget);
       await tapAndSettle(tester, find.text('בית'));
       expect(find.byType(WellnessTools), findsNothing);
       expect(find.byType(Home), findsOneWidget);
-      await tapAndSettle(tester, find.text('תפריט'));
       await tapAndSettle(tester, find.text('כלי תמיכה'));
       expect(find.byType(Home), findsNothing);
       expect(find.byType(WellnessTools), findsOneWidget);
@@ -139,7 +154,6 @@ void main() {
         (WidgetTester tester) async {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
-      await tapAndSettle(tester, find.text('תפריט'));
 
       await tapAndSettle(tester, find.text('כלי תמיכה'));
       expect(find.byType(FakeVideoPlayerPage), findsOneWidget);
@@ -150,7 +164,6 @@ void main() {
         (WidgetTester tester) async {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
-      await tapAndSettle(tester, find.text('תפריט'));
 
       await tapAndSettle(tester, find.text('כלי תמיכה'));
       expect(find.text("Image"), findsOneWidget);
@@ -162,7 +175,6 @@ void main() {
     testWidgets('Test change video', (WidgetTester tester) async {
       await tester
           .pumpWidget(getMenuForTests(mockUserInformation, mockAppInformation));
-      await tapAndSettle(tester, find.text('תפריט'));
 
       await tapAndSettle(tester, find.text('כלי תמיכה'));
       await tapAndSettle(tester, find.text('v2'));
