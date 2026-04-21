@@ -23,6 +23,16 @@ void main() {
       );
     });
 
+    test('returns false on macOS', () {
+      expect(
+        NotificationsService.supportsReminderSettings(
+          isWebOverride: false,
+          platformOverride: TargetPlatform.macOS,
+        ),
+        isFalse,
+      );
+    });
+
     test('returns true on Android', () {
       expect(
         NotificationsService.supportsReminderSettings(

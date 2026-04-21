@@ -35,7 +35,7 @@ class NotificationsService {
     }
 
     final platform = platformOverride ?? defaultTargetPlatform;
-    return platform != TargetPlatform.iOS;
+    return platform == TargetPlatform.android;
   }
 
   static Future<void> init() async {
