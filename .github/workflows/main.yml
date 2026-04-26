@@ -23,13 +23,6 @@ jobs:
         uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
-              
-      - name: Create dotenv file            
-        uses: SpicyPizza/create-envfile@v2.0.3
-        with:
-            envkey_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-            envkey_MIXPANEL_PROJECT_TOKEN: ${{ secrets.MIXPANEL_PROJECT_TOKEN }}
-            file_name: dotenv
       - name: Write key store file for release signing
         run: |
           echo "$APPSIGNINGKEY" | base64 --decode > "${{ env.KEYSTORE_PATH }}${{ env.KEYSTORE_FILE }}"
@@ -78,10 +71,15 @@ jobs:
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
 
       - name: Build App Bundle
+        env:
+          MIXPANEL_PROJECT_TOKEN: ${{ secrets.MIXPANEL_PROJECT_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: |
           flutter build appbundle --release \
             --build-name="${BUILD_NAME}" \
-            --build-number="${BUILD_NUMBER}"
+            --build-number="${BUILD_NUMBER}" \
+            --dart-define=MIXPANEL_PROJECT_TOKEN="$MIXPANEL_PROJECT_TOKEN" \
+            --dart-define=SENTRY_DSN="$SENTRY_DSN"
 
       - name: Upload App Bundle
         uses: actions/upload-artifact@v4
@@ -111,13 +109,6 @@ jobs:
         uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
-              
-      - name: Create dotenv file            
-        uses: SpicyPizza/create-envfile@v2.0.3
-        with:
-            envkey_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-            envkey_MIXPANEL_PROJECT_TOKEN: ${{ secrets.MIXPANEL_PROJECT_TOKEN }}
-            file_name: dotenv
 
       - name: Write firebase options file
         run: |
@@ -157,10 +148,15 @@ jobs:
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
 
       - name: Build Web App
+        env:
+          MIXPANEL_PROJECT_TOKEN: ${{ secrets.MIXPANEL_PROJECT_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: |
           flutter build web --release \
             --build-name="${BUILD_NAME}" \
-            --build-number="${BUILD_NUMBER}"
+            --build-number="${BUILD_NUMBER}" \
+            --dart-define=MIXPANEL_PROJECT_TOKEN="$MIXPANEL_PROJECT_TOKEN" \
+            --dart-define=SENTRY_DSN="$SENTRY_DSN"
 
       - name: Upload Web Build Artifact
         uses: actions/upload-artifact@v4
@@ -192,13 +188,6 @@ jobs:
         uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
-              
-      - name: Create dotenv file            
-        uses: SpicyPizza/create-envfile@v2.0.3
-        with:
-            envkey_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-            envkey_MIXPANEL_PROJECT_TOKEN: ${{ secrets.MIXPANEL_PROJECT_TOKEN }}
-            file_name: dotenv
 
       - name: Write firebase options file
         run: |
@@ -238,10 +227,15 @@ jobs:
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
 
       - name: Build Web App
+        env:
+          MIXPANEL_PROJECT_TOKEN: ${{ secrets.MIXPANEL_PROJECT_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: |
           flutter build web --release \
             --build-name="${BUILD_NAME}" \
-            --build-number="${BUILD_NUMBER}"
+            --build-number="${BUILD_NUMBER}" \
+            --dart-define=MIXPANEL_PROJECT_TOKEN="$MIXPANEL_PROJECT_TOKEN" \
+            --dart-define=SENTRY_DSN="$SENTRY_DSN"
 
       - name: Upload Web Build Artifact
         uses: actions/upload-artifact@v4

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
+
+const _mixpanelProjectToken = String.fromEnvironment('MIXPANEL_PROJECT_TOKEN');
 
 abstract class AnalyticsService {
   Future<void> init();
@@ -13,12 +13,10 @@ class MixPanelService implements AnalyticsService {
   String key = "";
   @override
   Future<void> init() async {
-    await dotenv.load(fileName: "dotenv");
-
-    if (dotenv.env['MIXPANEL_PROJECT_TOKEN'] == null) {
+    if (_mixpanelProjectToken.isEmpty) {
       return;
     }
-    key = dotenv.env['MIXPANEL_PROJECT_TOKEN'] as String;
+    key = _mixpanelProjectToken;
 
     // Once you've called this method once, you can access `mixpanel` throughout the rest of your application.
     _mixpanel = await Mixpanel.init(key, trackAutomaticEvents: false);
