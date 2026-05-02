@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/AnalyticsService.dart';
 import 'package:mazilon/global_enums.dart';
+import 'package:mazilon/main_menu_dialog.dart';
 import 'package:mazilon/pages/about.dart';
 import 'package:mazilon/pages/FeelGood/feelGood.dart';
 import 'package:mazilon/pages/WellnessTools/wellnessTools.dart';
@@ -13,7 +14,6 @@ import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:flutter/services.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
-import 'package:mazilon/pages/UserSettings.dart';
 
 import 'package:mazilon/pages/home.dart';
 import 'package:mazilon/pages/journal.dart';
@@ -30,7 +30,6 @@ import 'package:mazilon/util/HomePage/bottomNavigationItem.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
-import 'package:share_plus/share_plus.dart';
 
 class Menu extends StatefulWidget {
   final PhonePageData phonePageData;
@@ -141,31 +140,6 @@ class _MenuState extends LPExtendedState<Menu> {
     version = packageInfo.version;
   }
 
-  Widget displayNotificationButton(String gender, bool isWeb) {
-    if (isWeb) {
-      return const SizedBox.shrink();
-    }
-
-    return TextButton(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Icon(Icons.notification_add),
-          SizedBox(width: 20),
-          Text(AppLocalizations.of(context)!.notifications(gender)),
-        ],
-      ),
-      onPressed: () {
-        setState(() {
-          currentScreen = NotificationPage();
-
-          current = PagesCode.NotificationPage;
-        });
-        Navigator.of(context).pop();
-      },
-    );
-  }
-
   Map<String, List<String>> _filterVideoByLocal(
       Map<String, List<String>> videos) {
     var localizedVideos = {
@@ -215,145 +189,25 @@ class _MenuState extends LPExtendedState<Menu> {
   void _showMainMenu(BuildContext anchorContext) {
     final userInformation =
         Provider.of<UserInformation>(context, listen: false);
-    final gender = userInformation.gender;
-    final age = userInformation.age;
-    final mediaQuery = MediaQuery.of(context);
-    final screenWidth = mediaQuery.size.width;
-    final isRtl = appLocale.textDirection == "rtl";
-    final maxMenuWidth = screenWidth - 24 < 260 ? screenWidth - 24 : 260.0;
-    final minMenuWidth = maxMenuWidth < 180 ? maxMenuWidth : 180.0;
-    final menuWidth = (screenWidth * (isRtl ? 0.38 : 0.45))
-        .clamp(minMenuWidth, maxMenuWidth)
-        .toDouble();
-    final anchorBox = anchorContext.findRenderObject();
-    final overlayBox = Overlay.of(context).context.findRenderObject();
-    var menuLeft = isRtl ? 12.0 : screenWidth - menuWidth - 12.0;
-    var menuTop = mediaQuery.padding.top + kToolbarHeight;
-
-    if (anchorBox is RenderBox && overlayBox is RenderBox) {
-      final anchorOffset =
-          anchorBox.localToGlobal(Offset.zero, ancestor: overlayBox);
-
-      menuLeft = isRtl
-          ? anchorOffset.dx
-          : anchorOffset.dx + anchorBox.size.width - menuWidth;
-      menuTop = anchorOffset.dy + anchorBox.size.height + 8;
-    }
-
-    menuLeft = menuLeft.clamp(12.0, screenWidth - menuWidth - 12.0);
-
-    showGeneralDialog(
+    showMainMenuDialog(
       context: context,
-      barrierDismissible: true,
-      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-      barrierColor: Colors.black45,
-      transitionDuration: const Duration(milliseconds: 200),
-      pageBuilder: (BuildContext buildContext, Animation animation,
-          Animation secondaryAnimation) {
-        return Stack(
-          children: [
-            Positioned(
-              left: menuLeft,
-              top: menuTop,
-              width: menuWidth,
-              child: Material(
-                key: const Key('mainMenuDialog'),
-                color: Colors.white,
-                elevation: 24.0,
-                shape: Border.all(
-                  color: primaryPurple,
-                  width: 2,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Row(
-                      textDirection:
-                          isRtl ? TextDirection.ltr : TextDirection.rtl,
-                      children: [
-                        IconButton(
-                          key: const Key('mainMenuCloseButton'),
-                          icon: Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        Expanded(
-                          child: Align(
-                            alignment: isRtl
-                                ? Alignment.centerRight
-                                : Alignment.centerLeft,
-                            child: TextButton(
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(Icons.people),
-                                  SizedBox(width: 20),
-                                  Text(appLocale.homePageAbout(gender)),
-                                ],
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  currentScreen = About(version: version);
-                                  current = PagesCode.About;
-                                });
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    displayNotificationButton(gender, kIsWeb),
-                    TextButton(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(Icons.settings),
-                          SizedBox(width: 20),
-                          Text(appLocale.settings(gender)),
-                        ],
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UserSettings(
-                                    phonePageData: widget.phonePageData,
-                                    username: userInformation.name,
-                                    age: age,
-                                    gender: gender,
-                                    changeLocale: widget.changeLocale,
-                                  )),
-                        );
-                      },
-                    ),
-                    TextButton(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(Icons.share),
-                          SizedBox(width: 20),
-                          Text(appLocale.shareButtonText),
-                        ],
-                      ),
-                      onPressed: () async {
-                        await SharePlus.instance.share(
-                          ShareParams(
-                            text:
-                                '${appLocale.shareAppMessage}\n https://sites.google.com/mishol.org/matzilon/%D7%91%D7%99%D7%AA',
-                            subject: 'Living Positively App',
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        );
+      anchorContext: anchorContext,
+      appLocale: appLocale,
+      userInformation: userInformation,
+      phonePageData: widget.phonePageData,
+      changeLocale: widget.changeLocale,
+      isWeb: kIsWeb,
+      onAboutPressed: () {
+        setState(() {
+          currentScreen = About(version: version);
+          current = PagesCode.About;
+        });
+      },
+      onNotificationsPressed: () {
+        setState(() {
+          currentScreen = NotificationPage();
+          current = PagesCode.NotificationPage;
+        });
       },
     );
   }
