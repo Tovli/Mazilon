@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -100,12 +101,14 @@ Widget buildEmergencyGridTestApp({
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   test('Israel emergency numbers include correct Eran phone + WhatsApp', () {
     final israel = countries['israel'];
     expect(israel, isNotNull);
 
     final eran =
-        israel!.emergencyNumbers.firstWhere((entry) => entry['name'] == 'ער\"ן');
+        israel!.emergencyNumbers.firstWhere((entry) => entry['name'] == 'ער"ן');
 
     expect(eran['number'], '1201');
     expect(eran['whatsapp'], true);
@@ -300,17 +303,35 @@ void main() {
     expect(fakePlatform.lastLaunchedUrl, 'sms:741741?body=HOME');
   });
 
-  test('dialPhone launches tel links without a canLaunch pre-check', () async {
+  test('dialPhone uses url_launcher for Android phone links', () async {
     final originalPlatform = UrlLauncherPlatform.instance;
     final fakePlatform = FakeUrlLauncherPlatform();
     UrlLauncherPlatform.instance = fakePlatform;
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
     addTearDown(() {
+      debugDefaultTargetPlatformOverride = null;
       UrlLauncherPlatform.instance = originalPlatform;
     });
 
     await dialPhone('1201');
 
-    expect(fakePlatform.lastLaunchedUrl, 'tel:1201');
+    expect(fakePlatform.lastLaunchedUrl, 'tel:1201%20');
+  });
+
+  test('dialPhone does not add Android display hints to regular numbers',
+      () async {
+    final originalPlatform = UrlLauncherPlatform.instance;
+    final fakePlatform = FakeUrlLauncherPlatform();
+    UrlLauncherPlatform.instance = fakePlatform;
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+    addTearDown(() {
+      debugDefaultTargetPlatformOverride = null;
+      UrlLauncherPlatform.instance = originalPlatform;
+    });
+
+    await dialPhone('+9721201');
+
+    expect(fakePlatform.lastLaunchedUrl, 'tel:+9721201');
   });
 
   testWidgets('EmergencyDialogBox labels chat links as Chat', (tester) async {
