@@ -131,11 +131,11 @@ void main() {
       arabic['difficultEventsListNo4'],
       '{gender,select,male{الظلم والإجحاف وانعدام الإنصاف} female{الظلم والإجحاف وانعدام الإنصاف} other{الظلم والإجحاف وانعدام الإنصاف}}',
     );
-    expect(arabic['newTraitOrThanks'], '{item} جديد');
+    expect(arabic['newTraitOrThanks'], 'عنصر جديد: {item}');
     expect(arabic['camera'], 'كاميرا');
     expect(
       arabic['userSettingsGender'],
-      '{gender,select,male{كيف تفضل أن نخاطبك؟} female{كيف تفضلين أن نخاطبك؟} other{كيف تفضل أن نخاطبك؟}}',
+      '{gender,select,male{كيف تفضل أن نخاطبك؟} female{كيف تفضلين أن نخاطبك؟} other{ما الصيغة المفضلة للمخاطبة؟}}',
     );
     expect(
       arabic['feelGoodSubTitle'],

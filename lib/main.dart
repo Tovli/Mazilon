@@ -25,7 +25,8 @@ import 'package:upgrader/upgrader.dart';
 //testing:
 import 'package:mazilon/pages/SignIn_Pages/firstPage.dart';
 import 'package:sentry/sentry.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+const _backgroundWorkerSentryDsn = String.fromEnvironment('SENTRY_DSN');
 
 List<String> checkboxCollectionNames = [
   'PersonalPlan-DifficultEvents',
@@ -40,10 +41,9 @@ List<String> checkboxCollectionNames = [
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {
-      await dotenv.load(fileName: "dotenv");
-      final dsn = dotenv.env['SENTRY_DSN'];
-      if (dsn != null && !Sentry.isEnabled) {
-        await Sentry.init((options) => options.dsn = dsn);
+      if (_backgroundWorkerSentryDsn.isNotEmpty && !Sentry.isEnabled) {
+        await Sentry.init(
+            (options) => options.dsn = _backgroundWorkerSentryDsn);
       }
       if (inputData == null ||
           !inputData.containsKey("text") ||
