@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/pages/UserSettings.dart';
+import 'package:mazilon/pages/notifications/notification_service.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/userInformation.dart';
@@ -170,7 +171,7 @@ Widget _notificationButton({
   required bool isWeb,
   required VoidCallback onNotificationsPressed,
 }) {
-  if (isWeb) {
+  if (!NotificationsService.supportsReminderSettings(isWebOverride: isWeb)) {
     return const SizedBox.shrink();
   }
 
