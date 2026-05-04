@@ -20,6 +20,7 @@ import 'package:workmanager/workmanager.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/Firebase/firebase_functions.dart';
+import 'package:mazilon/util/Firebase/fcm_service.dart';
 import 'package:mazilon/util/Form/formPagePhoneModel.dart';
 import 'package:upgrader/upgrader.dart';
 //testing:
@@ -96,6 +97,7 @@ Future<void> initializeApp() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   setupLocator();
+  await FcmService.initialize();
 }
 
 void main() async {
@@ -152,7 +154,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   late Mixpanel mixpanel;
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  final GlobalKey<NavigatorState> _navigatorKey =
+      GetIt.instance<GlobalKey<NavigatorState>>();
   bool enteredBefore = true;
   String localeName = '';
   bool _initializationStarted = false; // Add this flag
