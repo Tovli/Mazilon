@@ -103,6 +103,9 @@ Widget buildEmergencyGridTestApp({
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  final hebrewEran = String.fromCharCodes([0x05E2, 0x05E8, 0x0022, 0x05DF]);
+  final hebrewSahar = String.fromCharCodes([0x05E1, 0x05D4, 0x0022, 0x05E8]);
+
   test('Israel emergency numbers include correct Eran phone + WhatsApp', () {
     final israel = countries['israel'];
     expect(israel, isNotNull);
@@ -382,5 +385,79 @@ void main() {
     expect(find.text('Samaritans'), findsOneWidget);
     expect(find.text('Shout'), findsOneWidget);
     expect(find.text('Veterans Crisis Line'), findsNothing);
+  });
+
+  testWidgets('EmergencyPhonesGrid uses two columns on phone width',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    final userInfo = UserInformation(
+      gender: 'male',
+      location: 'US',
+      service: FakePersistentMemoryService(),
+    );
+
+    await tester.pumpWidget(
+      buildEmergencyGridTestApp(userInformation: userInfo),
+    );
+
+    await tester.pumpAndSettle();
+
+    final emergency = find.text('Emergency');
+    final veterans = find.text('Veterans Crisis Line');
+    expect(emergency, findsOneWidget);
+    expect(veterans, findsOneWidget);
+
+    final emergencyTop = tester.getTopLeft(emergency).dy;
+    final veteransTop = tester.getTopLeft(veterans).dy;
+    final emergencyLeft = tester.getTopLeft(emergency).dx;
+    final veteransLeft = tester.getTopLeft(veterans).dx;
+
+    expect(veteransTop, closeTo(emergencyTop, 1));
+    expect(veteransLeft, greaterThan(emergencyLeft));
+  });
+
+  testWidgets('Hebrew Israel emergency grid puts Sahar beside Eran',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    final userInfo = UserInformation(
+      gender: 'male',
+      location: 'IL',
+      service: FakePersistentMemoryService(),
+    );
+
+    await tester.pumpWidget(
+      buildEmergencyGridTestApp(
+        userInformation: userInfo,
+        locale: const Locale('he'),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    final eran = find.text(hebrewEran);
+    final sahar = find.text(hebrewSahar);
+    final number105 = find.text('105');
+    expect(eran, findsOneWidget);
+    expect(sahar, findsOneWidget);
+    expect(number105, findsOneWidget);
+
+    final eranTop = tester.getTopLeft(eran).dy;
+    final saharTop = tester.getTopLeft(sahar).dy;
+    final number105Top = tester.getTopLeft(number105).dy;
+
+    expect(saharTop, closeTo(eranTop, 1));
+    expect(number105Top, greaterThan(eranTop + 20));
   });
 }
