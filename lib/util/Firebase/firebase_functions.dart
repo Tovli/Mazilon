@@ -136,14 +136,15 @@ Future<void> loadUserInformation(
   userInfo.updateDisclaimerSigned(data['disclaimerConfirmed'] ?? false);
   userInfo.updateNotificationMinute(data['notificationMinute'] ?? 0);
   userInfo.updateNotificationHour(data['notificationHour'] ?? 12);
-  userInfo.updateLocaleName(data['localeName'] ?? "en");
+  final savedLocale = data['localeName'];
+  userInfo.updateLocaleName(
+      savedLocale is String && savedLocale.isNotEmpty ? savedLocale : locale);
   userInfo.updatePositiveTraits(
       (TypeUtils.castToStringList(data['positiveTraits'])));
   userInfo.updateThanks({
     "thanks": (TypeUtils.castToStringList(data['thankYous'])),
     "dates": (TypeUtils.castToStringList(data['dates']))
   });
-  userInfo.updateLocaleName(locale);
 }
 
 //upon adding CMS(rowy) texts, this will need to be updated:

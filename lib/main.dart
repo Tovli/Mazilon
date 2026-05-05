@@ -333,10 +333,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   void changeLocale(String locale) {
     LocaleService localeService = GetIt.instance<LocaleService>();
+    PersistentMemoryService service = GetIt.instance<PersistentMemoryService>();
 
     setState(() {
       localeService.setLocale(locale);
+      localeName = localeService.getLocale();
     });
+    service.setItem("localeName", PersistentMemoryType.String, locale);
+    Provider.of<UserInformation>(context, listen: false)
+        .updateLocaleName(locale);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final currentContext = _navigatorKey.currentContext;
       if (currentContext == null) return;
