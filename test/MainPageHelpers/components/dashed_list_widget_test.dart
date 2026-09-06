@@ -78,22 +78,78 @@ void main() {
         expect(openCount, 1);
       },
     );
+
+    testWidgets('should render only the first three items by default', (
+      tester,
+    ) async {
+      await pumpWithProviders(
+        tester,
+        _subject(
+          onOpenSection: () {},
+          items: const ['One', 'Two', 'Three', 'Four'],
+        ),
+        surfaceSize: const Size(400, 800),
+      );
+
+      expect(find.text('One'), findsOneWidget);
+      expect(find.text('Two'), findsOneWidget);
+      expect(find.text('Three'), findsOneWidget);
+      expect(find.text('Four'), findsNothing);
+    });
+
+    testWidgets(
+      'should render and wire all items when showAllItems is enabled',
+      (tester) async {
+        const items = ['One', 'Two', 'Three', 'Four', 'Five'];
+        int? editedIndex;
+        int? removedIndex;
+
+        await pumpWithProviders(
+          tester,
+          _subject(
+            onOpenSection: () {},
+            items: items,
+            showAllItems: true,
+            onEditItem: (index) => editedIndex = index,
+            onRemoveItem: (index) => removedIndex = index,
+          ),
+          surfaceSize: const Size(400, 1000),
+        );
+
+        for (final item in items) {
+          expect(find.text(item), findsOneWidget);
+        }
+
+        await tester.tap(find.byIcon(Icons.edit).at(3));
+        await tester.tap(find.byIcon(Icons.close).at(4));
+
+        expect(editedIndex, 3);
+        expect(removedIndex, 4);
+      },
+    );
   });
 }
 
 Widget _subject({
   required VoidCallback onOpenSection,
   VoidCallback? onAddNew,
+  List<String> items = const ['A kind conversation'],
+  bool showAllItems = false,
+  void Function(int index)? onEditItem,
+  void Function(int index)? onRemoveItem,
 }) => Scaffold(
   body: DashedListWidget(
     title: 'Gratitude Journal',
     subtitle: 'Notice what went well',
     iconAsset: 'assets/images/thanks_icon.svg',
-    items: const ['A kind conversation'],
+    items: items,
     suggestions: const [],
-    totalCount: 1,
+    totalCount: items.length,
+    showAllItems: showAllItems,
     onOpenSection: onOpenSection,
     onAddNew: onAddNew,
+    onEditItem: onEditItem,
+    onRemoveItem: onRemoveItem,
   ),
 );
 
