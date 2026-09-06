@@ -14,4 +14,10 @@
 .gitignore
 
 node_modules
+
+# Local dotenv configuration is never part of a deployment upload, even if
+# the included .gitignore stops excluding it.
+.env
+.env.*
+
 #!include:.gitignore

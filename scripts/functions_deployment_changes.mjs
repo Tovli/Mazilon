@@ -9,6 +9,8 @@ const directlyDeployedFiles = new Set([
   'functions/package.json',
   'functions/package-lock.json',
   'functions/tsconfig.json',
+  'functions/.gcloudignore',
+  'functions/.gitignore',
 ]);
 const notificationContentFiles = new Set([
   'lib/l10n/app_he.arb',

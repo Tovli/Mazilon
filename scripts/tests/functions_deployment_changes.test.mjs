@@ -86,6 +86,8 @@ test('deploys for runtime configuration, dependencies, and source changes', asyn
     'functions/package-lock.json',
     'firebase.json',
     '.firebaserc',
+    'functions/.gcloudignore',
+    'functions/.gitignore',
   ]) {
     await t.test(path, (t) => {
       const repo = repository(t);
