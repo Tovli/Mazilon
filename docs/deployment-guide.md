@@ -138,8 +138,10 @@ run evidence, not a green run from an earlier commit.
 
 After completing section 2, configure the GitHub environment
 `firebase-production` under repository Settings → Environments. Restrict its
-deployment branches to `main`. If the release owner requires an approval,
-configure its required reviewers there; the workflow honors environment rules.
+deployment branches to `main`. Configure required reviewers on it: every
+Functions deployment after the first reuses the one-time
+`NOTIFICATION_MUTATION_FENCE_CLIENT_ROLLOUT_APPROVED` attestation, so
+per-deployment human review is the control that covers later revisions.
 The environment is assigned only to the actual release job after unprotected
 change detection reports that Functions deployment or content provisioning is
 required.
@@ -163,7 +165,10 @@ printing credential contents. A Functions release separately requires the
 protected environment variable
 `NOTIFICATION_MUTATION_FENCE_CLIENT_ROLLOUT_APPROVED=true`; configure it only
 after the compatible-client or first-remote-release evidence in section 2 is
-approved.
+approved. It attests that clients omitting `expectedMutationVersion` are no
+longer in the field, which cannot become false again, so it is set once and
+not rebound to a revision. Later revisions are gated by the environment's
+required reviewers instead.
 
 The pinned Google authentication action writes an ephemeral credentials file
 for the job and exposes Application Default Credentials to both the Admin SDK
@@ -232,9 +237,9 @@ flag that keeps it disabled after deployment. The compatibility gate above is
 therefore a pre-deployment requirement, not a runtime kill switch.
 
 Content provisioning is deliberately part of this protected release job because
-the mobile/web artifacts consume that content. Configure a required reviewer on
-the `firebase-production` environment if production writes need an explicit
-human approval. An ARB-only change provisions content without needlessly
+the mobile/web artifacts consume that content. The required reviewers
+configured in section 3 therefore also approve production content writes.
+An ARB-only change provisions content without needlessly
 redeploying Functions. An operator can use the same commands from an
 authenticated release environment when manual recovery is needed.
 
