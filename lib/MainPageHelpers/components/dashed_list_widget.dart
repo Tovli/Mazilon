@@ -14,6 +14,8 @@ class DashedListWidget extends StatefulWidget {
   final List<String> items;
   final List<String> suggestions;
   final int totalCount;
+
+  /// Whether all [items] are rendered instead of the default first three.
   final bool showAllItems;
   final VoidCallback onOpenSection;
   final VoidCallback? onAddNew;
