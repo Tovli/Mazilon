@@ -45,6 +45,7 @@ final class PersonalPlanExportSnapshot {
       customCategoriesKey: PersistentMemoryType.String,
       customCategoryTitlesKey: PersistentMemoryType.StringList,
       customCategoryDescriptionsKey: PersistentMemoryType.StringList,
+      customCategoriesLegacyCommitKey: PersistentMemoryType.String,
     });
     final categories = parseCustomCategoriesSnapshot(values);
     final snapshot = PersonalPlanExportSnapshot._({

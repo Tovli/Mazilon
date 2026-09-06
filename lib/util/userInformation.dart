@@ -59,6 +59,9 @@ class UserInformation with ChangeNotifier {
   /// In-flight custom categories persistence future.
   Future<void> get pendingCustomCategoriesSave => _pendingCustomCategoriesSave;
 
+  /// Revision of the latest custom-category snapshot held by the model.
+  int get customCategoriesSaveRevision => _customCategoriesSaveRevision;
+
   UserInformation({
     this.location = '',
     this.thanks = const <String, List<String>>{},
@@ -117,7 +120,35 @@ class UserInformation with ChangeNotifier {
     return customCategories;
   }
 
-  /// Persists [categories] (or current [customCategories]) into [memoryService] (or the default [service]).
+  /// Applies a storage snapshot without starting another persistence write.
+  /// This is used during application startup and by import/recovery flows.
+  void hydrateCustomCategories(List<MapEntry<String, String>> categories) {
+    customCategories = List<MapEntry<String, String>>.unmodifiable(
+      sanitizeAndFilterCustomCategoryEntries(categories),
+    );
+    notifyListeners();
+  }
+
+  /// Hydrates [categories] only when no newer custom-category mutation has
+  /// happened since [expectedRevision] was captured.
+  ///
+  /// Returns `true` when the snapshot was applied and `false` when it was
+  /// stale. A stale asynchronous read never overwrites a newer save or reset.
+  bool hydrateCustomCategoriesIfRevision(
+    List<MapEntry<String, String>> categories,
+    int expectedRevision,
+  ) {
+    if (expectedRevision != _customCategoriesSaveRevision) {
+      return false;
+    }
+    hydrateCustomCategories(categories);
+    return true;
+  }
+
+  /// Persists [categories] (or current [customCategories]) into [memoryService]
+  /// (or the default [service]). Saves are queued in order and the latest
+  /// revision remains retryable if an earlier mirror write fails. The model is
+  /// updated only after the complete queued snapshot succeeds.
   Future<void> saveCustomCategories({
     List<MapEntry<String, String>>? categories,
     PersistentMemoryService? memoryService,
@@ -178,6 +209,24 @@ class UserInformation with ChangeNotifier {
     notifyListeners();
   }
 
+  /// Retries the latest model-owned snapshot without replaying a stale revision.
+  Future<void> retryCustomCategoriesSave(
+    int revision, {
+    PersistentMemoryService? memoryService,
+  }) {
+    final source = memoryService ?? service;
+    if (!identical(source, service)) {
+      throw ArgumentError(
+        'Alternate-source retries belong to their save owner.',
+      );
+    }
+    final snapshot = _pendingCustomCategoriesSnapshot;
+    if (revision != _customCategoriesSaveRevision || snapshot == null) {
+      return _pendingCustomCategoriesSave;
+    }
+    return saveCustomCategories(categories: snapshot, memoryService: source);
+  }
+
   bool _matchesCustomCategories(List<MapEntry<String, String>> categories) {
     if (customCategories.length != categories.length) {
       return false;
@@ -217,6 +266,7 @@ class UserInformation with ChangeNotifier {
     dreamsAndGoals = [];
     dreamsAndGoalsSelectionSources = [];
     customCategories = [];
+    _customCategoriesSaveRevision++;
     // An in-flight snapshot cannot be cancelled safely. Queue the empty
     // snapshots behind them so reset is always the final local state.
     _dreamsAndGoalsSaveRevision++;

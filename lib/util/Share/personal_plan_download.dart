@@ -114,6 +114,8 @@ void _removeCompletedDownloads(PersistentMemoryService source) {
 /// Preparation and download errors are caught, logged via [IncidentLoggerService],
 /// and reported via the [AppLocalizations.downloadFailed] error toast.
 /// User cancellation or unsupported platform outcomes return `null` without an error toast.
+/// When [memoryService] is provided, it overrides the storage source supplied
+/// to [FileService]; otherwise [userInformation]'s service is used.
 ///
 /// Concurrent requests with an identical immutable export context coalesce into a single
 /// in-flight download operation to prevent duplicate file generations and repeated toasts,

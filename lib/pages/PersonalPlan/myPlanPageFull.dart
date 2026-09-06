@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/pages/PersonalPlan/myPlan.dart';
+import 'package:mazilon/pages/PersonalPlan/personal_plan_info_modal.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
 import 'package:mazilon/util/LP_extended_state.dart';
 import 'package:mazilon/util/styles.dart';
@@ -217,6 +218,18 @@ class _MyPlanPageFullState extends LPExtendedState<MyPlanPageFull> {
         ),
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
+        actions: [
+          DecoratedBox(
+            decoration: ShapeDecoration(
+              shape: CircleBorder(
+                side: BorderSide(color: colorScheme.onPrimary, width: 1.5),
+              ),
+            ),
+            child: const PersonalPlanInfoButton(
+              actionKey: Key('fullPlanInfoButton'),
+            ),
+          ),
+        ],
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(25.0),

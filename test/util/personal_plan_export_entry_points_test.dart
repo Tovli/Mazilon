@@ -894,6 +894,36 @@ void main() {
     );
 
     test(
+      'should prefer an explicit memory service for FileService download',
+      () async {
+        final userMemory = _TestPersistentMemoryService();
+        final exportMemory = _TestPersistentMemoryService();
+        final customUser = UserInformation(
+          service: userMemory,
+          name: 'Custom User',
+          gender: 'female',
+        );
+
+        final localizations = await AppLocalizations.delegate.load(
+          const Locale('en'),
+        );
+
+        final result = await downloadPersonalPlanFile(
+          appLocale: localizations,
+          gender: customUser.gender,
+          username: customUser.name,
+          appInformation: appInformation,
+          userInformation: customUser,
+          fileService: fileService,
+          memoryService: exportMemory,
+        );
+
+        expect(result, isNotNull);
+        expect(fileService.lastMemoryService, same(exportMemory));
+      },
+    );
+
+    test(
       'should coalesce downloads with equivalent sharePDFtexts map in different key order',
       () async {
         final completer = Completer<void>();
@@ -1481,6 +1511,36 @@ void main() {
 
         expect(result?.status, ShareResultStatus.success);
         expect(fileService.lastMemoryService, same(customMemory));
+      },
+    );
+
+    test(
+      'should prefer an explicit memory service for FileService share',
+      () async {
+        final userMemory = _TestPersistentMemoryService();
+        final exportMemory = _TestPersistentMemoryService();
+        final customUser = UserInformation(
+          service: userMemory,
+          name: 'Custom User',
+          gender: 'female',
+        );
+
+        final localizations = await AppLocalizations.delegate.load(
+          const Locale('en'),
+        );
+
+        final result = await shareFile(
+          localizations,
+          customUser.gender,
+          customUser.name,
+          appInformation,
+          userInformation: customUser,
+          fileService: fileService,
+          memoryService: exportMemory,
+        );
+
+        expect(result?.status, ShareResultStatus.success);
+        expect(fileService.lastMemoryService, same(exportMemory));
       },
     );
 

@@ -56,6 +56,43 @@ void main() {
     );
 
     test(
+      'should reject torn legacy category mirrors in a captured export',
+      () async {
+        final legacySource = ContractPersistentMemoryService(
+          initialValues: {
+            customCategoriesKey: 'invalid JSON',
+            customCategoryTitlesKey: ['New title'],
+            customCategoryDescriptionsKey: ['Old description'],
+            customCategoriesLegacyCommitKey:
+                '[{"title":"Old title","description":"Old description"}]',
+          },
+        );
+        final snapshot = await PersonalPlanExportSnapshot.capture(legacySource);
+        expect(snapshot.data['customCategoryTitles'], isEmpty);
+        expect(snapshot.data['customCategoryDescriptions'], isEmpty);
+        expect(legacySource.attemptedWrites, isEmpty);
+      },
+    );
+
+    test(
+      'should accept committed legacy categories in a captured export',
+      () async {
+        final legacySource = ContractPersistentMemoryService(
+          initialValues: {
+            customCategoryTitlesKey: ['Title'],
+            customCategoryDescriptionsKey: ['Description'],
+            customCategoriesLegacyCommitKey:
+                '[{"title":"Title","description":"Description"}]',
+          },
+        );
+        final snapshot = await PersonalPlanExportSnapshot.capture(legacySource);
+        expect(snapshot.data['customCategoryTitles'], ['Title']);
+        expect(snapshot.data['customCategoryDescriptions'], ['Description']);
+        expect(legacySource.attemptedWrites, isEmpty);
+      },
+    );
+
+    test(
       'should render only the captured values after the source changes',
       () async {
         final snapshot = await PersonalPlanExportSnapshot.capture(source);
@@ -221,7 +258,12 @@ void main() {
         expect(defaultExport.data['customCategoryTitles'], ['Custom']);
         expect(alternateExport.data['customCategoryTitles'], ['Other edited']);
         expect(source.attemptedWrites, isEmpty);
-        expect(other.attemptedWrites, hasLength(3));
+        expect(other.attemptedWrites.map((write) => write.key), [
+          customCategoriesKey,
+          customCategoryTitlesKey,
+          customCategoryDescriptionsKey,
+          customCategoriesLegacyCommitKey,
+        ]);
         model.dispose();
       },
     );

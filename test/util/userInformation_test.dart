@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mazilon/global_enums.dart';
@@ -409,6 +410,20 @@ void main() {
       expect(notified, 1);
     });
 
+    test('reset clears custom categories with one notification', () async {
+      final u = UserInformation(
+        service: fakeService,
+        customCategories: const [MapEntry('Old title', 'Old description')],
+      );
+      var notified = 0;
+      u.addListener(() => notified++);
+
+      await u.reset('en');
+
+      expect(u.customCategories, isEmpty);
+      expect(notified, 1);
+    });
+
     test(
       'queues an empty Dreams snapshot after a held earlier snapshot',
       () async {
@@ -594,6 +609,55 @@ void main() {
         );
       },
     );
+  });
+
+  test('loadCustomCategories does not hydrate over a newer save', () async {
+    final oldSnapshot = jsonEncode([
+      {'title': 'Old title', 'description': 'Old description'},
+    ]);
+    fakeService.store[customCategoriesKey] = oldSnapshot;
+    final readStarted = Completer<void>();
+    final releaseRead = Completer<void>();
+    fakeService.onRead = (key, _) async {
+      if (key == customCategoriesKey && !readStarted.isCompleted) {
+        readStarted.complete();
+        await releaseRead.future;
+      }
+    };
+    final u = UserInformation(
+      service: fakeService,
+      customCategories: const [
+        MapEntry('Current title', 'Current description'),
+      ],
+    );
+
+    final loading = u.loadCustomCategories();
+    await readStarted.future;
+    await u.saveCustomCategories(
+      categories: const [MapEntry('New title', 'New description')],
+    );
+    releaseRead.complete();
+    await loading;
+
+    expect(u.customCategories, hasLength(1));
+    expect(u.customCategories.single.key, 'New title');
+    expect(u.customCategories.single.value, 'New description');
+  });
+
+  test('revision-aware hydration rejects a stale Firebase snapshot', () async {
+    final u = buildUser();
+    await u.saveCustomCategories(
+      categories: const [MapEntry('New title', 'New description')],
+    );
+
+    final applied = u.hydrateCustomCategoriesIfRevision(const [
+      MapEntry('Old title', 'Old description'),
+    ], u.customCategoriesSaveRevision - 1);
+
+    expect(applied, isFalse);
+    expect(u.customCategories, hasLength(1));
+    expect(u.customCategories.single.key, 'New title');
+    expect(u.customCategories.single.value, 'New description');
   });
 
   group('update methods that persist', () {

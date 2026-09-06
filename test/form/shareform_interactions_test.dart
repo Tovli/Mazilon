@@ -19,6 +19,7 @@ import 'package:mazilon/form/shareform.dart';
 import 'package:mazilon/form/wizard_step.dart';
 import 'package:mazilon/global_enums.dart';
 import 'package:mazilon/util/logger_service.dart';
+import 'package:mazilon/l10n/app_localizations.dart';
 import 'package:mazilon/util/Share/LP_share_alert_dialog.dart';
 import 'package:mazilon/util/custom_categories_storage.dart';
 import 'package:mazilon/util/persistent_memory_service.dart';
@@ -38,6 +39,7 @@ const _dreamsAndGoalsSelectionSourcesKey =
 const _customCategoriesKey = 'customCategories';
 const _customCategoryTitlesKey = 'customCategoryTitles';
 const _customCategoryDescriptionsKey = 'customCategoryDescriptions';
+const _customCategoriesLegacyCommitKey = 'customCategoriesLegacyCommit';
 const _dreamsAndGoalsPersistenceKeys = <String>[
   _dreamsAndGoalsSelectionKey,
   _dreamsAndGoalsSelectionSourcesKey,
@@ -175,6 +177,17 @@ class _DreamsMemoryHarness {
       }
       return null;
     }
+    if (key == _customCategoriesLegacyCommitKey) {
+      if (type != PersistentMemoryType.String) {
+        throw StateError('Unexpected PersistentMemoryService read type: $type');
+      }
+      for (final _MemoryWrite write in completedWrites.reversed) {
+        if (write.key == key && write.type == PersistentMemoryType.String) {
+          return write.value as String?;
+        }
+      }
+      return null;
+    }
     if (type != PersistentMemoryType.StringList) {
       throw StateError('Unexpected PersistentMemoryService read type: $type');
     }
@@ -231,6 +244,7 @@ class _ExportReadingFileService extends NoopFileService {
   _ExportReadingFileService(this.memory);
 
   final PersistentMemoryService memory;
+  PersistentMemoryService? memoryServiceAtDownload;
   List<String> dreamsAtDownload = const [];
   List<String> dreamsSourcesAtDownload = const [];
   List<String> dreamsCustomItemsAtDownload = const [];
@@ -269,6 +283,7 @@ class _ExportReadingFileService extends NoopFileService {
     downloadCalls++;
     receivedMemoryService = memoryService;
     final storedDreams = snapshot!.data['DreamsAndGoals']!;
+    memoryServiceAtDownload = memoryService;
     final storedSources = await memory.getItem(
       _dreamsAndGoalsSelectionSourcesKey,
       PersistentMemoryType.StringList,
@@ -283,6 +298,25 @@ class _ExportReadingFileService extends NoopFileService {
       storedCustomItems as Iterable,
     );
     return 'downloaded-plan.pdf';
+  }
+}
+
+class _UnavailableShareFileService extends NoopFileService {
+  @override
+  Future<ShareResult?> share(
+    String message,
+    List<dynamic> titles,
+    List<dynamic> subTitles,
+    Map<String, String> texts,
+    ShareFileType saveFormat, {
+    required String mainTitle,
+    required String textDirection,
+    PersistentMemoryService? memoryService,
+    PersonalPlanExportSnapshot? snapshot,
+    Set<String>? approvedPdfHosts,
+  }) async {
+    shareCalls++;
+    return ShareResult.unavailable;
   }
 }
 
@@ -417,6 +451,36 @@ void main() {
     expect(find.byType(LPShareAlertDialog), findsOneWidget);
   });
 
+  testWidgets(
+    'ShareForm forwards its explicit memory service to the share dialog',
+    (tester) async {
+      final explicitMemory = _DreamsMemoryHarness();
+
+      await pumpWithProviders(
+        tester,
+        wizardStepHarness(
+          ShareForm(
+            key: GlobalKey<WizardStepState>(),
+            prev: () {},
+            submit: (_) async {},
+            memoryService: explicitMemory.service,
+          ),
+        ),
+        userInformation: user,
+        surfaceSize: const Size(1024, 1800),
+      );
+
+      await _pressIconButtonInAsyncZone(tester, Icons.share);
+      await _flushAsyncAction(tester);
+      await tester.pumpAndSettle();
+
+      final dialog = tester.widget<LPShareAlertDialog>(
+        find.byType(LPShareAlertDialog),
+      );
+      expect(dialog.memoryService, same(explicitMemory.service));
+    },
+  );
+
   testWidgets('tapping the download IconButton invokes FileService.download '
       '(null result → toast)', (tester) async {
     await pumpWithProviders(
@@ -524,6 +588,46 @@ void main() {
   });
 
   group('ShareForm', () {
+    testWidgets(
+      'should show localized feedback when Personal Plan file sharing is unavailable',
+      (tester) async {
+        final unavailableFiles = _UnavailableShareFileService();
+        final locator = GetIt.instance;
+        locator.unregister<FileService>();
+        locator.registerSingleton<FileService>(unavailableFiles);
+
+        await pumpWithProviders(
+          tester,
+          wizardStepHarness(
+            ShareForm(
+              key: GlobalKey<WizardStepState>(),
+              prev: () {},
+              submit: (_) async {},
+            ),
+          ),
+          userInformation: user,
+          surfaceSize: const Size(1024, 1800),
+        );
+        final localizations = AppLocalizations.of(
+          tester.element(find.byType(ShareForm)),
+        )!;
+
+        await _pressIconButtonInAsyncZone(tester, Icons.share);
+        await _flushAsyncAction(tester);
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text(localizations.shareFile));
+        await _flushAsyncAction(tester);
+        await tester.pumpAndSettle();
+
+        expect(unavailableFiles.shareCalls, 1);
+        expect(
+          find.text(localizations.personalPlanShareFailed),
+          findsOneWidget,
+        );
+      },
+    );
+
     testWidgets(
       'should persist has-filled through the injected UserInformation service',
       (tester) async {
@@ -1943,6 +2047,53 @@ void main() {
         reportedErrors.single.context.toString(),
         contains('while persisting custom categories'),
       );
+    },
+  );
+
+  testWidgets(
+    'ShareForm forwards its explicit memory service to the download export',
+    (tester) async {
+      final userMemory = _DreamsMemoryHarness();
+      final exportMemory = _DreamsMemoryHarness();
+      final exportFiles = _ExportReadingFileService(exportMemory.service);
+      final locator = GetIt.instance;
+      locator.unregister<FileService>();
+      locator.registerSingleton<FileService>(exportFiles);
+      user = UserInformation(service: userMemory.service)
+        ..gender = 'other'
+        ..localeName = 'en';
+
+      await pumpWithProviders(
+        tester,
+        wizardStepHarness(
+          ShareForm(
+            key: GlobalKey<WizardStepState>(),
+            prev: () {},
+            submit: (_) async {},
+            memoryService: exportMemory.service,
+          ),
+        ),
+        userInformation: user,
+        surfaceSize: const Size(1024, 1800),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.ensureVisible(find.byIcon(Icons.download));
+      await tester.tap(find.byIcon(Icons.download));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SnackBar), findsNothing);
+      expect(userMemory.writeKeys, contains(_dreamsAndGoalsSelectionKey));
+      expect(
+        (locator<IncidentLoggerService>() as NoopIncidentLoggerService)
+            .captured,
+        isEmpty,
+      );
+      expect(exportMemory.readKeys, contains('PhonePageSavedPhoneNames'));
+      expect(exportFiles.downloadCalls, 1);
+      expect(exportFiles.memoryServiceAtDownload, same(exportMemory.service));
+      await tester.pump(const Duration(seconds: 2));
+      expect(tester.takeException(), isNull);
     },
   );
 

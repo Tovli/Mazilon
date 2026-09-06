@@ -142,7 +142,6 @@ void main() {
               )
               .map((write) => write.value),
           [
-            <String>['Old'],
             <String>['Latest'],
             <String>['Latest'],
           ],

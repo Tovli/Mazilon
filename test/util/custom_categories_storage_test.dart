@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -41,13 +42,17 @@ final class _WriteRecord {
   String toString() => '_WriteRecord($key, $type, $value)';
 }
 
-final class _FakeMemoryService implements PersistentMemoryService {
+class _FakeMemoryService implements PersistentMemoryService {
   final Map<String, dynamic> store;
   final List<_WriteRecord> writes = [];
   final Set<String>? allowedKeys;
+  String? failKey;
 
-  _FakeMemoryService({Map<String, dynamic>? initialStore, this.allowedKeys})
-    : store = initialStore != null ? Map.from(initialStore) : {};
+  _FakeMemoryService({
+    Map<String, dynamic>? initialStore,
+    this.allowedKeys,
+    this.failKey,
+  }) : store = initialStore != null ? Map.from(initialStore) : {};
 
   @override
   Future<Map<String, Object?>> readSnapshot(
@@ -68,6 +73,9 @@ final class _FakeMemoryService implements PersistentMemoryService {
     if (allowedKeys != null && !allowedKeys!.contains(key)) {
       throw StateError('Unexpected memory write for key: $key');
     }
+    if (key == failKey) {
+      throw StateError('Intentional memory write failure for key: $key');
+    }
     writes.add(_WriteRecord(key, type, value));
     store[key] = value;
   }
@@ -75,6 +83,33 @@ final class _FakeMemoryService implements PersistentMemoryService {
   @override
   Future<void> reset() async {
     store.clear();
+  }
+}
+
+final class _QueuedFakeMemoryService extends _FakeMemoryService {
+  _QueuedFakeMemoryService({super.allowedKeys});
+
+  final Completer<void> firstCanonicalWriteStarted = Completer<void>();
+  final Completer<void> releaseFirstCanonicalWrite = Completer<void>();
+  bool holdFirstCanonicalWrite = true;
+  bool failFirstCanonicalWrite = true;
+
+  @override
+  Future<void> setItem(
+    String key,
+    PersistentMemoryType type,
+    dynamic value,
+  ) async {
+    if (key == customCategoriesKey && holdFirstCanonicalWrite) {
+      holdFirstCanonicalWrite = false;
+      firstCanonicalWriteStarted.complete();
+      await releaseFirstCanonicalWrite.future;
+      if (failFirstCanonicalWrite) {
+        failFirstCanonicalWrite = false;
+        throw StateError('first canonical write failed');
+      }
+    }
+    await super.setItem(key, type, value);
   }
 }
 
@@ -156,6 +191,83 @@ void main() {
     );
 
     test(
+      'falls back to legacy categories for non-list canonical JSON',
+      () async {
+        for (final invalidSnapshot in const ['null', '{}']) {
+          final fake = _FakeMemoryService(
+            initialStore: {
+              customCategoriesKey: invalidSnapshot,
+              customCategoryTitlesKey: ['Legacy title'],
+              customCategoryDescriptionsKey: ['Legacy description'],
+            },
+          );
+
+          final result = await loadCustomCategoriesFromStorage(
+            memoryService: fake,
+          );
+
+          expect(
+            _toPairs(result),
+            [
+              ['Legacy title', 'Legacy description'],
+            ],
+            reason: 'invalid canonical snapshot: $invalidSnapshot',
+          );
+        }
+      },
+    );
+
+    test(
+      'rejects legacy mirrors when their commit marker does not match',
+      () async {
+        final fake = _FakeMemoryService(
+          initialStore: {
+            customCategoriesKey: '',
+            customCategoryTitlesKey: ['New title'],
+            customCategoryDescriptionsKey: ['Old description'],
+            customCategoriesLegacyCommitKey: jsonEncode([
+              {'title': 'Old title', 'description': 'Old description'},
+            ]),
+          },
+        );
+
+        final result = await loadCustomCategoriesFromStorage(
+          memoryService: fake,
+        );
+
+        expect(result, isEmpty);
+      },
+    );
+
+    test(
+      'does not advance the legacy commit marker after a mirror failure',
+      () async {
+        final oldSnapshot = jsonEncode([
+          {'title': 'Old title', 'description': 'Old description'},
+        ]);
+        final fake = _FakeMemoryService(
+          initialStore: {customCategoriesLegacyCommitKey: oldSnapshot},
+          allowedKeys: {
+            customCategoriesKey,
+            customCategoryTitlesKey,
+            customCategoryDescriptionsKey,
+            customCategoriesLegacyCommitKey,
+          },
+          failKey: customCategoryDescriptionsKey,
+        );
+
+        await expectLater(
+          saveCustomCategoriesToStorage([
+            const MapEntry('New title', 'New description'),
+          ], memoryService: fake),
+          throwsA(isA<StateError>()),
+        );
+
+        expect(fake.store[customCategoriesLegacyCommitKey], oldSnapshot);
+      },
+    );
+
+    test(
       'saveCustomCategoriesToStorage saves atomic JSON snapshot and legacy lists with strict assertions',
       () async {
         final fake = _FakeMemoryService(
@@ -163,6 +275,7 @@ void main() {
             customCategoriesKey,
             customCategoryTitlesKey,
             customCategoryDescriptionsKey,
+            customCategoriesLegacyCommitKey,
           },
         );
 
@@ -193,6 +306,14 @@ void main() {
               PersistentMemoryType.StringList,
               ['Desc 1', 'Desc 2'],
             ),
+            _WriteRecord(
+              customCategoriesLegacyCommitKey,
+              PersistentMemoryType.String,
+              jsonEncode([
+                {'title': 'Title 1', 'description': 'Desc 1'},
+                {'title': 'Title 2', 'description': 'Desc 2'},
+              ]),
+            ),
           ]),
         );
 
@@ -217,6 +338,7 @@ void main() {
             customCategoriesKey,
             customCategoryTitlesKey,
             customCategoryDescriptionsKey,
+            customCategoriesLegacyCommitKey,
           },
         );
 
@@ -259,6 +381,13 @@ void main() {
               PersistentMemoryType.StringList,
               ['New Desc'],
             ),
+            _WriteRecord(
+              customCategoriesLegacyCommitKey,
+              PersistentMemoryType.String,
+              jsonEncode([
+                {'title': 'New Title', 'description': 'New Desc'},
+              ]),
+            ),
           ]),
         );
       },
@@ -294,6 +423,78 @@ void main() {
           ),
           isEmpty,
         );
+      },
+    );
+
+    test(
+      'UserInformation queues category saves and latest snapshot wins after a failure',
+      () async {
+        final memory = _QueuedFakeMemoryService(
+          allowedKeys: {
+            customCategoriesKey,
+            customCategoryTitlesKey,
+            customCategoryDescriptionsKey,
+            customCategoriesLegacyCommitKey,
+          },
+        );
+        final user = UserInformation(service: memory);
+
+        final first = user.saveCustomCategories(
+          categories: [const MapEntry('First', 'Old snapshot')],
+        );
+        await memory.firstCanonicalWriteStarted.future;
+        final second = user.saveCustomCategories(
+          categories: [const MapEntry('Second', 'Latest snapshot')],
+        );
+        memory.releaseFirstCanonicalWrite.complete();
+
+        await expectLater(first, throwsA(isA<StateError>()));
+        await expectLater(second, completes);
+        expect(jsonDecode(memory.store[customCategoriesKey] as String), [
+          {'title': 'Second', 'description': 'Latest snapshot'},
+        ]);
+        expect(user.customCategories.single.key, 'Second');
+        expect(user.customCategoriesSaveRevision, 2);
+      },
+    );
+
+    test(
+      'keeps the committed model until a failed category save is retried',
+      () async {
+        final memory = _FakeMemoryService(
+          allowedKeys: {
+            customCategoriesKey,
+            customCategoryTitlesKey,
+            customCategoryDescriptionsKey,
+            customCategoriesLegacyCommitKey,
+          },
+          failKey: customCategoryTitlesKey,
+        );
+        final user = UserInformation(
+          service: memory,
+          customCategories: const [
+            MapEntry('Committed title', 'Committed description'),
+          ],
+        );
+
+        await expectLater(
+          user.saveCustomCategories(
+            categories: const [
+              MapEntry('Pending title', 'Pending description'),
+            ],
+          ),
+          throwsA(isA<StateError>()),
+        );
+        expect(_toPairs(user.customCategories), [
+          ['Committed title', 'Committed description'],
+        ]);
+
+        memory.failKey = null;
+        await user.retryCustomCategoriesSave(user.customCategoriesSaveRevision);
+
+        expect(_toPairs(user.customCategories), [
+          ['Pending title', 'Pending description'],
+        ]);
       },
     );
   });

@@ -16,6 +16,7 @@ import 'package:share_plus/share_plus.dart';
 class LPShareAlertDialog extends StatefulWidget {
   const LPShareAlertDialog({super.key, this.memoryService});
 
+  /// Overrides the persistence source used for a Personal Plan file export.
   final PersistentMemoryService? memoryService;
 
   @override

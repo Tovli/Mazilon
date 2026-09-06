@@ -47,6 +47,7 @@ const _snapshotKeyTypes = <String, PersistentMemoryType>{
   'customCategories': PersistentMemoryType.String,
   'customCategoryTitles': PersistentMemoryType.StringList,
   'customCategoryDescriptions': PersistentMemoryType.StringList,
+  'customCategoriesLegacyCommit': PersistentMemoryType.String,
 };
 
 const _snapshotValues = <String, Object?>{

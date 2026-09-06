@@ -15,6 +15,7 @@ import 'package:mazilon/util/Firebase/fcm_service.dart';
 import 'dart:math';
 import 'package:mazilon/util/appInformation.dart';
 import 'package:mazilon/util/dreams_and_goals_selection.dart';
+import 'package:mazilon/util/custom_categories_storage.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -122,6 +123,7 @@ Future<void> loadUserInformation(
   Future<void> Function()? onAuthenticatedSessionRestored,
 }) async {
   PersistentMemoryService service = GetIt.instance<PersistentMemoryService>();
+  final customCategoriesLoadRevision = userInfo.customCategoriesSaveRevision;
   final futures = <String, Future>{
     'name': service.getItem("name", PersistentMemoryType.String),
     'gender': service.getItem("gender", PersistentMemoryType.String),
@@ -165,6 +167,7 @@ Future<void> loadUserInformation(
       dreamsAndGoalsCustomSelectionsStorageKey,
       PersistentMemoryType.StringList,
     ),
+    'customCategories': loadCustomCategoriesFromStorage(memoryService: service),
     'location': service.getItem("location", PersistentMemoryType.String),
     'disclaimerConfirmed': service.getItem(
       "disclaimerConfirmed",
@@ -275,11 +278,19 @@ Future<void> loadUserInformation(
     final synchronizeFcmToken =
         onAuthenticatedSessionRestored ?? FcmService.onUserSignedIn;
     unawaited(
-      Future<void>.sync(synchronizeFcmToken).catchError(
-        (Object error, StackTrace stackTrace) {
-          _reportAuthRestorationFailure(error, stackTrace);
-        },
-      ),
+      Future<void>.sync(synchronizeFcmToken).catchError((
+        Object error,
+        StackTrace stackTrace,
+      ) {
+        _reportAuthRestorationFailure(error, stackTrace);
+      }),
+    );
+  }
+  final loadedCustomCategories = data['customCategories'];
+  if (loadedCustomCategories is List<MapEntry<String, String>>) {
+    userInfo.hydrateCustomCategoriesIfRevision(
+      loadedCustomCategories,
+      customCategoriesLoadRevision,
     );
   }
 

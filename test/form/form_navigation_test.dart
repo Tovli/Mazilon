@@ -9,6 +9,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mazilon/form/custom_category_step.dart';
 import 'package:mazilon/form/form.dart';
 import 'package:mazilon/form/formpagetemplate.dart';
 import 'package:mazilon/form/phonePageform.dart';
@@ -213,7 +214,7 @@ Future<FormProgressIndicatorState> _moveToShare(WidgetTester tester) async {
   final state = tester.state<FormProgressIndicatorState>(
     find.byType(FormProgressIndicator),
   );
-  while (state.currentStep < 7) {
+  while (find.byType(ShareForm).evaluate().isEmpty) {
     state.next();
     await tester.pumpAndSettle();
   }
@@ -292,7 +293,7 @@ void main() {
   );
 
   testWidgets(
-    'wizard keeps the seven default categories in the required order',
+    'wizard keeps six default categories and inserts the add step in order',
     (tester) async {
       await _pumpForm(tester);
       final state = tester.state<FormProgressIndicatorState>(
@@ -317,6 +318,37 @@ void main() {
         await tester.pumpAndSettle();
       }
 
+      expect(find.byType(AddCustomCategoryStep), findsOneWidget);
+      await tester.enterText(
+        find.byKey(const Key('custom-category-title-field')),
+        'Wizard custom category',
+      );
+      await tester.enterText(
+        find.byKey(const Key('custom-category-description-field')),
+        'Wizard custom description',
+      );
+      await tester.tap(
+        find.byKey(const Key('wizard-primary-action')),
+        warnIfMissed: false,
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(CustomCategoryStep), findsOneWidget);
+      final savedCategory = tester
+          .widget<CustomCategoryStep>(find.byType(CustomCategoryStep))
+          .category;
+      expect(savedCategory.key, 'Wizard custom category');
+      expect(savedCategory.value, 'Wizard custom description');
+
+      // The saved category is followed by the add step. Skipping that step
+      // must still lead to the phone step.
+      state.next();
+      await tester.pumpAndSettle();
+      expect(find.byType(AddCustomCategoryStep), findsOneWidget);
+      await tester.tap(
+        find.byKey(const Key('wizard-secondary-action')),
+        warnIfMissed: false,
+      );
+      await tester.pumpAndSettle();
       expect(find.byType(PhonePageForm), findsOneWidget);
       final contactsContinue = find.byKey(const Key('wizard-primary-action'));
       await tester.ensureVisible(contactsContinue);
@@ -605,12 +637,12 @@ void main() {
 
       _pressHeaderBack(tester);
       await _flushAsyncAction(tester);
-      expect(state.currentStep, 7);
+      expect(state.currentStep, 8);
 
       heldMemory.releaseFirstDreamsSelectionWrite();
       await _flushAsyncAction(tester);
       await tester.pumpAndSettle();
-      expect(state.currentStep, 6);
+      expect(state.currentStep, 7);
     });
 
     testWidgets(
