@@ -131,17 +131,17 @@ class _GratitudeSectionWidgetState
         add: (thankYou, ui) =>
             addThankYou(thankYou, ui, _updateThanksState, _showThankYouPopup),
         index: index,
-        edit: (t, i, ui) {
-          final currentThanks = ui.thanks['thanks'] ?? <String>[];
-          final currentDates = ui.thanks['dates'] ?? <String>[];
+        edit: (text, index, userInfo) {
+          final currentThanks = userInfo.thanks['thanks'] ?? <String>[];
+          final currentDates = userInfo.thanks['dates'] ?? <String>[];
           if (!listEquals(currentThanks, sourceThanks) ||
               !listEquals(currentDates, sourceDates) ||
-              i < 0 ||
-              i >= currentThanks.length ||
-              i >= currentDates.length) {
+              index < 0 ||
+              index >= currentThanks.length ||
+              index >= currentDates.length) {
             return;
           }
-          editThankYou(t, i, ui, _updateThanksState);
+          editThankYou(text, index, userInfo, _updateThanksState);
         },
         text: text,
         formTitle: appLocale.thanks,
