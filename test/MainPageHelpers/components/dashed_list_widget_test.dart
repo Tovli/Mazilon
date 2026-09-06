@@ -79,21 +79,36 @@ void main() {
       },
     );
 
-    testWidgets('should render all items when showAllItems is enabled', (
-      tester,
-    ) async {
-      const items = ['One', 'Two', 'Three', 'Four', 'Five'];
+    testWidgets(
+      'should render and wire all items when showAllItems is enabled',
+      (tester) async {
+        const items = ['One', 'Two', 'Three', 'Four', 'Five'];
+        int? editedIndex;
+        int? removedIndex;
 
-      await pumpWithProviders(
-        tester,
-        _subject(onOpenSection: () {}, items: items, showAllItems: true),
-        surfaceSize: const Size(400, 1000),
-      );
+        await pumpWithProviders(
+          tester,
+          _subject(
+            onOpenSection: () {},
+            items: items,
+            showAllItems: true,
+            onEditItem: (index) => editedIndex = index,
+            onRemoveItem: (index) => removedIndex = index,
+          ),
+          surfaceSize: const Size(400, 1000),
+        );
 
-      for (final item in items) {
-        expect(find.text(item), findsOneWidget);
-      }
-    });
+        for (final item in items) {
+          expect(find.text(item), findsOneWidget);
+        }
+
+        await tester.tap(find.byIcon(Icons.edit).at(3));
+        await tester.tap(find.byIcon(Icons.close).at(4));
+
+        expect(editedIndex, 3);
+        expect(removedIndex, 4);
+      },
+    );
   });
 }
 
@@ -102,6 +117,8 @@ Widget _subject({
   VoidCallback? onAddNew,
   List<String> items = const ['A kind conversation'],
   bool showAllItems = false,
+  void Function(int index)? onEditItem,
+  void Function(int index)? onRemoveItem,
 }) => Scaffold(
   body: DashedListWidget(
     title: 'Gratitude Journal',
@@ -113,6 +130,8 @@ Widget _subject({
     showAllItems: showAllItems,
     onOpenSection: onOpenSection,
     onAddNew: onAddNew,
+    onEditItem: onEditItem,
+    onRemoveItem: onRemoveItem,
   ),
 );
 
