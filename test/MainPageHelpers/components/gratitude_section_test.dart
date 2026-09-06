@@ -31,6 +31,10 @@ void main() {
         surfaceSize: const Size(1024, 1200),
       );
 
+      for (final item in initialItems) {
+        expect(find.text(item), findsOneWidget);
+      }
+
       final section = tester.widget<DashedListWidget>(
         find.byType(DashedListWidget),
       );
