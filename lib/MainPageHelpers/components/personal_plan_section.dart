@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttericon/elusive_icons.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mazilon/file_service.dart';
 import 'package:mazilon/l10n/app_localizations.dart';
@@ -40,6 +39,13 @@ class PersonalPlanSectionWidget extends StatelessWidget {
     super.key,
   });
 
+  static const IconData _shareIcon = IconData(
+    0xe841,
+    fontFamily: 'Elusive',
+    fontPackage: 'fluttericon',
+    matchTextDirection: true,
+  );
+
   @override
   Widget build(BuildContext context) {
     final appLocale = AppLocalizations.of(context)!;
@@ -72,7 +78,7 @@ class PersonalPlanSectionWidget extends StatelessWidget {
                     child: Row(
                       children: [
                         Icon(
-                          Elusive.share,
+                          _shareIcon,
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
                         const SizedBox(width: AppSpacing.sm),
