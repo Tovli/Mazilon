@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -25,7 +24,6 @@ import 'package:mazilon/util/Share/personal_plan_download.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:mazilon/util/Share/show_share_dialog.dart';
 import 'package:mazilon/util/Form/retrieveInformation.dart';
-import 'package:mazilon/util/dreams_and_goals_selection.dart';
 import 'package:mazilon/pages/PersonalPlan/myPlan.dart';
 
 /// The result of preparing a Share action that depends on Dreams and Goals.
@@ -224,7 +222,10 @@ class _ShareFormState extends WizardStepState<ShareForm> {
       :final eventId,
     ) when eventId > _handledCustomCategoriesFailureEventId) {
       _handledCustomCategoriesFailureEventId = eventId;
-      _showCustomCategorySaveFailure(viewModel!);
+      // A primary/export retry owns its failure prompt and continuation.
+      if (!_isRunningDreamsAndGoalsAction) {
+        _showCustomCategorySaveFailure(viewModel!);
+      }
     }
   }
 
@@ -536,6 +537,19 @@ class _ShareFormState extends WizardStepState<ShareForm> {
         : userInformation.pendingDreamsAndGoalsSave;
   }
 
+  Future<void> _prepareCustomCategories({bool retry = false}) async {
+    if (_customCategoriesViewModel == null) {
+      await _customCategoriesReplacement;
+    }
+    final viewModel = _customCategoriesViewModel;
+    if (viewModel == null ||
+        !await viewModel.prepareForAction(retry: retry) ||
+        !mounted ||
+        !identical(viewModel, _customCategoriesViewModel)) {
+      throw StateError('Custom categories are not ready for this action.');
+    }
+  }
+
   /// Prepares Dreams and Goals state for a Share action.
   ///
   /// The returned outcome keeps persistence failures separate from the action
@@ -548,24 +562,25 @@ class _ShareFormState extends WizardStepState<ShareForm> {
     required int initialRetryRevision,
   }) async {
     int retryRevision = initialRetryRevision;
-    if (!_dreamsAndGoalsSourcesAreAligned(userInformation) && mounted) {
+    if (!userInformation.dreamsAndGoalsSourcesAreAligned && mounted) {
       setState(() {
         _hideDreamsAndGoalsSummaryUntilRepair = true;
       });
     }
     try {
+      await _prepareCustomCategories(retry: retry);
       while (true) {
         final bool hadInlineStep = _dreamsAndGoalsStepKey.currentState != null;
         await _persistInlineDreamsAndGoals(userInformation, retry: retry);
         retryRevision = userInformation.dreamsAndGoalsSaveRevision;
         await userInformation.pendingDreamsAndGoalsSave;
-        await userInformation.pendingCustomCategoriesSave;
+        await _prepareCustomCategories();
 
         final int revisionBeforeRepair =
             userInformation.dreamsAndGoalsSaveRevision;
         await userInformation.repairDreamsAndGoalsSelectionSources();
         await userInformation.pendingDreamsAndGoalsSave;
-        await userInformation.pendingCustomCategoriesSave;
+        await _prepareCustomCategories();
 
         // If no inline editor persisted this snapshot and repair left the revision
         // unchanged, queue the save now so in-memory state is durable in storage.
@@ -575,14 +590,14 @@ class _ShareFormState extends WizardStepState<ShareForm> {
                 revisionBeforeRepair) {
           await userInformation.queueDreamsAndGoalsSave();
           await userInformation.pendingDreamsAndGoalsSave;
-          await userInformation.pendingCustomCategoriesSave;
+          await _prepareCustomCategories();
         }
 
         final int expectedRevision = userInformation.dreamsAndGoalsSaveRevision;
         retryRevision = expectedRevision;
         if (userInformation.dreamsAndGoalsSaveRevision == expectedRevision) {
           await userInformation.pendingDreamsAndGoalsSave;
-          await userInformation.pendingCustomCategoriesSave;
+          await _prepareCustomCategories();
           if (mounted) {
             setState(() {
               _hideDreamsAndGoalsSummaryUntilRepair = false;
@@ -789,17 +804,7 @@ class _ShareFormState extends WizardStepState<ShareForm> {
         userInformation.dreamsAndGoals.isEmpty) {
       return false;
     }
-    return _dreamsAndGoalsSourcesAreAligned(userInformation);
-  }
-
-  bool _dreamsAndGoalsSourcesAreAligned(UserInformation userInformation) {
-    return listEquals(
-      userInformation.dreamsAndGoalsSelectionSources,
-      normalizeDreamsAndGoalsSelectionSources(
-        userInformation.dreamsAndGoals,
-        userInformation.dreamsAndGoalsSelectionSources,
-      ),
-    );
+    return userInformation.dreamsAndGoalsSourcesAreAligned;
   }
 
   Widget buildDreamsAndGoalsSection(BuildContext context, String gender) {
@@ -880,7 +885,7 @@ class _ShareFormState extends WizardStepState<ShareForm> {
     );
     await Future.wait<void>([
       _persistInlineDreamsAndGoals(userInformation),
-      userInformation.pendingCustomCategoriesSave,
+      _prepareCustomCategories(),
     ]);
   }
 
@@ -892,7 +897,7 @@ class _ShareFormState extends WizardStepState<ShareForm> {
     );
     await Future.wait<void>([
       _persistInlineDreamsAndGoals(userInformation, retry: true),
-      _customCategoriesViewModel?.retryLatestSave() ?? Future<void>.value(),
+      _prepareCustomCategories(retry: true),
     ]);
   }
 

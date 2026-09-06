@@ -93,6 +93,7 @@ final class ShareFormCustomCategoriesViewModel extends ChangeNotifier {
   int _failureEventId = 0;
   bool _isDisposed = false;
   bool _notifierDisposed = false;
+  bool _latestSaveFailed = false;
 
   /// Loads categories without allowing an older load to replace a newer save.
   ///
@@ -142,6 +143,7 @@ final class ShareFormCustomCategoriesViewModel extends ChangeNotifier {
     );
     _latestSaveSnapshot = snapshot;
     final int revision = ++_saveRevision;
+    _latestSaveFailed = false;
     try {
       await _userInformation.saveCustomCategories(
         categories: snapshot,
@@ -154,6 +156,9 @@ final class ShareFormCustomCategoriesViewModel extends ChangeNotifier {
         _usesAlternateSource ? snapshot : _userInformation.customCategories,
       );
     } catch (error, stackTrace) {
+      if (revision == _saveRevision) {
+        _latestSaveFailed = true;
+      }
       await _reportFailure(error, stackTrace);
       if (_isDisposed || revision != _saveRevision) {
         return;
@@ -176,6 +181,42 @@ final class ShareFormCustomCategoriesViewModel extends ChangeNotifier {
       return;
     }
     await save(latestSaveSnapshot);
+  }
+
+  /// Waits for this source's saves and optionally retries its latest failure.
+  ///
+  /// Returns false after a failed retry or disposal; actions must stay blocked.
+  Future<bool> prepareForAction({bool retry = false}) async {
+    while (_activeSaves.isNotEmpty) {
+      await Future.wait<void>(List.of(_activeSaves));
+    }
+    if (_isDisposed) {
+      return false;
+    }
+    if (retry && _latestSaveFailed) {
+      await retryLatestSave();
+    }
+    while (_activeSaves.isNotEmpty) {
+      await Future.wait<void>(List.of(_activeSaves));
+    }
+    if (_isDisposed || _latestSaveFailed) {
+      return false;
+    }
+    if (!_usesAlternateSource) {
+      try {
+        if (retry && _latestSaveSnapshot == null) {
+          await _userInformation.retryCustomCategoriesSave(
+            _userInformation.customCategoriesSaveRevision,
+          );
+        } else {
+          await _userInformation.pendingCustomCategoriesSave;
+        }
+      } catch (error, stackTrace) {
+        await _reportFailure(error, stackTrace);
+        return false;
+      }
+    }
+    return !_isDisposed && !_latestSaveFailed;
   }
 
   /// Stops accepting commands and waits for all accepted saves to settle.
@@ -201,7 +242,7 @@ final class ShareFormCustomCategoriesViewModel extends ChangeNotifier {
   }
 
   void _synchronizeDefaultSource() {
-    if (_isDisposed) {
+    if (_isDisposed || _latestSaveFailed || _activeSaves.isNotEmpty) {
       return;
     }
     _emitReady(_userInformation.customCategories);

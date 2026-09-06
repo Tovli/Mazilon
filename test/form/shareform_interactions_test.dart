@@ -426,6 +426,67 @@ void main() {
     resetTestServices();
   });
 
+  for (final alternate in [false, true]) {
+    testWidgets(
+      'should retry category persistence before primary submission (alternate: $alternate)',
+      (tester) async {
+        final memory = _DreamsMemoryHarness(
+          initialCustomCategoryTitles: ['Category'],
+          initialCustomCategoryDescriptions: ['Notes'],
+        )..failCustomCategoryWrites = true;
+        if (!alternate) {
+          user = UserInformation(service: memory.service)
+            ..gender = 'other'
+            ..localeName = 'en';
+        }
+        var submissions = 0;
+        await pumpWithProviders(
+          tester,
+          wizardStepHarness(
+            ShareForm(
+              key: GlobalKey<WizardStepState>(),
+              prev: () {},
+              submit: (_) async {
+                submissions++;
+              },
+              memoryService: alternate ? memory.service : null,
+            ),
+          ),
+          userInformation: user,
+          surfaceSize: const Size(1024, 1800),
+        );
+        await tester.pumpAndSettle();
+        await _editFirstCustomCategory(tester, 'Latest notes');
+        await tester.pumpAndSettle();
+        _pressWizardPrimaryAction(tester);
+        await _flushAsyncAction(tester);
+        await tester.pumpAndSettle();
+        expect(submissions, 0);
+        tester
+            .widget<SnackBarAction>(
+              find.widgetWithText(SnackBarAction, 'Try again'),
+            )
+            .onPressed();
+        await _flushAsyncAction(tester);
+        await tester.pumpAndSettle();
+        expect(submissions, 0);
+        memory.failCustomCategoryWrites = false;
+        tester
+            .widget<SnackBarAction>(
+              find.widgetWithText(SnackBarAction, 'Try again'),
+            )
+            .onPressed();
+        await _flushAsyncAction(tester);
+        await tester.pumpAndSettle();
+        expect(submissions, 1);
+        expect(memory.completedStringList(customCategoryDescriptionsKey), [
+          'Latest notes',
+        ]);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
   testWidgets('tapping the share IconButton opens the share dialog', (
     tester,
   ) async {

@@ -197,6 +197,25 @@ final class _FailingFirstDreamsSelectionMemoryService
 }
 
 void main() {
+  group('UserInformation Dreams alignment', () {
+    test(
+      'should expose alignment without changing selections or writing storage',
+      () async {
+        final memory = ContractPersistentMemoryService();
+        final user = UserInformation(service: memory);
+        expect(user.dreamsAndGoalsSourcesAreAligned, isTrue);
+        user.updateDreamsAndGoals(['Own goal']);
+        expect(user.dreamsAndGoalsSourcesAreAligned, isFalse);
+        expect(memory.attemptedWrites, isEmpty);
+        await user.repairDreamsAndGoalsSelectionSources();
+        expect(user.dreamsAndGoalsSourcesAreAligned, isTrue);
+        expect(user.dreamsAndGoals, ['Own goal']);
+        user.updateDreamsAndGoals(['Replacement']);
+        expect(user.dreamsAndGoalsSourcesAreAligned, isFalse);
+        user.dispose();
+      },
+    );
+  });
   late _FakePersistentMemoryService fakeService;
 
   setUp(() {

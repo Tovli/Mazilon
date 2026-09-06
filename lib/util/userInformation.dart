@@ -56,6 +56,15 @@ class UserInformation with ChangeNotifier {
   /// Whether a Dreams and Goals persistence operation is currently pending.
   bool get isDreamsAndGoalsSavePending => _activeDreamsAndGoalsSavesCount > 0;
 
+  /// Whether every Dreams and Goals selection has normalized source metadata.
+  bool get dreamsAndGoalsSourcesAreAligned => listEquals(
+    dreamsAndGoalsSelectionSources,
+    normalizeDreamsAndGoalsSelectionSources(
+      dreamsAndGoals,
+      dreamsAndGoalsSelectionSources,
+    ),
+  );
+
   /// In-flight custom categories persistence future.
   Future<void> get pendingCustomCategoriesSave => _pendingCustomCategoriesSave;
 

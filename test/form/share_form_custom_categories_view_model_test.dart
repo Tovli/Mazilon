@@ -55,6 +55,49 @@ List<(String, String)> _pairs(List<MapEntry<String, String>> categories) => [
 
 void main() {
   group('ShareFormCustomCategoriesViewModel', () {
+    for (final alternate in [false, true]) {
+      test(
+        'should block actions through a failed and held retry (alternate: $alternate)',
+        () async {
+          final memory = ContractPersistentMemoryService();
+          final model = UserInformation(
+            service: alternate ? ContractPersistentMemoryService() : memory,
+          );
+          final viewModel = ShareFormCustomCategoriesViewModel(
+            userInformation: model,
+            memoryService: memory,
+            incidentLogger: _RecordingIncidentLogger(),
+          );
+          addTearDown(viewModel.dispose);
+          var fail = true;
+          final gate = Completer<void>();
+          final started = Completer<void>();
+          memory.onPersist = (key, type, value) async {
+            if (key != customCategoriesKey) return;
+            if (fail) throw StateError('Save failed');
+            if (!started.isCompleted) started.complete();
+            await gate.future;
+          };
+          await viewModel.save(const [MapEntry('Latest', 'Notes')]);
+          model.updateName('Unrelated change');
+          expect(await viewModel.prepareForAction(), isFalse);
+          expect(await viewModel.prepareForAction(retry: true), isFalse);
+          fail = false;
+          var completed = false;
+          final retry = viewModel.prepareForAction(retry: true).then((ready) {
+            completed = true;
+            return ready;
+          });
+          await started.future;
+          expect(completed, isFalse);
+          gate.complete();
+          expect(await retry, isTrue);
+          expect(_pairs(viewModel.state.categories), [('Latest', 'Notes')]);
+          if (alternate) expect(model.customCategories, isEmpty);
+        },
+      );
+    }
+
     test(
       'should keep an alternate export source isolated from the user model',
       () async {

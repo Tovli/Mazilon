@@ -150,6 +150,47 @@ void main() {
   tearDown(_unregisterFakes);
 
   group('loadUserInformation – populated values', () {
+    for (final synchronousFailure in [false, true]) {
+      test(
+        'should complete loading independently and report callback errors (synchronous: $synchronousFailure)',
+        () async {
+          _registerFakes(store: {});
+          final auth = GetIt.instance<FirebaseAuth>() as MockFirebaseAuth;
+          final restored = MockUser();
+          when(restored.isAnonymous).thenReturn(false);
+          when(restored.uid).thenReturn('restored');
+          when(
+            auth.authStateChanges(),
+          ).thenAnswer((_) => Stream<User?>.value(restored));
+          final gate = Completer<void>();
+          final callbackDone = Completer<void>();
+          final error = StateError('Callback failed');
+          final stack = StackTrace.current;
+          final user = _makeUserInfo();
+          await loadUserInformation(
+            user,
+            'en',
+            onAuthenticatedSessionRestored: () {
+              if (synchronousFailure) Error.throwWithStackTrace(error, stack);
+              return gate.future.then((_) {
+                callbackDone.complete();
+                Error.throwWithStackTrace(error, stack);
+              });
+            },
+          ).timeout(const Duration(seconds: 2));
+          expect(user.loggedIn, isTrue);
+          if (!synchronousFailure) {
+            expect(callbackDone.isCompleted, isFalse);
+            gate.complete();
+          }
+          final logger = GetIt.instance<IncidentLoggerService>() as _FakeLogger;
+          await logger.captureLogCompleted.future;
+          expect(logger.capturedExceptions, [same(error)]);
+          expect(logger.capturedStackTraces, [same(stack)]);
+          user.dispose();
+        },
+      );
+    }
     test('propagates all scalar string/bool/int fields', () async {
       _registerFakes(
         store: {

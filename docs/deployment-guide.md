@@ -238,7 +238,8 @@ therefore a pre-deployment requirement, not a runtime kill switch.
 
 Content provisioning is deliberately part of this protected release job because
 the mobile/web artifacts consume that content. The required reviewers
-configured in section 3 therefore also approve production content writes.
+configured for the `firebase-production` environment in section 4 therefore
+also protect and approve production content writes.
 An ARB-only change provisions content without needlessly
 redeploying Functions. An operator can use the same commands from an
 authenticated release environment when manual recovery is needed.

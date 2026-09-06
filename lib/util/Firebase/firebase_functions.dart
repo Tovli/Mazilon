@@ -116,6 +116,13 @@ class Warning {
 /// the wait for the first `authStateChanges()` event. A timeout or restoration
 /// error keeps authenticated UI disabled without overwriting persisted sign-in
 /// evidence, allowing a later startup to retry restoration safely.
+///
+/// After the initial auth stream restores a signed-in user,
+/// [onAuthenticatedSessionRestored] (or FCM token synchronization by default)
+/// is dispatched without awaiting it. Completion of this method does not imply
+/// completion of that callback. Synchronous and asynchronous callback failures
+/// are reported through the auth-restoration logger, not propagated to callers.
+/// This keeps token/network initialization from blocking application startup.
 Future<void> loadUserInformation(
   UserInformation userInfo,
   String locale, {
