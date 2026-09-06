@@ -79,6 +79,24 @@ void main() {
       },
     );
 
+    testWidgets('should render only the first three items by default', (
+      tester,
+    ) async {
+      await pumpWithProviders(
+        tester,
+        _subject(
+          onOpenSection: () {},
+          items: const ['One', 'Two', 'Three', 'Four'],
+        ),
+        surfaceSize: const Size(400, 800),
+      );
+
+      expect(find.text('One'), findsOneWidget);
+      expect(find.text('Two'), findsOneWidget);
+      expect(find.text('Three'), findsOneWidget);
+      expect(find.text('Four'), findsNothing);
+    });
+
     testWidgets(
       'should render and wire all items when showAllItems is enabled',
       (tester) async {
