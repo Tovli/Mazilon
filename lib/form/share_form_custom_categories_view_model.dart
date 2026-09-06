@@ -22,6 +22,12 @@ final class ShareFormCustomCategoriesReady
   const ShareFormCustomCategoriesReady(super.categories);
 }
 
+/// Categories cannot be used until the selected source loads successfully.
+final class ShareFormCustomCategoriesLoadFailure
+    extends ShareFormCustomCategoriesState {
+  const ShareFormCustomCategoriesLoadFailure(super.categories);
+}
+
 /// State emitted when the latest applicable save cannot be persisted.
 final class ShareFormCustomCategoriesSaveFailure
     extends ShareFormCustomCategoriesState {
@@ -94,13 +100,18 @@ final class ShareFormCustomCategoriesViewModel extends ChangeNotifier {
   bool _isDisposed = false;
   bool _notifierDisposed = false;
   bool _latestSaveFailed = false;
+  Future<void>? _loadOperation;
+  bool _loadFailed = false;
+  bool _loadCompleted = false;
+  int? _ownedSharedRevision;
 
   /// Loads categories without allowing an older load to replace a newer save.
   ///
   /// Default-store loads publish through [UserInformation]. Alternate-store
-  /// loads update only this model. Failures are reported and leave [state]
-  /// unchanged.
-  Future<void> load() async {
+  /// loads update only this model. Failures block actions until an explicit retry.
+  Future<void> load() => _loadOperation ??= _load();
+
+  Future<void> _load() async {
     if (_isDisposed) {
       return;
     }
@@ -109,14 +120,20 @@ final class ShareFormCustomCategoriesViewModel extends ChangeNotifier {
       final categories = await _userInformation.loadCustomCategories(
         memoryService: _memoryService,
       );
+      _loadFailed = false;
       if (_isDisposed || saveRevisionAtStart != _saveRevision) {
         return;
       }
-      if (_usesAlternateSource) {
-        _emitReady(categories);
-      }
+      _emitReady(categories);
     } catch (error, stackTrace) {
+      _loadFailed = true;
+      if (!_isDisposed) {
+        _state = ShareFormCustomCategoriesLoadFailure(_state.categories);
+        notifyListeners();
+      }
       await _reportFailure(error, stackTrace);
+    } finally {
+      _loadCompleted = true;
     }
   }
 
@@ -145,10 +162,14 @@ final class ShareFormCustomCategoriesViewModel extends ChangeNotifier {
     final int revision = ++_saveRevision;
     _latestSaveFailed = false;
     try {
-      await _userInformation.saveCustomCategories(
+      final operation = _userInformation.saveCustomCategories(
         categories: snapshot,
         memoryService: _memoryService,
       );
+      if (!_usesAlternateSource) {
+        _ownedSharedRevision = _userInformation.customCategoriesSaveRevision;
+      }
+      await operation;
       if (_isDisposed || revision != _saveRevision) {
         return;
       }
@@ -187,11 +208,26 @@ final class ShareFormCustomCategoriesViewModel extends ChangeNotifier {
   ///
   /// Returns false after a failed retry or disposal; actions must stay blocked.
   Future<bool> prepareForAction({bool retry = false}) async {
+    if (!_loadCompleted) {
+      await load();
+    }
+    if (_loadFailed && retry && !_isDisposed) {
+      _loadOperation = null;
+      _loadCompleted = false;
+      await load();
+    }
+    if (_loadFailed || _isDisposed) return false;
     while (_activeSaves.isNotEmpty) {
       await Future.wait<void>(List.of(_activeSaves));
     }
     if (_isDisposed) {
       return false;
+    }
+    final siblingSaveIsLatest =
+        !_usesAlternateSource &&
+        _ownedSharedRevision != _userInformation.customCategoriesSaveRevision;
+    if (siblingSaveIsLatest) {
+      _latestSaveFailed = false;
     }
     if (retry && _latestSaveFailed) {
       await retryLatestSave();
@@ -204,12 +240,13 @@ final class ShareFormCustomCategoriesViewModel extends ChangeNotifier {
     }
     if (!_usesAlternateSource) {
       try {
-        if (retry && _latestSaveSnapshot == null) {
+        try {
+          await _userInformation.pendingCustomCategoriesSave;
+        } catch (_) {
+          if (!retry) rethrow;
           await _userInformation.retryCustomCategoriesSave(
             _userInformation.customCategoriesSaveRevision,
           );
-        } else {
-          await _userInformation.pendingCustomCategoriesSave;
         }
       } catch (error, stackTrace) {
         await _reportFailure(error, stackTrace);
@@ -242,7 +279,10 @@ final class ShareFormCustomCategoriesViewModel extends ChangeNotifier {
   }
 
   void _synchronizeDefaultSource() {
-    if (_isDisposed || _latestSaveFailed || _activeSaves.isNotEmpty) {
+    if (_isDisposed ||
+        _loadFailed ||
+        _latestSaveFailed ||
+        _activeSaves.isNotEmpty) {
       return;
     }
     _emitReady(_userInformation.customCategories);

@@ -57,6 +57,86 @@ void main() {
   group('ShareFormCustomCategoriesViewModel', () {
     for (final alternate in [false, true]) {
       test(
+        'should wait for and retry initial load (alternate: $alternate)',
+        () async {
+          final memory = ContractPersistentMemoryService(
+            initialValues: {
+              customCategoriesKey: jsonEncode([
+                {'title': 'Stored', 'description': 'Notes'},
+              ]),
+            },
+          );
+          final model = UserInformation(
+            service: alternate ? ContractPersistentMemoryService() : memory,
+          );
+          final viewModel = ShareFormCustomCategoriesViewModel(
+            userInformation: model,
+            memoryService: memory,
+            incidentLogger: _RecordingIncidentLogger(),
+          );
+          addTearDown(viewModel.dispose);
+          final gate = Completer<void>();
+          final started = Completer<void>();
+          var fail = true;
+          memory.onRead = (key, type) async {
+            if (key != customCategoriesKey) return;
+            if (!started.isCompleted) started.complete();
+            await gate.future;
+            if (fail) throw StateError('Read failed');
+          };
+          final loading = viewModel.load();
+          await started.future;
+          var completed = false;
+          final preparation = viewModel.prepareForAction().then((value) {
+            completed = true;
+            return value;
+          });
+          await Future<void>.delayed(Duration.zero);
+          expect(completed, isFalse);
+          gate.complete();
+          await loading;
+          expect(await preparation, isFalse);
+          expect(viewModel.state, isA<ShareFormCustomCategoriesLoadFailure>());
+          expect(await viewModel.prepareForAction(retry: true), isFalse);
+          fail = false;
+          expect(await viewModel.prepareForAction(retry: true), isTrue);
+          expect(_pairs(viewModel.state.categories), [('Stored', 'Notes')]);
+        },
+      );
+    }
+
+    test(
+      'should retry a newer sibling failure without replaying its own snapshot',
+      () async {
+        final memory = ContractPersistentMemoryService();
+        final model = UserInformation(service: memory);
+        final viewModel = ShareFormCustomCategoriesViewModel(
+          userInformation: model,
+          incidentLogger: _RecordingIncidentLogger(),
+        );
+        addTearDown(viewModel.dispose);
+        await viewModel.load();
+        await viewModel.save(const [MapEntry('Old', 'Own save')]);
+        memory.onPersist = (key, type, value) {
+          if (key == customCategoriesKey) throw StateError('Sibling failure');
+        };
+        await expectLater(
+          model.saveCustomCategories(
+            categories: const [MapEntry('New', 'Sibling save')],
+          ),
+          throwsStateError,
+        );
+        expect(await viewModel.prepareForAction(), isFalse);
+        expect(await viewModel.prepareForAction(retry: true), isFalse);
+        memory.onPersist = null;
+        expect(await viewModel.prepareForAction(retry: true), isTrue);
+        expect(_pairs(model.customCategories), [('New', 'Sibling save')]);
+        expect(_pairs(viewModel.state.categories), [('New', 'Sibling save')]);
+      },
+    );
+
+    for (final alternate in [false, true]) {
+      test(
         'should block actions through a failed and held retry (alternate: $alternate)',
         () async {
           final memory = ContractPersistentMemoryService();

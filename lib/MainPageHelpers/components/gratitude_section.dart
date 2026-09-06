@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart' as intl;
@@ -118,32 +119,41 @@ class _GratitudeSectionWidgetState
     String text = '',
     int index = 0,
   ]) {
+    final sourceThanks = List<String>.from(
+      userInfo.thanks['thanks'] ?? <String>[],
+    );
+    final sourceDates = List<String>.from(
+      userInfo.thanks['dates'] ?? <String>[],
+    );
     showDialog(
       context: context,
       builder: (_) => AddForm(
         add: (thankYou, ui) =>
             addThankYou(thankYou, ui, _updateThanksState, _showThankYouPopup),
         index: index,
-        edit: (t, i, ui) => editThankYou(t, i, ui, _updateThanksState),
+        edit: (text, index, userInfo) {
+          final currentThanks = userInfo.thanks['thanks'] ?? <String>[];
+          final currentDates = userInfo.thanks['dates'] ?? <String>[];
+          if (!listEquals(currentThanks, sourceThanks) ||
+              !listEquals(currentDates, sourceDates) ||
+              index < 0 ||
+              index >= currentThanks.length ||
+              index >= currentDates.length) {
+            return;
+          }
+          editThankYou(text, index, userInfo, _updateThanksState);
+        },
         text: text,
         formTitle: appLocale.thanks,
       ),
     );
   }
 
-  void _removeItem(int displayIndex, UserInformation userInfo) {
-    final thanks = userInfo.thanks['thanks'] ?? <String>[];
-    final dates = userInfo.thanks['dates'] ?? <String>[];
-    final sourceIndexes = _todayIndexes(thanks, dates).reversed.toList();
-    if (displayIndex < 0 || displayIndex >= sourceIndexes.length) return;
-    removeThankYou(sourceIndexes[displayIndex], userInfo, _updateThanksState);
-  }
-
   @override
   Widget build(BuildContext context) {
     final userInfo = Provider.of<UserInformation>(context);
-    final thanks = userInfo.thanks['thanks'] ?? <String>[];
-    final dates = userInfo.thanks['dates'] ?? <String>[];
+    final thanks = List<String>.from(userInfo.thanks['thanks'] ?? <String>[]);
+    final dates = List<String>.from(userInfo.thanks['dates'] ?? <String>[]);
     final sourceIndexes = _todayIndexes(thanks, dates).reversed.toList();
     final todayItems = sourceIndexes.map((i) => thanks[i]).toList();
     _refreshHomeSuggestions(userInfo);
@@ -155,15 +165,37 @@ class _GratitudeSectionWidgetState
       items: todayItems,
       suggestions: _homeSuggestions,
       totalCount: thanks.length,
+      showAllItems: true,
       onOpenSection: widget.onOpenSection,
       onAddNew: () => _openThankDialog(userInfo),
       onEditItem: (displayIndex) {
         if (displayIndex < 0 || displayIndex >= sourceIndexes.length) return;
         final sourceIndex = sourceIndexes[displayIndex];
-        if (sourceIndex < 0 || sourceIndex >= thanks.length) return;
+        final currentThanks = userInfo.thanks['thanks'] ?? <String>[];
+        final currentDates = userInfo.thanks['dates'] ?? <String>[];
+        if (!listEquals(currentThanks, thanks) ||
+            !listEquals(currentDates, dates) ||
+            sourceIndex < 0 ||
+            sourceIndex >= thanks.length ||
+            sourceIndex >= dates.length) {
+          return;
+        }
         _openThankDialog(userInfo, thanks[sourceIndex], sourceIndex);
       },
-      onRemoveItem: (displayIndex) => _removeItem(displayIndex, userInfo),
+      onRemoveItem: (displayIndex) {
+        if (displayIndex < 0 || displayIndex >= sourceIndexes.length) return;
+        final sourceIndex = sourceIndexes[displayIndex];
+        final currentThanks = userInfo.thanks['thanks'] ?? <String>[];
+        final currentDates = userInfo.thanks['dates'] ?? <String>[];
+        if (!listEquals(currentThanks, thanks) ||
+            !listEquals(currentDates, dates) ||
+            sourceIndex < 0 ||
+            sourceIndex >= thanks.length ||
+            sourceIndex >= dates.length) {
+          return;
+        }
+        removeThankYou(sourceIndex, userInfo, _updateThanksState);
+      },
       onAddSuggestion: (suggestion) => addThankYou(
         suggestion,
         userInfo,
