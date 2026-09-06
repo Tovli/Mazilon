@@ -78,20 +78,39 @@ void main() {
         expect(openCount, 1);
       },
     );
+
+    testWidgets('should render all items when showAllItems is enabled', (
+      tester,
+    ) async {
+      const items = ['One', 'Two', 'Three', 'Four', 'Five'];
+
+      await pumpWithProviders(
+        tester,
+        _subject(onOpenSection: () {}, items: items, showAllItems: true),
+        surfaceSize: const Size(400, 1000),
+      );
+
+      for (final item in items) {
+        expect(find.text(item), findsOneWidget);
+      }
+    });
   });
 }
 
 Widget _subject({
   required VoidCallback onOpenSection,
   VoidCallback? onAddNew,
+  List<String> items = const ['A kind conversation'],
+  bool showAllItems = false,
 }) => Scaffold(
   body: DashedListWidget(
     title: 'Gratitude Journal',
     subtitle: 'Notice what went well',
     iconAsset: 'assets/images/thanks_icon.svg',
-    items: const ['A kind conversation'],
+    items: items,
     suggestions: const [],
-    totalCount: 1,
+    totalCount: items.length,
+    showAllItems: showAllItems,
     onOpenSection: onOpenSection,
     onAddNew: onAddNew,
   ),

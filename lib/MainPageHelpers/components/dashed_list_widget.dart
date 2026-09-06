@@ -14,6 +14,7 @@ class DashedListWidget extends StatefulWidget {
   final List<String> items;
   final List<String> suggestions;
   final int totalCount;
+  final bool showAllItems;
   final VoidCallback onOpenSection;
   final VoidCallback? onAddNew;
   final void Function(int index)? onEditItem;
@@ -28,6 +29,7 @@ class DashedListWidget extends StatefulWidget {
     required this.suggestions,
     required this.totalCount,
     required this.onOpenSection,
+    this.showAllItems = false,
     this.onAddNew,
     this.onEditItem,
     this.onRemoveItem,
@@ -190,8 +192,10 @@ class _DashedListWidgetState extends State<DashedListWidget>
       _syncDisplayedSuggestions(availableSuggestions);
     }
 
-    // Callers pass items newest-first; take the first 3
-    final displayedItems = widget.items.take(3).toList();
+    // Callers pass items newest-first.
+    final displayedItems = widget.showAllItems
+        ? widget.items
+        : widget.items.take(3).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

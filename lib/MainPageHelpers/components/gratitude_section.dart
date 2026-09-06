@@ -155,6 +155,7 @@ class _GratitudeSectionWidgetState
       items: todayItems,
       suggestions: _homeSuggestions,
       totalCount: todayItems.length,
+      showAllItems: true,
       onOpenSection: widget.onOpenSection,
       onAddNew: () => _openThankDialog(userInfo),
       onEditItem: (displayIndex) {
