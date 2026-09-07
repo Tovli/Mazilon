@@ -618,6 +618,7 @@ jobs:
         timeout-minutes: 90
         run: |
           mkdir -p ci-ios-diagnostics
+          source scripts/recover_ios_vm_service.sh
           {
             echo "=== date ==="
             date -u
@@ -775,7 +776,10 @@ jobs:
           # registers it. Retry only that pre-process launch race; application
           # crashes and test failures remain blocking on their first result.
           if [ "$TEST_EXIT" -ne 0 ] && grep -Fq 'is unknown to FrontBoard' ci-ios-diagnostics/flutter-test.log; then
-            if [ "$SECONDS" -lt 2400 ]; then
+            # A cold dependency build currently takes about 48 minutes on the
+            # hosted runner, while a retry reuses Xcode's completed build. Keep
+            # the retry available until the existing 80-minute watchdog bound.
+            if ios_frontboard_retry_has_headroom "$SECONDS"; then
               echo "::warning::FrontBoard has not registered the installed app; resetting its registration and retrying once."
               {
                 echo
@@ -794,7 +798,7 @@ jobs:
                 TEST_EXIT=$RESET_EXIT
               fi
             else
-              echo "::warning::Skipping the FrontBoard retry after ${SECONDS}s to preserve the 90-minute step boundary."
+              echo "::warning::Skipping the FrontBoard retry after ${SECONDS}s to preserve the final 10 minutes of the 90-minute step boundary."
             fi
           fi
           set -e

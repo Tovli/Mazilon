@@ -7,6 +7,11 @@ trap 'rm -f "$test_directory/flutter.log" "$test_directory/simulator.log"; rmdir
 flutter_log="$test_directory/flutter.log"
 simulator_log="$test_directory/simulator.log"
 
+ios_frontboard_retry_has_headroom 2401
+ios_frontboard_retry_has_headroom 4799
+! ios_frontboard_retry_has_headroom 4800
+! ios_frontboard_retry_has_headroom invalid
+
 # Fake only the external simulator commands and passage of time. Exercise
 # the production log predicates and recovery sequence with real log files.
 sleep() {
@@ -103,6 +108,11 @@ expect_result 0
 [ "${#calls[@]}" -eq 0 ]
 
 reset_case
+printf '              [        ] exiting with code 0\n' >> "$flutter_log"
+expect_result 0
+[ "${#calls[@]}" -eq 2 ]
+
+reset_case
 failed_command=terminate
 expect_result 1
 [ "${#calls[@]}" -eq 1 ]
@@ -130,4 +140,4 @@ printf '%s\n' 'com.clubhouse.livingpositively: 40050' 'Waiting for VM Service po
 expect_result 0
 [ "${#calls[@]}" -eq 0 ]
 
-echo 'PASS: iOS VM-service recovery (17 scenarios)'
+echo 'PASS: iOS launch recovery predicates and VM-service recovery (18 scenarios)'

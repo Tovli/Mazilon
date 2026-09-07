@@ -3,12 +3,22 @@
 # CI-only workaround for Flutter 3.44's simulator log-reader startup race.
 # Return 2 while waiting, 0 when finished, and 1 on a failed recovery. The
 # caller still requires the original flutter test process to report success.
+ios_frontboard_retry_has_headroom() {
+  local elapsed_seconds="${1:-}"
+  [[ "$elapsed_seconds" =~ ^(0|[1-9][0-9]*)$ ]] &&
+    [ "$elapsed_seconds" -lt 4800 ]
+}
+
 recover_ios_vm_service_once() {
   local device_id="$1" flutter_log="$2" simulator_log="$3" simulator_log_offset="$4"
   local runner_pid current_pid launch_arguments
   local expected_arguments='--enable-dart-profiling --disable-vm-service-publication --enable-checked-mode --verify-entry-points'
+  local flutter_finished_pattern='^(\[[^]]*\][[:space:]]*)?(VM Service URL on device|Successfully connected to service protocol|exiting with code)'
 
-  if grep -Eq 'VM Service URL on device|Successfully connected to service protocol|exiting with code' "$flutter_log" 2>/dev/null; then
+  # Flutter indents verbose output from child tools. Only its own status lines
+  # begin at column zero; an indented child "exiting with code" must not stop
+  # this watcher while the integration-test process is still running.
+  if grep -Eq "$flutter_finished_pattern" "$flutter_log" 2>/dev/null; then
     return 0
   fi
   grep -Fq 'Waiting for VM Service port to be available' "$flutter_log" 2>/dev/null || return 2
@@ -29,7 +39,7 @@ recover_ios_vm_service_once() {
   fi
 
   sleep 120
-  if grep -Eq 'VM Service URL on device|Successfully connected to service protocol|exiting with code' "$flutter_log"; then
+  if grep -Eq "$flutter_finished_pattern" "$flutter_log"; then
     return 0
   fi
   current_pid=$(sed -n 's/.*com\.clubhouse\.livingpositively: \([0-9][0-9]*\).*/\1/p' "$flutter_log" | tail -n 1)
