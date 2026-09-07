@@ -234,6 +234,53 @@ void main() {
       expect(find.byType(PersonalPlanSectionWidget), findsOneWidget);
       expect(find.byKey(const Key('personalPlanHeaderMenu')), findsOneWidget);
     });
+
+    testWidgets('should mirror share icon in Hebrew', (tester) async {
+      await tester.pumpWidget(getPersonalPlanWidgetForTests());
+
+      await tapAndSettle(
+        tester,
+        find.byKey(const Key('personalPlanHeaderMenu')),
+      );
+
+      final shareIconFinder = find.descendant(
+        of: find.byKey(const Key('personalPlanHeaderShare')),
+        matching: find.byType(Icon),
+      );
+      final shareIcon = tester.widget<Icon>(shareIconFinder);
+
+      expect(
+        Directionality.of(tester.element(shareIconFinder)),
+        TextDirection.rtl,
+      );
+      expect(shareIcon.textDirection, isNull);
+      expect(shareIcon.icon?.matchTextDirection, isTrue);
+    });
+
+    testWidgets('should keep share icon LTR in English', (tester) async {
+      await tester.pumpWidget(
+        getPersonalPlanWidgetForTests(locale: const Locale('en')),
+      );
+
+      await tapAndSettle(
+        tester,
+        find.byKey(const Key('personalPlanHeaderMenu')),
+      );
+
+      final shareIconFinder = find.descendant(
+        of: find.byKey(const Key('personalPlanHeaderShare')),
+        matching: find.byType(Icon),
+      );
+      final shareIcon = tester.widget<Icon>(shareIconFinder);
+
+      expect(
+        Directionality.of(tester.element(shareIconFinder)),
+        TextDirection.ltr,
+      );
+      expect(shareIcon.textDirection, isNull);
+      expect(shareIcon.icon?.matchTextDirection, isTrue);
+    });
+
     testWidgets('should download the complete stored plan snapshot', (
       WidgetTester tester,
     ) async {
