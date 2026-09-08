@@ -87,7 +87,14 @@ class _HomeState extends LPExtendedState<Home> {
   void _refreshQuote(List<String> quotes) {
     if (quotes.isEmpty) return;
     final previousQuote = quotes[_quoteIndex % quotes.length];
-    setState(() => _quoteIndex = Random().nextInt(quotes.length));
+    if (quotes.length > 1) {
+      final currentIndex = _quoteIndex % quotes.length;
+      var nextIndex = Random().nextInt(quotes.length - 1);
+      if (nextIndex >= currentIndex) {
+        nextIndex++;
+      }
+      setState(() => _quoteIndex = nextIndex);
+    }
     final nextQuote = quotes[_quoteIndex % quotes.length];
     unawaited(
       GetIt.instance<AnalyticsService>().trackEvent(

@@ -51,6 +51,26 @@ void main() {
   });
 
   group('AuthPage', () {
+    test('should recognize Firebase social sign-in cancellation codes', () {
+      expect(
+        isSocialSignInCancellation(FirebaseAuthException(code: 'canceled')),
+        isTrue,
+      );
+      expect(
+        isSocialSignInCancellation(
+          FirebaseAuthException(code: 'web-context-canceled'),
+        ),
+        isTrue,
+      );
+      expect(
+        isSocialSignInCancellation(
+          FirebaseAuthException(code: 'network-request-failed'),
+        ),
+        isFalse,
+      );
+      expect(isSocialSignInCancellation(StateError('canceled')), isFalse);
+    });
+
 
   test(
     'AuthService persists user profile through registered Firestore',

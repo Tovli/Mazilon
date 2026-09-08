@@ -299,15 +299,24 @@ void main() {
       },
     );
 
-    test(
-      'should reject incomplete contacts rather than render incorrect pairings',
-      () async {
-        source.store['PhonePageSavedPhoneNumbers'] = <String>[];
-        await expectLater(
-          PersonalPlanExportSnapshot.capture(source),
-          throwsStateError,
-        );
-      },
-    );
+    test('should omit an unpaired phone name from a torn save', () async {
+      source.store['PhonePageSavedPhoneNames'] = <String>[
+        'friend',
+        'unpaired name',
+      ];
+      final snapshot = await PersonalPlanExportSnapshot.capture(source);
+      expect(snapshot.data['phoneNames'], ['friend']);
+      expect(snapshot.data['phoneNumbers'], ['1201']);
+    });
+
+    test('should omit an unpaired phone number from a torn save', () async {
+      source.store['PhonePageSavedPhoneNumbers'] = <String>[
+        '1201',
+        'unpaired number',
+      ];
+      final snapshot = await PersonalPlanExportSnapshot.capture(source);
+      expect(snapshot.data['phoneNames'], ['friend']);
+      expect(snapshot.data['phoneNumbers'], ['1201']);
+    });
   });
 }

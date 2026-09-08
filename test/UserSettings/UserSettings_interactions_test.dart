@@ -614,16 +614,15 @@ void main() {
         );
         expect(dialogButtons, findsNWidgets(2));
         await tester.tap(find.byKey(_resetConfirmKey), warnIfMissed: false);
-        await tester.pumpAndSettle();
+        await tester.pump();
+        await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+        await tester.pump(const Duration(milliseconds: 300));
 
         expect(find.byType(FirstPage), findsNothing);
         expect(find.byType(UserSettings), findsOneWidget);
-        expect(find.byKey(_resetDialogKey), findsNothing);
+        expect(find.byKey(_resetDialogKey), findsOneWidget);
         expect(find.byType(CircularProgressIndicator), findsNothing);
-        expect(
-          find.text("Couldn't reset your data. Please try again."),
-          findsOneWidget,
-        );
+        expect(find.byType(SnackBar).hitTestable(), findsOneWidget);
         expect(logger.captureStarted, isTrue);
         expect(phonePageData.resetStarted, isFalse);
         expect(picker.deleteStarted, isFalse);
@@ -693,6 +692,47 @@ void main() {
     } finally {
       debugDefaultTargetPlatformOverride = null;
     }
+  });
+
+  testWidgets('sign-out should preserve persisted onboarding completion', (
+    tester,
+  ) async {
+    final memory = user.service as FakePersistentMemoryService;
+    memory.store['enteredBefore'] = true;
+    memory.store['hasFilled'] = true;
+    user.loggedIn = true;
+    final auth = MockFirebaseAuth();
+    when(auth.currentUser).thenReturn(null);
+    when(auth.signOut()).thenAnswer((_) async {});
+    GetIt.instance.registerSingleton<FirebaseAuth>(auth);
+
+    await pumpWithProviders(
+      tester,
+      UserSettings(
+        username: 'Returning user',
+        age: '18-30',
+        gender: 'male',
+        phonePageData: _phone(),
+        changeLocale: (_) {},
+      ),
+      userInformation: user,
+      surfaceSize: const Size(1024, 2800),
+    );
+
+    final signOutButton = find.byKey(const Key('userSettingsSignOutButton'));
+    await tester.ensureVisible(signOutButton);
+    await tester.tap(signOutButton, warnIfMissed: false);
+    await tester.pumpAndSettle();
+    final dialogButtons = find.descendant(
+      of: find.byType(Dialog),
+      matching: find.byType(TextButton),
+    );
+    await tester.tap(dialogButtons.last, warnIfMissed: false);
+    await tester.pumpAndSettle();
+
+    final firstPage = tester.widget<FirstPage>(find.byType(FirstPage));
+    expect(firstPage.firsttime, isFalse);
+    expect(firstPage.hasFilled, isTrue);
   });
 
   testWidgets('discarded auth persistence failures remain terminal', (
@@ -1360,7 +1400,7 @@ void main() {
         expect(find.byType(UserSettings), findsOneWidget);
         expect(find.byType(FirstPage), findsNothing);
         expect(user.getNotificationPreference('default'), isNotNull);
-        expect(find.byKey(_resetDialogKey), findsNothing);
+        expect(find.byKey(_resetDialogKey), findsOneWidget);
         expect(find.byType(SnackBar).hitTestable(), findsOneWidget);
       } finally {
         debugDefaultTargetPlatformOverride = null;

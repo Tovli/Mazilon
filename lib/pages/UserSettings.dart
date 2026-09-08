@@ -578,12 +578,6 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
         }
       }
       _reportResetFailure(error, stackTrace);
-      if (mounted) {
-        Navigator.of(context).pop();
-        ScaffoldMessenger.maybeOf(
-          context,
-        )?.showSnackBar(SnackBar(content: Text(appLocale.resetDataFailed)));
-      }
       rethrow;
     }
 
@@ -652,6 +646,23 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
   }
 
   Future<bool> signOut(UserInformation userInfo) async {
+    var persistedEnteredBefore = true;
+    var persistedHasFilled = false;
+    try {
+      persistedEnteredBefore =
+          await userInfo.service.getItem(
+                'enteredBefore',
+                PersistentMemoryType.Bool,
+              )
+              as bool? ??
+          true;
+      persistedHasFilled =
+          await userInfo.service.getItem('hasFilled', PersistentMemoryType.Bool)
+              as bool? ??
+          false;
+    } catch (error, stackTrace) {
+      _reportResetFailure(error, stackTrace);
+    }
     final firebaseUser = GetIt.instance.isRegistered<FirebaseAuth>()
         ? GetIt.instance<FirebaseAuth>().currentUser
         : null;
@@ -720,9 +731,9 @@ class _UserSettingsState extends LPExtendedState<UserSettings> {
       MaterialPageRoute(
         builder: (context) => FirstPage(
           phonePageData: widget.phonePageData,
-          firsttime: !enteredBefore,
+          firsttime: !persistedEnteredBefore,
           changeLocale: widget.changeLocale,
-          hasFilled: hasFilled,
+          hasFilled: persistedHasFilled,
         ),
       ),
       (Route<dynamic> route) => false,

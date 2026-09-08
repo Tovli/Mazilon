@@ -472,23 +472,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             loadUserInformation(userInfoProvider, localeService.getLocale()),
             setLocale(),
           ])
-          .then((_) async {
-            // The retired Android scheduler created repeating local alarms.
-            // Remove them on the first launch of this version even when there
-            // is no authenticated account available for remote migration.
-            await FcmScheduledNotificationService.retireLegacyLocalNotificationsWithReporting(
-              persistentMemory: userInfoProvider.service,
-            );
-            if (userInfoProvider.loggedIn) {
-              // Interactive sign-in already starts this best-effort local
-              // reminder migration. Restored Firebase sessions must take the
-              // same path even if this widget is disposed before startup
-              // finishes. The migration uses the captured model and does not
-              // depend on this State's BuildContext.
-              await FcmScheduledNotificationService.migrateLegacyDefaultReminderWithReporting(
-                userInformation: userInfoProvider,
-              );
-            }
+          .then((_) {
             if (!mounted) return;
             //initialize which widget will run first:
             widgetNotifier.value = FirstPage(
@@ -497,6 +481,26 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               changeLocale: changeLocale,
               phonePageData: phonePageData,
             );
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              // The retired Android scheduler created repeating local alarms.
+              // Remove them after startup has rendered, even without an
+              // authenticated account available for remote migration.
+              unawaited(
+                FcmScheduledNotificationService.retireLegacyLocalNotificationsWithReporting(
+                  persistentMemory: userInfoProvider.service,
+                ),
+              );
+              if (userInfoProvider.loggedIn) {
+                // Interactive sign-in already starts this best-effort local
+                // reminder migration. Restored Firebase sessions take the
+                // same path without delaying application startup.
+                unawaited(
+                  FcmScheduledNotificationService.migrateLegacyDefaultReminderWithReporting(
+                    userInformation: userInfoProvider,
+                  ),
+                );
+              }
+            });
           })
           .catchError((error, stackTrace) {
             // Handle errors and provide a fallback widget

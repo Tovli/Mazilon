@@ -619,6 +619,12 @@ jobs:
         run: |
           mkdir -p ci-ios-diagnostics
           source scripts/recover_ios_vm_service.sh
+          # Keep these values aligned with this step's 90-minute deadline.
+          # The retry budget covers simulator reset, the registration delay,
+          # and the warm Flutter retry; the step timeout remains the enforced
+          # outer deadline for that entire sequence.
+          IOS_TEST_DEADLINE_SECONDS=$((90 * 60))
+          IOS_FRONTBOARD_RETRY_BUDGET_SECONDS=$((15 * 60))
           {
             echo "=== date ==="
             date -u
@@ -777,9 +783,10 @@ jobs:
           # crashes and test failures remain blocking on their first result.
           if [ "$TEST_EXIT" -ne 0 ] && grep -Fq 'is unknown to FrontBoard' ci-ios-diagnostics/flutter-test.log; then
             # A cold dependency build currently takes about 48 minutes on the
-            # hosted runner, while a retry reuses Xcode's completed build. Keep
-            # the retry available until the existing 80-minute watchdog bound.
-            if ios_frontboard_retry_has_headroom "$SECONDS"; then
+            # hosted runner, while a retry reuses Xcode's completed build. Only
+            # begin recovery when the complete retry budget fits inside the
+            # step's enforced deadline.
+            if ios_frontboard_retry_has_headroom "$SECONDS" "$IOS_TEST_DEADLINE_SECONDS" "$IOS_FRONTBOARD_RETRY_BUDGET_SECONDS"; then
               echo "::warning::FrontBoard has not registered the installed app; resetting its registration and retrying once."
               {
                 echo
@@ -798,7 +805,8 @@ jobs:
                 TEST_EXIT=$RESET_EXIT
               fi
             else
-              echo "::warning::Skipping the FrontBoard retry after ${SECONDS}s to preserve the final 10 minutes of the 90-minute step boundary."
+              REMAINING_SECONDS=$((IOS_TEST_DEADLINE_SECONDS - SECONDS))
+              echo "::warning::Skipping the FrontBoard retry after ${SECONDS}s; ${REMAINING_SECONDS}s remain, below the ${IOS_FRONTBOARD_RETRY_BUDGET_SECONDS}s recovery budget."
             fi
           fi
           set -e

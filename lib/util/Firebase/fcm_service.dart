@@ -130,7 +130,10 @@ class FcmService {
       await override();
       return;
     }
-    if (defaultTargetPlatform != TargetPlatform.android) return;
+    if (!supportsReminderSettings() ||
+        defaultTargetPlatform != TargetPlatform.android) {
+      return;
+    }
     await _localNotifications.cancelAll();
   }
 

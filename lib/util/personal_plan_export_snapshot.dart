@@ -48,18 +48,26 @@ final class PersonalPlanExportSnapshot {
       customCategoriesLegacyCommitKey: PersistentMemoryType.String,
     });
     final categories = parseCustomCategoriesSnapshot(values);
+    final phoneNames = TypeUtils.castToStringList(
+      values[_selectionKeys['phoneNames']],
+    );
+    final phoneNumbers = TypeUtils.castToStringList(
+      values[_selectionKeys['phoneNumbers']],
+    );
+    final contactCount = phoneNames.length < phoneNumbers.length
+        ? phoneNames.length
+        : phoneNumbers.length;
     final snapshot = PersonalPlanExportSnapshot._({
       for (final entry in _selectionKeys.entries)
-        entry.key: TypeUtils.castToStringList(values[entry.value]),
+        if (entry.key != 'phoneNames' && entry.key != 'phoneNumbers')
+          entry.key: TypeUtils.castToStringList(values[entry.value]),
+      'phoneNames': phoneNames.take(contactCount).toList(),
+      'phoneNumbers': phoneNumbers.take(contactCount).toList(),
       'customCategoryTitles': [for (final category in categories) category.key],
       'customCategoryDescriptions': [
         for (final category in categories) category.value,
       ],
     });
-    if (snapshot.data['phoneNames']!.length !=
-        snapshot.data['phoneNumbers']!.length) {
-      throw StateError('Cannot export incomplete saved contacts.');
-    }
     return snapshot;
   }
 }

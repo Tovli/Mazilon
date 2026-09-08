@@ -97,7 +97,6 @@ base class ContractPersistentMemoryService implements PersistentMemoryService {
   Future<void>? _pendingOperation;
   Future<void>? _activeReset;
   bool _resetFenceActive = false;
-  final Map<String, Object> _failedWrites = {};
   bool _resetFailed = false;
 
   /// Runs inside the serialized write operation before the write is durable.
@@ -170,8 +169,15 @@ base class ContractPersistentMemoryService implements PersistentMemoryService {
 
       try {
         await onPersist?.call(key, type, write.value);
-      } catch (error) {
-        _failedWrites[key] = error;
+      } catch (_) {
+        if (exposePendingWrites) {
+          final Object? durableValue = _durableStore[key];
+          if (durableValue == null) {
+            store.remove(key);
+          } else {
+            store[key] = _copyUntypedValue(durableValue);
+          }
+        }
         rethrow;
       }
 
@@ -180,7 +186,6 @@ base class ContractPersistentMemoryService implements PersistentMemoryService {
         store[key] = _copyValue(type, write.value);
       }
       completedWrites.add(write);
-      _failedWrites.remove(key);
       await onSetItemCompleted?.call(key, type, write.value);
     });
   }
@@ -213,13 +218,6 @@ base class ContractPersistentMemoryService implements PersistentMemoryService {
       if (_resetFailed) {
         throw StateError('Cannot export after an unsuccessful storage reset.');
       }
-      for (final key in requestedKeys.keys) {
-        if (_failedWrites.containsKey(key)) {
-          throw StateError(
-            'Cannot export after an unsuccessful save of "$key".',
-          );
-        }
-      }
       final values = <String, Object?>{};
       for (final entry in requestedKeys.entries) {
         final Object? value = await getItem(entry.key, entry.value);
@@ -251,7 +249,6 @@ base class ContractPersistentMemoryService implements PersistentMemoryService {
             rethrow;
           }
           _durableStore.clear();
-          _failedWrites.clear();
           _resetFailed = false;
         }).whenComplete(() {
           if (identical(_activeReset, resetOperation)) {

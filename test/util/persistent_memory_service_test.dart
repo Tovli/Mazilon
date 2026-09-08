@@ -199,29 +199,24 @@ void main() {
     );
 
     test(
-      'should reject an eager cached failed write until a successful retry',
+      'should recover the durable value after an eager cached write fails',
       () async {
-        final outcomes = <String, _WriteOutcome>{
-          'flutter.plan': _WriteOutcome.reject,
-        };
+        final outcomes = <String, _WriteOutcome>{};
         _installControlledStore(
           _ControlledSharedPreferencesStore(outcomesByKey: outcomes),
         );
         final service = SharedPreferencesService();
+        await service.setItem('plan', PersistentMemoryType.String, 'durable');
+        outcomes['flutter.plan'] = _WriteOutcome.reject;
         await expectLater(
           service.setItem('plan', PersistentMemoryType.String, 'unsaved'),
           throwsStateError,
         );
-        await expectLater(
-          service.readSnapshot({'plan': PersistentMemoryType.String}),
-          throwsStateError,
+        expect(
+          await service.readSnapshot({'plan': PersistentMemoryType.String}),
+          {'plan': 'durable'},
         );
-        // An unrelated write does not erase the failed plan save.
-        await service.setItem('other', PersistentMemoryType.Bool, true);
-        await expectLater(
-          service.readSnapshot({'plan': PersistentMemoryType.String}),
-          throwsStateError,
-        );
+
         outcomes['flutter.plan'] = _WriteOutcome.succeed;
         await service.setItem('plan', PersistentMemoryType.String, 'saved');
         expect(

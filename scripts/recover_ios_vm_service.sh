@@ -4,16 +4,18 @@
 # Return 2 while waiting, 0 when finished, and 1 on a failed recovery. The
 # caller still requires the original flutter test process to report success.
 ios_frontboard_retry_has_headroom() {
-  local elapsed_seconds="${1:-}"
+  local elapsed_seconds="${1:-}" deadline_seconds="${2:-}" retry_budget_seconds="${3:-}"
   [[ "$elapsed_seconds" =~ ^(0|[1-9][0-9]*)$ ]] &&
-    [ "$elapsed_seconds" -lt 4800 ]
+    [[ "$deadline_seconds" =~ ^[1-9][0-9]*$ ]] &&
+    [[ "$retry_budget_seconds" =~ ^[1-9][0-9]*$ ]] &&
+    [ $((elapsed_seconds + retry_budget_seconds)) -le "$deadline_seconds" ]
 }
 
 recover_ios_vm_service_once() {
   local device_id="$1" flutter_log="$2" simulator_log="$3" simulator_log_offset="$4"
   local runner_pid current_pid launch_arguments
   local expected_arguments='--enable-dart-profiling --disable-vm-service-publication --enable-checked-mode --verify-entry-points'
-  local flutter_finished_pattern='^(\[[^]]*\][[:space:]]*)?(VM Service URL on device|Successfully connected to service protocol|exiting with code)'
+  local flutter_finished_pattern='^(\[[^]]*\] )?(VM Service URL on device|Successfully connected to service protocol|exiting with code)'
 
   # Flutter indents verbose output from child tools. Only its own status lines
   # begin at column zero; an indented child "exiting with code" must not stop

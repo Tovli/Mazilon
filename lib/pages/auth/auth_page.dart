@@ -12,6 +12,11 @@ import 'package:mazilon/util/styles.dart';
 import 'package:mazilon/util/userInformation.dart';
 import 'package:provider/provider.dart';
 
+@visibleForTesting
+bool isSocialSignInCancellation(Object error) =>
+    error is FirebaseAuthException &&
+    (error.code == 'canceled' || error.code == 'web-context-canceled');
+
 // ─── Shared mixin ─────────────────────────────────────────────────────────────
 
 mixin _SocialSignIn<T extends StatefulWidget> on LPExtendedState<T> {
@@ -38,6 +43,9 @@ mixin _SocialSignIn<T extends StatefulWidget> on LPExtendedState<T> {
       }
       await _socialSuccessCallback(user);
     } catch (error, stackTrace) {
+      if (isSocialSignInCancellation(error)) {
+        return;
+      }
       await reportAuthenticationError(error, stackTrace);
       if (mounted) _setSocialError(appLocale.authErrorGeneric);
     } finally {

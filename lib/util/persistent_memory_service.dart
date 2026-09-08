@@ -31,10 +31,11 @@ abstract class PersistentMemoryService {
 
   /// Captures an immutable set of values after earlier accepted writes finish.
   ///
-  /// No write or reset on this instance may interleave with the capture. A
-  /// failed write to a requested key must fail capture until that key is saved
-  /// successfully (or reset). This is a read barrier, not a multi-key write
-  /// transaction, and does not coordinate separate instances or isolates.
+  /// No write or reset on this instance may interleave with the capture. The
+  /// persisted cache is refreshed before reading so an earlier rejected write
+  /// cannot leak an uncommitted value or prevent later captures. This is a read
+  /// barrier, not a multi-key write transaction, and does not coordinate
+  /// separate instances or isolates.
   Future<Map<String, Object?>> readSnapshot(
     Map<String, PersistentMemoryType> keys,
   );
@@ -53,7 +54,6 @@ class SharedPreferencesService implements PersistentMemoryService {
   Future<void> _pendingOperation = Future<void>.value();
   Future<void>? _activeReset;
   bool _resetFenceActive = false;
-  final Map<String, Object> _failedWrites = {};
   bool _resetFailed = false;
 
   @override
@@ -115,9 +115,7 @@ class SharedPreferencesService implements PersistentMemoryService {
       if (!saved) {
         throw StateError('Persistent memory rejected "$key".');
       }
-      _failedWrites.remove(key);
     } catch (error, stackTrace) {
-      _failedWrites[key] = error;
       _recordFailure(loggerService, error, stackTrace);
       rethrow;
     }
@@ -191,14 +189,8 @@ class SharedPreferencesService implements PersistentMemoryService {
       if (_resetFailed) {
         throw StateError('Cannot export after an unsuccessful storage reset.');
       }
-      for (final key in requestedKeys.keys) {
-        if (_failedWrites.containsKey(key)) {
-          throw StateError(
-            'Cannot export after an unsuccessful save of "$key".',
-          );
-        }
-      }
       final prefs = await SharedPreferences.getInstance();
+      await prefs.reload();
       // All getters and defensive copies run synchronously against one cache.
       // Unlike getItem, malformed values fail capture rather than losing data.
       snapshot = Map<String, Object?>.unmodifiable({
@@ -244,7 +236,6 @@ class SharedPreferencesService implements PersistentMemoryService {
       if (!cleared) {
         throw StateError('Persistent memory clear was rejected.');
       }
-      _failedWrites.clear();
       _resetFailed = false;
     } catch (error, stackTrace) {
       _resetFailed = true;

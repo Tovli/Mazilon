@@ -98,7 +98,8 @@ class _ShareFormState extends WizardStepState<ShareForm> {
   Future<void> _customCategoriesReplacement = Future<void>.value();
   int _customCategoriesReplacementRevision = 0;
   int _handledCustomCategoriesFailureEventId = 0;
-  VoidCallback? _customCategorySaveSuccess;
+  int _customCategorySaveRevision = 0;
+  ({int revision, VoidCallback? onSuccess})? _customCategorySaveContinuation;
 
   List<MapEntry<String, String>> get _customCategories =>
       _customCategoriesViewModel?.state.categories ?? const [];
@@ -165,8 +166,14 @@ class _ShareFormState extends WizardStepState<ShareForm> {
     _customCategoriesViewModel = null;
     _customCategoriesUserInformation = userInformation;
     _handledCustomCategoriesFailureEventId = 0;
-    _customCategorySaveSuccess = null;
-    ScaffoldMessenger.maybeOf(context)?.hideCurrentSnackBar();
+    _customCategorySaveRevision++;
+    _customCategorySaveContinuation = null;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted &&
+          replacementRevision == _customCategoriesReplacementRevision) {
+        ScaffoldMessenger.maybeOf(context)?.hideCurrentSnackBar();
+      }
+    });
 
     final previousReplacement = _customCategoriesReplacement;
     final replacement = _installCustomCategoriesViewModel(
@@ -218,14 +225,24 @@ class _ShareFormState extends WizardStepState<ShareForm> {
     setState(() {});
     final viewModel = _customCategoriesViewModel;
     final state = viewModel?.state;
+    if (state is ShareFormCustomCategoriesReady) {
+      final continuation = _customCategorySaveContinuation;
+      if (continuation != null &&
+          continuation.revision == _customCategorySaveRevision) {
+        _customCategorySaveContinuation = null;
+        continuation.onSuccess?.call();
+      }
+      return;
+    }
     if (state case ShareFormCustomCategoriesSaveFailure(
       :final eventId,
     ) when eventId > _handledCustomCategoriesFailureEventId) {
-      _handledCustomCategoriesFailureEventId = eventId;
-      // A primary/export retry owns its failure prompt and continuation.
-      if (!_isRunningDreamsAndGoalsAction) {
-        _showCustomCategorySaveFailure(viewModel!);
+      if (_isRunningDreamsAndGoalsAction) {
+        return;
       }
+      _handledCustomCategoriesFailureEventId = eventId;
+      final continuation = _customCategorySaveContinuation;
+      _showCustomCategorySaveFailure(viewModel!, continuation);
     }
   }
 
@@ -241,38 +258,55 @@ class _ShareFormState extends WizardStepState<ShareForm> {
 
   Future<void> _saveCustomCategories(
     List<MapEntry<String, String>> categories,
-  ) => _customCategoriesViewModel?.save(categories) ?? Future<void>.value();
+  ) async {
+    if (_customCategoriesViewModel == null) {
+      await _customCategoriesReplacement;
+    }
+    final viewModel = _customCategoriesViewModel;
+    if (viewModel == null) {
+      throw StateError('Custom categories are not ready to save.');
+    }
+    await viewModel.save(categories);
+  }
 
   Future<void> _persistCustomCategoriesWithRetry(
     List<MapEntry<String, String>> categories, {
     VoidCallback? onSuccess,
   }) async {
-    _customCategorySaveSuccess = onSuccess;
-    final viewModel = _customCategoriesViewModel;
-    await _saveCustomCategories(categories);
-    if (mounted &&
-        identical(viewModel, _customCategoriesViewModel) &&
-        viewModel?.state is ShareFormCustomCategoriesReady) {
-      _customCategorySaveSuccess = null;
-      onSuccess?.call();
+    final revision = ++_customCategorySaveRevision;
+    final continuation = (revision: revision, onSuccess: onSuccess);
+    _customCategorySaveContinuation = continuation;
+    try {
+      await _saveCustomCategories(categories);
+    } catch (error, stackTrace) {
+      if (_customCategorySaveContinuation?.revision == revision) {
+        _customCategorySaveContinuation = null;
+      }
+      await _captureDreamsAndGoalsFailure(error, stackTrace);
+      if (mounted && revision == _customCategorySaveRevision) {
+        showPersistenceRetrySnackBar(
+          context,
+          () => _persistCustomCategoriesWithRetry(
+            categories,
+            onSuccess: onSuccess,
+          ),
+        );
+      }
     }
   }
 
   void _showCustomCategorySaveFailure(
     ShareFormCustomCategoriesViewModel failedViewModel,
+    ({int revision, VoidCallback? onSuccess})? continuation,
   ) {
     showPersistenceRetrySnackBar(context, () async {
-      if (!mounted || !identical(failedViewModel, _customCategoriesViewModel)) {
+      if (!mounted ||
+          !identical(failedViewModel, _customCategoriesViewModel) ||
+          (continuation != null &&
+              continuation.revision != _customCategorySaveRevision)) {
         return;
       }
       await failedViewModel.retryLatestSave();
-      if (mounted &&
-          identical(failedViewModel, _customCategoriesViewModel) &&
-          failedViewModel.state is ShareFormCustomCategoriesReady) {
-        final onSuccess = _customCategorySaveSuccess;
-        _customCategorySaveSuccess = null;
-        onSuccess?.call();
-      }
     });
   }
 
@@ -716,6 +750,11 @@ class _ShareFormState extends WizardStepState<ShareForm> {
     if (_isRunningDreamsAndGoalsAction) {
       return;
     }
+    // The guarded action owns recovery for any save that was already pending
+    // when it started. Do not let that save's UI continuation replace the
+    // action retry or run later after the action has recovered persistence.
+    _customCategorySaveRevision++;
+    _customCategorySaveContinuation = null;
     _isRunningDreamsAndGoalsAction = true;
     try {
       final _DreamsAndGoalsActionPreparation preparation =
@@ -750,6 +789,9 @@ class _ShareFormState extends WizardStepState<ShareForm> {
       }
     } finally {
       _isRunningDreamsAndGoalsAction = false;
+      if (mounted) {
+        _onCustomCategoriesStateChanged();
+      }
     }
   }
 
