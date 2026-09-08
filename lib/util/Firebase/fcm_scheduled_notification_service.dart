@@ -36,6 +36,8 @@ class FcmScheduledNotificationService {
       'fcmDefaultReminderMigrated';
   static const String _legacyDefaultReminderEnabledKey =
       'legacyDefaultReminderEnabled';
+  static const String _legacyLocalNotificationsRetiredKey =
+      'legacyLocalNotificationsRetired';
   static const Duration _networkTimeout = Duration(seconds: 15);
   static const Duration _legacyMigrationOperationTimeout = Duration(seconds: 5);
   static Future<void>? _operationQueue;
@@ -127,6 +129,61 @@ class FcmScheduledNotificationService {
       _log('Warning: no authenticated user, cannot get ID token.');
     }
     return token;
+  }
+
+  /// Removes schedules left by the retired Android local-notification system.
+  ///
+  /// This cleanup is independent of authentication and intentionally does not
+  /// infer reminder consent from legacy default hour/minute values. It runs
+  /// once per installation and retries on a later launch if cancellation or
+  /// marker persistence fails.
+  static Future<void> retireLegacyLocalNotifications({
+    PersistentMemoryService? persistentMemory,
+    Future<void> Function()? legacyNotificationsCanceller,
+  }) {
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      return Future<void>.value();
+    }
+    return _enqueue(() async {
+      final memory =
+          persistentMemory ?? GetIt.instance<PersistentMemoryService>();
+      final retired =
+          await memory
+              .getItem(
+                _legacyLocalNotificationsRetiredKey,
+                PersistentMemoryType.Bool,
+              )
+              .timeout(_legacyMigrationOperationTimeout) ??
+          false;
+      if (retired == true) return;
+
+      await (legacyNotificationsCanceller ??
+              FcmService.cancelAllLegacyLocalNotifications)()
+          .timeout(_legacyMigrationOperationTimeout);
+      await memory
+          .setItem(
+            _legacyLocalNotificationsRetiredKey,
+            PersistentMemoryType.Bool,
+            true,
+          )
+          .timeout(_legacyMigrationOperationTimeout);
+    });
+  }
+
+  /// Retires legacy local schedules without allowing cleanup failure to block
+  /// application startup.
+  static Future<void> retireLegacyLocalNotificationsWithReporting({
+    PersistentMemoryService? persistentMemory,
+  }) async {
+    try {
+      await retireLegacyLocalNotifications(persistentMemory: persistentMemory);
+    } catch (error, stackTrace) {
+      _reportNotificationFailure(
+        'Unable to retire legacy local notifications',
+        error,
+        stackTrace,
+      );
+    }
   }
 
   /// Migrates an Android legacy local default reminder to the FCM scheduler.

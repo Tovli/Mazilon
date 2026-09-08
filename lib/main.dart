@@ -473,6 +473,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             setLocale(),
           ])
           .then((_) async {
+            // The retired Android scheduler created repeating local alarms.
+            // Remove them on the first launch of this version even when there
+            // is no authenticated account available for remote migration.
+            await FcmScheduledNotificationService.retireLegacyLocalNotificationsWithReporting(
+              persistentMemory: userInfoProvider.service,
+            );
             if (userInfoProvider.loggedIn) {
               // Interactive sign-in already starts this best-effort local
               // reminder migration. Restored Firebase sessions must take the

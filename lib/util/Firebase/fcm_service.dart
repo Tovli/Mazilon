@@ -36,6 +36,10 @@ class FcmService {
   debugCancelLegacyLocalNotificationOverride;
 
   @visibleForTesting
+  static Future<void> Function()?
+  debugCancelAllLegacyLocalNotificationsOverride;
+
+  @visibleForTesting
   static Future<String?> Function()? debugGetApnsTokenOverride;
 
   @visibleForTesting
@@ -64,6 +68,7 @@ class FcmService {
     debugGetNotificationSettingsOverride = null;
     debugInitializeLocalNotificationsOverride = null;
     debugCancelLegacyLocalNotificationOverride = null;
+    debugCancelAllLegacyLocalNotificationsOverride = null;
     debugGetApnsTokenOverride = null;
     debugGetTokenOverride = null;
     debugGetCurrentUserIdOverride = null;
@@ -117,6 +122,16 @@ class FcmService {
     }
     if (!supportsReminderSettings()) return;
     await _localNotifications.cancel(id: notificationId);
+  }
+
+  static Future<void> cancelAllLegacyLocalNotifications() async {
+    final override = debugCancelAllLegacyLocalNotificationsOverride;
+    if (override != null) {
+      await override();
+      return;
+    }
+    if (defaultTargetPlatform != TargetPlatform.android) return;
+    await _localNotifications.cancelAll();
   }
 
   static Future<bool> hasPermission() async {

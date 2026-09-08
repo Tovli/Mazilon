@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 
 class _FakePersistentMemoryService implements PersistentMemoryService {
   static const _migrationKey = 'fcmDefaultReminderMigrated';
+  static const _retirementKey = 'legacyLocalNotificationsRetired';
   static const _notificationPreferencesKey = 'notificationPreferences';
   static const _legacyReminderKeys = {
     'legacyDefaultReminderEnabled',
@@ -48,7 +49,7 @@ class _FakePersistentMemoryService implements PersistentMemoryService {
       }
       return stored[key];
     }
-    if (key != _migrationKey) {
+    if (key != _migrationKey && key != _retirementKey) {
       throw StateError('Unexpected persistent-memory read: $key');
     }
     if (migrationMarkerRead != null) {
@@ -73,7 +74,9 @@ class _FakePersistentMemoryService implements PersistentMemoryService {
     PersistentMemoryType type,
     dynamic value,
   ) async {
-    if (key != _migrationKey && key != _notificationPreferencesKey) {
+    if (key != _migrationKey &&
+        key != _retirementKey &&
+        key != _notificationPreferencesKey) {
       throw StateError('Unexpected persistent-memory write: $key');
     }
     if (key == _notificationPreferencesKey) {
@@ -187,6 +190,94 @@ void main() {
       ),
     );
   }
+
+  group('FcmScheduledNotificationService legacy local retirement', () {
+    test(
+      'should cancel all legacy Android notifications and persist completion once',
+      () async {
+        var cancellationCalls = 0;
+
+        await _onPlatform(
+          TargetPlatform.android,
+          () => FcmScheduledNotificationService.retireLegacyLocalNotifications(
+            persistentMemory: memory,
+            legacyNotificationsCanceller: () async {
+              cancellationCalls++;
+            },
+          ),
+        );
+        await _onPlatform(
+          TargetPlatform.android,
+          () => FcmScheduledNotificationService.retireLegacyLocalNotifications(
+            persistentMemory: memory,
+            legacyNotificationsCanceller: () async {
+              cancellationCalls++;
+            },
+          ),
+        );
+
+        expect(cancellationCalls, 1);
+        expect(memory.stored['legacyLocalNotificationsRetired'], isTrue);
+      },
+    );
+
+    test(
+      'should leave retirement retryable when Android cancellation fails',
+      () async {
+        var cancellationCalls = 0;
+
+        await expectLater(
+          _onPlatform(
+            TargetPlatform.android,
+            () =>
+                FcmScheduledNotificationService.retireLegacyLocalNotifications(
+                  persistentMemory: memory,
+                  legacyNotificationsCanceller: () async {
+                    cancellationCalls++;
+                    throw StateError('notification storage unavailable');
+                  },
+                ),
+          ),
+          throwsStateError,
+        );
+        await _onPlatform(
+          TargetPlatform.android,
+          () => FcmScheduledNotificationService.retireLegacyLocalNotifications(
+            persistentMemory: memory,
+            legacyNotificationsCanceller: () async {
+              cancellationCalls++;
+            },
+          ),
+        );
+
+        expect(cancellationCalls, 2);
+        expect(memory.stored['legacyLocalNotificationsRetired'], isTrue);
+      },
+    );
+
+    test(
+      'should not inspect or cancel legacy local notifications on iOS',
+      () async {
+        var cancellationCalls = 0;
+
+        await _onPlatform(
+          TargetPlatform.iOS,
+          () => FcmScheduledNotificationService.retireLegacyLocalNotifications(
+            persistentMemory: memory,
+            legacyNotificationsCanceller: () async {
+              cancellationCalls++;
+            },
+          ),
+        );
+
+        expect(cancellationCalls, isZero);
+        expect(
+          memory.stored.containsKey('legacyLocalNotificationsRetired'),
+          isFalse,
+        );
+      },
+    );
+  });
 
   testWidgets('notification operations reject missing user state safely', (
     tester,
