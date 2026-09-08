@@ -241,8 +241,7 @@ class _ShareFormState extends WizardStepState<ShareForm> {
         return;
       }
       _handledCustomCategoriesFailureEventId = eventId;
-      final continuation = _customCategorySaveContinuation;
-      _showCustomCategorySaveFailure(viewModel!, continuation);
+      _showCustomCategorySaveFailure(viewModel!);
     }
   }
 
@@ -297,13 +296,9 @@ class _ShareFormState extends WizardStepState<ShareForm> {
 
   void _showCustomCategorySaveFailure(
     ShareFormCustomCategoriesViewModel failedViewModel,
-    ({int revision, VoidCallback? onSuccess})? continuation,
   ) {
     showPersistenceRetrySnackBar(context, () async {
-      if (!mounted ||
-          !identical(failedViewModel, _customCategoriesViewModel) ||
-          (continuation != null &&
-              continuation.revision != _customCategorySaveRevision)) {
+      if (!mounted || !identical(failedViewModel, _customCategoriesViewModel)) {
         return;
       }
       await failedViewModel.retryLatestSave();

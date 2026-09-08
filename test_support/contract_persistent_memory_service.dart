@@ -170,7 +170,11 @@ base class ContractPersistentMemoryService implements PersistentMemoryService {
       try {
         await onPersist?.call(key, type, write.value);
       } catch (_) {
-        if (exposePendingWrites) {
+        // Roll back only the eager value installed by this write. A test hook
+        // may model an independent writer by replacing the visible value
+        // before rejecting; that newer value must remain observable.
+        if (exposePendingWrites &&
+            _sameUntypedValue(store[key], visibleValue)) {
           final Object? durableValue = _durableStore[key];
           if (durableValue == null) {
             store.remove(key);
@@ -283,6 +287,17 @@ base class ContractPersistentMemoryService implements PersistentMemoryService {
     });
     return queuedOperation;
   }
+}
+
+bool _sameUntypedValue(Object? left, Object? right) {
+  if (left is List && right is List) {
+    if (left.length != right.length) return false;
+    for (var index = 0; index < left.length; index++) {
+      if (left[index] != right[index]) return false;
+    }
+    return true;
+  }
+  return left == right;
 }
 
 dynamic _missingValueFor(PersistentMemoryType type) {
