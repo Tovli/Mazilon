@@ -24,10 +24,10 @@ jobs:
         working-directory: functions
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: npm
@@ -55,7 +55,7 @@ jobs:
       AAB_PATH: build/app/outputs/bundle/release/app-release.aab
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Write key store file for release signing
         env:
@@ -72,7 +72,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
-          distribution: "adopt"
+          distribution: "temurin"
           java-version: "17.x"
           cache: gradle
           cache-dependency-path: |
@@ -136,7 +136,7 @@ jobs:
         run: dart run scripts/check_coverage.dart
       - name: Upload coverage report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-lcov
           path: coverage/lcov.info
@@ -184,7 +184,7 @@ jobs:
             --dart-define=GOOGLE_SIGN_IN_SERVER_CLIENT_ID="$GOOGLE_SIGN_IN_SERVER_CLIENT_ID"
 
       - name: Upload App Bundle
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: app-release
           path: ${{ env.AAB_PATH }}
@@ -234,7 +234,7 @@ jobs:
       FIREBASE_OPTIONS_PATH: lib/util/Firebase/firebase_options.dart
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Write firebase options file
         env:
@@ -245,7 +245,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
-          distribution: "adopt"
+          distribution: "temurin"
           java-version: "17.x"
           cache: gradle
           cache-dependency-path: |
@@ -330,7 +330,7 @@ jobs:
 
       - name: Upload integration coverage shard
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-integration-shard-${{ matrix.id }}
           path: coverage/shards/${{ matrix.id }}.info
@@ -343,7 +343,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Verify Android integration matrix matches test files
         shell: bash
@@ -402,7 +402,7 @@ jobs:
           fi
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -430,7 +430,7 @@ jobs:
           exit 1
 
       - name: Download integration coverage shards
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           pattern: coverage-integration-shard-*
           merge-multiple: true
@@ -471,7 +471,7 @@ jobs:
 
       - name: Upload integration coverage report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-integration-lcov
           path: coverage/integration.info
@@ -503,7 +503,7 @@ jobs:
       FLUTTER_SWIFT_PACKAGE_MANAGER: "false"
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Write firebase options file
         env:
@@ -897,7 +897,7 @@ jobs:
 
       - name: Upload iOS integration diagnostics
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ios-integration-diagnostics
           path: ci-ios-diagnostics
@@ -905,7 +905,7 @@ jobs:
 
       - name: Upload iOS Podfile lockfile
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ios-podfile-lock
           path: ios/Podfile.lock
@@ -942,7 +942,7 @@ jobs:
       FIREBASE_OPTIONS_PATH: lib/util/Firebase/firebase_options.dart
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Write firebase options file
         env:
@@ -992,7 +992,7 @@ jobs:
 
       - name: Upload web coverage report (telemetry — may be missing or stale)
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-web-lcov
           path: coverage/lcov.info
@@ -1059,7 +1059,7 @@ jobs:
           echo "All upstream jobs succeeded — proceeding with aggregate merge."
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -1087,13 +1087,13 @@ jobs:
           exit 1
 
       - name: Download unit coverage artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: coverage-lcov
           path: coverage
 
       - name: Download integration coverage artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: coverage-integration-lcov
           path: coverage
@@ -1124,7 +1124,7 @@ jobs:
 
       - name: Upload aggregate coverage report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-aggregate-lcov
           path: coverage/aggregate.info
@@ -1145,12 +1145,12 @@ jobs:
       content_required: ${{ steps.changes.outputs.content_required }}
     steps:
       - name: Checkout tested revision and history
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: npm
@@ -1182,12 +1182,12 @@ jobs:
       FIREBASE_PROJECT_ID: mezilondb
     steps:
       - name: Checkout tested revision and history
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
       - name: Set up Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "22"
           cache: npm
@@ -1278,7 +1278,7 @@ jobs:
       queue: max
     steps:
       - name: Download App Bundle
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: app-release
           path: build/app/outputs/bundle/release
@@ -1301,7 +1301,7 @@ jobs:
       WEB_BUILD_PATH: build/web
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Write firebase options file
         env:
@@ -1370,13 +1370,13 @@ jobs:
             --dart-define=SENTRY_DSN="$SENTRY_DSN"
 
       - name: Upload Web Build Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: web-build
           path: ${{ env.WEB_BUILD_PATH }}
 
       - name: Deploy to Azure Storage Static Website
-        uses: azure/cli@v2
+        uses: azure/cli@v3
         with:
           inlineScript: |
             az storage blob upload-batch \
@@ -1396,7 +1396,7 @@ jobs:
       WEB_BUILD_PATH: build/web
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Write firebase options file
         env:
@@ -1465,13 +1465,13 @@ jobs:
             --dart-define=SENTRY_DSN="$SENTRY_DSN"
 
       - name: Upload Web Build Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: web-build-dev
           path: ${{ env.WEB_BUILD_PATH }}
 
       - name: Deploy to Azure Storage Static Website
-        uses: azure/cli@v2
+        uses: azure/cli@v3
         with:
           inlineScript: |
             az storage blob upload-batch \

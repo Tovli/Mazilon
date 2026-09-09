@@ -3,7 +3,12 @@ set -euo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/../recover_ios_vm_service.sh"
 test_directory=$(mktemp -d)
-trap 'rm -f "$test_directory/flutter.log" "$test_directory/simulator.log"; rmdir "$test_directory"' EXIT
+# The recovery function reports its decisions with ::warning:: workflow
+# commands. Drive every scenario with those commands disabled so the test run
+# never posts annotations for simulated recoveries.
+workflow_commands_token='recover-ios-vm-service-test'
+echo "::stop-commands::$workflow_commands_token"
+trap 'echo "::$workflow_commands_token::"; rm -f "$test_directory/flutter.log" "$test_directory/simulator.log"; rmdir "$test_directory"' EXIT
 flutter_log="$test_directory/flutter.log"
 simulator_log="$test_directory/simulator.log"
 
