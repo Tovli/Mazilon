@@ -164,7 +164,7 @@ class _GratitudeSectionWidgetState
       iconAsset: 'assets/images/thanks_icon.svg',
       items: todayItems,
       suggestions: _homeSuggestions,
-      totalCount: thanks.length,
+      totalCount: todayItems.length,
       showAllItems: true,
       onOpenSection: widget.onOpenSection,
       onAddNew: () => _openThankDialog(userInfo),

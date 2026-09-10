@@ -83,7 +83,7 @@ void main() {
     expect(find.byIcon(Icons.chevron_right), findsNothing);
   });
 
-  testWidgets('GratitudeSectionWidget should count the full journal', (
+  testWidgets("GratitudeSectionWidget should count only today's entries", (
     tester,
   ) async {
     final now = DateTime.now();
@@ -109,7 +109,7 @@ void main() {
       find.byType(DashedListWidget),
     );
     expect(section.items, ['today']);
-    expect(section.totalCount, 2);
+    expect(section.totalCount, 1);
   });
 
   testWidgets('CardContainer should use its default radius safely', (
